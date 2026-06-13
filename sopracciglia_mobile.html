@@ -2173,11 +2173,16 @@ loop();
   function btn(id, fn){
     var el = document.getElementById(id);
     if(!el) return;
-    el.addEventListener('click', function(){
+    var fired = false;
+    function handler(e){
+      if(e.type === 'touchstart'){ fired = true; e.preventDefault(); e.stopPropagation(); }
+      else if(e.type === 'click' && fired){ fired = false; return; }
       audioUnlocked=true;
       try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
       try{ fn(); }catch(err){ console.warn('mobile btn err',err); }
-    });
+    }
+    el.addEventListener('touchstart', handler, {passive:false});
+    el.addEventListener('click', handler);
   }
 
   btn('mb-1', function(){ game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); });
