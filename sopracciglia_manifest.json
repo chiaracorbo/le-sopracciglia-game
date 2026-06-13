@@ -1,0 +1,13 @@
+{
+  "name": "Le Sopracciglia della Guerra",
+  "short_name": "Sopracciglia",
+  "description": "Arena Combat – Metal Slug Edition",
+  "start_url": "./sopracciglia_mobile.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0a0806",
+  "theme_color": "#0a0806",
+  "icons": [
+    {"src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0806'/><text y='.9em' font-size='80'>⚔️</text></svg>", "sizes": "any", "type": "image/svg+xml"}
+  ]
+}
