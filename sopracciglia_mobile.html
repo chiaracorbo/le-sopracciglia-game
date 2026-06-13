@@ -2090,8 +2090,10 @@ function loop(){
   if(game && game.state==='fight'){
     var dbgK=[];
     ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyZ','KeyX','KeyC','Space'].forEach(function(k){if(keys[k])dbgK.push(k);});
-    if(dbgK.length){ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(0,0,W,18);
-      ctx.fillStyle='#0F0';ctx.font='11px monospace';ctx.textAlign='left';ctx.fillText('KEYS: '+dbgK.join(' '),4,13);}
+    ctx.fillStyle='rgba(0,0,0,0.75)';ctx.fillRect(0,0,W,18);
+    ctx.fillStyle='#0F0';ctx.font='11px monospace';ctx.textAlign='left';
+    var p1=game.p&&game.p[0];
+    ctx.fillText('frz='+game.freeze+' st='+(p1&&p1.state)+' KEYS='+dbgK.join(','),4,13);
   }
   requestAnimationFrame(loop);
 }
