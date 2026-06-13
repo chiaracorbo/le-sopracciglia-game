@@ -2097,53 +2097,35 @@ loop();
   var IS_MOB = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   if(!IS_MOB) return;
 
-  /* touchId → lista di codici tasto attivati da quel dito */
-  var touchKeys = {};
+  /* Mappa elemento → codice tasto */
+  var ELEM_KEYS = {
+    'dp-u':'ArrowUp','dp-l':'ArrowLeft','dp-r':'ArrowRight','dp-d':'ArrowDown',
+    'ab-p':'KeyZ','ab-k':'KeyX','ab-b':'KeyC','ab-s':'Space'
+  };
 
-  function getZoneKeys(x, y){
-    /* x, y = coordinate SCHERMO (clientX/clientY) */
-    var W = window.innerWidth, H = window.innerHeight;
-    var out = [];
+  /* touchId → codice tasto */
+  var touchMap = {};
 
-    /* Zona sinistra: D-pad (primo 30% larghezza, ultimi 50% altezza) */
-    if(x < W * 0.35 && y > H * 0.45){
-      var lx = x, ly = y;
-      /* centra rispetto all'area dpad (assumiamo centro = 12% W, 80% H) */
-      var cx = W * 0.12, cy = H * 0.82;
-      var dx = lx - cx, dy = ly - cy;
-      var thresh = Math.min(W, H) * 0.06;
-      if(Math.abs(dx) > Math.abs(dy)){
-        if(dx < 0) out.push('ArrowLeft'); else out.push('ArrowRight');
-      } else {
-        if(dy < 0) out.push('ArrowUp'); else out.push('ArrowDown');
-      }
+  /* Trova quale elemento di controllo è sotto il punto (cx, cy) */
+  function elemAtPoint(cx, cy){
+    var ids = Object.keys(ELEM_KEYS);
+    for(var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if(!el) continue;
+      var r = el.getBoundingClientRect();
+      /* aggiungi 8px di margine per facilità */
+      if(cx >= r.left-8 && cx <= r.right+8 && cy >= r.top-8 && cy <= r.bottom+8)
+        return ids[i];
     }
-
-    /* Zona destra: pulsanti azione (ultimo 30% larghezza, ultimi 50% altezza) */
-    if(x > W * 0.65 && y > H * 0.45){
-      var rx = x - W * 0.65, ry = y - H * 0.45;
-      var rw = W * 0.35, rh = H * 0.55;
-      /* Griglia 2×2: punch top-left, kick top-right, block bottom-left, special bottom-right */
-      var col = rx < rw * 0.5 ? 0 : 1;
-      var row = ry < rh * 0.5 ? 0 : 1;
-      var map = [['KeyZ','KeyX'],['KeyC','Space']];
-      out.push(map[row][col]);
-    }
-
-    return out;
+    return null;
   }
 
-  function applyKeys(codes, val){
-    codes.forEach(function(c){ keys[c] = val; });
-    /* aggiorna visuale D-pad */
-    var vis = {
-      'ArrowUp':'dp-u','ArrowDown':'dp-d','ArrowLeft':'dp-l','ArrowRight':'dp-r',
-      'KeyZ':'ab-p','KeyX':'ab-k','KeyC':'ab-b','Space':'ab-s'
-    };
-    codes.forEach(function(c){
-      var el = document.getElementById(vis[c]||'');
-      if(el){ if(val) el.classList.add('on'); else el.classList.remove('on'); }
-    });
+  function pressElem(id, val){
+    if(!id) return;
+    var code = ELEM_KEYS[id];
+    keys[code] = val;
+    var el = document.getElementById(id);
+    if(el){ if(val) el.classList.add('on'); else el.classList.remove('on'); }
   }
 
   function onTouchStart(e){
@@ -2151,20 +2133,17 @@ loop();
     e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
-      var codes = getZoneKeys(t.clientX, t.clientY);
-      if(codes.length){
-        touchKeys[t.identifier] = codes;
-        applyKeys(codes, true);
-      }
+      var id = elemAtPoint(t.clientX, t.clientY);
+      if(id){ touchMap[t.identifier] = id; pressElem(id, true); }
     }
   }
   function onTouchEnd(e){
     if(game.state !== 'fight') return;
+    e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
-      var codes = touchKeys[t.identifier] || [];
-      applyKeys(codes, false);
-      delete touchKeys[t.identifier];
+      pressElem(touchMap[t.identifier], false);
+      delete touchMap[t.identifier];
     }
   }
   function onTouchMove(e){
@@ -2172,22 +2151,14 @@ loop();
     e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
-      var oldCodes = touchKeys[t.identifier] || [];
-      var newCodes = getZoneKeys(t.clientX, t.clientY);
-      /* rimuovi vecchi */
-      var toRemove = oldCodes.filter(function(c){ return newCodes.indexOf(c)<0; });
-      var toAdd    = newCodes.filter(function(c){ return oldCodes.indexOf(c)<0; });
-      applyKeys(toRemove, false);
-      applyKeys(toAdd, true);
-      if(newCodes.length) touchKeys[t.identifier] = newCodes;
-      else delete touchKeys[t.identifier];
+      var newId = elemAtPoint(t.clientX, t.clientY);
+      var oldId = touchMap[t.identifier];
+      if(newId !== oldId){
+        pressElem(oldId, false);
+        if(newId){ touchMap[t.identifier]=newId; pressElem(newId, true); }
+        else delete touchMap[t.identifier];
+      }
     }
-  }
-  function clearAllFightKeys(){
-    Object.keys(touchKeys).forEach(function(id){
-      applyKeys(touchKeys[id], false);
-    });
-    touchKeys = {};
   }
 
   document.addEventListener('touchstart',  onTouchStart,  {passive:false});
