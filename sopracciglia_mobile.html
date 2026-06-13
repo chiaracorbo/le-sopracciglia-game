@@ -2074,31 +2074,33 @@ function wrapText(t,x,y,maxW,lh){
   ctx.fillText(line,x,yy);
 }
 
-var _dbgTouch='', _dbgKeys='';
-/* ---------- LOOP ---------- */
-function loop(){
-  try{update();}catch(e){
-    ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
-    ctx.fillText('ERR update: '+e.message,W/2,H/2-20);
-    ctx.fillText(String(e.stack||'').slice(0,120),W/2,H/2+10);
+/* ---------- LOOP con delta-time ---------- */
+let _lastTs=0, _fpsSmooth=60, _fpsCount=0, _fpsSec=0;
+function loop(ts){
+  const dt=_lastTs?Math.min(ts-_lastTs,100):16.67; // cap 100ms (evita spiral of death)
+  _lastTs=ts;
+
+  /* FPS smoothed */
+  _fpsCount++; _fpsSec+=dt;
+  if(_fpsSec>=1000){_fpsSmooth=Math.round(_fpsCount*1000/_fpsSec);_fpsCount=0;_fpsSec=0;}
+
+  /* Quanti step di gioco (a 60fps) simulare in questo frame */
+  const steps=Math.min(Math.round(dt/16.67),3);
+  for(let s=0;s<steps;s++){
+    try{update();}catch(e){
+      ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
+      ctx.fillText('ERR: '+e.message,W/2,H/2);
+      break;
+    }
   }
   try{draw();}catch(e){
-    ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
+    ctx.fillStyle='#FF4136';ctx.font='12px monospace';ctx.textAlign='center';
     ctx.fillText('ERR draw: '+e.message,W/2,H/2+40);
-  }
-  /* debug tasti: mostra quali keys sono attivi */
-  if(game && game.state==='fight'){
-    var dbgK=[];
-    ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyZ','KeyX','KeyC','Space'].forEach(function(k){if(keys[k])dbgK.push(k);});
-    ctx.fillStyle='rgba(0,0,0,0.75)';ctx.fillRect(0,0,W,18);
-    ctx.fillStyle='#0F0';ctx.font='11px monospace';ctx.textAlign='left';
-    var p1=game.p&&game.p[0];
-    ctx.fillText('frz='+game.freeze+' st='+(p1&&p1.state)+' KEYS='+dbgK.join(','),4,13);
   }
   requestAnimationFrame(loop);
 }
-loop();
+requestAnimationFrame(loop);
 
 
 /* ============================================================
