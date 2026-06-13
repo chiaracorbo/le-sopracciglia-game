@@ -220,6 +220,7 @@ function ensureMusic(){
   if(!audioUnlocked)return;
   if(musicMuted){if(curTrack&&!curTrack.paused)curTrack.pause();return;}
   const t=tracks[wantTrack];
+  if(!t)return; // music.js non ancora caricato
   if(curTrack===t){if(t.paused)t.play().catch(()=>{});return;}
   if(curTrack){curTrack.pause();curTrack.currentTime=0;}
   curTrack=t;t.play().catch(()=>{});
