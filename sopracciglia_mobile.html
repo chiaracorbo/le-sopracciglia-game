@@ -67,37 +67,38 @@
   #m-esc   { top: 8px; right: 8px; }
   #m-music { top: 8px; left: 50%; transform: translateX(-50%); }
 
+  /* fight overlay — pointer-events:auto su tutto, nessun blocco */
   #m-controls {
-    display: none; position: fixed; bottom: 0; left: 0; right: 0;
-    height: 175px; z-index: 100; pointer-events: none;
+    display: none; position: fixed; inset: 0; z-index: 100;
+    pointer-events: auto;
   }
   #m-dpad {
-    position: absolute; left: 10px; bottom: 10px;
-    width: 140px; height: 140px; pointer-events: all;
+    position: absolute; left: 10px; bottom: 20px;
+    width: 150px; height: 150px;
   }
   .dp {
     position: absolute; display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.11); border: 2px solid rgba(255,255,255,0.28);
-    border-radius: 10px; font-size: 20px; color: rgba(255,255,255,0.75);
-    -webkit-user-select: none;
+    background: rgba(255,255,255,0.13); border: 2px solid rgba(255,255,255,0.30);
+    border-radius: 12px; font-size: 22px; color: rgba(255,255,255,0.80);
+    -webkit-user-select: none; touch-action: none;
   }
-  .dp.on { background: rgba(255,255,255,0.35); }
-  #dp-l { left: 0;   top: 46px; width: 44px; height: 48px; }
-  #dp-r { left: 96px;top: 46px; width: 44px; height: 48px; }
-  #dp-u { left: 46px;top: 0;    width: 48px; height: 44px; }
-  #dp-d { left: 46px;top: 96px; width: 48px; height: 44px; }
+  .dp.on { background: rgba(255,255,255,0.38); }
+  #dp-l { left: 0;    top: 51px; width: 47px; height: 51px; }
+  #dp-r { left: 103px;top: 51px; width: 47px; height: 51px; }
+  #dp-u { left: 51px; top: 0;    width: 51px; height: 47px; }
+  #dp-d { left: 51px; top: 103px;width: 51px; height: 47px; }
 
   #m-btns {
-    position: absolute; right: 10px; bottom: 10px; pointer-events: all;
-    display: grid; grid-template-columns: 60px 60px; grid-template-rows: 60px 60px; gap: 6px;
+    position: absolute; right: 10px; bottom: 20px;
+    display: grid; grid-template-columns: 70px 70px; grid-template-rows: 70px 70px; gap: 8px;
   }
   .ab {
     display: flex; align-items: center; justify-content: center; text-align: center;
-    font-size: 10px; font-weight: bold; font-family: monospace; line-height: 1.2;
-    border-radius: 13px; cursor: pointer; -webkit-user-select: none;
-    background: rgba(55,35,8,0.75); border: 2px solid rgba(255,215,0,0.35); color: #F5F0E1;
+    font-size: 11px; font-weight: bold; font-family: monospace; line-height: 1.2;
+    border-radius: 14px; -webkit-user-select: none; touch-action: none;
+    background: rgba(55,35,8,0.80); border: 2px solid rgba(255,215,0,0.40); color: #F5F0E1;
   }
-  .ab.on { background: rgba(200,150,40,0.65); }
+  .ab.on { background: rgba(200,150,40,0.70); }
   #ab-p { border-color: rgba(255,90,50,0.7);  color: #FF6347; }
   #ab-k { border-color: rgba(50,175,255,0.7); color: #4FC3F7; }
   #ab-b { border-color: rgba(70,195,70,0.7);  color: #81C784; }
