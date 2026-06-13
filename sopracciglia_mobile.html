@@ -2100,11 +2100,27 @@ loop();
     el.addEventListener('touchcancel',off, {passive:false});
   });
 
-  /* ---- canvas tap (selezione personaggi / victory) ---- */
+  /* ---- canvas tap (title / selezione / victory) ---- */
   document.getElementById('cv').addEventListener('touchstart', function(e){
     e.preventDefault();
     audioUnlocked = true;
     try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
+
+    if(game.state === 'title'){
+      var touch = e.changedTouches[0];
+      var rect = cv.getBoundingClientRect();
+      var ty = (touch.clientY - rect.top) * (480 / rect.height);
+      // [1] y≈312  [2] y≈336  [3] y≈360  [D] y≈384
+      if(ty >= 290 && ty < 326){ game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); }
+      else if(ty >= 326 && ty < 350){ game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); }
+      else if(ty >= 350 && ty < 378){ game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); }
+      else if(ty >= 378 && ty < 400){
+        var ks=['facile','normale','difficile'];
+        game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];
+        try{sfx.sel();}catch(_){}
+      }
+      return;
+    }
 
     if(game.state === 'select'){
       var touch = e.changedTouches[0];
