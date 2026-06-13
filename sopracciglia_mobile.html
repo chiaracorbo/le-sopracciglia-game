@@ -2073,6 +2073,7 @@ function wrapText(t,x,y,maxW,lh){
   ctx.fillText(line,x,yy);
 }
 
+var _dbgTouch='', _dbgKeys='';
 /* ---------- LOOP ---------- */
 function loop(){
   try{update();}catch(e){
@@ -2084,6 +2085,13 @@ function loop(){
   try{draw();}catch(e){
     ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
     ctx.fillText('ERR draw: '+e.message,W/2,H/2+40);
+  }
+  /* debug tasti: mostra quali keys sono attivi */
+  if(game && game.state==='fight'){
+    var dbgK=[];
+    ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyZ','KeyX','KeyC','Space'].forEach(function(k){if(keys[k])dbgK.push(k);});
+    if(dbgK.length){ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(0,0,W,18);
+      ctx.fillStyle='#0F0';ctx.font='11px monospace';ctx.textAlign='left';ctx.fillText('KEYS: '+dbgK.join(' '),4,13);}
   }
   requestAnimationFrame(loop);
 }
@@ -2147,16 +2155,17 @@ loop();
     }
   }
   function onTouchMove(e){
+    e.preventDefault(); /* previene scroll su iOS */
     if(game.state !== 'fight') return;
-    e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
       var newId = elemAtPoint(t.clientX, t.clientY);
       var oldId = touchMap[t.identifier];
-      if(newId !== oldId){
+      /* cambia tasto solo se il dito va su un ALTRO pulsante, non se esce nel vuoto */
+      if(newId && newId !== oldId){
         pressElem(oldId, false);
-        if(newId){ touchMap[t.identifier]=newId; pressElem(newId, true); }
-        else delete touchMap[t.identifier];
+        touchMap[t.identifier] = newId;
+        pressElem(newId, true);
       }
     }
   }
