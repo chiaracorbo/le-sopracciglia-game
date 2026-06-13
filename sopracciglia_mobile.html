@@ -2073,7 +2073,19 @@ function wrapText(t,x,y,maxW,lh){
 }
 
 /* ---------- LOOP ---------- */
-function loop(){update();draw();requestAnimationFrame(loop);}
+function loop(){
+  try{update();}catch(e){
+    ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
+    ctx.fillText('ERR update: '+e.message,W/2,H/2-20);
+    ctx.fillText(String(e.stack||'').slice(0,120),W/2,H/2+10);
+  }
+  try{draw();}catch(e){
+    ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
+    ctx.fillText('ERR draw: '+e.message,W/2,H/2+40);
+  }
+  requestAnimationFrame(loop);
+}
 loop();
 
 
