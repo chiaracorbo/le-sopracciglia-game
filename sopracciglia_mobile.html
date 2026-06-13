@@ -2091,32 +2091,115 @@ loop();
 
 
 /* ============================================================
-   MOBILE TOUCH LAYER v3 — tutto via canvas, nessun HTML button
+   MOBILE TOUCH LAYER v4 — coordinate raw, nessun elemento listener
    ============================================================ */
 (function(){
   var IS_MOB = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   if(!IS_MOB) return;
 
-  /* ---- D-pad e pulsanti di combattimento ---- */
-  var K = {
-    'dp-u':'ArrowUp','dp-l':'ArrowLeft','dp-r':'ArrowRight','dp-d':'ArrowDown',
-    'ab-p':'KeyZ','ab-k':'KeyX','ab-b':'KeyC','ab-s':'Space'
-  };
-  Object.keys(K).forEach(function(id){
-    var el = document.getElementById(id);
-    if(!el) return;
-    var code = K[id];
-    function on(e){ e.preventDefault(); keys[code]=true; el.classList.add('on'); }
-    function off(e){ e.preventDefault(); keys[code]=false; el.classList.remove('on'); }
-    el.addEventListener('touchstart', on, {passive:false});
-    el.addEventListener('touchend',   off, {passive:false});
-    el.addEventListener('touchcancel',off, {passive:false});
-  });
+  /* touchId → lista di codici tasto attivati da quel dito */
+  var touchKeys = {};
 
-  /* ---- tap su TUTTA la pagina per gestire navigazione ---- */
+  function getZoneKeys(x, y){
+    /* x, y = coordinate SCHERMO (clientX/clientY) */
+    var W = window.innerWidth, H = window.innerHeight;
+    var out = [];
+
+    /* Zona sinistra: D-pad (primo 30% larghezza, ultimi 50% altezza) */
+    if(x < W * 0.35 && y > H * 0.45){
+      var lx = x, ly = y;
+      /* centra rispetto all'area dpad (assumiamo centro = 12% W, 80% H) */
+      var cx = W * 0.12, cy = H * 0.82;
+      var dx = lx - cx, dy = ly - cy;
+      var thresh = Math.min(W, H) * 0.06;
+      if(Math.abs(dx) > Math.abs(dy)){
+        if(dx < 0) out.push('ArrowLeft'); else out.push('ArrowRight');
+      } else {
+        if(dy < 0) out.push('ArrowUp'); else out.push('ArrowDown');
+      }
+    }
+
+    /* Zona destra: pulsanti azione (ultimo 30% larghezza, ultimi 50% altezza) */
+    if(x > W * 0.65 && y > H * 0.45){
+      var rx = x - W * 0.65, ry = y - H * 0.45;
+      var rw = W * 0.35, rh = H * 0.55;
+      /* Griglia 2×2: punch top-left, kick top-right, block bottom-left, special bottom-right */
+      var col = rx < rw * 0.5 ? 0 : 1;
+      var row = ry < rh * 0.5 ? 0 : 1;
+      var map = [['KeyZ','KeyX'],['KeyC','Space']];
+      out.push(map[row][col]);
+    }
+
+    return out;
+  }
+
+  function applyKeys(codes, val){
+    codes.forEach(function(c){ keys[c] = val; });
+    /* aggiorna visuale D-pad */
+    var vis = {
+      'ArrowUp':'dp-u','ArrowDown':'dp-d','ArrowLeft':'dp-l','ArrowRight':'dp-r',
+      'KeyZ':'ab-p','KeyX':'ab-k','KeyC':'ab-b','Space':'ab-s'
+    };
+    codes.forEach(function(c){
+      var el = document.getElementById(vis[c]||'');
+      if(el){ if(val) el.classList.add('on'); else el.classList.remove('on'); }
+    });
+  }
+
+  function onTouchStart(e){
+    if(game.state !== 'fight') return;
+    e.preventDefault();
+    for(var i=0;i<e.changedTouches.length;i++){
+      var t = e.changedTouches[i];
+      var codes = getZoneKeys(t.clientX, t.clientY);
+      if(codes.length){
+        touchKeys[t.identifier] = codes;
+        applyKeys(codes, true);
+      }
+    }
+  }
+  function onTouchEnd(e){
+    if(game.state !== 'fight') return;
+    for(var i=0;i<e.changedTouches.length;i++){
+      var t = e.changedTouches[i];
+      var codes = touchKeys[t.identifier] || [];
+      applyKeys(codes, false);
+      delete touchKeys[t.identifier];
+    }
+  }
+  function onTouchMove(e){
+    if(game.state !== 'fight') return;
+    e.preventDefault();
+    for(var i=0;i<e.changedTouches.length;i++){
+      var t = e.changedTouches[i];
+      var oldCodes = touchKeys[t.identifier] || [];
+      var newCodes = getZoneKeys(t.clientX, t.clientY);
+      /* rimuovi vecchi */
+      var toRemove = oldCodes.filter(function(c){ return newCodes.indexOf(c)<0; });
+      var toAdd    = newCodes.filter(function(c){ return oldCodes.indexOf(c)<0; });
+      applyKeys(toRemove, false);
+      applyKeys(toAdd, true);
+      if(newCodes.length) touchKeys[t.identifier] = newCodes;
+      else delete touchKeys[t.identifier];
+    }
+  }
+  function clearAllFightKeys(){
+    Object.keys(touchKeys).forEach(function(id){
+      applyKeys(touchKeys[id], false);
+    });
+    touchKeys = {};
+  }
+
+  document.addEventListener('touchstart',  onTouchStart,  {passive:false});
+  document.addEventListener('touchend',    onTouchEnd,    {passive:false});
+  document.addEventListener('touchcancel', onTouchEnd,    {passive:false});
+  document.addEventListener('touchmove',   onTouchMove,   {passive:false});
+
+  /* ---- navigazione (title / select / victory) — fight gestito da zone sopra ---- */
   document.addEventListener('touchstart', function(e){
     audioUnlocked = true;
     try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
+    if(game.state === 'fight') return; /* fight gestito dal zone handler */
 
     var touch = e.changedTouches[0];
 
