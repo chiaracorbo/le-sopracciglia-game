@@ -2078,13 +2078,13 @@ loop();
 
 
 /* ============================================================
-   MOBILE TOUCH LAYER v2 — chiaro, robusto, senza conflitti
+   MOBILE TOUCH LAYER v3 — tutto via canvas, nessun HTML button
    ============================================================ */
 (function(){
   var IS_MOB = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   if(!IS_MOB) return;
 
-  /* ---- virtual keys ---- */
+  /* ---- D-pad e pulsanti di combattimento ---- */
   var K = {
     'dp-u':'ArrowUp','dp-l':'ArrowLeft','dp-r':'ArrowRight','dp-d':'ArrowDown',
     'ab-p':'KeyZ','ab-k':'KeyX','ab-b':'KeyC','ab-s':'Space'
@@ -2100,134 +2100,123 @@ loop();
     el.addEventListener('touchcancel',off, {passive:false});
   });
 
-  /* ---- canvas tap (title / selezione / victory) ---- */
-  document.getElementById('cv').addEventListener('touchstart', function(e){
-    e.preventDefault();
+  /* ---- tap su TUTTA la pagina per gestire navigazione ---- */
+  document.addEventListener('touchstart', function(e){
     audioUnlocked = true;
     try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
 
+    var touch = e.changedTouches[0];
+
+    /* --- TITLE: tappa ovunque nella metà inferiore per scegliere --- */
     if(game.state === 'title'){
-      var touch = e.changedTouches[0];
-      var rect = cv.getBoundingClientRect();
-      var ty = (touch.clientY - rect.top) * (480 / rect.height);
-      // [1] y≈312  [2] y≈336  [3] y≈360  [D] y≈384
-      if(ty >= 290 && ty < 326){ game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); }
-      else if(ty >= 326 && ty < 350){ game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); }
-      else if(ty >= 350 && ty < 378){ game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); }
-      else if(ty >= 378 && ty < 400){
-        var ks=['facile','normale','difficile'];
-        game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];
-        try{sfx.sel();}catch(_){}
+      e.preventDefault();
+      /* Calcola zona dal canvas se il tocco è sul canvas, altrimenti usa posizione schermo */
+      var cvEl = document.getElementById('cv');
+      var rect = cvEl ? cvEl.getBoundingClientRect() : null;
+      var ty = rect ? (touch.clientY - rect.top) * (480 / rect.height) : 999;
+      var tx = rect ? (touch.clientX - rect.left) * (640 / rect.width) : 999;
+      var inCanvas = rect && touch.clientX>=rect.left && touch.clientX<=rect.right && touch.clientY>=rect.top && touch.clientY<=rect.bottom;
+
+      if(inCanvas){
+        /* Zone basate su dove il testo è disegnato nel canvas (drawTitle) */
+        if(ty >= 290 && ty < 330){
+          game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0;
+          try{sfx.ok();}catch(_){} updateOverlay(); return;
+        }
+        if(ty >= 330 && ty < 355){
+          game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0;
+          try{sfx.ok();}catch(_){} updateOverlay(); return;
+        }
+        if(ty >= 355 && ty < 385){
+          game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0;
+          try{sfx.ok();}catch(_){} updateOverlay(); return;
+        }
+        if(ty >= 385 && ty < 410){
+          var ks=['facile','normale','difficile'];
+          game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];
+          try{sfx.sel();}catch(_){} return;
+        }
+      } else {
+        /* Tocco fuori canvas → avvia modalità 1 direttamente */
+        game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0;
+        try{sfx.ok();}catch(_){} updateOverlay();
       }
       return;
     }
 
+    /* --- SELECT: tap sui ritratti personaggio --- */
     if(game.state === 'select'){
-      var touch = e.changedTouches[0];
-      var rect = cv.getBoundingClientRect();
+      var cvEl = document.getElementById('cv');
+      var rect = cvEl ? cvEl.getBoundingClientRect() : null;
+      if(!rect) return;
       var tx = (touch.clientX - rect.left) * (640 / rect.width);
       var ty = (touch.clientY - rect.top)  * (480 / rect.height);
+      /* Zona "Indietro" (angolo alto sinistra del canvas) */
+      if(tx < 80 && ty < 50){
+        if(game.pickTurn===1) game.pickTurn=0; else game.state='title';
+        try{sfx.sel();}catch(_){} updateOverlay(); return;
+      }
+      /* Zona "Casuale" (angolo alto destra del canvas) */
+      if(tx > 560 && ty < 50){
+        game.sel[game.pickTurn]=(Math.random()*12)|0;
+        try{sfx.ok();}catch(_){}
+        if(game.pickTurn===0){ if(game.mode===3) game.startTournament(); else game.pickTurn=1; }
+        else game.startMatch();
+        updateOverlay(); return;
+      }
+      /* Griglia personaggi */
       var cs=86, gx=(640-6*(cs+8))/2+4, gy=56;
       for(var i=0;i<12;i++){
         var col=i%6, row=(i/6)|0;
         var x=gx+col*(cs+8), y=gy+row*(cs+34);
         if(tx>=x && tx<=x+cs && ty>=y && ty<=y+cs){
+          e.preventDefault();
           game.sel[game.pickTurn]=i;
-          try{ sfx.sel(); }catch(_){}
+          try{sfx.sel();}catch(_){}
           clearTimeout(window._mst);
-          window._mst = setTimeout(function(){
-            try{ sfx.ok(); }catch(_){}
+          window._mst=setTimeout(function(){
+            try{sfx.ok();}catch(_){}
             if(game.pickTurn===0){
               if(game.mode===3) game.startTournament();
               else{ game.pickTurn=1; if(game.sel[1]===game.sel[0]) game.sel[1]=(game.sel[0]+1)%12; }
             } else game.startMatch();
-            mUI();
-          }, 350);
+            updateOverlay();
+          },300);
           break;
         }
       }
+      return;
     }
+
+    /* --- VICTORY: tocca per continuare --- */
     if(game.state==='victory'){
-      keys['Enter']=true; setTimeout(function(){ keys['Enter']=false; }, 120);
+      e.preventDefault();
+      keys['Enter']=true; setTimeout(function(){ keys['Enter']=false; },120);
+      return;
     }
+
   }, {passive:false});
 
-  /* ---- UI sync ---- */
-  var DIFF_L = {facile:'Facile 😊', normale:'Normale ⚔️', difficile:'Difficile 💀'};
-  var DIFF_K = ['facile','normale','difficile'];
-
-  function mUI(){
+  /* ---- overlay fight controls (D-pad + bottoni azione) ---- */
+  function updateOverlay(){
     var s = game.state;
-    var db = document.getElementById('diff-btn');
-    if(db) db.textContent = 'Difficoltà: '+(DIFF_L[game.difficulty]||game.difficulty);
     function sh(id,v){ var el=document.getElementById(id); if(el) el.style.display=v; }
-    sh('menu-btns',   s==='title'   ? 'flex' : 'none');
-    sh('select-btns', s==='select'  ? 'flex' : 'none');
-    sh('m-controls',  s==='fight'   ? 'block': 'none');
-    sh('m-esc',  (s==='fight'||s==='victory') ? 'block':'none');
-    sh('m-back',  s==='select'  ? 'block' : 'none');
-    sh('m-music', (s==='title'||s==='fight') ? 'block':'none');
+    sh('menu-btns',  'none');
+    sh('select-btns','none');
+    sh('m-controls', s==='fight' ? 'block' : 'none');
+    sh('m-esc',      (s==='fight'||s==='victory') ? 'block':'none');
+    sh('m-back',     'none');
+    sh('m-music',    'none');
   }
 
-  /* ---- button wiring ---- */
-  function btn(id, fn){
-    var el = document.getElementById(id);
-    if(!el) return;
-    var fired = false;
-    function handler(e){
-      if(e.type === 'touchstart'){ fired = true; e.preventDefault(); e.stopPropagation(); }
-      else if(e.type === 'click' && fired){ fired = false; return; }
-      audioUnlocked=true;
-      try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
-      try{ fn(); }catch(err){ console.warn('mobile btn err',err); }
-    }
-    el.addEventListener('touchstart', handler, {passive:false});
-    el.addEventListener('click', handler);
-  }
-
-  btn('mb-1', function(){ game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); });
-  btn('mb-2', function(){ game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); });
-  btn('mb-3', function(){ game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0; try{sfx.ok();}catch(_){} mUI(); });
-  btn('diff-btn', function(){
-    game.difficulty = DIFF_K[(DIFF_K.indexOf(game.difficulty)+1)%3];
-    try{ sfx.sel(); }catch(_){} mUI();
-  });
-  btn('sel-confirm', function(){
-    try{sfx.ok();}catch(_){}
-    if(game.pickTurn===0){
-      if(game.mode===3) game.startTournament();
-      else{ game.pickTurn=1; if(game.sel[1]===game.sel[0]) game.sel[1]=(game.sel[0]+1)%12; }
-    } else game.startMatch();
-    mUI();
-  });
-  btn('sel-random', function(){
-    try{sfx.ok();}catch(_){}
-    game.sel[game.pickTurn] = (Math.random()*12)|0;
-    if(game.pickTurn===0){ if(game.mode===3) game.startTournament(); else game.pickTurn=1; }
-    else game.startMatch();
-    mUI();
-  });
-  btn('m-esc', function(){
-    if(game.state==='fight'){ keys['Escape']=true; setTimeout(function(){ keys['Escape']=false; },120); }
-    else{ game.tournament=null; game.state='title'; mUI(); }
-  });
-  btn('m-back', function(){
-    if(game.state==='select'){
-      if(game.pickTurn===1) game.pickTurn=0; else game.state='title';
-      try{sfx.sel();}catch(_){} mUI();
-    }
-  });
-  btn('m-music', function(){ keys['KeyM']=true; setTimeout(function(){ keys['KeyM']=false; },120); });
-
-  /* ---- state polling (safe, non wrappa draw) ---- */
-  var _prev = '';
+  /* Polling stato → aggiorna overlay fight controls automaticamente */
+  var _prev='';
   setInterval(function(){
-    if(game && game.state !== _prev){ _prev = game.state; mUI(); }
-  }, 80);
+    if(game && game.state!==_prev){ _prev=game.state; updateOverlay(); }
+  },80);
 
-  /* ---- init ---- */
-  mUI();
-  document.addEventListener('touchmove', function(e){ e.preventDefault(); }, {passive:false});
+  updateOverlay();
+  document.addEventListener('touchmove', function(e){ e.preventDefault(); },{passive:false});
 
 })();
 </script>
