@@ -11,7 +11,7 @@
   html,body{margin:0;height:100%;background:#0a0806;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:monospace}
   #wrap{position:relative}
   canvas{image-rendering:pixelated;image-rendering:crisp-edges;background:#000;box-shadow:0 0 60px #000,0 0 24px rgba(255,215,0,.12);border:4px solid #2a1f14;border-radius:6px}
-  #scan{position:absolute;inset:4px;pointer-events:none;border-radius:3px;
+  #scan{display:none;position:absolute;inset:4px;pointer-events:none;border-radius:3px;
     background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
 
   /* ===== MOBILE LAYER — non conflicta con il CSS originale ===== */
@@ -154,8 +154,10 @@
 <script>
 "use strict";
 const W=640,H=480,GROUND=440;
+const IS_MOBILE=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=false;
+/* Background cache: ridisegna solo quando camX cambia */
 function fit(){
   const mobile=window.innerWidth<=1024&&('ontouchstart' in window||navigator.maxTouchPoints>0);
   const s=Math.min(innerWidth/(W+8),innerHeight/(H+8),4);
@@ -341,11 +343,13 @@ let particles=[],projectiles=[],floatTexts=[],frameTimers=[];
 let shake=0,hitstop=0,frame=0,whiteFlash=0,specialBanner=null,specialCutIn=null,camX=0;
 let vcfxFrame=0;
 function setTimeoutFrames(fr,fn){frameTimers.push({fr,fn});}
-function spark(x,y,col,n=8,sp=3){for(let i=0;i<n;i++)particles.push({x,y,vx:rnd(-sp,sp),vy:rnd(-sp,sp*.5),life:rnd(8,18),max:18,col,sz:rnd(2,5)});}
-function blood(x,y,n=10){for(let i=0;i<n;i++)particles.push({x,y,vx:rnd(-3.5,3.5),vy:rnd(-5.5,-1),life:rnd(15,35),max:35,col:Math.random()<.7?'#FF0000':'#990000',sz:rnd(2,4),grav:.32,splat:true});}
-function dust(x,y,n=6,big=false){for(let i=0;i<n;i++)particles.push({x:x+rnd(-8,8),y:y-rnd(0,4),vx:rnd(-1.4,1.4),vy:rnd(-1.4,-.3),life:rnd(10,16),max:16,col:Math.random()<.5?'#A9A9A9':'#8B7355',sz:big?rnd(4,7):rnd(3,5),fade:true});}
-function ring(x,y,col,growth=4,maxR=100){particles.push({ring:true,x,y,r:8,growth,maxR,life:30,max:30,col});}
-function smokePuff(x,y,n=8){for(let i=0;i<n;i++)particles.push({x:x+rnd(-10,10),y:y+rnd(-10,4),vx:rnd(-.8,.8),vy:rnd(-1.6,-.5),life:rnd(20,34),max:34,col:['#A9A9A9','#777','#999'][i%3],sz:rnd(5,9),fade:true});}
+const _PMAX=IS_MOBILE?40:200;
+function _padd(p){if(particles.length<_PMAX)particles.push(p);}
+function spark(x,y,col,n=8,sp=3){const m=IS_MOBILE?Math.ceil(n/2):n;for(let i=0;i<m;i++)_padd({x,y,vx:rnd(-sp,sp),vy:rnd(-sp,sp*.5),life:rnd(8,18),max:18,col,sz:rnd(2,5)});}
+function blood(x,y,n=10){const m=IS_MOBILE?Math.ceil(n/2):n;for(let i=0;i<m;i++)_padd({x,y,vx:rnd(-3.5,3.5),vy:rnd(-5.5,-1),life:rnd(15,35),max:35,col:Math.random()<.7?'#FF0000':'#990000',sz:rnd(2,4),grav:.32,splat:true});}
+function dust(x,y,n=6,big=false){const m=IS_MOBILE?Math.ceil(n/2):n;for(let i=0;i<m;i++)_padd({x:x+rnd(-8,8),y:y-rnd(0,4),vx:rnd(-1.4,1.4),vy:rnd(-1.4,-.3),life:rnd(10,16),max:16,col:Math.random()<.5?'#A9A9A9':'#8B7355',sz:big?rnd(4,7):rnd(3,5),fade:true});}
+function ring(x,y,col,growth=4,maxR=100){_padd({ring:true,x,y,r:8,growth,maxR,life:30,max:30,col});}
+function smokePuff(x,y,n=8){const m=IS_MOBILE?Math.ceil(n/2):n;for(let i=0;i<m;i++)_padd({x:x+rnd(-10,10),y:y+rnd(-10,4),vx:rnd(-.8,.8),vy:rnd(-1.6,-.5),life:rnd(20,34),max:34,col:['#A9A9A9','#777','#999'][i%3],sz:rnd(5,9),fade:true});}
 function ftext(x,y,txt,col,sz=10){floatTexts.push({x,y,txt,col,sz,life:45});}
 function specialFX(f){
   const x=f.x,y=f.y-f.cfg.h*.55,fx=f.cfg.special.fx,cols=FX_COL[fx]||FX_COL.gold;
@@ -1363,8 +1367,8 @@ const game={
     if(this.p[1].ctrl==='cpu'){const d=this.cpuDiff();this.p[1].aiDiff=d;
       this.p[1].maxHp=this.p[1].hp=Math.round(this.p[1].cfg.hp*d.hp);}
     this.timer=99;this.timerF=0;this.koPending=false;
-    this.banner='ROUND '+this.round;this.bannerT=70;this.freeze=100;
-    setTimeoutFrames(70,()=>{this.banner='COMBATTETE!';this.bannerT=30;sfx.ok();});},
+    this.banner='ROUND '+this.round;this.bannerT=IS_MOBILE?30:70;this.freeze=IS_MOBILE?40:100;
+    setTimeoutFrames(IS_MOBILE?30:70,()=>{this.banner='COMBATTETE!';this.bannerT=IS_MOBILE?15:30;sfx.ok();});},
   onKO(loser){if(this.koPending)return;this.koPending=true;
     const wIdx=this.p[0]===loser?1:0;this.wins[wIdx]++;
     this.banner='K.O.';this.bannerT=80;
