@@ -8,103 +8,174 @@
 <meta name="theme-color" content="#0a0806">
 <title>Le Sopracciglia della Guerra: Arena Combat — Metal Slug Edition</title>
 <style>
-  html,body{margin:0;height:100%;background:#0a0806;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:monospace}
-  #wrap{position:relative}
-  canvas{image-rendering:pixelated;image-rendering:crisp-edges;background:#000;box-shadow:0 0 60px #000,0 0 24px rgba(255,215,0,.12);border:4px solid #2a1f14;border-radius:6px}
-  #scan{display:none;position:absolute;inset:4px;pointer-events:none;border-radius:3px;
-    background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+  /* ===== BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: #0a0806; font-family: monospace;
+    touch-action: none; -webkit-user-select: none; user-select: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #wrap { position: relative; }
+  canvas {
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    background: #000; border: 3px solid #2a1f14; border-radius: 4px;
+    display: block;
+  }
+  #scan { display: none; }
 
-  /* ===== MOBILE LAYER — non conflicta con il CSS originale ===== */
-  /* Il body originale ha già display:flex centrato — lo lasciamo */
-  /* Aggiungiamo solo viewport lock e overlays fixed */
-  html { touch-action: none; }
-  body { touch-action: none; -webkit-user-select: none; user-select: none; }
-
-  /* Tutti gli overlay sono position:fixed → fuori dal flusso flex */
+  /* ===== ROTATE HINT ===== */
   #rotate-hint {
     display: none; position: fixed; inset: 0; z-index: 9999;
     background: #0a0806; flex-direction: column;
     align-items: center; justify-content: center;
-    color: #F5F0E1; font-family: monospace; font-size: 16px; text-align: center;
+    color: #F5F0E1; font-size: clamp(14px, 4vw, 20px); text-align: center;
+    padding: 24px; gap: 16px;
   }
-  #rotate-hint .ri { font-size: 56px; display: block; margin-bottom: 16px; }
+  #rotate-hint .ri { font-size: clamp(48px, 14vw, 80px); }
   @media (orientation: portrait) { #rotate-hint { display: flex !important; } }
 
-  #menu-btns {
-    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 101;
-    flex-direction: column; align-items: center; gap: 8px; padding: 10px 12px 14px;
-    background: linear-gradient(transparent, rgba(10,8,6,0.96) 35%);
-  }
-  .menu-btn {
-    width: min(90vw, 340px); padding: 13px 18px; font-size: 15px;
-    font-family: monospace; color: #F5F0E1; text-align: center; cursor: pointer;
-    background: rgba(35,25,8,0.92); border: 2px solid rgba(255,215,0,0.45);
-    border-radius: 12px; -webkit-user-select: none;
-  }
-  .menu-btn:active { background: rgba(110,80,15,0.92); }
-  #diff-btn { font-size: 12px; padding: 9px; color: #B7A98C; border-color: rgba(255,255,255,0.2); }
-
-  #select-btns {
-    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 101;
-    flex-direction: row; justify-content: center; gap: 10px; padding: 10px;
-    background: rgba(10,8,6,0.9);
-  }
-  .sel-btn {
-    padding: 13px 26px; font-size: 14px; font-family: monospace;
-    color: #F5F0E1; cursor: pointer; border-radius: 10px;
-    background: rgba(35,25,8,0.95); border: 2px solid rgba(255,215,0,0.45);
-    -webkit-user-select: none;
-  }
-  .sel-btn:active { background: rgba(110,80,15,0.9); }
-
+  /* ===== FLOATING TOP BAR (Indietro / ♪ / Menu) ===== */
   #m-back, #m-esc, #m-music {
     display: none; position: fixed; z-index: 200;
-    background: rgba(15,10,4,0.88); border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 8px; color: #B7A98C; font-family: monospace;
-    font-size: 12px; padding: 8px 13px; cursor: pointer; -webkit-user-select: none;
+    background: rgba(10,7,3,0.82); border: 1.5px solid rgba(255,255,255,0.22);
+    border-radius: 10px; color: #C8BC9E; font-family: monospace;
+    font-size: clamp(11px, 2.8vw, 14px);
+    min-width: 52px; min-height: 44px;
+    padding: 0 14px;
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer; -webkit-user-select: none;
+    /* safe-area per iPhone notch */
+    top: max(10px, env(safe-area-inset-top, 10px));
   }
-  #m-back  { top: 8px; left: 8px; }
-  #m-esc   { top: 8px; right: 8px; }
-  #m-music { top: 8px; left: 50%; transform: translateX(-50%); }
+  #m-back  { left:  max(10px, env(safe-area-inset-left,  10px)); }
+  #m-esc   { right: max(10px, env(safe-area-inset-right, 10px)); }
+  #m-music { left: 50%; transform: translateX(-50%); }
+  #m-back:active, #m-esc:active, #m-music:active {
+    background: rgba(100,70,10,0.85); color: #FFD700;
+  }
 
-  /* fight overlay — pointer-events:auto su tutto, nessun blocco */
+  /* ===== TITLE MENU BUTTONS ===== */
+  #menu-btns {
+    display: none; position: fixed;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    left: 0; right: 0; z-index: 101;
+    flex-direction: column; align-items: center;
+    gap: clamp(6px, 1.5vh, 12px);
+    padding: 0 clamp(12px, 4vw, 32px);
+  }
+  .menu-btn {
+    width: 100%; max-width: 380px;
+    min-height: 52px;
+    padding: 0 20px;
+    font-size: clamp(14px, 3.5vw, 18px);
+    font-family: monospace; font-weight: bold;
+    color: #F5F0E1; text-align: center; cursor: pointer;
+    background: rgba(28,18,5,0.94);
+    border: 2px solid rgba(255,215,0,0.5);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    -webkit-user-select: none;
+    transition: background .1s;
+  }
+  .menu-btn:active { background: rgba(120,85,10,0.95); border-color: #FFD700; }
+  #mb-3 { color: #FF8C00; border-color: rgba(255,140,0,0.65); }
+  #diff-btn {
+    font-size: clamp(11px, 2.5vw, 14px); min-height: 40px;
+    color: #B7A98C; border-color: rgba(255,255,255,0.18);
+    background: rgba(15,10,4,0.88);
+  }
+
+  /* ===== SELECT SCREEN BUTTONS ===== */
+  #select-btns {
+    display: none; position: fixed;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    left: 0; right: 0; z-index: 101;
+    flex-direction: row; justify-content: center;
+    gap: clamp(8px, 2vw, 18px);
+    padding: 0 clamp(12px, 4vw, 32px);
+  }
+  .sel-btn {
+    flex: 1; max-width: 180px; min-height: 52px;
+    padding: 0 16px;
+    font-size: clamp(13px, 3.2vw, 16px); font-family: monospace; font-weight: bold;
+    color: #F5F0E1; cursor: pointer; border-radius: 14px;
+    background: rgba(28,18,5,0.95); border: 2px solid rgba(255,215,0,0.5);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    -webkit-user-select: none;
+  }
+  .sel-btn:active { background: rgba(120,85,10,0.95); }
+
+  /* ===== FIGHT OVERLAY (D-pad + Action buttons) ===== */
   #m-controls {
     display: none; position: fixed; inset: 0; z-index: 100;
     pointer-events: auto;
   }
-  #m-dpad {
-    position: absolute; left: 10px; bottom: 20px;
-    width: 150px; height: 150px;
-  }
-  .dp {
-    position: absolute; display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.13); border: 2px solid rgba(255,255,255,0.30);
-    border-radius: 12px; font-size: 22px; color: rgba(255,255,255,0.80);
-    -webkit-user-select: none; touch-action: none;
-  }
-  .dp.on { background: rgba(255,255,255,0.38); }
-  #dp-l { left: 0;    top: 51px; width: 47px; height: 51px; }
-  #dp-r { left: 103px;top: 51px; width: 47px; height: 51px; }
-  #dp-u { left: 51px; top: 0;    width: 51px; height: 47px; }
-  #dp-d { left: 51px; top: 103px;width: 51px; height: 47px; }
 
-  #m-btns {
-    position: absolute; right: 10px; bottom: 20px;
-    display: grid; grid-template-columns: 70px 70px; grid-template-rows: 70px 70px; gap: 8px;
+  /* D-pad — bottom left, sizing via vmin per essere responsive */
+
+  #m-dpad {
+    position: absolute;
+    left:  max(14px, env(safe-area-inset-left,  14px));
+    bottom: max(14px, env(safe-area-inset-bottom, 14px));
+    display: grid;
+    grid-template-columns: clamp(52px,13vmin,72px) clamp(52px,13vmin,72px) clamp(52px,13vmin,72px);
+    grid-template-rows:    clamp(52px,13vmin,72px) clamp(52px,13vmin,72px) clamp(52px,13vmin,72px);
+    gap: clamp(3px,0.8vmin,6px);
+    width: auto; height: auto;
   }
+
+  .dp {
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.11);
+    border: 2px solid rgba(255,255,255,0.28);
+    border-radius: 12px;
+    font-size: clamp(18px, 4.5vmin, 28px);
+    color: rgba(255,255,255,0.82);
+    -webkit-user-select: none; touch-action: none;
+    transition: background .06s;
+  }
+  .dp.on { background: rgba(255,255,255,0.36); border-color: rgba(255,255,255,0.7); }
+  /* posizionamento nella griglia 3×3 */
+  #dp-u { grid-column: 2; grid-row: 1; }
+  #dp-l { grid-column: 1; grid-row: 2; }
+  #dp-r { grid-column: 3; grid-row: 2; }
+  #dp-d { grid-column: 2; grid-row: 3; }
+  /* celle vuote (angoli) sono trasparenti e non-interactive */
+  #m-dpad::before { content:''; grid-column:1; grid-row:1; pointer-events:none; }
+
+  /* Action buttons — bottom right */
+  #m-btns {
+    position: absolute;
+    right:  max(14px, env(safe-area-inset-right,  14px));
+    bottom: max(14px, env(safe-area-inset-bottom, 14px));
+    display: grid;
+    grid-template-columns: clamp(56px,14vmin,76px) clamp(56px,14vmin,76px);
+    grid-template-rows:    clamp(56px,14vmin,76px) clamp(56px,14vmin,76px);
+    gap: clamp(4px,1vmin,8px);
+  }
+
   .ab {
     display: flex; align-items: center; justify-content: center; text-align: center;
-    font-size: 11px; font-weight: bold; font-family: monospace; line-height: 1.2;
+    font-size: clamp(9px, 2.2vmin, 12px); font-weight: bold;
+    font-family: monospace; line-height: 1.25;
     border-radius: 14px; -webkit-user-select: none; touch-action: none;
-    background: rgba(55,35,8,0.80); border: 2px solid rgba(255,215,0,0.40); color: #F5F0E1;
+    background: rgba(50,30,5,0.82); border: 2.5px solid rgba(255,215,0,0.4);
+    color: #F5F0E1;
+    transition: background .06s;
   }
-  .ab.on { background: rgba(200,150,40,0.70); }
-  #ab-p { border-color: rgba(255,90,50,0.7);  color: #FF6347; }
-  #ab-k { border-color: rgba(50,175,255,0.7); color: #4FC3F7; }
-  #ab-b { border-color: rgba(70,195,70,0.7);  color: #81C784; }
-  #ab-s { grid-column: 1/3; height: 44px; border-color: rgba(255,215,0,0.9);
-           color: #FFD700; background: rgba(90,60,0,0.75); font-size: 13px; }
-  #ab-s.on { background: rgba(200,150,40,0.65); }
+  .ab.on { background: rgba(210,155,40,0.72); border-color: rgba(255,215,0,0.9); }
+
+  #ab-p { border-color: rgba(255,90,50,0.75);  color: #FF6B47; }
+  #ab-k { border-color: rgba(50,175,255,0.75); color: #4FC3F7; }
+  #ab-b { border-color: rgba(70,195,70,0.75);  color: #7ED98A; }
+  #ab-s {
+    grid-column: 1 / 3;
+    height: clamp(40px, 10vmin, 52px);
+    border-color: rgba(255,215,0,0.95); color: #FFD700;
+    background: rgba(80,52,0,0.82); font-size: clamp(11px, 2.8vmin, 15px);
+  }
+  #ab-s.on { background: rgba(200,148,35,0.72); }
 </style>
   <script src="sprites.js" async></script>
   <script src="music.js" async></script>
@@ -133,16 +204,18 @@
 <button id="m-music">♪</button>
 
 <div id="m-controls">
+  <!-- D-pad: griglia 3×3, solo 4 celle occupate -->
   <div id="m-dpad">
     <div class="dp" id="dp-u">▲</div>
     <div class="dp" id="dp-l">◀</div>
     <div class="dp" id="dp-r">▶</div>
     <div class="dp" id="dp-d">▼</div>
   </div>
+  <!-- Action buttons: griglia 2×2 + SPECIAL full-width -->
   <div id="m-btns">
-    <div class="ab" id="ab-p">PUGNO<br>Z</div>
-    <div class="ab" id="ab-k">CALCIO<br>X</div>
-    <div class="ab" id="ab-b">PARATA<br>C</div>
+    <div class="ab" id="ab-p">👊<br>PUGNO</div>
+    <div class="ab" id="ab-k">🦵<br>CALCIO</div>
+    <div class="ab" id="ab-b">🛡<br>PARATA</div>
     <div class="ab" id="ab-s">⚡ SPECIAL</div>
   </div>
 </div>
