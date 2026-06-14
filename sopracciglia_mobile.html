@@ -176,6 +176,152 @@
     background: rgba(80,52,0,0.82); font-size: clamp(11px, 2.8vmin, 15px);
   }
   #ab-s.on { background: rgba(200,148,35,0.72); }
+
+  /* ===== HOME SCREEN FULLSCREEN ===== */
+  #home-screen {
+    display: none;
+    position: fixed; inset: 0; z-index: 500;
+    background: #080604;
+    flex-direction: column;
+    align-items: center; justify-content: space-between;
+    overflow: hidden;
+    padding:
+      max(16px, env(safe-area-inset-top,    16px))
+      max(20px, env(safe-area-inset-right,  20px))
+      max(20px, env(safe-area-inset-bottom, 20px))
+      max(20px, env(safe-area-inset-left,   20px));
+  }
+
+  /* Sfondo animato: sopracciglia che scorrono */
+  .hs-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden; z-index: 0;
+  }
+  .hs-brow {
+    position: absolute;
+    height: clamp(5px,1.2vh,9px); border-radius: 99px;
+    opacity: 0.18;
+    animation: brow-drift linear infinite;
+  }
+  @keyframes brow-drift {
+    from { transform: translateX(-120px); }
+    to   { transform: translateX(110vw); }
+  }
+
+  /* Logo area */
+  .hs-logo {
+    position: relative; z-index: 1;
+    text-align: center; width: 100%;
+    padding-top: clamp(8px,2vh,20px);
+  }
+  .hs-title {
+    font-family: monospace; font-weight: 900; letter-spacing: .06em;
+    font-size: clamp(28px, 7.5vw, 56px);
+    color: #FFD700;
+    text-shadow: 0 0 28px rgba(255,215,0,.55), 0 3px 0 #6B4F00;
+    line-height: 1.05;
+    -webkit-user-select: none;
+  }
+  .hs-arena {
+    font-family: monospace; letter-spacing: .35em;
+    font-size: clamp(10px, 2.8vw, 20px);
+    color: #DC143C;
+    margin-top: clamp(4px,1vh,10px);
+    -webkit-user-select: none;
+  }
+  .hs-edition {
+    font-family: monospace;
+    font-size: clamp(9px, 2.2vw, 16px);
+    color: #FF8C00; letter-spacing: .12em;
+    margin-top: 4px;
+    -webkit-user-select: none;
+  }
+  .hs-tagline {
+    font-family: monospace;
+    font-size: clamp(8px, 1.8vw, 13px);
+    color: #7A6E56; margin-top: 6px;
+    -webkit-user-select: none;
+  }
+
+  /* Mode buttons */
+  .hs-modes {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 480px;
+    display: flex; flex-direction: column;
+    gap: clamp(8px, 2vh, 16px);
+  }
+  .hs-btn {
+    width: 100%; min-height: clamp(62px, 14vh, 84px);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 clamp(16px,4vw,28px);
+    font-family: monospace; cursor: pointer;
+    border-radius: 16px;
+    background: rgba(24,16,4,0.9);
+    border: 2px solid rgba(255,215,0,0.35);
+    color: #F0E8D0;
+    text-align: left;
+    -webkit-user-select: none; touch-action: manipulation;
+    transition: background .08s, border-color .08s, transform .06s;
+    position: relative; overflow: hidden;
+  }
+  .hs-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,215,0,.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hs-btn:active {
+    background: rgba(100,68,8,0.95);
+    border-color: #FFD700;
+    transform: scale(0.975);
+  }
+  .hs-btn-icon {
+    font-size: clamp(26px, 6vw, 38px);
+    flex-shrink: 0; line-height: 1;
+  }
+  .hs-btn-text { flex: 1; }
+  .hs-btn-label {
+    font-size: clamp(16px, 4vw, 24px);
+    font-weight: 900; letter-spacing: .04em;
+    line-height: 1.1;
+  }
+  .hs-btn-desc {
+    font-size: clamp(10px, 2.2vw, 14px);
+    color: #8A7E64; margin-top: 2px;
+  }
+  .hs-btn-arrow {
+    font-size: clamp(18px, 4vw, 26px);
+    color: rgba(255,215,0,0.4); flex-shrink: 0;
+  }
+  /* Torneo — accento arancio */
+  #hb-3 { border-color: rgba(255,140,0,0.45); }
+  #hb-3 .hs-btn-label { color: #FF8C00; }
+  #hb-3:active { border-color: #FF8C00; }
+
+  /* Difficoltà + versione */
+  .hs-footer {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 480px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px;
+  }
+  #hb-diff {
+    width: 100%; min-height: 48px;
+    font-family: monospace;
+    font-size: clamp(12px, 2.8vw, 15px);
+    color: #8A7E64; background: rgba(14,10,4,0.85);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 12px; cursor: pointer;
+    -webkit-user-select: none; touch-action: manipulation;
+    transition: background .08s;
+  }
+  #hb-diff:active { background: rgba(60,40,8,0.9); color: #F0E8D0; }
+  #hb-diff-val { color: #F0E8D0; font-weight: bold; }
+  .hs-version {
+    font-family: monospace;
+    font-size: clamp(8px, 1.8vw, 11px);
+    color: rgba(100,90,70,.5);
+    -webkit-user-select: none;
+  }
 </style>
   <script src="sprites.js" async></script>
   <script src="music.js" async></script>
@@ -187,12 +333,56 @@
   <strong>Ruota il telefono</strong><br>in orizzontale per giocare!
 </div>
 
-<div id="menu-btns">
-  <button class="menu-btn" id="mb-1">⚔️ vs CPU</button>
-  <button class="menu-btn" id="mb-2">👥 2 Giocatori</button>
-  <button class="menu-btn" id="mb-3" style="color:#FF8C00;border-color:rgba(255,140,0,0.6);">🏆 Torneo</button>
-  <button class="menu-btn" id="diff-btn">Difficoltà CPU: —</button>
+<!-- HOME SCREEN FULLSCREEN -->
+<div id="home-screen">
+  <!-- sfondo animato: sopracciglia che volano -->
+  <div class="hs-bg" id="hs-bg"></div>
+
+  <!-- logo -->
+  <div class="hs-logo">
+    <div class="hs-title">LE SOPRACCIGLIA</div>
+    <div class="hs-title">DELLA GUERRA</div>
+    <div class="hs-arena">A R E N A &nbsp; C O M B A T</div>
+    <div class="hs-edition">— METAL SLUG EDITION —</div>
+    <div class="hs-tagline">Dal racconto corale dell'ufficio di Siena</div>
+  </div>
+
+  <!-- pulsanti modalità -->
+  <div class="hs-modes">
+    <button class="hs-btn" id="hb-1">
+      <span class="hs-btn-icon">⚔️</span>
+      <span class="hs-btn-text">
+        <div class="hs-btn-label">vs CPU</div>
+        <div class="hs-btn-desc">Singleplayer · sfida l'AI</div>
+      </span>
+      <span class="hs-btn-arrow">›</span>
+    </button>
+    <button class="hs-btn" id="hb-2">
+      <span class="hs-btn-icon">👥</span>
+      <span class="hs-btn-text">
+        <div class="hs-btn-label">2 Giocatori</div>
+        <div class="hs-btn-desc">Local PvP · stesso schermo</div>
+      </span>
+      <span class="hs-btn-arrow">›</span>
+    </button>
+    <button class="hs-btn" id="hb-3">
+      <span class="hs-btn-icon">🏆</span>
+      <span class="hs-btn-text">
+        <div class="hs-btn-label">Torneo</div>
+        <div class="hs-btn-desc">Sfida tutti i campioni in fila</div>
+      </span>
+      <span class="hs-btn-arrow">›</span>
+    </button>
+  </div>
+
+  <!-- footer: difficoltà + versione -->
+  <div class="hs-footer">
+    <button id="hb-diff">Difficoltà CPU: <span id="hb-diff-val">Normale</span></button>
+    <div class="hs-version">Le Sopracciglia della Guerra · Arena Combat v1.0</div>
+  </div>
 </div>
+
+<div id="menu-btns" style="display:none"><!-- legacy, tenuto per compatibilità JS --></div>
 
 <div id="select-btns">
   <button class="sel-btn" id="sel-random">🎲 Casuale</button>
@@ -2361,13 +2551,38 @@ requestAnimationFrame(loop);
   function updateOverlay(){
     var s = game.state;
     function sh(id,v){ var el=document.getElementById(id); if(el) el.style.display=v; }
-    sh('menu-btns',   s==='title'  ? 'flex' : 'none');
+    /* Home screen fullscreen: copre il canvas quando siamo nel titolo */
+    sh('home-screen', s==='title'  ? 'flex' : 'none');
     sh('select-btns', 'none');
     sh('m-controls',  s==='fight'  ? 'block' : 'none');
     sh('m-esc',       s==='fight'  ? 'block' : 'none');
     sh('m-back',      (s==='select'||s==='victory') ? 'block' : 'none');
     sh('m-music',     'block');
+    /* Sincronizza label difficoltà nella home */
+    var dv = document.getElementById('hb-diff-val');
+    if(dv){ var dl={facile:'Facile',normale:'Normale',difficile:'Difficile'};
+      dv.textContent = dl[game.difficulty]||'Normale'; }
   }
+
+  /* ---- Genera sopracciglia animate nella home ---- */
+  (function(){
+    var bg = document.getElementById('hs-bg'); if(!bg) return;
+    var cols = ['#FFD700','#DC143C','#FF8C00','#8A8D88','#4FC3F7','#81C784'];
+    for(var i=0;i<18;i++){
+      var el = document.createElement('div');
+      el.className = 'hs-brow';
+      var w = 30 + Math.random()*70;
+      el.style.cssText = [
+        'width:'+w+'px',
+        'top:'+(Math.random()*96)+'%',
+        'background:'+cols[i%cols.length],
+        'animation-duration:'+(8+Math.random()*18)+'s',
+        'animation-delay:'+(-Math.random()*20)+'s',
+        'opacity:'+(0.08+Math.random()*0.14)
+      ].join(';');
+      bg.appendChild(el);
+    }
+  })();
 
   /* ---- listener bottoni overlay ---- */
   function _btn(id, fn){
@@ -2409,18 +2624,23 @@ requestAnimationFrame(loop);
     else if(curTrack && !curTrack.paused) curTrack.pause();
   });
 
-  /* menu-btns (title screen): modalità di gioco */
-  _btn('mb-1', function(){
+  /* home screen buttons */
+  _btn('hb-1', function(){
     game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0;
     try{sfx.ok();}catch(_){} updateOverlay();
   });
-  _btn('mb-2', function(){
+  _btn('hb-2', function(){
     game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0;
     try{sfx.ok();}catch(_){} updateOverlay();
   });
-  _btn('mb-3', function(){
+  _btn('hb-3', function(){
     game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0;
     try{sfx.ok();}catch(_){} updateOverlay();
+  });
+  _btn('hb-diff', function(){
+    var ks=['facile','normale','difficile'];
+    game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];
+    try{sfx.sel();}catch(_){} updateOverlay();
   });
 
   /* Polling stato → aggiorna overlay fight controls automaticamente */
