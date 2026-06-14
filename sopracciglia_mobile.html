@@ -2188,6 +2188,8 @@ requestAnimationFrame(loop);
   document.addEventListener('touchstart', function(e){
     audioUnlocked = true;
     try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
+    /* iOS: chiama ensureMusic() sincrono dentro il touch handler */
+    ensureMusic();
     if(game.state === 'fight') return; /* fight gestito dal zone handler */
 
     var touch = e.changedTouches[0];
@@ -2286,13 +2288,67 @@ requestAnimationFrame(loop);
   function updateOverlay(){
     var s = game.state;
     function sh(id,v){ var el=document.getElementById(id); if(el) el.style.display=v; }
-    sh('menu-btns',  'none');
-    sh('select-btns','none');
-    sh('m-controls', s==='fight' ? 'block' : 'none');
-    sh('m-esc',      (s==='fight'||s==='victory') ? 'block':'none');
-    sh('m-back',     'none');
-    sh('m-music',    'none');
+    sh('menu-btns',   s==='title'  ? 'flex' : 'none');
+    sh('select-btns', 'none');
+    sh('m-controls',  s==='fight'  ? 'block' : 'none');
+    sh('m-esc',       s==='fight'  ? 'block' : 'none');
+    sh('m-back',      (s==='select'||s==='victory') ? 'block' : 'none');
+    sh('m-music',     'block');
   }
+
+  /* ---- listener bottoni overlay ---- */
+  function _btn(id, fn){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('touchstart', function(e){
+      e.preventDefault(); e.stopPropagation();
+      audioUnlocked = true;
+      try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
+      fn();
+    }, {passive:false});
+    el.addEventListener('click', fn);
+  }
+
+  /* m-esc: durante il fight → torna al menu */
+  _btn('m-esc', function(){
+    try{sfx.sel();}catch(_){}
+    game.state='title'; game.tournament=null;
+    updateOverlay();
+  });
+
+  /* m-back: da select → titolo; da victory → titolo */
+  _btn('m-back', function(){
+    try{sfx.sel();}catch(_){}
+    if(game.state==='select'){
+      if(game.pickTurn===1) game.pickTurn=0; else game.state='title';
+    } else {
+      game.state='title'; game.tournament=null;
+    }
+    updateOverlay();
+  });
+
+  /* m-music: toggle mute */
+  _btn('m-music', function(){
+    musicMuted = !musicMuted;
+    var el = document.getElementById('m-music');
+    if(el) el.textContent = musicMuted ? '🔇' : '♪';
+    if(!musicMuted){ audioUnlocked=true; ensureMusic(); }
+    else if(curTrack && !curTrack.paused) curTrack.pause();
+  });
+
+  /* menu-btns (title screen): modalità di gioco */
+  _btn('mb-1', function(){
+    game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0;
+    try{sfx.ok();}catch(_){} updateOverlay();
+  });
+  _btn('mb-2', function(){
+    game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0;
+    try{sfx.ok();}catch(_){} updateOverlay();
+  });
+  _btn('mb-3', function(){
+    game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0;
+    try{sfx.ok();}catch(_){} updateOverlay();
+  });
 
   /* Polling stato → aggiorna overlay fight controls automaticamente */
   var _prev='';
