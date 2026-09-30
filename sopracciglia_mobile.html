@@ -14,6 +14,7 @@
 <style>
   /* ===== BASE ===== */
   *, *::before, *::after { box-sizing: border-box; }
+  :root { --sal: env(safe-area-inset-left, 0px); --sar: env(safe-area-inset-right, 0px); }
   html, body {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
     background: #0a0806; font-family: monospace;
@@ -43,7 +44,7 @@
     padding: 24px; gap: 16px;
   }
   #rotate-hint .ri { font-size: clamp(48px, 14vw, 80px); }
-  @media (orientation: portrait) { #rotate-hint { display: flex !important; } }
+  @media (orientation: portrait) { body:not(.in-title) #rotate-hint { display: flex !important; } }
 
   /* ===== FLOATING TOP BAR (Indietro / ♪ / Menu) ===== */
   #m-back, #m-esc, #m-music {
@@ -59,8 +60,9 @@
     top: max(10px, env(safe-area-inset-top, 10px));
   }
   #m-back  { left:  max(10px, env(safe-area-inset-left,  10px)); }
-  #m-esc   { right: max(10px, env(safe-area-inset-right, 10px)); }
-  #m-music { left: 50%; transform: translateX(-50%); }
+  #m-music { right: max(10px, env(safe-area-inset-right, 10px)); z-index: 600; }
+  #m-esc   { right: max(10px, env(safe-area-inset-right, 10px)); top: calc(max(10px, env(safe-area-inset-top, 10px)) + 54px); }
+  #m-back.pressed, #m-esc.pressed, #m-music.pressed, .sel-btn.pressed { background: rgba(100,70,10,0.85); color: #FFD700; }
   #m-back:active, #m-esc:active, #m-music:active {
     background: rgba(100,70,10,0.85); color: #FFD700;
   }
@@ -129,9 +131,9 @@
     left:  max(14px, env(safe-area-inset-left,  14px));
     bottom: max(14px, env(safe-area-inset-bottom, 14px));
     display: grid;
-    grid-template-columns: clamp(52px,13vmin,72px) clamp(52px,13vmin,72px) clamp(52px,13vmin,72px);
-    grid-template-rows:    clamp(52px,13vmin,72px) clamp(52px,13vmin,72px) clamp(52px,13vmin,72px);
-    gap: clamp(3px,0.8vmin,6px);
+    grid-template-columns: repeat(3, clamp(40px, 12.5vh, 48px));
+    grid-template-rows:    repeat(3, clamp(40px, 12.5vh, 48px));
+    gap: 3px;
     width: auto; height: auto;
   }
 
@@ -160,9 +162,9 @@
     right:  max(14px, env(safe-area-inset-right,  14px));
     bottom: max(14px, env(safe-area-inset-bottom, 14px));
     display: grid;
-    grid-template-columns: clamp(56px,14vmin,76px) clamp(56px,14vmin,76px);
-    grid-template-rows:    clamp(56px,14vmin,76px) clamp(56px,14vmin,76px);
-    gap: clamp(4px,1vmin,8px);
+    grid-template-columns: repeat(2, clamp(52px, 16vh, 66px));
+    grid-template-rows:    repeat(2, clamp(52px, 16vh, 66px)) auto;
+    gap: 6px;
   }
 
   .ab {
@@ -181,7 +183,7 @@
   #ab-b { border-color: rgba(70,195,70,0.75);  color: #7ED98A; }
   #ab-s {
     grid-column: 1 / 3;
-    height: clamp(40px, 10vmin, 52px);
+    height: clamp(40px, 11vh, 48px);
     border-color: rgba(255,215,0,0.95); color: #FFD700;
     background: rgba(80,52,0,0.82); font-size: clamp(11px, 2.8vmin, 15px);
   }
@@ -191,146 +193,80 @@
   #home-screen {
     display: none;
     position: fixed; inset: 0; z-index: 500;
-    background: #080604;
-    flex-direction: column;
-    align-items: center; justify-content: space-between;
+    background: radial-gradient(ellipse at 30% 40%, #1c1206 0%, #080604 70%);
     overflow: hidden;
     padding:
-      max(16px, env(safe-area-inset-top,    16px))
-      max(20px, env(safe-area-inset-right,  20px))
-      max(20px, env(safe-area-inset-bottom, 20px))
-      max(20px, env(safe-area-inset-left,   20px));
+      max(12px, env(safe-area-inset-top))
+      max(16px, env(safe-area-inset-right))
+      max(12px, env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+    /* orizzontale: logo a sinistra, menu a destra */
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4vw;
   }
-
-  /* Sfondo animato: sopracciglia che scorrono */
-  .hs-bg {
-    position: absolute; inset: 0; pointer-events: none;
-    overflow: hidden; z-index: 0;
-  }
+  .hs-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
   .hs-brow {
-    position: absolute;
-    height: clamp(5px,1.2vh,9px); border-radius: 99px;
-    opacity: 0.18;
+    position: absolute; height: 6px; border-radius: 99px;
     animation: brow-drift linear infinite;
   }
-  @keyframes brow-drift {
-    from { transform: translateX(-120px); }
-    to   { transform: translateX(110vw); }
-  }
+  @keyframes brow-drift { from { transform: translateX(-120px); } to { transform: translateX(110vw); } }
 
-  /* Logo area */
-  .hs-logo {
-    position: relative; z-index: 1;
-    text-align: center; width: 100%;
-    padding-top: clamp(8px,2vh,20px);
-  }
+  .hs-logo { position: relative; text-align: center; pointer-events: none; }
   .hs-title {
-    font-family: monospace; font-weight: 900; letter-spacing: .06em;
-    font-size: clamp(28px, 7.5vw, 56px);
+    font-weight: 900; letter-spacing: .04em; line-height: 1.05;
+    font-size: min(4.3vw, 11vh); white-space: nowrap;
     color: #FFD700;
-    text-shadow: 0 0 28px rgba(255,215,0,.55), 0 3px 0 #6B4F00;
-    line-height: 1.05;
-    -webkit-user-select: none;
+    text-shadow: 0 0 24px rgba(255,215,0,.45), 0 3px 0 #6B4F00;
   }
-  .hs-arena {
-    font-family: monospace; letter-spacing: .35em;
-    font-size: clamp(10px, 2.8vw, 20px);
-    color: #DC143C;
-    margin-top: clamp(4px,1vh,10px);
-    -webkit-user-select: none;
-  }
-  .hs-edition {
-    font-family: monospace;
-    font-size: clamp(9px, 2.2vw, 16px);
-    color: #FF8C00; letter-spacing: .12em;
-    margin-top: 4px;
-    -webkit-user-select: none;
-  }
-  .hs-tagline {
-    font-family: monospace;
-    font-size: clamp(8px, 1.8vw, 13px);
-    color: #7A6E56; margin-top: 6px;
-    -webkit-user-select: none;
-  }
+  .hs-arena { letter-spacing: .3em; font-size: min(2vw, 4.2vh); color: #DC143C; margin-top: 1.5vh; }
+  .hs-edition { font-size: min(1.6vw, 3.4vh); color: #FF8C00; margin-top: .8vh; }
+  .hs-tagline { font-size: min(1.4vw, 3vh); color: #7A6E56; margin-top: .8vh; }
 
-  /* Mode buttons */
-  .hs-modes {
-    position: relative; z-index: 1;
-    width: 100%; max-width: 480px;
+  .hs-menu {
+    position: relative;
     display: flex; flex-direction: column;
-    gap: clamp(8px, 2vh, 16px);
+    gap: min(2.2vh, 12px);
+    width: 100%; max-width: 420px; justify-self: center;
   }
   .hs-btn {
-    width: 100%; min-height: clamp(62px, 14vh, 84px);
-    display: flex; align-items: center; gap: 16px;
-    padding: 0 clamp(16px,4vw,28px);
-    font-family: monospace; cursor: pointer;
-    border-radius: 16px;
-    background: rgba(24,16,4,0.9);
-    border: 2px solid rgba(255,215,0,0.35);
-    color: #F0E8D0;
-    text-align: left;
-    -webkit-user-select: none; touch-action: manipulation;
-    transition: background .08s, border-color .08s, transform .06s;
-    position: relative; overflow: hidden;
+    width: 100%; height: min(17vh, 72px); min-height: 48px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 16px;
+    font-family: monospace; text-align: left; color: #F0E8D0;
+    background: rgba(24,16,4,.92);
+    border: 2px solid rgba(255,215,0,.4); border-radius: 14px;
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   }
-  .hs-btn::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,215,0,.06) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .hs-btn:active {
-    background: rgba(100,68,8,0.95);
-    border-color: #FFD700;
-    transform: scale(0.975);
-  }
-  .hs-btn-icon {
-    font-size: clamp(26px, 6vw, 38px);
-    flex-shrink: 0; line-height: 1;
-  }
-  .hs-btn-text { flex: 1; }
-  .hs-btn-label {
-    font-size: clamp(16px, 4vw, 24px);
-    font-weight: 900; letter-spacing: .04em;
-    line-height: 1.1;
-  }
-  .hs-btn-desc {
-    font-size: clamp(10px, 2.2vw, 14px);
-    color: #8A7E64; margin-top: 2px;
-  }
-  .hs-btn-arrow {
-    font-size: clamp(18px, 4vw, 26px);
-    color: rgba(255,215,0,0.4); flex-shrink: 0;
-  }
-  /* Torneo — accento arancio */
-  #hb-3 { border-color: rgba(255,140,0,0.45); }
+  .hs-btn:active, .hs-btn.pressed { background: rgba(110,75,10,.95); border-color: #FFD700; transform: scale(.97); }
+  .hs-btn-icon { font-size: min(4vw, 8vh); line-height: 1; flex-shrink: 0; pointer-events: none; }
+  .hs-btn-text { flex: 1; pointer-events: none; }
+  .hs-btn-label { font-size: min(2.6vw, 5.4vh); font-weight: 900; }
+  .hs-btn-desc { font-size: min(1.5vw, 3.2vh); color: #8A7E64; margin-top: 2px; }
+  .hs-btn-arrow { font-size: 22px; color: rgba(255,215,0,.45); pointer-events: none; }
+  #hb-3 { border-color: rgba(255,140,0,.5); }
   #hb-3 .hs-btn-label { color: #FF8C00; }
-  #hb-3:active { border-color: #FF8C00; }
-
-  /* Difficoltà + versione */
-  .hs-footer {
-    position: relative; z-index: 1;
-    width: 100%; max-width: 480px;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 6px;
-  }
   #hb-diff {
-    width: 100%; min-height: 48px;
-    font-family: monospace;
-    font-size: clamp(12px, 2.8vw, 15px);
-    color: #8A7E64; background: rgba(14,10,4,0.85);
-    border: 1.5px solid rgba(255,255,255,0.12);
-    border-radius: 12px; cursor: pointer;
-    -webkit-user-select: none; touch-action: manipulation;
-    transition: background .08s;
+    height: min(12vh, 48px); min-height: 44px;
+    font-family: monospace; font-size: min(1.7vw, 3.6vh);
+    color: #8A7E64; background: rgba(14,10,4,.85);
+    border: 1.5px solid rgba(255,255,255,.15); border-radius: 12px;
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   }
-  #hb-diff:active { background: rgba(60,40,8,0.9); color: #F0E8D0; }
+  #hb-diff:active { color: #F0E8D0; background: rgba(60,40,8,.9); }
   #hb-diff-val { color: #F0E8D0; font-weight: bold; }
-  .hs-version {
-    font-family: monospace;
-    font-size: clamp(8px, 1.8vw, 11px);
-    color: rgba(100,90,70,.5);
-    -webkit-user-select: none;
+
+  /* verticale: tutto in colonna */
+  @media (orientation: portrait) {
+    #home-screen { grid-template-columns: 1fr; align-content: center; gap: 5vh; }
+    .hs-title { font-size: 9vw; }
+    .hs-arena { font-size: 3.4vw; }
+    .hs-edition, .hs-tagline { font-size: 2.8vw; }
+    .hs-btn { height: 9vh; }
+    .hs-btn-icon { font-size: 7vw; }
+    .hs-btn-label { font-size: 4.6vw; }
+    .hs-btn-desc { font-size: 3vw; }
+    #hb-diff { font-size: 3.4vw; height: 6vh; }
   }
 </style>
   <script src="sprites.js" async></script>
@@ -345,10 +281,8 @@
 
 <!-- HOME SCREEN FULLSCREEN -->
 <div id="home-screen">
-  <!-- sfondo animato: sopracciglia che volano -->
   <div class="hs-bg" id="hs-bg"></div>
 
-  <!-- logo -->
   <div class="hs-logo">
     <div class="hs-title">LE SOPRACCIGLIA</div>
     <div class="hs-title">DELLA GUERRA</div>
@@ -357,38 +291,18 @@
     <div class="hs-tagline">Dal racconto corale dell'ufficio di Siena</div>
   </div>
 
-  <!-- pulsanti modalità -->
-  <div class="hs-modes">
+  <div class="hs-menu">
     <button class="hs-btn" id="hb-1">
       <span class="hs-btn-icon">⚔️</span>
-      <span class="hs-btn-text">
-        <div class="hs-btn-label">vs CPU</div>
-        <div class="hs-btn-desc">Singleplayer · sfida l'AI</div>
-      </span>
-      <span class="hs-btn-arrow">›</span>
-    </button>
-    <button class="hs-btn" id="hb-2">
-      <span class="hs-btn-icon">👥</span>
-      <span class="hs-btn-text">
-        <div class="hs-btn-label">2 Giocatori</div>
-        <div class="hs-btn-desc">Local PvP · stesso schermo</div>
-      </span>
+      <span class="hs-btn-text"><div class="hs-btn-label">vs CPU</div><div class="hs-btn-desc">Sfida l'intelligenza artificiale</div></span>
       <span class="hs-btn-arrow">›</span>
     </button>
     <button class="hs-btn" id="hb-3">
       <span class="hs-btn-icon">🏆</span>
-      <span class="hs-btn-text">
-        <div class="hs-btn-label">Torneo</div>
-        <div class="hs-btn-desc">Sfida tutti i campioni in fila</div>
-      </span>
+      <span class="hs-btn-text"><div class="hs-btn-label">Torneo</div><div class="hs-btn-desc">Batti tutti i campioni in fila</div></span>
       <span class="hs-btn-arrow">›</span>
     </button>
-  </div>
-
-  <!-- footer: difficoltà + versione -->
-  <div class="hs-footer">
     <button id="hb-diff">Difficoltà CPU: <span id="hb-diff-val">Normale</span></button>
-    <div class="hs-version">Le Sopracciglia della Guerra · Arena Combat v1.0</div>
   </div>
 </div>
 
@@ -432,17 +346,21 @@ const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=false;
 /* Background cache: ridisegna solo quando camX cambia */
 function fit(){
+  const cs=getComputedStyle(document.documentElement);
+  const safe=Math.max(parseFloat(cs.getPropertyValue('--sal'))||0, parseFloat(cs.getPropertyValue('--sar'))||0);
+  const CTRL_COL=Math.max(14,safe)+150;
   const mobile=('ontouchstart' in window||navigator.maxTouchPoints>0);
   if(mobile){
-    /* Riempi lo schermo mantenendo l'aspect ratio 4:3 */
-    const s=Math.min(innerWidth/W, innerHeight/H);
+    /* in orizzontale lascia due colonne laterali libere per D-pad e pulsanti */
+    const side=innerWidth>innerHeight?CTRL_COL:0;
+    const s=Math.min((innerWidth-2*side)/W, innerHeight/H);
     cv.style.width=(W*s)+'px'; cv.style.height=(H*s)+'px';
   } else {
     const s=Math.min(innerWidth/(W+8),innerHeight/(H+8),4);
     cv.style.width=(W*s)+'px'; cv.style.height=(H*s)+'px';
   }
 }
-addEventListener('resize',fit);fit();
+addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));fit();
 
 /* ---------- AUDIO ---------- */
 let AC=null;
@@ -1863,7 +1781,7 @@ function drawHUD(){
   outlineText(game.timer,W/2,30,22,'#F5F0E1');
   if(game.mode===3&&game.tournament)
     outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,46,10,'#FF8C00');
-  text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIAL quando la barra gialla \u00E8 piena',W/2,H-6,8.5,'rgba(245,240,225,.45)');
+  if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIAL quando la barra gialla \u00E8 piena',W/2,H-6,8.5,'rgba(245,240,225,.45)');
 }
 
 function draw(){
@@ -1898,7 +1816,7 @@ function drawTitle(){
 
 function drawSelect(){
   ctx.fillStyle='#120D08';ctx.fillRect(0,0,W,H);
-  outlineText('SCEGLI IL TUO COMBATTENTE',W/2,36,18,'#FFD700');
+  outlineText(game.pickTurn===1&&game.mode===1?'SCEGLI L\u2019AVVERSARIO':'SCEGLI IL TUO COMBATTENTE',W/2,36,18,game.pickTurn===1?'#FF4136':'#FFD700');
   const cs=86,gx=(W-6*(cs+8))/2+4,gy=56;
   ROSTER.forEach((c,i)=>{
     const col=i%6,row=(i/6)|0,x=gx+col*(cs+8),y=gy+row*(cs+34);
@@ -1912,7 +1830,7 @@ function drawSelect(){
   text('SPECIAL: '+s.name+'  ('+s.dmg+' dmg \u2022 costo '+s.cost+' \u2022 CD '+(s.cd/60).toFixed(1)+'s)   |   HP '+cur.hp+'  VEL '+Math.round(cur.speed*2)+'  POT '+cur.power+'  DEF '+cur.def,W/2,gy+2*(cs+34)+42,10,'#B7A98C');
   const hint1=game.mode===2?'P2: scegli il tuo lottatore (L o Z conferma \u2022 R casuale)':'Scegli l\u2019AVVERSARIO della CPU (Z conferma \u2022 R casuale \u2022 ESC indietro)';
   const hint0=game.mode===3?'TORNEO: scegli il tuo CAMPIONE (Z conferma \u2022 R casuale)':'P1: scegli il tuo lottatore (Z conferma \u2022 R casuale)';
-  text(game.pickTurn===0?hint0:hint1,W/2,H-12,11,game.pickTurn===0?(game.mode===3?'#FF8C00':'#FFD700'):'#DC143C');
+  if(!IS_MOBILE)text(game.pickTurn===0?hint0:hint1,W/2,H-12,11,game.pickTurn===0?(game.mode===3?'#FF8C00':'#FFD700'):'#DC143C');
 }
 
 function drawFight(){
@@ -2393,75 +2311,89 @@ requestAnimationFrame(loop);
   var IS_MOB = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   if(!IS_MOB) return;
 
-  /* Mappa elemento → codice tasto */
-  var ELEM_KEYS = {
-    'dp-u':'ArrowUp','dp-l':'ArrowLeft','dp-r':'ArrowRight','dp-d':'ArrowDown',
-    'ab-p':'KeyZ','ab-k':'KeyX','ab-b':'KeyC','ab-s':'Space'
-  };
+  /* Pulsanti d'azione: elemento → codice tasto */
+  var BTN_KEYS = { 'ab-p':'KeyZ', 'ab-k':'KeyX', 'ab-b':'KeyC', 'ab-s':'Space' };
+  var DIRS = { ArrowLeft:'dp-l', ArrowRight:'dp-r', ArrowUp:'dp-u', ArrowDown:'dp-d' };
+  var btnTouch = {};      /* touchId → id pulsante */
+  var stickId = null;     /* touchId del pollice sul joystick */
 
-  /* touchId → codice tasto */
-  var touchMap = {};
-
-  /* Trova quale elemento di controllo è sotto il punto (cx, cy) */
-  function elemAtPoint(cx, cy){
-    var ids = Object.keys(ELEM_KEYS);
-    for(var i=0;i<ids.length;i++){
-      var el = document.getElementById(ids[i]);
-      if(!el) continue;
-      var r = el.getBoundingClientRect();
-      /* aggiungi 8px di margine per facilità */
-      if(cx >= r.left-8 && cx <= r.right+8 && cy >= r.top-8 && cy <= r.bottom+8)
-        return ids[i];
+  function setKey(code, val, elId){
+    keys[code] = val;
+    var el = document.getElementById(elId);
+    if(el) el.classList.toggle('on', val);
+  }
+  function btnAtPoint(cx, cy){
+    for(var id in BTN_KEYS){
+      var r = document.getElementById(id).getBoundingClientRect();
+      if(cx >= r.left-6 && cx <= r.right+6 && cy >= r.top-6 && cy <= r.bottom+6) return id;
     }
     return null;
   }
-
-  function pressElem(id, val){
-    if(!id) return;
-    var code = ELEM_KEYS[id];
-    keys[code] = val;
-    var el = document.getElementById(id);
-    if(el){ if(val) el.classList.add('on'); else el.classList.remove('on'); }
+  function inStick(cx, cy){
+    var r = document.getElementById('m-dpad').getBoundingClientRect();
+    return cx >= r.left-24 && cx <= r.right+24 && cy >= r.top-24 && cy <= r.bottom+24;
   }
+  /* joystick a 8 direzioni: direzione calcolata dal centro del D-pad */
+  function updateStick(cx, cy){
+    var r = document.getElementById('m-dpad').getBoundingClientRect();
+    var dx = cx - (r.left + r.width/2), dy = cy - (r.top + r.height/2);
+    var ax = Math.abs(dx), ay = Math.abs(dy), dz = r.width * 0.12;
+    var h = ax > dz && ax > ay * 0.45, v = ay > dz && ay > ax * 0.45;
+    setKey('ArrowLeft',  h && dx < 0, 'dp-l');
+    setKey('ArrowRight', h && dx > 0, 'dp-r');
+    setKey('ArrowUp',    v && dy < 0, 'dp-u');
+    setKey('ArrowDown',  v && dy > 0, 'dp-d');
+  }
+  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); stickId = null; }
+  function releaseAll(){
+    releaseStick();
+    for(var t in btnTouch) setKey(BTN_KEYS[btnTouch[t]], false, btnTouch[t]);
+    btnTouch = {};
+  }
+  window._releaseTouchKeys = releaseAll;
 
   function onTouchStart(e){
     if(game.state !== 'fight') return;
     e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
-      var id = elemAtPoint(t.clientX, t.clientY);
-      if(id){ touchMap[t.identifier] = id; pressElem(id, true); }
-    }
-  }
-  function onTouchEnd(e){
-    if(game.state !== 'fight') return;
-    e.preventDefault();
-    for(var i=0;i<e.changedTouches.length;i++){
-      var t = e.changedTouches[i];
-      pressElem(touchMap[t.identifier], false);
-      delete touchMap[t.identifier];
-    }
-  }
-  function onTouchMove(e){
-    e.preventDefault(); /* previene scroll su iOS */
-    if(game.state !== 'fight') return;
-    for(var i=0;i<e.changedTouches.length;i++){
-      var t = e.changedTouches[i];
-      var newId = elemAtPoint(t.clientX, t.clientY);
-      var oldId = touchMap[t.identifier];
-      /* cambia tasto solo se il dito va su un ALTRO pulsante, non se esce nel vuoto */
-      if(newId && newId !== oldId){
-        pressElem(oldId, false);
-        touchMap[t.identifier] = newId;
-        pressElem(newId, true);
+      var id = btnAtPoint(t.clientX, t.clientY);
+      if(id){ btnTouch[t.identifier] = id; setKey(BTN_KEYS[id], true, id); }
+      else if(stickId === null && inStick(t.clientX, t.clientY)){
+        stickId = t.identifier; updateStick(t.clientX, t.clientY);
       }
     }
   }
+  function onTouchMove(e){
+    e.preventDefault();
+    if(game.state !== 'fight') return;
+    for(var i=0;i<e.changedTouches.length;i++){
+      var t = e.changedTouches[i];
+      if(t.identifier === stickId){ updateStick(t.clientX, t.clientY); continue; }
+      var oldId = btnTouch[t.identifier];
+      if(!oldId) continue;
+      var newId = btnAtPoint(t.clientX, t.clientY);
+      /* scivolando su un altro pulsante si cambia tasto; uscendo nel vuoto si resta premuti */
+      if(newId && newId !== oldId){
+        setKey(BTN_KEYS[oldId], false, oldId);
+        btnTouch[t.identifier] = newId; setKey(BTN_KEYS[newId], true, newId);
+      }
+    }
+  }
+  function onTouchEnd(e){
+    for(var i=0;i<e.changedTouches.length;i++){
+      var t = e.changedTouches[i];
+      if(t.identifier === stickId) releaseStick();
+      var id = btnTouch[t.identifier];
+      if(id){ setKey(BTN_KEYS[id], false, id); delete btnTouch[t.identifier]; }
+    }
+    if(game.state === 'fight') e.preventDefault();
+  }
 
-  document.addEventListener('touchstart',  onTouchStart,  {passive:false});
-  document.addEventListener('touchend',    onTouchEnd,    {passive:false});
-  document.addEventListener('touchcancel', onTouchEnd,    {passive:false});
-  document.addEventListener('touchmove',   onTouchMove,   {passive:false});
+  document.addEventListener('touchstart',  onTouchStart, {passive:false});
+  document.addEventListener('touchend',    onTouchEnd,   {passive:false});
+  document.addEventListener('touchcancel', onTouchEnd,   {passive:false});
+  document.addEventListener('touchmove',   onTouchMove,  {passive:false});
 
   /* ---- navigazione (title / select / victory) — fight gestito da zone sopra ---- */
   document.addEventListener('touchstart', function(e){
@@ -2495,19 +2427,6 @@ requestAnimationFrame(loop);
       if(!rect) return;
       var tx = (touch.clientX - rect.left) * (640 / rect.width);
       var ty = (touch.clientY - rect.top)  * (480 / rect.height);
-      /* Zona "Indietro" (angolo alto sinistra del canvas) */
-      if(tx < 80 && ty < 50){
-        if(game.pickTurn===1) game.pickTurn=0; else game.state='title';
-        try{sfx.sel();}catch(_){} updateOverlay(); return;
-      }
-      /* Zona "Casuale" (angolo alto destra del canvas) */
-      if(tx > 560 && ty < 50){
-        game.sel[game.pickTurn]=(Math.random()*12)|0;
-        try{sfx.ok();}catch(_){}
-        if(game.pickTurn===0){ if(game.mode===3) game.startTournament(); else game.pickTurn=1; }
-        else game.startMatch();
-        updateOverlay(); return;
-      }
       /* Griglia personaggi */
       var cs=86, gx=(640-6*(cs+8))/2+4, gy=56;
       for(var i=0;i<12;i++){
@@ -2515,17 +2434,9 @@ requestAnimationFrame(loop);
         var x=gx+col*(cs+8), y=gy+row*(cs+34);
         if(tx>=x && tx<=x+cs && ty>=y && ty<=y+cs){
           e.preventDefault();
-          game.sel[game.pickTurn]=i;
-          try{sfx.sel();}catch(_){}
-          clearTimeout(window._mst);
-          window._mst=setTimeout(function(){
-            try{sfx.ok();}catch(_){}
-            if(game.pickTurn===0){
-              if(game.mode===3) game.startTournament();
-              else{ game.pickTurn=1; if(game.sel[1]===game.sel[0]) game.sel[1]=(game.sel[0]+1)%12; }
-            } else game.startMatch();
-            updateOverlay();
-          },300);
+          /* primo tocco: seleziona e mostra le statistiche; secondo tocco sullo stesso: conferma */
+          if(game.sel[game.pickTurn]===i) confirmPick();
+          else { game.sel[game.pickTurn]=i; try{sfx.sel();}catch(_){} }
           break;
         }
       }
@@ -2546,12 +2457,13 @@ requestAnimationFrame(loop);
     var s = game.state;
     function sh(id,v){ var el=document.getElementById(id); if(el) el.style.display=v; }
     /* Home screen fullscreen: copre il canvas quando siamo nel titolo */
-    sh('home-screen', s==='title'  ? 'flex' : 'none');
-    sh('select-btns', 'none');
+    sh('home-screen', s==='title'  ? 'grid' : 'none');
+    document.body.classList.toggle('in-title', s==='title');
+    sh('select-btns', s==='select' ? 'flex' : 'none');
     sh('m-controls',  s==='fight'  ? 'block' : 'none');
-    sh('m-esc',       s==='fight'  ? 'block' : 'none');
-    sh('m-back',      (s==='select'||s==='victory') ? 'block' : 'none');
-    sh('m-music',     'block');
+    sh('m-esc',       s==='fight'  ? 'flex' : 'none');
+    sh('m-back',      (s==='select'||s==='victory') ? 'flex' : 'none');
+    sh('m-music',     'flex');
     /* Sincronizza label difficoltà nella home */
     var dv = document.getElementById('hb-diff-val');
     if(dv){ var dl={facile:'Facile',normale:'Normale',difficile:'Difficile'};
@@ -2578,16 +2490,33 @@ requestAnimationFrame(loop);
     }
   })();
 
+  function confirmPick(){
+    try{sfx.ok();}catch(_){}
+    if(game.pickTurn===0){
+      if(game.mode===3) game.startTournament();
+      else{ game.pickTurn=1; if(game.sel[1]===game.sel[0]) game.sel[1]=(game.sel[0]+1)%12; }
+    } else game.startMatch();
+    updateOverlay();
+  }
+
   /* ---- listener bottoni overlay ---- */
   function _btn(id, fn){
     var el = document.getElementById(id);
     if(!el) return;
     el.addEventListener('touchstart', function(e){
       e.preventDefault(); e.stopPropagation();
+      el.classList.add('pressed');
+    }, {passive:false});
+    el.addEventListener('touchend', function(e){
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('pressed');
+      var t=e.changedTouches[0], r=el.getBoundingClientRect();
+      if(t.clientX<r.left||t.clientX>r.right||t.clientY<r.top||t.clientY>r.bottom) return;
       audioUnlocked = true;
       try{ if(AC && AC.state==='suspended') AC.resume(); }catch(_){}
-      fn();
+      fn(); ensureMusic();
     }, {passive:false});
+    el.addEventListener('touchcancel', function(){ el.classList.remove('pressed'); });
     el.addEventListener('click', fn);
   }
 
@@ -2623,13 +2552,14 @@ requestAnimationFrame(loop);
     game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0;
     try{sfx.ok();}catch(_){} updateOverlay();
   });
-  _btn('hb-2', function(){
-    game.mode=2; game.tournament=null; game.state='select'; game.pickTurn=0;
-    try{sfx.ok();}catch(_){} updateOverlay();
-  });
   _btn('hb-3', function(){
     game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0;
     try{sfx.ok();}catch(_){} updateOverlay();
+  });
+  _btn('sel-confirm', confirmPick);
+  _btn('sel-random', function(){
+    game.sel[game.pickTurn]=(Math.random()*12)|0;
+    try{sfx.sel();}catch(_){}
   });
   _btn('hb-diff', function(){
     var ks=['facile','normale','difficile'];
@@ -2640,7 +2570,7 @@ requestAnimationFrame(loop);
   /* Polling stato → aggiorna overlay fight controls automaticamente */
   var _prev='';
   setInterval(function(){
-    if(game && game.state!==_prev){ _prev=game.state; updateOverlay(); }
+    if(game && game.state!==_prev){ _prev=game.state; releaseAll(); updateOverlay(); }
   },80);
 
   updateOverlay();
