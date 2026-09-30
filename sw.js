@@ -1,8 +1,7 @@
-const CACHE = 'sopracciglia-v2';
+const CACHE = 'sopracciglia-v3';
 const ASSETS = [
-  './sopracciglia_mobile.html',
+  './index.html',
   './sprites.js',
-  './music.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'

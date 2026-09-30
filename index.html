@@ -270,7 +270,6 @@
   }
 </style>
   <script src="sprites.js" async></script>
-  <script src="music.js" async></script>
 </head>
 <body>
 
@@ -402,12 +401,12 @@ const SPRITES={};
 (()=>{for(const k in SPRITE_SRC){const i=new Image();i.src=SPRITE_SRC[k];SPRITES[k]=i;}})();
 
 /* ---------- MUSICA (tracce embedded) ---------- */
-const MUSIC_SRC=window._MUSIC_SRC||{};
+const MUSIC_SRC={menu:'music/menu.mp3',fight:'music/fight.mp3',win:'music/win.mp3',lose:'music/lose.mp3'};
 const tracks={};
 function _initTracks(src){
   for(const k in src){
     if(!tracks[k]){
-      const a=new Audio(src[k]);a.loop=true;a.volume=0.45;a.preload='auto';tracks[k]=a;
+      const a=new Audio(src[k]);a.loop=true;a.volume=0.45;a.preload=k==='menu'?'auto':'none';tracks[k]=a;
     }
   }
 }
