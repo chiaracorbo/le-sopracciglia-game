@@ -1,7 +1,6 @@
-const CACHE = 'sopracciglia-v3';
+const CACHE = 'sopracciglia-v4';
 const ASSETS = [
   './index.html',
-  './sprites.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'

@@ -269,7 +269,6 @@
     #hb-diff { font-size: 3.4vw; height: 6vh; }
   }
 </style>
-  <script src="sprites.js" async></script>
 </head>
 <body>
 
@@ -396,7 +395,7 @@ const sfx={
   parry:()=>{beep(1568,.12,'triangle',.09);setTimeout(()=>beep(784,.16,'square',.05,-200),60);noise(.06,.05);},
 };
 
-const SPRITE_SRC=window._SPRITE_SRC||{};
+const SPRITE_SRC=Object.fromEntries(["iacopo","sito","alice","batteo","mango","pisani","zibe","dimauro","ettore","chiara","baumizio","bederico"].map(k=>[k,'sprites/'+k+'.png']));
 const SPRITES={};
 (()=>{for(const k in SPRITE_SRC){const i=new Image();i.src=SPRITE_SRC[k];SPRITES[k]=i;}})();
 
@@ -2261,7 +2260,7 @@ function drawVictory(){
     }else outlineText('\u2605 CAMPIONE DEL TORNEO! '+R.wins+'/'+R.order.length+' \u2605',px2+pw/2,ptop+ph-20,14,'#FFD700');}
 
   // PROMPT
-  const pTxt=game.mode===3&&R&&R.idx<R.order.length-1?'[INVIO] prossimo incontro   [ESC] abbandona':'[INVIO] nuova sfida   [ESC] titolo';
+  const pTxt=IS_MOBILE?(game.mode===3&&R&&R.idx<R.order.length-1?'Tocca per il prossimo incontro':'Tocca per una nuova sfida'):(game.mode===3&&R&&R.idx<R.order.length-1?'[INVIO] prossimo incontro   [ESC] abbandona':'[INVIO] nuova sfida   [ESC] titolo');
   if(frame%60<40)text(pTxt,W/2,H-10,10,'#B7A98C');
 
   // screen flash all'inizio (0-10fr)
