@@ -501,10 +501,14 @@ const ROSTER=[
   tophat:true,sunglasses:true,nosering:true,fluff:'#C8A878',noBelt:true,
   special:{type:'grenade',name:'TROMBONE GRANATA',dmg:17.6,kb:24,r:60,st:8,act:4,rec:12,fx:'smoke',cost:45,cd:104},
   quote:'Non \u00E8 una figata?!'},
- {id:'bederico',name:'BEDERICO',title:'Il Supervisore dell\u2019AI',hp:170,speed:3.4,power:9,h:149,def:3,aer:6,
+ {id:'bederico',name:'BEDERICO',title:'Il Supervisore dell\u2019AI',hp:170,speed:3.4,power:9,h:148,def:3,aer:6,
   fur:'#3A3A3E',brow:'#20B2AA',ui:'#7DF9FF',outfit:'#16161A',weapon:'prompt',species:'alpaca',recMod:.9,meta:true,
   hair:{t:'mohawk',c1:'#1A1A1A',c2:'#E8C84A',c3:'#D04040'},boa:'#C0392B',buttons:'#C9A227',noBelt:true,
-  special:{type:'lightning',name:'DEUS EX MACHINA',dmg:19.2,kb:20,st:6,act:4,rec:10,fx:'glitch',cost:45,cd:104},
+  moves:{
+    punch:{startup:4,active:14,recovery:6,lag:6,dmg:2.4,range:36,kb:2,rehit:[6,11]},
+    kick:{startup:8,active:6,recovery:14,lag:10,dmg:6,range:56,hh:70,kb:10,smokeFx:true},
+  },
+  special:{type:'rift',name:'DEUS EX MACHINA',dmg:19.2,kb:10,st:12,act:10,rec:14,fx:'blue',cost:45,cd:104},
   quote:'Rigenero la risposta.'},
 ];
 const FX_COL={gold:['#FFD700','#FF6347','#FFF3B0'],smoke:['#A9A9A9','#777','#555'],
@@ -718,6 +722,8 @@ class Fighter{
     const aS=m.startup,aE=m.startup+m.active;
     const SC=SPRITE_CHARS[this.cfg.id];
     if(SC&&SC.kickLunge&&m.key==='kick'&&this.moveFr<=aS)this.x+=this.facing*SC.kickLunge/aS;
+    if(m.rehit)for(const o of m.rehit)if(this.moveFr===aS+o)this.hitConsumed=false;
+    if(m.smokeFx&&this.moveFr===aS)smokeBomb(this);
     if(this.moveFr===aS&&m.key==='special')this.resolveSpecialStart(opp);
     if(m.sType==='waves'&&this.pendingWaves){
       for(const w of this.pendingWaves)if(!w.done&&this.moveFr===w.fr)this.fireWave(w,opp);}
@@ -737,6 +743,7 @@ class Fighter{
       this.facing=opp.x>=this.x?1:-1;
       fxBurst(this.x,this.y-this.cfg.h*0.5,'yellow',12);}
     if(t==='laser'){fireLaser(this,opp);this.hitConsumed=true;}
+    if(t==='rift'){openRifts(this,opp);this.hitConsumed=true;}
     if(t==='star'){const S=SPRITE_CHARS[this.cfg.id],b=S&&S.bracelet?spritePoint(this,S.bracelet.x,S.bracelet.y):{x:this.x,y:this.y-this.cfg.h*.75};
       const tx=opp.x,ty=opp.y-opp.cfg.h*.55,d=Math.hypot(tx-b.x,ty-b.y)||1,sp=7.5;
       projectiles.push({x:b.x,y:b.y,vx:(tx-b.x)/d*sp,vy:(ty-b.y)/d*sp,w:34,h:34,dmg:s.dmg,kb:s.kb,life:140,
@@ -871,7 +878,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='laser'||sType==='star'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='laser'||sType==='star'||sType==='rift'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -1002,6 +1009,25 @@ const SPRITE_CHARS={
     shield:{x:88,y:84,col:'#FFD700'},  /* scudo davanti al braccialetto in parata */
     slash:{x:78,y:72,r:44,col:'#FF2A2A'}, /* centro e raggio del fendente */
   },
+  bederico:{
+    dir:'sprites/bederico/',fw:128,fh:128,ax:60,ay:122,scale:1.25,
+    body:{x0:35,y0:4,x1:91,y1:122},
+    anims:{
+      idle:   {file:'idle',   n:12,fps:8},
+      walk:   {file:'walk',   n:12,fps:14},
+      /* dy: lo sprite si alza già da solo dentro il fotogramma, lo riportiamo giù */
+      jump:   {file:'jump',   n:12,jf:{squat:2,up:3,peak:4,down:6,land:7},dy:{3:8,4:14,5:19,6:10}},
+      hurt:   {file:'hurt',   n:12},
+      block:  {file:'block',  n:12,fps:20,holdFrom:6},
+      ko:     {file:'ko',     n:12,fps:12},
+      win:    {file:'win',    n:12,fps:10},
+      punch:  {file:'punches',n:12,hit:2,act:8},          /* raffica di pugni */
+      kick:   {file:'smoke',  n:12,hit:3,act:3},          /* fumogeno */
+      special:{file:'special',n:12,hit:4,act:6},          /* pugno nello squarcio */
+    },
+    fist:{x:100,y:55,crop:{x:82,y:46,w:25,h:18,frame:6}}, /* pugno teso (ritagliato per l'uscita dallo squarcio) */
+    hand:{x:104,y:58},                                   /* mano che lancia il fumogeno */
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   for(const k in S.anims){const f=S.anims[k].file;if(S.img[f])continue;left++;
@@ -1068,7 +1094,7 @@ function drawSpriteBody(f){
   if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
     ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
     ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
-  drawSpriteFrame(S,a,fi,f.x,f.y,S.scale,f.facing,f.flash>0);
+  drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&a.dy[fi])||0)*S.scale,S.scale,f.facing,f.flash>0);
   /* dissolvenza rapida (4 fotogrammi) quando cambia la posa di partenza */
   const prev=f._sprPrev;
   if(prev&&prev.a!==a&&(prev.a.xfade||a.xfade)){f._sprFade={a:prev.a,fi:prev.fi,t:4};}
@@ -1101,7 +1127,7 @@ function drawStar(x,y,R,r,rot,col){
 
 /* ---------- EFFETTI DISEGNATI (scie, lampi) ---------- */
 let fxObjs=[];
-function updateFxObjs(){for(const o of fxObjs)o.t++;fxObjs=fxObjs.filter(o=>o.t<o.life);}
+function updateFxObjs(){for(const o of fxObjs){o.t++;if(o.update)o.update(o);}fxObjs=fxObjs.filter(o=>o.t<o.life);}
 function drawFxObjs(){for(const o of fxObjs)o.draw(o);}
 /* scia rossa del fendente: arco davanti al personaggio, segue il personaggio */
 function slashTrail(f){
@@ -1118,6 +1144,69 @@ function slashTrail(f){
   /* bagliore sulla lama */
   const tip=spritePoint(f,c.x+c.r*.95,c.y-8);
   spark(tip.x,tip.y,'#FF2A2A',8,3);spark(tip.x,tip.y,'#FFB0B0',4,2);
+}
+/* fumogeno: lampo bianco e nuvola di fumo grigio intorno al personaggio */
+function smokeBomb(f){
+  const S=SPRITE_CHARS[f.cfg.id],h=S&&S.hand?spritePoint(f,S.hand.x,S.hand.y):{x:f.x+f.facing*30,y:f.y-f.cfg.h*.6};
+  whiteFlash=Math.max(whiteFlash,2);noise(.35,.09);beep(1200,.06,'square',.05);
+  ring(h.x,h.y,'#FFFFFF',6,70);spark(h.x,h.y,'#FFFFFF',12,5);
+  const cx=f.x,cy=f.y-f.cfg.h*.45,puffs=[];
+  for(let i=0;i<14;i++)puffs.push({a:rnd(0,7),d:rnd(10,70),r:rnd(16,30),sp:rnd(.15,.5),c:['#9A9A9A','#B8B8B8','#7E7E7E'][i%3],y:rnd(-50,40)});
+  fxObjs.push({t:0,life:70,draw(o){const k=o.t/o.life,fade=o.t<8?o.t/8:1-Math.max(0,(o.t-30)/40);
+    for(const p of puffs){const d=p.d+o.t*p.sp*1.6,x=cx+Math.cos(p.a)*d,y=cy+p.y*(1+k*.3)-o.t*.25,r=p.r*(1+k*.8);
+      ctx.globalAlpha=.55*fade;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}
+    ctx.globalAlpha=1;}});
+  smokePuff(cx,cy,10);
+}
+/* squarcio spazio-temporale blu: si apre, resta, si richiude */
+function drawRift(x,y,open,t){
+  if(open<=0)return;
+  const h=46*open,w=14*open;
+  ctx.save();
+  ctx.globalAlpha=.35*open;ctx.fillStyle='#1E90FF';ctx.beginPath();ctx.ellipse(x,y,w*2.2,h*1.25,0,0,7);ctx.fill();
+  ctx.globalAlpha=.9*open;ctx.fillStyle='#0A1A4A';ctx.beginPath();ctx.ellipse(x,y,w,h,0,0,7);ctx.fill();
+  /* bordo frastagliato luminoso */
+  ctx.strokeStyle='#7DF9FF';ctx.lineWidth=3;ctx.beginPath();
+  for(let i=0;i<=24;i++){const an=i/24*Math.PI*2,j=1+Math.sin(an*5+t*.5)*.12;
+    const px=x+Math.cos(an)*w*j,py=y+Math.sin(an)*h*j;if(i)ctx.lineTo(px,py);else ctx.moveTo(px,py);}
+  ctx.stroke();
+  ctx.strokeStyle='#FFFFFF';ctx.lineWidth=1;ctx.globalAlpha=open*.8;
+  ctx.beginPath();ctx.ellipse(x,y,w*.45,h*.8,0,0,7);ctx.stroke();
+  /* vortice */
+  for(let i=0;i<4;i++){const an=t*.3+i*1.57;ctx.fillStyle=i%2?'#7DF9FF':'#FFFFFF';
+    ctx.fillRect(x+Math.cos(an)*w*.6-1,y+Math.sin(an)*h*.6-1,3,3);}
+  ctx.restore();ctx.globalAlpha=1;
+}
+function openRifts(f,opp){
+  const S=SPRITE_CHARS[f.cfg.id],fp=spritePoint(f,S.fist.x,S.fist.y);
+  const ax=fp.x+f.facing*4,ay=fp.y;
+  /* secondo squarcio: alle spalle dell'avversario, all'altezza del petto */
+  const bx=clamp(opp.x+f.facing*(opp.half+30),20,W-20),by=opp.y-opp.cfg.h*.55;
+  const life=f.cur.active+f.cur.recovery,dmg=f.cur.s.dmg,kb=f.cur.s.kb;
+  sfx.blinkS();shake=Math.max(shake,4);
+  ring(ax,ay,'#7DF9FF',4,40);ring(bx,by,'#7DF9FF',4,40);
+  const c=S.fist.crop,img=S.img[S.anims.special.file];let hit=false;
+  const outAt=t=>Math.max(0,Math.min(1,(t-3)/4))*(t>life-8?Math.max(0,(life-t-2)/6):1);
+  fxObjs.push({t:0,life,
+  update(o){
+    if(!hit&&outAt(o.t)>=1&&opp.state!=='ko'){hit=true;
+      const tip={x:bx+(-f.facing)*c.w*S.scale,y:by},hb=opp.hurtbox();
+      if(aabb({x:Math.min(bx,tip.x)-6,y:by-14,w:Math.abs(tip.x-bx)+12,h:28},hb)){
+        opp.takeDamage(dmg*(f.cfg.power/7)*f.dmgMul,kb,f);
+        spark(tip.x,tip.y,'#7DF9FF',14,5);spark(tip.x,tip.y,'#FFFFFF',6,3);ring(tip.x,tip.y,'#1E90FF',4,36);}}},
+  draw(o){
+    const open=Math.min(1,o.t/5,(o.life-o.t)/6);
+    drawRift(ax,ay,open,o.t);drawRift(bx,by,open,o.t);
+    /* il pugno esce dal secondo squarcio, rivolto verso l'avversario */
+    const out=outAt(o.t);
+    if(out>0){const dir=-f.facing,sc=S.scale,len=c.w*sc*out;
+      ctx.save();ctx.imageSmoothingEnabled=false;ctx.beginPath();
+      /* ritaglia: si vede solo la parte uscita dallo squarcio */
+      ctx.rect(dir>0?bx:bx-len,by-c.h*sc,len,c.h*sc*2);ctx.clip();
+      ctx.translate(bx+dir*(len-c.w*sc),by);if(dir<0)ctx.scale(-1,1);
+      ctx.drawImage(img,c.frame*S.fw+c.x,c.y,c.w,c.h,0,-(S.fist.y-c.y)*sc,c.w*sc,c.h*sc);
+      ctx.restore();}
+  }});
 }
 function muzzleFlash(x,y,dir){
   fxObjs.push({t:0,life:4,draw(o){const k=1-o.t/o.life;
