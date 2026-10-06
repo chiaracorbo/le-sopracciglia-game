@@ -507,10 +507,14 @@ const ROSTER=[
   },
   special:{type:'star',name:'RELAZIONI COL POPOLO',dmg:19.2,airDmg:20,kb:26,st:16,act:4,rec:14,fx:'gold',cost:40,cd:96},
   quote:'Il regno ha bisogno di un cambiamento.'},
- {id:'baumizio',name:'BAUMIZIO',title:'Il Trafficante',hp:225,speed:2.5,power:8,h:158,def:7,aer:3,
+ {id:'baumizio',name:'BAUMIZIO',title:'Il Trafficante',hp:225,speed:2.5,power:8,h:157,def:7,aer:3,
   fur:'#B89A78',brow:'#556B2F',ui:'#D8B040',outfit:'#1E1B18',coat:true,weapon:'trombone',species:'alpaca',recMod:1.05,
   tophat:true,sunglasses:true,nosering:true,fluff:'#C8A878',noBelt:true,
-  special:{type:'grenade',name:'TROMBONE GRANATA',dmg:17.6,kb:24,r:60,st:8,act:4,rec:12,fx:'smoke',cost:45,cd:104},
+  moves:{
+    punch:{startup:7,active:4,recovery:12,lag:6,range:48,dmg:5.2,kb:8,slashFx:true},
+    kick:{startup:6,active:14,recovery:10,lag:8,range:44,hh:50,dmg:3.8,kb:3,rehit:[7],trailAt:[0,7],slashFx:true},
+  },
+  special:{type:'flurry',name:'GUANTI FALCO',dmg:1.65,every:6,kb:2,w:56,hh:60,st:8,act:36,rec:12,slashFx:true,fx:'white',cost:45,cd:104},
   quote:'Non \u00E8 una figata?!'},
  {id:'bederico',name:'BEDERICO',title:'Il Supervisore dell\u2019AI',hp:170,speed:3.4,power:9,h:148,def:3,aer:6,
   fur:'#3A3A3E',brow:'#20B2AA',ui:'#7DF9FF',outfit:'#16161A',weapon:'prompt',species:'alpaca',recMod:.9,meta:true,
@@ -747,7 +751,10 @@ class Fighter{
       for(const o of m.shots){const off=typeof o==='number'?o:o.at;
         if(this.moveFr===aS+off)this.fireShot(typeof o==='number'?m:{...m,...o},opp);}}
     if(m.recoil&&this.moveFr>aS&&this.moveFr<=aS+5)this.x-=this.facing*m.recoil/5;
-    if((m.slashFx||(m.s&&m.s.slashFx))&&this.moveFr===aS)slashTrail(this,m.key==='special'?'punch':m.key);
+    if(m.slashFx||(m.s&&m.s.slashFx)){const SCt=SPRITE_CHARS[this.cfg.id],tk=m.key==='special'&&!(SCt&&SCt.trails&&SCt.trails.special)?'punch':m.key;
+      for(const o of (m.trailAt||[0]))if(this.moveFr===aS+o)slashTrail(this,tk);}
+    if(m.sType==='flurry'&&this.moveFr>aS&&this.moveFr<aE&&(this.moveFr-aS)%m.s.every===0){this.hitConsumed=false;
+      const SC2=SPRITE_CHARS[this.cfg.id];if(SC2&&SC2.trails&&SC2.trails.special){SC2.trails.special.flip=!SC2.trails.special.flip;slashTrail(this,'special');}}
     if(m.hop&&this.moveFr===1&&this.onGround()){this.vy=-m.hop;this.y-=1;dust(this.x,GROUND,5);}
     if(m.sType==='teleport')this.teleportStep(m,opp);
     if(this.moveFr>=aE+m.recovery){this.atkLag=m.lag||0;this.state='idle';this.cur=null;this.pendingWaves=null;}
@@ -848,7 +855,7 @@ class Fighter{
         fxBurst(opp.x,opp.y-opp.cfg.h*0.6,m.s.fx,8);
         return;}
       this.hitConsumed=true;
-      if(m.key==='punch'||m.key==='kick')meleeFX(this,opp,m.key);
+      if(m.key==='punch'||m.key==='kick'||m.sType==='flurry')meleeFX(this,opp,m.key);
       let dmgBase=m.dmg;
       if(m.key==='special'&&m.s.airDmg&&!opp.onGround())dmgBase=m.s.airDmg;
       const base=dmgBase*(this.cfg.power/7)*this.dmgMul;
@@ -918,7 +925,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -1114,6 +1121,29 @@ const SPRITE_CHARS={
     },
     glow:{x:60,y:62},
   },
+  baumizio:{
+    dir:'sprites/baumizio/',fw:128,fh:128,ax:58,ay:120,scale:1.38,
+    body:{x0:33,y0:6,x1:94,y1:120},
+    anims:{
+      idle:   {file:'idle',   n:16,fps:8},
+      walk:   {file:'walk',   n:16,fps:16},
+      jump:   {file:'jump',   n:16,jf:{squat:5,up:7,peak:8,down:9,land:10},dy:{7:18,8:24,9:22}},
+      hurt:   {file:'hurt',   n:16},
+      block:  {file:'block',  n:16,fps:20,holdFrom:5},
+      ko:     {file:'ko',     n:16,fps:14},
+      win:    {file:'win',    n:16,fps:10},
+      punch:  {file:'claw1',  n:16,hit:7,act:3,recReverse:true}, /* artigliata orizzontale (affondo) */
+      kick:   {file:'claw2',  n:16,hit:4,act:7},                 /* doppia artigliata */
+      special:{file:'special',n:12,hit:3,act:8},                 /* raffica di artigliate */
+    },
+    /* scie degli artigli: tre linee parallele */
+    trails:{
+      punch:  {x:74,y:52,r:36,a0:-.7,a1:.55,col:'#DDE6F0',claws:true},
+      kick:   {x:74,y:46,r:34,a0:-1.55,a1:.5,col:'#DDE6F0',claws:true},
+      special:{x:74,y:54,r:36,a0:-1.2,a1:.7,col:'#DDE6F0',claws:true},
+    },
+    clawTip:{punch:{x:107,y:51},kick:{x:103,y:53},special:{x:106,y:56}},
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
@@ -1251,6 +1281,14 @@ function drawFxObjs(){for(const o of fxObjs)o.draw(o);}
 /* scia rossa del fendente: arco davanti al personaggio, segue il personaggio */
 function slashTrail(f,key){
   const S=SPRITE_CHARS[f.cfg.id],c=(S.trails&&S.trails[key])||S.slash;
+  if(c.claws){const flip=c.flip?-1:1;fxObjs.push({t:0,life:9,draw(o){
+    const p=spritePoint(f,c.x,c.y),R=c.r*S.scale,k=1-o.t/o.life,dir=f.facing;
+    const a0=c.a0*flip,a1=c.a1*flip;
+    ctx.save();ctx.translate(p.x,p.y);ctx.scale(dir,1);ctx.lineCap='round';
+    for(let i=0;i<3;i++){const r=R-6+i*6;
+      ctx.globalAlpha=k*.55;ctx.strokeStyle='#8FA3B8';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,r,Math.min(a0,a1),Math.max(a0,a1));ctx.stroke();
+      ctx.globalAlpha=k;ctx.strokeStyle=c.col;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r,Math.min(a0,a1),Math.max(a0,a1));ctx.stroke();}
+    ctx.restore();ctx.globalAlpha=1;}});return;}
   fxObjs.push({t:0,life:10,draw(o){
     const p=spritePoint(f,c.x,c.y),R=c.r*S.scale,k=1-o.t/o.life,dir=f.facing;
     const a0=c.a0!==undefined?c.a0:-1.45,a1=c.a1!==undefined?c.a1:.15; /* da sopra fino in avanti, verso il basso */
@@ -1327,6 +1365,19 @@ function openRifts(f,opp){
       ctx.restore();}
   }});
 }
+function clawMarks(opp,attacker){
+  const ox=rnd(-12,12),oy=-opp.cfg.h*rnd(.35,.7),ang=rnd(-1.1,-.5)*attacker.facing,len=26;
+  fxObjs.push({t:0,life:34,draw(o){const k=o.t<4?1:1-(o.t-4)/(o.life-4);
+    const cx=opp.x+ox,cy=opp.y+oy,ca=Math.cos(ang),sa=Math.sin(ang);
+    ctx.save();ctx.lineCap='round';
+    for(let i=-1;i<=1;i++){const nx=-sa*i*6,ny=ca*i*6;
+      ctx.globalAlpha=k*.9;ctx.strokeStyle='#7A0000';ctx.lineWidth=4;
+      ctx.beginPath();ctx.moveTo(cx+nx-ca*len/2,cy+ny-sa*len/2);ctx.lineTo(cx+nx+ca*len/2,cy+ny+sa*len/2);ctx.stroke();
+      ctx.strokeStyle=o.t<5?'#FFFFFF':'#FF4136';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(cx+nx-ca*len/2,cy+ny-sa*len/2);ctx.lineTo(cx+nx+ca*len/2,cy+ny+sa*len/2);ctx.stroke();}
+    ctx.restore();ctx.globalAlpha=1;}});
+}
+function metalSparks(x,y){spark(x,y,'#FFFFFF',8,4);spark(x,y,'#C0C8D0',8,4);spark(x,y,'#FFE94A',5,3);beep(1800,.04,'square',.04,-600);}
 function muzzleFlash(x,y,dir,big){
   const L=big?34:18,Hh=big?11:6;
   fxObjs.push({t:0,life:big?7:4,draw(o){const k=1-o.t/o.life;
@@ -1403,6 +1454,8 @@ function drawBeamFlashes(){
 /* effetti al contatto degli attacchi corpo a corpo */
 function meleeFX(f,opp,key){
   const S=SPRITE_CHARS[f.cfg.id];
+  if(f.cfg.id==='baumizio'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
+    metalSparks(p.x,p.y);if(key==='special')clawMarks(opp,f);return;}
   if(f.cfg.id==='chiara'&&key==='punch'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.6};
     spark(p.x,p.y,'#FF2A2A',10,4);spark(p.x,p.y,'#FFFFFF',4,2);return;}
   if(!S||!S.paw||!S.paw[key])return;
