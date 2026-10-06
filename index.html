@@ -1050,7 +1050,7 @@ const SPRITE_CHARS={
     portrait:{file:'base',x0:16,y0:9,x1:110,y1:117},  /* immagine base usata nel ritratto */
     anims:{
       idle:   {file:'idle',   n:12,fps:7,pingpong:true},  /* avanti e indietro: alza e abbassa le pistole senza scatti */
-      walk:   {file:'walk',   n:16,fps:16,dy:{all:-1}},
+      walk:   {file:'walk',   n:16,fps:16},               /* cammina con le pistole puntate */
       jump:   {file:'jump',   n:12,jf:{squat:3,up:5,peak:6,down:8,land:9},dy:{5:10,6:12,7:13,8:12}},
       hurt:   {file:'hurt',   n:12},
       block:  {file:'block',  n:12,fps:20,holdFrom:6},
