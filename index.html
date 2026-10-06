@@ -441,12 +441,12 @@ const ROSTER=[
   special:{type:'melee_big',name:'RIVOLUZIONE DORATA',dmg:20,airDmg:24,kb:40,w:80,hh:60,st:10,act:6,rec:8,fx:'gold',cost:40,cd:96},
   quote:'\u00C8 un peccato, ma \u00E8 necessario per la causa.'},
  {id:'sito',name:'SITO',title:'Il Generale',hp:245,speed:2.6,power:9,h:162,def:8,aer:4,
-  kickDmg:7.2,meleeR:2,heavyJump:true,
+  meleeR:2,heavyJump:true,
   fur:'#C8A888',brow:'#EDE5D0',ui:'#DC143C',outfit:'#A8332E',weapon:'ascia',species:'alpaca',recMod:1.1,
   hair:{t:'mane',c1:'#9FD8A0'},fluff:'#9FD8A0',trim:'#C8A07A',vest:'#2E5E4E',medallion:true,noBelt:true,
   moves:{
-    punch:{startup:8,active:5,recovery:12,lag:6,range:62,hh:50,dmg:6,kb:10,slashFx:true},
-    kick:{startup:10,active:4,recovery:12,lag:8,range:58,hh:70,dmg:8,kb:16,slashFx:true},
+    punch:{startup:8,active:5,recovery:12,lag:6,range:62,hh:96,yFrac:.45,dmg:7.4,kb:10,slashFx:true},
+    kick:{startup:10,active:5,recovery:12,lag:8,range:58,hh:116,yFrac:.4,dmg:9.4,kb:16,slashFx:true},
   },
   /* colpo d'ascia (attivo dal fotogramma 12), sparo al 30, ricarica dal 36 */
   special:{type:'axegun',name:'FURIA DELL\u2019ASCIA',dmg:9,kb:8,w:68,hh:60,st:12,act:5,rec:62,shotAt:30,reloadAt:36,shotDmg:10,
@@ -470,7 +470,7 @@ const ROSTER=[
   special:{type:'blink',name:'STRATAGEMMA PAPERO',dmg:14.4,kb:25,st:6,act:4,rec:6,fx:'yellow',cost:30,cd:72},
   quote:'Tutto secondo il piano.'},
  {id:'mango',name:'MANGO',title:'Il Cane Spaziale',hp:215,speed:3.0,power:7,h:132,bodyHalf:42,def:6,aer:5,
-  punchDmg:4.8,
+  punchDmg:4.8,punchRange:42,
   fur:'#F0EDE8',brow:'#C0C0C0',outfit:'#AEB6BE',weapon:'braccio',species:'dog',recMod:1.0,ui:'#00E5FF',
   mech:true,noBelt:true,
   special:{type:'laser',name:'LASER COSMICO',dmg:22.4,airDmg:24,kb:30,st:14,act:16,rec:14,fx:'cyan',cost:45,cd:104},
@@ -711,6 +711,8 @@ class Fighter{
     if(key==='kick'&&this.cfg.kickDmg)this.cur.dmg=this.cfg.kickDmg;
     this.cur.range+=(this.cfg.meleeR||0);
     if(key==='punch'&&this.cfg.punchRange)this.cur.range=this.cfg.punchRange;
+    const SR=SPRITE_CHARS[this.cfg.id];
+    if(SR&&SR.reach&&SR.reach[key])this.cur.range=Math.max(this.cur.range,Math.round(SR.reach[key]-(this.half-6)));
     sfx.whoosh();
   }
   attemptSpecial(opp,fromCancel){
@@ -1182,9 +1184,21 @@ const SPRITE_CHARS={
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
   for(const f of files){if(S.img[f])continue;left++;
-    const im=new Image();im.onload=()=>{if(--left===0)S.ready=true;};
+    const im=new Image();im.onload=()=>{if(--left===0){S.ready=true;measureReach(S);}};
     im.onerror=()=>console.warn('Sprite mancante: '+S.dir+f+'.png');
     im.src=S.dir+f+'.png';S.img[f]=im;}}})();
+/* fin dove arriva l'arma (in pixel dal centro del personaggio) durante la fase attiva di pugno e calcio */
+function measureReach(S){
+  S.reach={};
+  try{const c=document.createElement('canvas');c.width=S.fw;c.height=S.fh;const x=c.getContext('2d');
+    for(const key of ['punch','kick']){const a=S.anims[key];if(!a)continue;
+      let f0,f1;if(a.tl){const g=a.tl.find(g=>g.to==='a')||a.tl[0];f0=g.f0;f1=g.f1;}else{f0=a.hit;f1=a.hit+(a.act||1)-1;}
+      let m=-1;for(let f=f0;f<=f1;f++){x.clearRect(0,0,S.fw,S.fh);x.drawImage(S.img[a.file],-f*S.fw,0);
+        const d=x.getImageData(0,0,S.fw,S.fh).data;
+        for(let yy=0;yy<S.fh;yy++)for(let xx=S.fw-1;xx>m;xx--)if(d[(yy*S.fw+xx)*4+3]>40){m=xx;break;}}
+      if(m>0)S.reach[key]=(m-S.ax)*S.scale;}
+  }catch(e){}
+}
 /* un'immagine è usabile solo se esiste ed è stata caricata */
 function imgOk(im){return !!(im&&im.complete&&im.naturalWidth>0);}
 
