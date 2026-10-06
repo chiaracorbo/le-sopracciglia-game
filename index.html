@@ -453,7 +453,7 @@ const ROSTER=[
   moves:{
     punch:{startup:6,active:10,recovery:12,lag:6,shotSpd:13,shotDmg:2.6,
       shots:[{at:0,muzzle:'gunA'},{at:6,muzzle:'gunB'}]},
-    kick:{startup:9,active:4,recovery:16,lag:10,shotSpd:19,shotDmg:7.2,shotKb:14,shotBig:true,recoil:12,
+    kick:{startup:14,active:4,recovery:14,lag:10,shotSpd:19,shotDmg:7.2,shotKb:14,shotBig:true,recoil:12,
       shots:[{at:0,muzzle:'heavyGun'}]},
   },
   special:{type:'barrage',name:'TEMPESTA TURCHESE',dmg:2.6,every:4,kb:2,st:10,act:40,rec:12,fx:'blue',cost:35,cd:80},
@@ -1058,12 +1058,12 @@ const SPRITE_CHARS={
       win:    {file:'base',   n:1, fps:1},                 /* posa base con le pistole alzate */
       /* gli attacchi partono dalla posa con le pistole alzate: dissolvenza in entrata e in uscita */
       punch:  {file:'double', n:12,hit:2,act:4,xfade:true},  /* doppio colpo */
-      kick:   {file:'heavy',  n:12,hit:1,act:2,xfade:true},  /* colpo potente con rinculo */
+      kick:   {file:'heavy',  n:11,hit:5,act:2,xfade:true},  /* alza le pistole e spara un colpo potente */
       special:{file:'special',n:12,hit:2,act:9,xfade:true},  /* raffica */
     },
     /* bocche delle canne: pistola davanti (A) e dietro (B), per ogni attacco */
     gunA:{x:117,y:42},gunB:{x:107,y:49},
-    heavyGun:{x:114,y:39},
+    heavyGun:{x:110,y:40},
     burstA:{x:112,y:39},burstB:{x:104,y:46},
   },
 };
