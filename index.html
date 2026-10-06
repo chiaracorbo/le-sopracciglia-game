@@ -434,11 +434,16 @@ function lift(h,a){const[r,g,b]=hex2rgb(h);
 /* ---------- ROSTER (canon dal libro) — sprite 108-180px ---------- */
 const ROSTER=[
  {id:'iacopo',name:'IACOPO',title:'L\u2019Imperatore',hp:225,speed:3.0,power:8,h:153,def:5,aer:5,
-  punchDmg:4.8,kickDmg:8,meleeR:5,
+  meleeR:5,
   fur:'#8A8D88',brow:'#FFD700',outfit:'#2E3B2E',weapon:'segaspada',species:'alpaca',recMod:1.0,
   hair:{t:'pouf',c1:'#9AA88A'},fluff:'#E8C84A',sash:{a:'#A8332E',b:'#2E3E5E'},buttons:'#C9A227',
   harness:true,eyeCol:'#D87A2A',browBig:true,
-  special:{type:'melee_big',name:'RIVOLUZIONE DORATA',dmg:20,airDmg:24,kb:40,w:80,hh:60,st:10,act:6,rec:8,fx:'gold',cost:40,cd:96},
+  moves:{
+    punch:{startup:8,active:4,recovery:12,lag:6,range:60,hh:70,yFrac:.5,dmg:7.6,kb:10,slashFx:true},
+    kick:{startup:9,active:5,recovery:13,lag:8,range:60,hh:100,yFrac:.42,dmg:7.6,kb:14,slashFx:true},
+  },
+  /* la Segaspada accesa trita l'avversario: colpi ripetuti ogni 6 fotogrammi */
+  special:{type:'flurry',chainsaw:true,name:'RIVOLUZIONE DORATA',dmg:1.38,every:6,kb:1,lunge:14,w:78,hh:70,st:10,act:38,rec:16,fx:'gold',cost:40,cd:96},
   quote:'\u00C8 un peccato, ma \u00E8 necessario per la causa.'},
  {id:'sito',name:'SITO',title:'Il Generale',hp:245,speed:2.6,power:9,h:162,def:8,aer:4,
   meleeR:2,heavyJump:true,
@@ -749,6 +754,15 @@ class Fighter{
     if(SC&&SC.kickLunge&&m.key==='kick'&&this.moveFr<=aS)this.x+=this.facing*SC.kickLunge/aS;
     if(m.rehit)for(const o of m.rehit)if(this.moveFr===aS+o)this.hitConsumed=false;
     if(m.smokeFx&&this.moveFr===aS)smokeBomb(this);
+    if(m.s&&m.s.chainsaw){
+      if(this.moveFr<=aS)this.x+=this.facing*m.s.lunge/aS;
+      if(this.moveFr>=aS&&this.moveFr<aE){
+        if((this.moveFr-aS)%7===0)sfx.chainsaw();
+        shake=Math.max(shake,2.5);
+        const B=SPRITE_CHARS[this.cfg.id].blade;
+        if(this.moveFr%3===0){const p=spritePoint(this,rnd(B.x0,B.x1),B.y-rnd(2,8));
+          _padd({x:p.x,y:p.y,vx:rnd(-.5,.5),vy:rnd(-1.4,-.6),life:24,max:24,col:['#9A9A9A','#B8B8B8','#777'][this.moveFr%3],sz:rnd(4,7),fade:true});}
+        if(this.moveFr%2===0){const p=spritePoint(this,rnd(B.x0,B.x1),B.y);_padd({x:p.x,y:p.y,vx:this.facing*rnd(-1,1),vy:rnd(-2,0),life:6,max:6,col:'#FFB347',sz:2});}}}
     if(m.sType==='pump3'){for(const o of m.s.shotsAt)if(this.moveFr===aS+o){this.hitConsumed=true;
         this.fireShot({muzzle:'pumpgun',pellets:true,shotDmg:m.s.dmg,shotKb:9},opp);
         if(o>0)beep(300,.06,'square',.05,-120);}}
@@ -875,6 +889,7 @@ class Fighter{
         return;}
       this.hitConsumed=true;
       if(m.key==='punch'||m.key==='kick'||m.sType==='flurry')meleeFX(this,opp,m.key);
+      if(m.s&&m.s.chainsaw)blood(opp.x,opp.y-opp.cfg.h*.5,3);
       let dmgBase=m.dmg;
       if(m.key==='special'&&m.s.airDmg&&!opp.onGround())dmgBase=m.s.airDmg;
       const base=dmgBase*(this.cfg.power/7)*this.dmgMul;
@@ -1208,6 +1223,27 @@ const SPRITE_CHARS={
     pumpgun:{x:106,y:68},   /* bocca del fucile nella speciale */
     kickLunge:12,
   },
+  iacopo:{
+    dir:'sprites/iacopo/',fw:128,fh:128,ax:46,ay:123,scale:1.28,
+    body:{x0:13,y0:4,x1:113,y1:123},
+    anims:{
+      idle:   {file:'idle',    n:16,fps:8},
+      jump:   {file:'jump',    n:16,jf:{squat:3,up:5,peak:7,down:9,land:11},dy:{5:8,6:2,7:2,8:2,9:2,10:2}},
+      hurt:   {file:'hurt',    n:16},
+      block:  {file:'block',   n:16,fps:20,holdFrom:8},
+      ko:     {file:'ko',      n:16,fps:14},
+      win:    {file:'win',     n:16,fps:10},
+      punch:  {file:'slash',   n:16,hit:6,act:2,xfade:true},   /* fendente orizzontale */
+      kick:   {file:'overhead',n:16,hit:4,act:3,xfade:true},   /* colpo dall'alto */
+      /* motosega accesa: la lama resta tesa (fotogrammi 4-9) per tutta la fase attiva */
+      special:{file:'chainsaw',n:16,tl:[{to:'s',f0:0,f1:3},{to:'a',f0:4,f1:9},{to:'end',f0:10,f1:15}]},
+    },
+    trails:{
+      punch:{x:56,y:56,r:58,a0:-1.45,a1:.3,col:'#D8D8D8'},
+      kick: {x:56,y:52,r:60,a0:-1.75,a1:.75,col:'#D8D8D8'},
+    },
+    blade:{x0:70,x1:122,y:60},   /* lama della Segaspada tesa (per fumo e scintille) */
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
@@ -1313,7 +1349,10 @@ function drawSpriteBody(f){
     ctx.globalAlpha=.18+.25*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.75,r,0,0,7);ctx.fill();
     ctx.globalAlpha=.25*k;ctx.fillStyle='#FFF3B0';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.45,r*.7,0,0,7);ctx.fill();ctx.globalAlpha=1;}
   if(alpha!==undefined)ctx.globalAlpha=Math.max(0,alpha);
+  const shakeX=(f.state==='attack'&&f.cur&&f.cur.s&&f.cur.s.chainsaw&&f.moveFr>=f.cur.startup&&f.moveFr<f.cur.startup+f.cur.active)?rnd(-2,2):0;
+  if(shakeX){ctx.save();ctx.translate(shakeX,rnd(-1,1));}
   drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*S.scale,S.scale,f.facing,f.flash>0);
+  if(shakeX)ctx.restore();
   /* durante il bagliore lo sprite si illumina di giallo */
   if(S.glow&&f.state==='attack'&&f.cur&&f.cur.key==='special'&&f.cur.s.castFr&&f.moveFr<f.cur.s.castFr+f.cur.s.vanishFr){
     const k=Math.min(1,f.moveFr/f.cur.s.castFr);
@@ -1574,6 +1613,8 @@ function drawBeamFlashes(){
 /* effetti al contatto degli attacchi corpo a corpo */
 function meleeFX(f,opp,key){
   const S=SPRITE_CHARS[f.cfg.id];
+  if(f.cfg.id==='iacopo'&&key==='special'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
+    metalSparks(p.x,p.y);spark(p.x,p.y,'#FFB347',6,4);return;}
   if(f.cfg.id==='zibe'&&key==='kick'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.45};
     spark(p.x,p.y,'#FFE94A',8,3);spark(p.x,p.y,'#FFFFFF',4,2);dust(opp.x,GROUND,7,true);return;}
   if(f.cfg.id==='baumizio'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
