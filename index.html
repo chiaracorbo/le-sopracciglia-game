@@ -512,7 +512,7 @@ const ROSTER=[
   tophat:true,sunglasses:true,nosering:true,fluff:'#C8A878',noBelt:true,
   moves:{
     punch:{startup:7,active:4,recovery:12,lag:6,range:48,dmg:5.2,kb:8,slashFx:true},
-    kick:{startup:6,active:14,recovery:10,lag:8,range:44,hh:50,dmg:3.8,kb:3,rehit:[7],trailAt:[0,7],slashFx:true},
+    kick:{startup:7,active:14,recovery:12,lag:8,range:56,hh:50,dmg:3.8,kb:3,rehit:[12],trailAt:[0,12],slashFx:true},
   },
   special:{type:'flurry',name:'GUANTI FALCO',dmg:1.65,every:6,kb:2,w:56,hh:60,st:8,act:36,rec:12,slashFx:true,fx:'white',cost:45,cd:104},
   quote:'Non \u00E8 una figata?!'},
@@ -1133,16 +1133,16 @@ const SPRITE_CHARS={
       ko:     {file:'ko',     n:16,fps:14},
       win:    {file:'win',    n:16,fps:10},
       punch:  {file:'claw1',  n:16,hit:7,act:3,recReverse:true}, /* artigliata orizzontale (affondo) */
-      kick:   {file:'claw2',  n:16,hit:4,act:7},                 /* doppia artigliata */
+      kick:   {file:'claw2',  n:16,hit:4,act:7,xfade:true},      /* doppia artigliata in affondo */
       special:{file:'special',n:12,hit:3,act:8},                 /* raffica di artigliate */
     },
     /* scie degli artigli: tre linee parallele */
     trails:{
       punch:  {x:74,y:52,r:36,a0:-.7,a1:.55,col:'#DDE6F0',claws:true},
-      kick:   {x:74,y:46,r:34,a0:-1.55,a1:.5,col:'#DDE6F0',claws:true},
+      kick:   {x:84,y:50,r:32,a0:-.55,a1:.5,col:'#DDE6F0',claws:true},
       special:{x:74,y:54,r:36,a0:-1.2,a1:.7,col:'#DDE6F0',claws:true},
     },
-    clawTip:{punch:{x:107,y:51},kick:{x:103,y:53},special:{x:106,y:56}},
+    clawTip:{punch:{x:107,y:51},kick:{x:114,y:50},special:{x:106,y:56}},
   },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
