@@ -459,11 +459,11 @@ const ROSTER=[
   buff:true,hair:{t:'crest',c1:'#1A1A1A'},legCol:'#8A7D5A',gloves:'#1A1A1A',pouch:true,
   special:{type:'blink',name:'STRATAGEMMA PAPERO',dmg:14.4,kb:25,st:6,act:4,rec:6,fx:'yellow',cost:30,cd:72},
   quote:'Tutto secondo il piano.'},
- {id:'mango',name:'MANGO',title:'Il Cane Spaziale',hp:215,speed:3.0,power:7,h:144,def:6,aer:5,
+ {id:'mango',name:'MANGO',title:'Il Cane Spaziale',hp:215,speed:3.0,power:7,h:132,bodyHalf:42,def:6,aer:5,
   punchDmg:4.8,
-  fur:'#F0EDE8',brow:'#C0C0C0',outfit:'#AEB6BE',weapon:'braccio',species:'dog',recMod:1.0,punchRange:70,
+  fur:'#F0EDE8',brow:'#C0C0C0',outfit:'#AEB6BE',weapon:'braccio',species:'dog',recMod:1.0,ui:'#00E5FF',
   mech:true,noBelt:true,
-  special:{type:'grab',name:'PUGNO COSMICO',dmg:22.4,airDmg:24,kb:50,reach:120,st:8,act:8,rec:16,fx:'green',cost:45,cd:104},
+  special:{type:'laser',name:'LASER COSMICO',dmg:22.4,airDmg:24,kb:30,st:14,act:16,rec:14,fx:'cyan',cost:45,cd:104},
   quote:'BAU! (trad.: la comunicazione \u00E8 fondamentale per la nostra lotta.)'},
  {id:'pisani',name:'LUCA PISANI',title:'Il Gran Maestro',hp:270,speed:2.1,power:10,h:180,def:7,aer:3,
   punchDmg:6.4,kickDmg:8.8,meleeR:5,comeback:true,
@@ -505,7 +505,7 @@ const ROSTER=[
 ];
 const FX_COL={gold:['#FFD700','#FF6347','#FFF3B0'],smoke:['#A9A9A9','#777','#555'],
   blue:['#00BFFF','#9FF5EF','#FFFFFF'],yellow:['#FFFF00','#FFE94A','#FFF'],
-  green:['#00FF00','#7CFC00','#CFFFC0'],purple:['#9932CC','#C77DF0','#E8C8FF'],
+  green:['#00FF00','#7CFC00','#CFFFC0'],cyan:['#00FFFF','#7DF9FF','#E8FFFF'],purple:['#9932CC','#C77DF0','#E8C8FF'],
   orange:['#FFC27D','#FF8C00','#FFE3B0'],white:['#FFFFFF','#D8E4F0','#AAB8C8'],
   glitch:['#FFFFFF','#7DF9FF','#FF5DF0']};
 
@@ -556,7 +556,7 @@ function specialFX(f){
     case 'alice':case 'dimauro':for(let i=0;i<6;i++)particles.push({bar:true,x:x-f.facing*100,y:y+rnd(-40,40),w:70,h:2,vx:f.facing*7,vy:0,life:rnd(8,14),max:14,col:cols[i%cols.length]});break;
     case 'ettore':for(let i=0;i<5;i++)particles.push({star:true,x:x+rnd(-32,32),y:y+rnd(-44,12),vx:0,vy:-.5,life:22,max:22,col:'#FFFFFF',sz:3});break;
     case 'batteo':for(let i=0;i<6;i++)particles.push({x:x+rnd(-36,36),y:y+rnd(-50,30),vx:rnd(-1,1),vy:rnd(-2,0),life:rnd(8,14),max:14,col:'#FFFF00',sz:rnd(3,5)});break;
-    case 'mango':for(let i=0;i<7;i++)particles.push({bar:true,x:x+f.facing*rnd(8,42),y:y+rnd(-22,30),w:rnd(6,14),h:2,vx:0,vy:0,life:rnd(6,12),max:12,col:'#00FF00'});break;
+    case 'mango':for(let i=0;i<7;i++)particles.push({bar:true,x:x+f.facing*rnd(8,42),y:y+rnd(-22,30),w:rnd(6,14),h:2,vx:0,vy:0,life:rnd(6,12),max:12,col:'#00FFFF'});break;
     case 'zibe':for(let i=0;i<5;i++)particles.push({bar:true,x:x+f.facing*16,y:y-12+i*6,w:38+i*7,h:2,vx:f.facing*4,vy:0,life:12,max:12,col:'#FFC27D'});break;
     case 'sito':smokePuff(x,y,12);break;
     case 'baumizio':smokePuff(x,y-10,10);ring(x,y,'#6B8E23',4,70);break;
@@ -582,7 +582,7 @@ class Fighter{
     this.jumpV=-Math.sqrt(2*0.6*(45+(cfg.aer||5)*4))*(cfg.heavyJump?Math.sqrt(.9):1);
     this.ai={cool:0,plan:'approach',planT:0};this.animT=0;this.readyPing=false;
   }
-  get half(){return this.cfg.h*0.17;}
+  get half(){return this.cfg.bodyHalf||this.cfg.h*0.17;}
   get dmgMul(){return (this.cfg.comeback&&this.hp/this.maxHp<0.4)?1.2:1;}
   get specialReady(){return this.meter>=this.cfg.special.cost&&this.cooldown<=0;}
   hurtbox(){const crouch=this.state==='crouch';const h=this.cfg.h*(crouch?0.6:1);
@@ -712,6 +712,8 @@ class Fighter{
   advanceAttack(opp){
     const m=this.cur;this.moveFr++;
     const aS=m.startup,aE=m.startup+m.active;
+    const SC=SPRITE_CHARS[this.cfg.id];
+    if(SC&&SC.kickLunge&&m.key==='kick'&&this.moveFr<=aS)this.x+=this.facing*SC.kickLunge/aS;
     if(this.moveFr===aS&&m.key==='special')this.resolveSpecialStart(opp);
     if(m.sType==='waves'&&this.pendingWaves){
       for(const w of this.pendingWaves)if(!w.done&&this.moveFr===w.fr)this.fireWave(w,opp);}
@@ -727,6 +729,7 @@ class Fighter{
       this.x=clamp(opp.x+this.facing*(opp.half+26),this.half+6,W-this.half-6);
       this.facing=opp.x>=this.x?1:-1;
       fxBurst(this.x,this.y-this.cfg.h*0.5,'yellow',12);}
+    if(t==='laser'){fireLaser(this,opp);this.hitConsumed=true;}
     if(t==='hopburst'){this.vy=-5;this.y-=1;this.burstLeft=s.n;this.burstT=0;this.hitConsumed=true;}
     if(t==='cone'){for(let k=0;k<s.n;k++)projectiles.push({x:this.x+this.facing*26,y:this.y-this.cfg.h*0.55+rnd(-18,18),
       vx:this.facing*rnd(7,10),vy:rnd(-1,1),w:8,h:4,dmg:s.dmg,kb:s.kb,life:12,owner:this,col:'#FFC27D'});
@@ -779,6 +782,7 @@ class Fighter{
         fxBurst(opp.x,opp.y-opp.cfg.h*0.6,m.s.fx,8);
         return;}
       this.hitConsumed=true;
+      if(m.key==='punch'||m.key==='kick')meleeFX(this,opp,m.key);
       let dmgBase=m.dmg;
       if(m.key==='special'&&m.s.airDmg&&!opp.onGround())dmgBase=m.s.airDmg;
       const base=dmgBase*(this.cfg.power/7)*this.dmgMul;
@@ -848,7 +852,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='laser'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -935,10 +939,177 @@ const sil=document.createElement('canvas');sil.width=360;sil.height=320;
 const sctx=sil.getContext('2d');sctx.imageSmoothingEnabled=false;
 const OX=180,OY=300; // origine piedi dentro l'offscreen
 
+/* ---------- SPRITE ANIMATI (pixler.dev) ----------
+   Ogni personaggio: strisce PNG orizzontali di fotogrammi fw×fh, tutte rivolte a destra.
+   ax,ay = punto d'appoggio (centro corpo, linea dei piedi) dentro il fotogramma.
+   hit = fotogramma in cui il colpo è "attivo"; act = quanti fotogrammi dura la fase attiva. */
+const SPRITE_CHARS={
+  mango:{
+    dir:'sprites/mango/',fw:128,fh:128,ax:64,ay:116,scale:1.25,
+    body:{x0:16,y0:11,x1:111,y1:116},
+    anims:{
+      idle:   {file:'idle',   n:12,fps:8},
+      walk:   {file:'walk',   n:12,fps:16},
+      jump:   {file:'jump',   n:10},
+      hurt:   {file:'hurt',   n:12},
+      block:  {file:'block',  n:12,fps:20,holdFrom:5},
+      ko:     {file:'ko',     n:12,fps:12},
+      win:    {file:'win',    n:12,fps:10},
+      punch:  {file:'atk1',   n:10,hit:4,act:2},
+      kick:   {file:'atk2',   n:12,hit:3,act:4},
+      special:{file:'special',n:12,hit:5,act:3},
+    },
+    muzzle:{x:36,y:40},                 /* punta dei cannoni sulla schiena */
+    paw:{punch:{x:94,y:74},kick:{x:108,y:77}},
+    kickLunge:16,                       /* scatto in avanti della carica */
+  },
+};
+(()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
+  for(const k in S.anims){const f=S.anims[k].file;if(S.img[f])continue;left++;
+    const im=new Image();im.onload=()=>{if(--left===0)S.ready=true;};im.src=S.dir+f+'.png';S.img[f]=im;}}})();
+
+/* punto dello sprite (px,py) → coordinate nell'arena, tenendo conto del verso */
+function spritePoint(f,px,py){const S=SPRITE_CHARS[f.cfg.id];
+  return {x:f.x+f.facing*(px-S.ax)*S.scale,y:f.y-(S.ay-py)*S.scale};}
+
+/* sceglie animazione e fotogramma dallo stato del combattente */
+function spriteFrame(f,S){
+  const A=S.anims;let key,fi=0;
+  if(f.state==='ko')key='ko';
+  else if(f.state==='attack'&&f.cur)key=f.cur.key;
+  else if(f.state==='hitstun')key='hurt';
+  else if(f.state==='block'||f.state==='crouch')key='block';
+  else if(f.state==='jumpsquat'||f.state==='jump'||!f.onGround())key='jump';
+  else if(f.state==='walk')key='walk';
+  else key='idle';
+  if(f._sk!==key){f._sk=key;f._st0=f.animT;f._sdur=f.hitstun+1;}
+  const t=f.animT-f._st0,a=A[key]||A.idle,n=a.n;
+  if(key==='punch'||key==='kick'||key==='special'){
+    const m=f.cur,s=m.startup,ac=m.active,r=m.recovery,fr=f.moveFr,h=a.hit,k=a.act||1;
+    if(fr<s)fi=Math.floor(fr/s*h);
+    else if(fr<s+ac)fi=h+Math.floor((fr-s)/ac*k);
+    else fi=h+k+Math.floor((fr-s-ac)/Math.max(1,r)*(n-h-k));
+  }
+  else if(key==='hurt')fi=Math.floor(t/f._sdur*n);
+  else if(key==='ko')fi=Math.floor(t*a.fps/60);
+  else if(key==='block'){const h=a.holdFrom;fi=Math.floor(t*a.fps/60);
+    if(fi>=h)fi=h+Math.floor((t*8/60))%(n-h);}
+  else if(key==='jump'){
+    if(f.state==='jumpsquat')fi=2;
+    else if(f.vy<-2)fi=4;
+    else if(f.vy<2)fi=5;
+    else fi=f.y>GROUND-30?6:5;
+  }
+  else{
+    fi=Math.floor(t*a.fps/60)%n;
+    /* camminando all'indietro l'animazione va al contrario */
+    if(key==='walk'&&f.input&&((f.facing>0&&f.input.left)||(f.facing<0&&f.input.right)))fi=n-1-fi;
+  }
+  return {a,fi:Math.max(0,Math.min(n-1,fi))};
+}
+
+const sprTint=document.createElement('canvas');const sprTctx=sprTint.getContext('2d');
+function drawSpriteFrame(S,a,fi,x,y,sc,facing,flash){
+  const img=S.img[a.file],w=S.fw*sc,h=S.fh*sc;
+  ctx.save();ctx.imageSmoothingEnabled=false;
+  ctx.translate(Math.round(x),Math.round(y));if(facing<0)ctx.scale(-1,1);
+  if(flash){ /* lampo bianco quando viene colpito */
+    sprTint.width=S.fw;sprTint.height=S.fh;sprTctx.imageSmoothingEnabled=false;
+    sprTctx.drawImage(img,fi*S.fw,0,S.fw,S.fh,0,0,S.fw,S.fh);
+    sprTctx.globalCompositeOperation='source-in';sprTctx.fillStyle='#FFFFFF';sprTctx.fillRect(0,0,S.fw,S.fh);
+    sprTctx.globalCompositeOperation='source-over';
+    ctx.drawImage(sprTint,-S.ax*sc,-S.ay*sc,w,h);
+  }else ctx.drawImage(img,fi*S.fw,0,S.fw,S.fh,-S.ax*sc,-S.ay*sc,w,h);
+  ctx.restore();
+}
+function drawSpriteBody(f){
+  const S=SPRITE_CHARS[f.cfg.id];if(!S||!S.ready)return false;
+  const {a,fi}=spriteFrame(f,S);
+  if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
+    ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
+    ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
+  drawSpriteFrame(S,a,fi,f.x,f.y,S.scale,f.facing,f.flash>0);
+  return true;
+}
+/* ritratto nella schermata di scelta: primo fotogramma di attesa */
+function drawSpritePortrait(cfg,x,y,s){
+  const S=SPRITE_CHARS[cfg.id];if(!S||!S.ready)return false;
+  const b=S.body,bw=b.x1-b.x0,bh=b.y1-b.y0,sc=(s-8)/Math.max(bw,bh);
+  pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
+  ctx.save();ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(S.img.idle,b.x0,b.y0,bw,bh,x+(s-bw*sc)/2,y+(s-bh*sc)/2,bw*sc,bh*sc);
+  ctx.restore();return true;
+}
+
+/* ---------- RAGGI LASER ---------- */
+let beams=[];
+function fireLaser(f,opp){
+  const s=f.cur.s;
+  beams.push({f,opp,t:0,life:f.cur.active+10,grow:5,hit:false,dmg:s.dmg,kb:s.kb,end:null});
+  sfx.zap();shake=Math.max(shake,4);
+}
+function updateBeams(){
+  for(const b of beams){
+    b.t++;const S=SPRITE_CHARS[b.f.cfg.id],o=spritePoint(b.f,S.muzzle.x,S.muzzle.y);
+    b.x0=o.x;b.y=o.y;
+    const edge=b.f.facing>0?W+20:-20;
+    let tx=edge,blocked=false;
+    const hb=b.opp.hurtbox(),inLine=b.opp.state!=='ko'&&b.y>=hb.y&&b.y<=hb.y+hb.h&&
+      (b.f.facing>0?b.opp.x>b.x0:b.opp.x<b.x0);
+    if(inLine)tx=b.f.facing>0?hb.x:hb.x+hb.w;
+    const full=Math.min(1,b.t/b.grow);
+    b.x1=b.x0+(tx-b.x0)*full;
+    if(inLine&&full>=1&&!b.hit&&b.t<=b.life-8){
+      b.hit=true;
+      b.opp.takeDamage(b.dmg*(b.f.cfg.power/7)*b.f.dmgMul,b.kb,b.f);
+      spark(b.x1,b.y,'#7DF9FF',14,5);spark(b.x1,b.y,'#FFFFFF',6,3);
+      ring(b.x1,b.y,'#7DF9FF',4,40);whiteFlash=Math.max(whiteFlash,1);
+      b.impact=12;}
+    if(b.impact>0){b.impact--;if(frame%2===0)spark(b.x1,b.y,'#00FFFF',3,2);}
+  }
+  beams=beams.filter(b=>b.t<b.life&&b.f.state!=='ko');
+}
+function drawBeams(){
+  for(const b of beams){
+    const fade=Math.min(1,(b.life-b.t)/8),wob=Math.sin(frame*1.3)*1.2;
+    const x=Math.min(b.x0,b.x1),w=Math.abs(b.x1-b.x0),y=Math.round(b.y);
+    ctx.globalAlpha=.35*fade;ctx.fillStyle='#00E5FF';ctx.fillRect(x,y-8-wob,w,16+wob*2);
+    ctx.globalAlpha=.85*fade;ctx.fillStyle='#00FFFF';ctx.fillRect(x,y-4,w,8);
+    ctx.globalAlpha=fade;ctx.fillStyle='#E8FFFF';ctx.fillRect(x,y-1,w,3);
+    ctx.globalAlpha=1;
+  }
+}
+/* bagliori in primo piano: bocca dei cannoni e punto d'impatto */
+function drawBeamFlashes(){
+  for(const b of beams){
+    const fade=Math.min(1,(b.life-b.t)/8),r=6+Math.sin(frame*.9)*2;
+    ctx.globalAlpha=.8*fade;ctx.fillStyle='#7DF9FF';
+    ctx.beginPath();ctx.arc(b.x0,b.y,r,0,7);ctx.fill();
+    ctx.fillStyle='#FFFFFF';ctx.beginPath();ctx.arc(b.x0,b.y,r*.45,0,7);ctx.fill();
+    if(b.impact>0){const ir=10+b.impact;ctx.globalAlpha=.7*b.impact/12;ctx.fillStyle='#00FFFF';
+      ctx.beginPath();ctx.arc(b.x1,b.y,ir,0,7);ctx.fill();
+      ctx.fillStyle='#FFFFFF';ctx.beginPath();ctx.arc(b.x1,b.y,ir*.4,0,7);ctx.fill();}
+    ctx.globalAlpha=1;
+  }
+}
+
+/* effetti al contatto degli attacchi corpo a corpo */
+function meleeFX(f,opp,key){
+  const S=SPRITE_CHARS[f.cfg.id];if(!S||!S.paw||!S.paw[key])return;
+  const p=spritePoint(f,S.paw[key].x,S.paw[key].y);
+  if(f.cfg.id==='mango'){
+    if(key==='punch'){spark(p.x,p.y,'#00FFFF',8,3);spark(p.x,p.y,'#FFFFFF',3,2);}
+    if(key==='kick'){spark(p.x,p.y,'#FFE94A',10,4);spark(p.x,p.y,'#FFFFFF',5,3);
+      dust(opp.x,GROUND,8,true);dust(p.x,GROUND,5);}
+  }
+}
+
+
 function opx(x,y,w,h,c){octx.fillStyle=c;octx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
 
 function drawFighter(f){
   const c=f.cfg;
+  if(!drawSpriteBody(f)){
   octx.clearRect(0,0,360,320);
   octx.save();octx.translate(OX,OY);
   const koLay=f.state==='ko';
@@ -963,6 +1134,7 @@ function drawFighter(f){
   for(const[ox,oy]of[[-2,0],[2,0],[0,-2],[0,2],[-1,-1],[1,-1],[-1,1],[1,1]])
     ctx.drawImage(sil,dx+ox,dy+oy);
   if(f.flash>0)ctx.drawImage(sil,dx,dy);else ctx.drawImage(ofs,dx,dy);
+  }
 
   // aure post (in world space)
   if(f.counterT>0){ctx.strokeStyle='#9B59B6';ctx.lineWidth=2;ctx.globalAlpha=.5+.3*Math.sin(frame*.4);
@@ -1547,7 +1719,7 @@ const game={
     return finale?DIFFS.boss:DIFFS[this.difficulty];},
   p:[null,null],round:1,wins:[0,0],timer:99,timerF:0,
   banner:'',bannerT:0,freeze:0,koPending:false,matchWinner:null,
-  reset(){particles=[];projectiles=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
+  reset(){particles=[];projectiles=[];beams=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
   startMatch(){this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
     this.round=1;this.wins=[0,0];this.startRound();this.state='fight';},
   startTournament(){
@@ -1641,6 +1813,7 @@ function update(){
       const target=clamp(((a.x+b.x)/2-W/2)*.3,-44,44);
       camX+=(target-camX)*.08;
       // proiettili
+      updateBeams();
       projectiles=projectiles.filter(p=>{
         p.x+=p.vx;p.y+=p.vy;if(p.grav)p.vy+=p.grav;p.life--;
         if(frame%3===0)particles.push({x:p.x,y:p.y,vx:0,vy:0,life:6,max:6,col:p.col,sz:2});
@@ -1694,6 +1867,7 @@ function outlineText(t,x,y,sz,col,align='center'){ctx.font='bold '+sz+'px monosp
   ctx.fillStyle=col;ctx.fillText(t,x,y);}
 
 function drawPortrait(cfg,x,y,s){
+  if(drawSpritePortrait(cfg,x,y,s))return;
   pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
   const hw=s*.56,hx=x+s*.16,hy=y+s*.36;
   // cranio arrotondato (outline + base)
@@ -1836,7 +2010,9 @@ function drawFight(){
   text(STAGES[game.stage].name,W/2,H-18,9,'rgba(245,240,225,.35)');
   ctx.save();ctx.translate(-camX*0.0,0); // fighters in world≈screen, cam già nei layer
   const ps=[...game.p].sort((a,b)=>(a.state==='attack'?1:0)-(b.state==='attack'?1:0));
+  drawBeams();
   ps.forEach(drawFighter);
+  drawBeamFlashes();
   projectiles.forEach(p=>{pxs(p.x-p.w/2,p.y-p.h/2,p.w,p.h,p.col);pxs(p.x-p.w/2,p.y-p.h/2,p.w,1,'#FFF');});
   particles.forEach(p=>{
     ctx.globalAlpha=clamp(p.life/(p.max||20),0,1)*(p.fade?.7:1);
@@ -2107,6 +2283,10 @@ const VICTORY_CFG={
 
 /* Victory-pose: usa l'immagine reale del personaggio */
 function drawVictoryPose(f,vcfg,t){
+  const SV=SPRITE_CHARS[f.cfg.id];
+  if(SV&&SV.ready){const a=SV.anims.win,sc=3,cx=W*.26,fy=H*.92;
+    ctx.globalAlpha=.35;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx,fy+4,90,10,0,0,7);ctx.fill();ctx.globalAlpha=1;
+    drawSpriteFrame(SV,a,Math.floor(t*a.fps/60)%a.n,cx,fy,sc,1,false);return;}
   const img=SPRITES[f.cfg.id];
   if(!img||!img.complete||img.naturalWidth===0){
     // fallback: disegna il fighter procedurale
