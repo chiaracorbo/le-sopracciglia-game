@@ -1047,6 +1047,7 @@ const SPRITE_CHARS={
   alice:{
     dir:'sprites/alice/',fw:128,fh:128,ax:62,ay:118,scale:1.25,
     body:{x0:34,y0:7,x1:92,y1:119},
+    portrait:{file:'base',x0:16,y0:9,x1:110,y1:117},  /* immagine base usata nel ritratto */
     anims:{
       idle:   {file:'idle',   n:16,fps:8},
       walk:   {file:'walk',   n:16,fps:16},
@@ -1054,7 +1055,7 @@ const SPRITE_CHARS={
       hurt:   {file:'hurt',   n:12},
       block:  {file:'block',  n:12,fps:20,holdFrom:6},
       ko:     {file:'ko',     n:12,fps:12},
-      win:    {file:'idle',   n:16,fps:8},                 /* manca l'animazione di vittoria */
+      win:    {file:'base',   n:1, fps:1},                 /* posa base con le pistole alzate */
       /* gli attacchi partono dalla posa con le pistole alzate: dissolvenza in entrata e in uscita */
       punch:  {file:'double', n:12,hit:2,act:4,xfade:true},  /* doppio colpo */
       kick:   {file:'heavy',  n:12,hit:1,act:2,xfade:true},  /* colpo potente con rinculo */
@@ -1258,10 +1259,10 @@ function muzzleFlash(x,y,dir,big){
 /* ritratto nella schermata di scelta: primo fotogramma di attesa */
 function drawSpritePortrait(cfg,x,y,s){
   const S=SPRITE_CHARS[cfg.id];if(!S||!S.ready)return false;
-  const b=S.body,bw=b.x1-b.x0,bh=b.y1-b.y0,sc=(s-8)/Math.max(bw,bh);
+  const b=S.portrait||S.body,bw=b.x1-b.x0,bh=b.y1-b.y0,sc=(s-8)/Math.max(bw,bh);
   pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
   ctx.save();ctx.imageSmoothingEnabled=false;
-  ctx.drawImage(S.img.idle,b.x0,b.y0,bw,bh,x+(s-bw*sc)/2,y+(s-bh*sc)/2,bw*sc,bh*sc);
+  ctx.drawImage(S.img[(S.portrait&&S.portrait.file)||'idle'],b.x0,b.y0,bw,bh,x+(s-bw*sc)/2,y+(s-bh*sc)/2,bw*sc,bh*sc);
   ctx.restore();return true;
 }
 
