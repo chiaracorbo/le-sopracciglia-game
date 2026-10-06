@@ -498,7 +498,13 @@ const ROSTER=[
  {id:'dimauro',name:'LUCA DI MAURO',title:'Il Braccio Destro',hp:215,speed:3.1,power:7,h:151,def:6,aer:5,
   fur:'#9A9AA0',brow:'#E03030',outfit:'#141418',weapon:'sciabola',species:'alpaca',recMod:1.0,
   hair:{t:'afro',c1:'#8A8A90'},epaul:true,sash:{a:'#7A7A3A',b:'#6A6A30'},medals:true,
-  special:{type:'dash',name:'PUGNO DI FERRO',dmg:14.4,kb:26,dist:130,st:5,act:10,rec:9,fx:'gold',cost:40,cd:88},
+  moves:{
+    punch:{startup:10,active:4,recovery:12,lag:8,shots:[{at:0,muzzle:'pistol'}],shotDmg:6.8,shotSpd:15},
+    kick:{startup:7,active:4,recovery:13,lag:6,range:52,hh:60,dmg:7.4,kb:16},
+  },
+  /* con l'esoscheletro: pugno meccanico pesante, più danno */
+  exoMove:{exo:true,startup:8,active:5,recovery:14,lag:8,range:64,hh:80,yFrac:.5,dmg:12,kb:26,stCost:4},
+  special:{type:'exo',name:'PUGNO DI FERRO',dmg:0,kb:0,st:26,act:2,rec:8,fx:'gold',cost:40,cd:88},
   quote:'Sar\u00E0 dura da spiegare agli altri.'},
  {id:'ettore',name:'ETTORE',title:'L\u2019Erede della Spada',hp:180,speed:3.4,power:6,h:144,def:5,aer:5,
   fur:'#F5F2EA',brow:'#FFD700',outfit:'#8C97A3',weapon:'spadabianca',species:'alpaca',recMod:.95,
@@ -711,7 +717,7 @@ class Fighter{
   }
 
   startMove(key){
-    const m={...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
+    const m=this.exo>0&&this.cfg.exoMove?{...MOVES.kick,...this.cfg.exoMove}:{...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
     this.stamina=Math.max(0,this.stamina-m.stCost);
     this.state='attack';this.hitConsumed=false;this.moveFr=0;
     this.cur={key,...m,recovery:Math.round(m.recovery*this.cfg.recMod)};
@@ -725,6 +731,7 @@ class Fighter{
   }
   attemptSpecial(opp,fromCancel){
     const s=this.cfg.special;
+    if(s.type==='exo'&&this.exo>0)return; /* esoscheletro già indossato */
     if(this.meter<s.cost||this.cooldown>0){
       if(!fromCancel){sfx.buzz();
         ftext(this.x,this.y-this.cfg.h-14,this.cooldown>0?'RICARICA!':'METER!','#FF4136',9);}return;}
@@ -763,6 +770,13 @@ class Fighter{
         if(this.moveFr%3===0){const p=spritePoint(this,rnd(B.x0,B.x1),B.y-rnd(2,8));
           _padd({x:p.x,y:p.y,vx:rnd(-.5,.5),vy:rnd(-1.4,-.6),life:24,max:24,col:['#9A9A9A','#B8B8B8','#777'][this.moveFr%3],sz:rnd(4,7),fade:true});}
         if(this.moveFr%2===0){const p=spritePoint(this,rnd(B.x0,B.x1),B.y);_padd({x:p.x,y:p.y,vx:this.facing*rnd(-1,1),vy:rnd(-2,0),life:6,max:6,col:'#FFB347',sz:2});}}}
+    if(m.sType==='exo'){
+      if(this.moveFr<aS&&this.moveFr%3===0){const p={x:this.x+rnd(-30,30),y:this.y-rnd(10,this.cfg.h)};
+        spark(p.x,p.y,'#FFE94A',3,3);spark(p.x,p.y,'#7DF9FF',2,2);if(this.moveFr%9===0)beep(400+this.moveFr*20,.05,'square',.04);}
+      if(this.moveFr===aS){this.exo=3;this.hitConsumed=true;whiteFlash=Math.max(whiteFlash,2);shake=Math.max(shake,8);
+        const c={x:this.x,y:this.y-this.cfg.h*.5};ring(c.x,c.y,'#FFE94A',6,90);ring(c.x,c.y,'#FFFFFF',4,55);
+        spark(c.x,c.y,'#FFE94A',18,6);spark(c.x,c.y,'#C0C8D0',12,5);sfx.boom();
+        ftext(this.x,this.y-this.cfg.h-30,'ESOSCHELETRO!','#FFB000',11);}}
     if(m.sType==='pump3'){for(const o of m.s.shotsAt)if(this.moveFr===aS+o){this.hitConsumed=true;
         this.fireShot({muzzle:'pumpgun',pellets:true,shotDmg:m.s.dmg,shotKb:9},opp);
         if(o>0)beep(300,.06,'square',.05,-120);}}
@@ -789,7 +803,8 @@ class Fighter{
       const SC2=SPRITE_CHARS[this.cfg.id];if(SC2&&SC2.trails&&SC2.trails.special){SC2.trails.special.flip=!SC2.trails.special.flip;slashTrail(this,'special');}}
     if(m.hop&&this.moveFr===1&&this.onGround()){this.vy=-m.hop;this.y-=1;dust(this.x,GROUND,5);}
     if(m.sType==='teleport')this.teleportStep(m,opp);
-    if(this.moveFr>=aE+m.recovery){this.atkLag=m.lag||0;this.state='idle';this.cur=null;this.pendingWaves=null;}
+    if(this.moveFr>=aE+m.recovery){this.atkLag=m.lag||0;this.state='idle';this.cur=null;this.pendingWaves=null;
+      if(m.exo&&this.exo>0){this.exo--;if(this.exo===0)exoBreak(this);}}
   }
   resolveSpecialStart(opp){
     const s=this.cur.s,t=this.cur.sType;
@@ -940,6 +955,7 @@ class Fighter{
     this.hp=Math.max(0,this.hp-Math.round(dmg));
     this.x+=kb*attacker.facing*(blocked?0.4:1);
     if(!blocked)ftext(this.x,this.y-this.cfg.h-8,Math.round(dmg),'#FFF',10);
+    if(this.hp===0&&this.exo>0){this.exo=0;exoBreak(this);}
     if(this.hp===0){this.state='ko';this.vy=-7;this.hitstun=0;sfx.ko();shake=12;
       blood(this.x,this.y-this.cfg.h*0.5,26);game.onKO(this);}
   }
@@ -959,7 +975,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='exo'?999:sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -1245,6 +1261,30 @@ const SPRITE_CHARS={
     },
     blade:{x0:70,x1:122,y:60},   /* lama della Segaspada tesa (per fumo e scintille) */
   },
+  dimauro:{
+    dir:'sprites/dimauro/',fw:128,fh:128,ax:60,ay:118,scale:1.37,
+    body:{x0:39,y0:8,x1:87,y1:118},
+    anims:{
+      idle:   {file:'idle',  n:16,fps:8},
+      jump:   {file:'jump',  n:13,jf:{squat:3,up:7,peak:8,down:9,land:11},dy:{7:19,8:25,9:22,10:9}},
+      hurt:   {file:'hurt',  n:16},
+      block:  {file:'block', n:16,fps:20,holdFrom:8},
+      ko:     {file:'ko',    n:16,fps:14},
+      win:    {file:'win',   n:16,fps:10},
+      punch:  {file:'pistol',n:16,hit:6,act:2},              /* estrae la pistola e spara dal fianco */
+      kick:   {file:'lunge', n:16,hit:4,act:2,xfade:true},   /* pugno potente in affondo */
+      special:{file:'idle',  n:16,tl:[{to:'end',f0:0,f1:15}]},/* si concentra mentre indossa l'esoscheletro */
+      /* versione con esoscheletro (i piedi sono 2px più in basso) */
+      exoIdle: {file:'exo-idle', n:16,fps:8, dy:{all:-2}},
+      exoHurt: {file:'exo-hurt', n:16,dy:{all:-2}},
+      exoPunch:{file:'exo-punch',n:16,hit:3,act:3,dy:{all:-2},xfade:true},
+    },
+    /* quale animazione usare per ogni stato quando l'esoscheletro è attivo */
+    exoMap:{idle:'exoIdle',walk:'exoIdle',jump:'exoIdle',block:'exoIdle',special:'exoIdle',hurt:'exoHurt',punch:'exoPunch',kick:'exoPunch'},
+    pistol:{x:125,y:62},     /* bocca della pistola */
+    exoFist:{x:107,y:55},    /* pugno meccanico */
+    exoBack:{x:44,y:40},     /* tubi idraulici sulla schiena (getto di vapore) */
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
@@ -1281,6 +1321,7 @@ function spriteFrame(f,S){
   else if(f.state==='jumpsquat'||f.state==='jump'||!f.onGround())key='jump';
   else if(f.state==='walk')key='walk';
   else key='idle';
+  if(f.exo>0&&S.exoMap&&S.exoMap[key]&&A[S.exoMap[key]])key=S.exoMap[key];
   if(f._sk!==key){f._sk=key;f._st0=f.animT;f._sdur=f.hitstun+1;}
   const t=f.animT-f._st0,a=A[key]||A.idle,n=a.n;
   if(key==='special'&&a.teleport){
@@ -1296,6 +1337,8 @@ function spriteFrame(f,S){
       const p=Math.min(1,Math.max(0,(fr-from)/Math.max(1,to-from)));
       return {a,fi:Math.min(g.f1,g.f0+Math.floor(p*(g.f1-g.f0+1)))};}from=to;}
   }
+  if(key==='exoPunch')key='punch';
+  if(key==='exoHurt')key='hurt';
   if(key==='punch'||key==='kick'||key==='special'){
     const m=f.cur,s=m.startup,ac=m.active,r=m.recovery,fr=f.moveFr,h=a.hit,k=a.act||1;
     if(fr<s)fi=Math.floor(fr/s*h);
@@ -1354,6 +1397,11 @@ function drawSpriteBody(f){
   if(shakeX){ctx.save();ctx.translate(shakeX,rnd(-1,1));}
   drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*S.scale,S.scale,f.facing,f.flash>0);
   if(shakeX)ctx.restore();
+  if(f.exo>0&&f.state!=='ko'){const hx=f.x,hy=f.y-f.cfg.h-18;
+    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(hx-26,hy-9,52,16);
+    for(let i=0;i<3;i++){const on=i<f.exo,px=hx-17+i*17;
+      ctx.fillStyle=on?'#FFB000':'#3A3A3A';ctx.beginPath();ctx.arc(px,hy-1,5,0,7);ctx.fill();
+      if(on){ctx.fillStyle='#FFF3B0';ctx.fillRect(px-1,hy-4,2,6);}}}
   /* durante il bagliore lo sprite si illumina di giallo */
   if(S.glow&&f.state==='attack'&&f.cur&&f.cur.key==='special'&&f.cur.s.castFr&&f.moveFr<f.cur.s.castFr+f.cur.s.vanishFr){
     const k=Math.min(1,f.moveFr/f.cur.s.castFr);
@@ -1500,6 +1548,27 @@ function clawMarks(opp,attacker){
       ctx.beginPath();ctx.moveTo(cx+nx-ca*len/2,cy+ny-sa*len/2);ctx.lineTo(cx+nx+ca*len/2,cy+ny+sa*len/2);ctx.stroke();}
     ctx.restore();ctx.globalAlpha=1;}});
 }
+/* scossa elettrica sull'avversario a ogni pugno meccanico */
+function exoShock(opp){
+  const cx=opp.x,cy=opp.y-opp.cfg.h*.55,bolts=[];
+  for(let b=0;b<4;b++){const pts=[];let x=cx+rnd(-30,30),y=cy-rnd(30,50);
+    for(let i=0;i<6;i++){pts.push([x,y]);x+=rnd(-10,10);y+=rnd(10,18);}bolts.push(pts);}
+  fxObjs.push({t:0,life:10,draw(o){ctx.globalAlpha=1-o.t/o.life;
+    for(const pts of bolts){ctx.strokeStyle=o.t%2?'#FFFFFF':'#7DF9FF';ctx.lineWidth=2;ctx.beginPath();
+      pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();}
+    ctx.globalAlpha=1;}});
+  sfx.zap();shake=Math.max(shake,7);
+}
+/* l'esoscheletro si rompe: getto di vapore dai tubi idraulici */
+function exoBreak(f){
+  const S=SPRITE_CHARS[f.cfg.id],b=spritePoint(f,S.exoBack.x,S.exoBack.y);
+  noise(.6,.07);beep(180,.3,'sawtooth',.05,-120);shake=Math.max(shake,5);
+  spark(b.x,b.y,'#C0C8D0',10,4);spark(b.x,b.y,'#FFE94A',6,3);
+  ftext(f.x,f.y-f.cfg.h-24,'ESOSCHELETRO ROTTO!','#C0C8D0',10);
+  for(let i=0;i<26;i++){const d=i*1.2;setTimeoutFrames(Math.round(d),()=>{
+    _padd({x:b.x+rnd(-4,4),y:b.y,vx:-f.facing*rnd(.5,2.5)+rnd(-.6,.6),vy:-rnd(2.5,4.5),life:rnd(22,34),max:34,
+      col:['#FFFFFF','#E8EEF2','#C8D0D8'][i%3],sz:rnd(5,9),fade:true});});}
+}
 function goldReload(f){
   const S=SPRITE_CHARS[f.cfg.id],N=6;
   for(let i=0;i<N;i++){
@@ -1614,6 +1683,10 @@ function drawBeamFlashes(){
 /* effetti al contatto degli attacchi corpo a corpo */
 function meleeFX(f,opp,key){
   const S=SPRITE_CHARS[f.cfg.id];
+  if(f.cfg.id==='dimauro'&&f.cur&&f.cur.exo){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
+    metalSparks(p.x,p.y);spark(p.x,p.y,'#FFB000',8,5);exoShock(opp);return;}
+  if(f.cfg.id==='dimauro'&&key==='kick'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.6};
+    spark(p.x,p.y,'#FFE94A',8,3);spark(p.x,p.y,'#FFFFFF',4,2);return;}
   if(f.cfg.id==='iacopo'&&key==='special'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
     metalSparks(p.x,p.y);spark(p.x,p.y,'#FFB347',6,4);return;}
   if(f.cfg.id==='zibe'&&key==='kick'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.45};
