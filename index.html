@@ -1045,12 +1045,12 @@ const SPRITE_CHARS={
     hand:{x:104,y:58},                                   /* mano che lancia il fumogeno */
   },
   alice:{
-    dir:'sprites/alice/',fw:128,fh:128,ax:62,ay:118,scale:1.25,
-    body:{x0:34,y0:7,x1:92,y1:119},
+    dir:'sprites/alice/',fw:128,fh:128,ax:62,ay:117,scale:1.25,
+    body:{x0:16,y0:9,x1:110,y1:117},
     portrait:{file:'base',x0:16,y0:9,x1:110,y1:117},  /* immagine base usata nel ritratto */
     anims:{
-      idle:   {file:'idle',   n:16,fps:8},
-      walk:   {file:'walk',   n:16,fps:16},
+      idle:   {file:'idle',   n:12,fps:7,pingpong:true},  /* avanti e indietro: alza e abbassa le pistole senza scatti */
+      walk:   {file:'walk',   n:16,fps:16,dy:{all:-1}},
       jump:   {file:'jump',   n:12,jf:{squat:3,up:5,peak:6,down:8,land:9},dy:{5:10,6:12,7:13,8:12}},
       hurt:   {file:'hurt',   n:12},
       block:  {file:'block',  n:12,fps:20,holdFrom:6},
@@ -1105,7 +1105,8 @@ function spriteFrame(f,S){
     else fi=f.y>GROUND-30?j.land:j.down;
   }
   else{
-    fi=Math.floor(t*a.fps/60)%n;
+    fi=Math.floor(t*a.fps/60);
+    if(a.pingpong){const p=2*n-2;fi%=p;if(fi>=n)fi=p-fi;}else fi%=n;
     /* camminando all'indietro l'animazione va al contrario */
     if(key==='walk'&&f.input&&((f.facing>0&&f.input.left)||(f.facing<0&&f.input.right)))fi=n-1-fi;
   }
@@ -1132,7 +1133,7 @@ function drawSpriteBody(f){
   if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
     ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
     ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
-  drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&a.dy[fi])||0)*S.scale,S.scale,f.facing,f.flash>0);
+  drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*S.scale,S.scale,f.facing,f.flash>0);
   /* dissolvenza rapida (4 fotogrammi) quando cambia la posa di partenza */
   const prev=f._sprPrev;
   if(prev&&prev.a!==a&&(prev.a.xfade||a.xfade)){f._sprFade={a:prev.a,fi:prev.fi,t:4};}
