@@ -1116,8 +1116,13 @@ const SPRITE_CHARS={
   },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
-  for(const k in S.anims){const f=S.anims[k].file;if(S.img[f])continue;left++;
-    const im=new Image();im.onload=()=>{if(--left===0)S.ready=true;};im.src=S.dir+f+'.png';S.img[f]=im;}}})();
+  const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
+  for(const f of files){if(S.img[f])continue;left++;
+    const im=new Image();im.onload=()=>{if(--left===0)S.ready=true;};
+    im.onerror=()=>console.warn('Sprite mancante: '+S.dir+f+'.png');
+    im.src=S.dir+f+'.png';S.img[f]=im;}}})();
+/* un'immagine è usabile solo se esiste ed è stata caricata */
+function imgOk(im){return !!(im&&im.complete&&im.naturalWidth>0);}
 
 /* punto dello sprite (px,py) → coordinate nell'arena, tenendo conto del verso */
 function spritePoint(f,px,py){const S=SPRITE_CHARS[f.cfg.id];
@@ -1170,6 +1175,7 @@ function spriteFrame(f,S){
 const sprTint=document.createElement('canvas');const sprTctx=sprTint.getContext('2d');
 function drawSpriteFrame(S,a,fi,x,y,sc,facing,flash){
   const img=S.img[a.file],w=S.fw*sc,h=S.fh*sc;
+  if(!imgOk(img))return false;
   ctx.save();ctx.imageSmoothingEnabled=false;
   ctx.translate(Math.round(x),Math.round(y));if(facing<0)ctx.scale(-1,1);
   if(flash){ /* lampo bianco quando viene colpito */
@@ -1184,6 +1190,7 @@ function drawSpriteFrame(S,a,fi,x,y,sc,facing,flash){
 function drawSpriteBody(f){
   const S=SPRITE_CHARS[f.cfg.id];if(!S||!S.ready)return false;
   const {a,fi,alpha}=spriteFrame(f,S);
+  if(!imgOk(S.img[a.file]))return false;
   if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
     ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
     ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
@@ -1333,6 +1340,7 @@ function muzzleFlash(x,y,dir,big){
 /* ritratto nella schermata di scelta: primo fotogramma di attesa */
 function drawSpritePortrait(cfg,x,y,s){
   const S=SPRITE_CHARS[cfg.id];if(!S||!S.ready)return false;
+  if(!imgOk(S.img[(S.portrait&&S.portrait.file)||'idle']))return false;
   const b=S.portrait||S.body,bw=b.x1-b.x0,bh=b.y1-b.y0,sc=(s-8)/Math.max(bw,bh);
   pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
   ctx.save();ctx.imageSmoothingEnabled=false;
@@ -2597,7 +2605,7 @@ const VICTORY_CFG={
 /* Victory-pose: usa l'immagine reale del personaggio */
 function drawVictoryPose(f,vcfg,t){
   const SV=SPRITE_CHARS[f.cfg.id];
-  if(SV&&SV.ready){const a=SV.anims.win,sc=3,cx=W*.26,fy=H*.92;
+  if(SV&&SV.ready&&imgOk(SV.img[SV.anims.win.file])){const a=SV.anims.win,sc=3,cx=W*.26,fy=H*.92;
     ctx.globalAlpha=.35;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx,fy+4,90,10,0,0,7);ctx.fill();ctx.globalAlpha=1;
     drawSpriteFrame(SV,a,Math.floor(t*a.fps/60)%a.n,cx,fy+((a.dy&&a.dy.all)||0)*sc,sc,1,false);return;}
   const img=SPRITES[f.cfg.id];
