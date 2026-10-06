@@ -484,8 +484,11 @@ const ROSTER=[
  {id:'zibe',name:'ZIBE',title:'Il Veterano',hp:200,speed:3.4,power:7,h:148,def:6,aer:5,
   fur:'#E8E2D2',brow:'#FF8C00',outfit:'#4A3270',weapon:'pompa',species:'alpaca',recMod:.95,
   hair:{t:'pouf',c1:'#7A4E9E'},boa:'#D89020',buttons:'#C0C8D0',strap:'#3A3040',noBelt:true,eyeCol:'#E08020',
-  punchProjectile:{dmg:2,spd:8,life:10,w:7,hh:3,col:'#FFC27D',pellets:3},
-  special:{type:'cone',name:'PIOGGIA DI PALLETTONI',dmg:4,n:5,kb:14,st:6,act:4,rec:10,fx:'orange',cost:35,cd:80},
+  moves:{
+    punch:{startup:14,active:4,recovery:12,lag:8,shots:[{at:0,muzzle:'shotgun',pellets:true}],shotDmg:8.4,shotKb:10},
+    kick:{startup:7,active:4,recovery:12,lag:6,dmg:7.6,kb:14,hh:60},
+  },
+  special:{type:'pump3',name:'PIOGGIA DI PALLETTONI',dmg:7.6,shotsAt:[0,18,34],st:10,act:40,rec:12,fx:'orange',cost:35,cd:80},
   quote:'Rapidi e silenziosi.'},
  {id:'dimauro',name:'LUCA DI MAURO',title:'Il Braccio Destro',hp:215,speed:3.1,power:7,h:151,def:6,aer:5,
   fur:'#9A9AA0',brow:'#E03030',outfit:'#141418',weapon:'sciabola',species:'alpaca',recMod:1.0,
@@ -746,6 +749,9 @@ class Fighter{
     if(SC&&SC.kickLunge&&m.key==='kick'&&this.moveFr<=aS)this.x+=this.facing*SC.kickLunge/aS;
     if(m.rehit)for(const o of m.rehit)if(this.moveFr===aS+o)this.hitConsumed=false;
     if(m.smokeFx&&this.moveFr===aS)smokeBomb(this);
+    if(m.sType==='pump3'){for(const o of m.s.shotsAt)if(this.moveFr===aS+o){this.hitConsumed=true;
+        this.fireShot({muzzle:'pumpgun',pellets:true,shotDmg:m.s.dmg,shotKb:9},opp);
+        if(o>0)beep(300,.06,'square',.05,-120);}}
     if(m.sType==='axegun'){
       if(this.moveFr===aS)slashTrail(this,'punch');
       if(this.moveFr===m.s.shotAt){this.hitConsumed=true;
@@ -818,6 +824,7 @@ class Fighter{
   fireShot(m,opp){const S=SPRITE_CHARS[this.cfg.id],g=S&&S[m.muzzle];
     const p=g?spritePoint(this,g.x,g.y):{x:this.x+this.facing*28,y:this.y-this.cfg.h*.55};
     const big=m.shotBig;
+    if(m.pellets){shotgunBlast(this,p,opp,m);return;}
     muzzleFlash(p.x,p.y,this.facing,big);
     if(big){beep(160,.18,'sawtooth',.09,-80);noise(.12,.1);shake=Math.max(shake,6);ring(p.x,p.y,'#FFF3B0',5,34);}
     else{beep(880,.05,'square',.05);noise(.04,.05);}
@@ -937,7 +944,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -1179,6 +1186,27 @@ const SPRITE_CHARS={
     },
     revolver:{x:118,y:53},   /* bocca del revolver (fotogramma dello sparo) */
     cylinder:{x:88,y:55},    /* tamburo del revolver */
+  },
+  zibe:{
+    dir:'sprites/zibe/',fw:128,fh:128,ax:50,ay:118,scale:1.36,
+    body:{x0:22,y0:9,x1:101,y1:118},
+    anims:{
+      idle:   {file:'idle', n:16,fps:8},
+      walk:   {file:'walk', n:16,fps:14},
+      jump:   {file:'jump', n:16,jf:{squat:4,up:7,peak:8,down:10,land:11},dy:{7:11,8:31,9:33,10:29}},
+      hurt:   {file:'hurt', n:16},
+      block:  {file:'block',n:16,fps:20,holdFrom:7},
+      ko:     {file:'ko',   n:16,fps:14},
+      win:    {file:'win',  n:16,fps:10},
+      /* sparo: si accuccia, mira (0-11), spara (12-13), torna (14-15) */
+      punch:  {file:'shot', n:16,xfade:true,tl:[{to:'s',f0:0,f1:11},{to:'a',f0:12,f1:13},{to:'end',f0:14,f1:15}]},
+      kick:   {file:'butt', n:16,hit:4,act:3,xfade:true},              /* colpo col calcio del fucile */
+      /* tre spari con la pompa durante la fase attiva */
+      special:{file:'pump', n:16,xfade:true,tl:[{to:'s',f0:0,f1:4},{to:'a',f0:5,f1:13},{to:'end',f0:14,f1:15}]},
+    },
+    shotgun:{x:112,y:62},   /* bocca del fucile nell'attacco 1 */
+    pumpgun:{x:106,y:68},   /* bocca del fucile nella speciale */
+    kickLunge:12,
   },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
@@ -1454,6 +1482,22 @@ function goldReload(f){
     ctx.globalAlpha=.35+.35*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(c.x,c.y,5+k*2,0,7);ctx.fill();ctx.globalAlpha=1;}});
 }
 function metalSparks(x,y){spark(x,y,'#FFFFFF',8,4);spark(x,y,'#C0C8D0',8,4);spark(x,y,'#FFE94A',5,3);beep(1800,.04,'square',.04,-600);}
+function shotgunBlast(f,p,opp,m){
+  const dir=f.facing,spd=12,tx=opp.x-dir*opp.half,dist=Math.max(40,Math.abs(tx-p.x)),life=Math.ceil(dist/spd)+2;
+  muzzleFlash(p.x,p.y,dir,true);smokePuff(p.x+dir*10,p.y,5);
+  beep(90,.16,'sawtooth',.1,-40);noise(.18,.12);shake=Math.max(shake,5);
+  /* bossolo rosso che vola all'indietro */
+  _padd({x:p.x-dir*40,y:p.y+6,vx:-dir*rnd(1.5,2.5),vy:-3,grav:.35,life:30,max:30,col:'#C0392B',sz:3});
+  /* colpo invisibile che porta il danno (alto quanto la rosa, così prende anche chi si abbassa) */
+  projectiles.push({x:p.x+dir*8,y:p.y,vx:dir*spd,vy:0,w:18,h:44,dmg:m.shotDmg,kb:m.shotKb||8,life:life+4,owner:f,col:'#000',hidden:true});
+  /* rosa di pallini: si allarga mentre viaggia verso l'avversario */
+  const pel=[];for(let i=0;i<9;i++)pel.push({a:rnd(-.14,.14),s:spd*rnd(.9,1.1),c:i%3?'#FFD27A':'#FFFFFF'});
+  fxObjs.push({t:0,life,draw(o){const k=o.t/o.life;
+    for(const q of pel){const d=q.s*o.t,x=p.x+dir*d,y=p.y+Math.tan(q.a)*d;
+      ctx.globalAlpha=1-k*.3;ctx.fillStyle=q.c;ctx.fillRect(x-2,y-2,4,4);
+      ctx.globalAlpha=.45*(1-k);ctx.fillRect(x-dir*10,y-1,10*dir,2);}
+    ctx.globalAlpha=1;}});
+}
 function muzzleFlash(x,y,dir,big){
   const L=big?34:18,Hh=big?11:6;
   fxObjs.push({t:0,life:big?7:4,draw(o){const k=1-o.t/o.life;
@@ -1530,6 +1574,8 @@ function drawBeamFlashes(){
 /* effetti al contatto degli attacchi corpo a corpo */
 function meleeFX(f,opp,key){
   const S=SPRITE_CHARS[f.cfg.id];
+  if(f.cfg.id==='zibe'&&key==='kick'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.45};
+    spark(p.x,p.y,'#FFE94A',8,3);spark(p.x,p.y,'#FFFFFF',4,2);dust(opp.x,GROUND,7,true);return;}
   if(f.cfg.id==='baumizio'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
     metalSparks(p.x,p.y);if(key==='special')clawMarks(opp,f);return;}
   if(f.cfg.id==='chiara'&&key==='punch'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.6};
@@ -2255,7 +2301,7 @@ function update(){
       updateBeams();updateFxObjs();
       projectiles=projectiles.filter(p=>{
         p.x+=p.vx;p.y+=p.vy;if(p.grav)p.vy+=p.grav;p.life--;
-        if(frame%3===0)particles.push({x:p.x,y:p.y,vx:0,vy:0,life:6,max:6,col:p.col,sz:2});
+        if(!p.hidden&&frame%3===0)particles.push({x:p.x,y:p.y,vx:0,vy:0,life:6,max:6,col:p.col,sz:2});
         const tgt=p.owner===game.p[0]?game.p[1]:game.p[0];
         const hb={x:p.x-p.w/2,y:p.y-p.h/2,w:p.w,h:p.h};
         let boom=false;
@@ -2456,6 +2502,7 @@ function drawFight(){
   ps.forEach(drawFighter);
   drawBeamFlashes();drawFxObjs();
   projectiles.forEach(p=>{
+    if(p.hidden)return;
     if(p.starShot){p.rot+=.25;
       ctx.globalAlpha=.3;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(p.x,p.y,26+Math.sin(frame*.6)*3,0,7);ctx.fill();
       ctx.globalAlpha=.55;drawStar(p.x-p.vx*2,p.y-p.vy*2,16,7,p.rot-.4,'#FF8C00');
