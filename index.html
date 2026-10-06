@@ -490,7 +490,11 @@ const ROSTER=[
  {id:'chiara',name:'CHIARA',title:'La Consigliera',hp:190,speed:3.8,power:5,h:140,def:4,aer:6,
   fur:'#4A4A52',brow:'#9B59B6',outfit:'#2E6E7E',weapon:'stiletto',species:'alpaca',recMod:.9,
   hair:{t:'hat',c1:'#D8CBB0'},fluff:'#D8CBB0',fringe:true,strap:'#6E4A32',noBelt:true,
-  special:{type:'counter',name:'RELAZIONI COL POPOLO',dmg:19.2,kb:26,dur:45,st:4,act:4,rec:6,fx:'purple',cost:40,cd:96},
+  moves:{
+    punch:{startup:6,active:3,recovery:8,range:44,dmg:4.4,slashFx:true},
+    kick:{startup:10,active:10,recovery:12,lag:10,shots:[0,7],shotDmg:4.4,shotSpd:13,muzzle:'gun'},
+  },
+  special:{type:'star',name:'RELAZIONI COL POPOLO',dmg:19.2,airDmg:20,kb:26,st:16,act:4,rec:14,fx:'gold',cost:40,cd:96},
   quote:'Il regno ha bisogno di un cambiamento.'},
  {id:'baumizio',name:'BAUMIZIO',title:'Il Trafficante',hp:225,speed:2.5,power:8,h:158,def:7,aer:3,
   fur:'#B89A78',brow:'#556B2F',ui:'#D8B040',outfit:'#1E1B18',coat:true,weapon:'trombone',species:'alpaca',recMod:1.05,
@@ -675,7 +679,7 @@ class Fighter{
   }
 
   startMove(key){
-    const m=MOVES[key];
+    const m={...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
     this.stamina=Math.max(0,this.stamina-m.stCost);
     this.state='attack';this.hitConsumed=false;this.moveFr=0;
     this.cur={key,...m,recovery:Math.round(m.recovery*this.cfg.recMod)};
@@ -719,6 +723,9 @@ class Fighter{
       for(const w of this.pendingWaves)if(!w.done&&this.moveFr===w.fr)this.fireWave(w,opp);}
     if(this.moveFr>=aS&&this.moveFr<aE)this.checkHit(opp);
     if(this.moveFr===aS&&m.key==='punch'&&this.cfg.punchProjectile)this.fireProjectile(this.cfg.punchProjectile);
+    if(m.shots){if(this.moveFr===1)this.hitConsumed=true;
+      for(const o of m.shots)if(this.moveFr===aS+o)this.fireShot(m,opp);}
+    if(m.slashFx&&this.moveFr===aS)slashTrail(this);
     if(this.moveFr>=aE+m.recovery){this.atkLag=m.lag||0;this.state='idle';this.cur=null;this.pendingWaves=null;}
   }
   resolveSpecialStart(opp){
@@ -730,6 +737,12 @@ class Fighter{
       this.facing=opp.x>=this.x?1:-1;
       fxBurst(this.x,this.y-this.cfg.h*0.5,'yellow',12);}
     if(t==='laser'){fireLaser(this,opp);this.hitConsumed=true;}
+    if(t==='star'){const S=SPRITE_CHARS[this.cfg.id],b=S&&S.bracelet?spritePoint(this,S.bracelet.x,S.bracelet.y):{x:this.x,y:this.y-this.cfg.h*.75};
+      const tx=opp.x,ty=opp.y-opp.cfg.h*.55,d=Math.hypot(tx-b.x,ty-b.y)||1,sp=7.5;
+      projectiles.push({x:b.x,y:b.y,vx:(tx-b.x)/d*sp,vy:(ty-b.y)/d*sp,w:34,h:34,dmg:s.dmg,kb:s.kb,life:140,
+        owner:this,col:'#FFD700',starShot:true,rot:0});
+      ring(b.x,b.y,'#FFD700',5,60);spark(b.x,b.y,'#FFF3B0',12,4);whiteFlash=Math.max(whiteFlash,1);sfx.special();
+      this.hitConsumed=true;}
     if(t==='hopburst'){this.vy=-5;this.y-=1;this.burstLeft=s.n;this.burstT=0;this.hitConsumed=true;}
     if(t==='cone'){for(let k=0;k<s.n;k++)projectiles.push({x:this.x+this.facing*26,y:this.y-this.cfg.h*0.55+rnd(-18,18),
       vx:this.facing*rnd(7,10),vy:rnd(-1,1),w:8,h:4,dmg:s.dmg,kb:s.kb,life:12,owner:this,col:'#FFC27D'});
@@ -756,6 +769,12 @@ class Fighter{
     if(opp.state!=='ko'&&aabb(hb,opp.hurtbox()))
       opp.takeDamage(this.cur.s.dmg*(this.cfg.power/7)*this.dmgMul,this.cur.s.kb,this);
   }
+  /* sparo dalla bocca dell'arma verso l'avversario */
+  fireShot(m,opp){const S=SPRITE_CHARS[this.cfg.id],g=S&&S[m.muzzle];
+    const p=g?spritePoint(this,g.x,g.y):{x:this.x+this.facing*28,y:this.y-this.cfg.h*.55};
+    muzzleFlash(p.x,p.y,this.facing);beep(880,.05,'square',.05);noise(.04,.05);
+    projectiles.push({x:p.x+this.facing*8,y:p.y,vx:this.facing*m.shotSpd,vy:0,w:12,h:4,dmg:m.shotDmg,kb:5,
+      life:80,owner:this,col:'#FFE94A'});}
   fireBurst(){const s=this.cfg.special;
     projectiles.push({x:this.x+this.facing*24,y:this.y-this.cfg.h*0.6+rnd(-8,8),vx:this.facing*10,vy:0,
       w:9,h:3,dmg:s.dmg,kb:s.kb,life:28,owner:this,col:'#00BFFF'});beep(740,.04,'square',.04);}
@@ -852,7 +871,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='laser'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='laser'||sType==='star'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -950,7 +969,7 @@ const SPRITE_CHARS={
     anims:{
       idle:   {file:'idle',   n:12,fps:8},
       walk:   {file:'walk',   n:12,fps:16},
-      jump:   {file:'jump',   n:10},
+      jump:   {file:'jump',   n:10,jf:{squat:2,up:4,peak:5,down:5,land:6}},
       hurt:   {file:'hurt',   n:12},
       block:  {file:'block',  n:12,fps:20,holdFrom:5},
       ko:     {file:'ko',     n:12,fps:12},
@@ -962,6 +981,26 @@ const SPRITE_CHARS={
     muzzle:{x:36,y:40},                 /* punta dei cannoni sulla schiena */
     paw:{punch:{x:94,y:74},kick:{x:108,y:77}},
     kickLunge:16,                       /* scatto in avanti della carica */
+  },
+  chiara:{
+    dir:'sprites/chiara/',fw:128,fh:128,ax:62,ay:122,scale:1.2,
+    body:{x0:37,y0:5,x1:90,y1:122},
+    anims:{
+      idle:   {file:'idle',   n:12,fps:8},
+      walk:   {file:'walk',   n:12,fps:14},
+      jump:   {file:'jump',   n:12,jf:{squat:3,up:5,peak:6,down:7,land:8}},
+      hurt:   {file:'hurt',   n:12},
+      block:  {file:'block',  n:12,fps:20,holdFrom:6},
+      ko:     {file:'ko',     n:12,fps:12},
+      win:    {file:'win',    n:12,fps:10},
+      punch:  {file:'slash',  n:12,hit:6,act:2},                     /* fendente col pugnale */
+      kick:   {file:'gun',    n:10,hit:8,act:2,recReverse:true,xfade:true}, /* pistola dal fianco */
+      special:{file:'special',n:12,hit:7,act:2},                     /* polso col braccialetto */
+    },
+    gun:{x:104,y:62},          /* bocca della pistola */
+    bracelet:{x:97,y:36},      /* braccialetto alzato */
+    shield:{x:88,y:84,col:'#FFD700'},  /* scudo davanti al braccialetto in parata */
+    slash:{x:78,y:72,r:44,col:'#FF2A2A'}, /* centro e raggio del fendente */
   },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
@@ -988,17 +1027,18 @@ function spriteFrame(f,S){
     const m=f.cur,s=m.startup,ac=m.active,r=m.recovery,fr=f.moveFr,h=a.hit,k=a.act||1;
     if(fr<s)fi=Math.floor(fr/s*h);
     else if(fr<s+ac)fi=h+Math.floor((fr-s)/ac*k);
+    else if(a.recReverse)fi=h+k-1-Math.floor((fr-s-ac)/Math.max(1,r)*(h+k));
     else fi=h+k+Math.floor((fr-s-ac)/Math.max(1,r)*(n-h-k));
   }
   else if(key==='hurt')fi=Math.floor(t/f._sdur*n);
   else if(key==='ko')fi=Math.floor(t*a.fps/60);
   else if(key==='block'){const h=a.holdFrom;fi=Math.floor(t*a.fps/60);
     if(fi>=h)fi=h+Math.floor((t*8/60))%(n-h);}
-  else if(key==='jump'){
-    if(f.state==='jumpsquat')fi=2;
-    else if(f.vy<-2)fi=4;
-    else if(f.vy<2)fi=5;
-    else fi=f.y>GROUND-30?6:5;
+  else if(key==='jump'){const j=a.jf;
+    if(f.state==='jumpsquat')fi=j.squat;
+    else if(f.vy<-2)fi=j.up;
+    else if(f.vy<2)fi=j.peak;
+    else fi=f.y>GROUND-30?j.land:j.down;
   }
   else{
     fi=Math.floor(t*a.fps/60)%n;
@@ -1029,7 +1069,62 @@ function drawSpriteBody(f){
     ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
     ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
   drawSpriteFrame(S,a,fi,f.x,f.y,S.scale,f.facing,f.flash>0);
+  /* dissolvenza rapida (4 fotogrammi) quando cambia la posa di partenza */
+  const prev=f._sprPrev;
+  if(prev&&prev.a!==a&&(prev.a.xfade||a.xfade)){f._sprFade={a:prev.a,fi:prev.fi,t:4};}
+  if(f._sprFade&&f._sprFade.t>0){ctx.globalAlpha=f._sprFade.t/5;
+    drawSpriteFrame(S,f._sprFade.a,f._sprFade.fi,f.x,f.y,S.scale,f.facing,false);ctx.globalAlpha=1;f._sprFade.t--;}
+  f._sprPrev={a,fi};
+  /* braccialetto che si illumina d'oro durante la preparazione della speciale */
+  if(S.bracelet&&f.state==='attack'&&f.cur&&f.cur.key==='special'&&f.moveFr<f.cur.startup+f.cur.active){
+    const p=spritePoint(f,S.bracelet.x,S.bracelet.y),k=Math.min(1,f.moveFr/f.cur.startup),r=4+k*10+Math.sin(frame*.8)*2;
+    ctx.globalAlpha=.35+.4*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(p.x,p.y,r*1.8,0,7);ctx.fill();
+    ctx.globalAlpha=.9;ctx.fillStyle='#FFF3B0';ctx.beginPath();ctx.arc(p.x,p.y,r*.6,0,7);ctx.fill();
+    drawStar(p.x,p.y,r*.9,r*.4,frame*.1,'#FFFFFF');ctx.globalAlpha=1;
+    if(frame%3===0)_padd({star:true,x:p.x+rnd(-8,8),y:p.y+rnd(-8,8),vx:0,vy:-.6,life:14,max:14,col:'#FFD700',sz:3});}
+  /* scudo di luce in parata */
+  if(S.shield&&(f.state==='block'||f.blockFlash>0)&&f.state!=='ko'){
+    const p=spritePoint(f,S.shield.x,S.shield.y),sx=p.x+f.facing*14;
+    const al=f.blockFlash>0?.75:(.35+.12*Math.sin(frame*.3));
+    ctx.save();ctx.globalAlpha=al;ctx.strokeStyle=S.shield.col;ctx.lineWidth=3;
+    ctx.beginPath();ctx.ellipse(sx,p.y,9,30,0,0,7);ctx.stroke();
+    ctx.globalAlpha=al*.35;ctx.fillStyle=S.shield.col;ctx.fill();
+    ctx.globalAlpha=al;drawStar(sx,p.y,7,3,frame*.05,'#FFF3B0');ctx.restore();}
   return true;
+}
+function drawStar(x,y,R,r,rot,col){
+  ctx.fillStyle=col;ctx.beginPath();
+  for(let i=0;i<10;i++){const rr=i%2?r:R,an=rot+i*Math.PI/5-Math.PI/2;
+    const px=x+Math.cos(an)*rr,py=y+Math.sin(an)*rr;if(i)ctx.lineTo(px,py);else ctx.moveTo(px,py);}
+  ctx.closePath();ctx.fill();
+}
+
+/* ---------- EFFETTI DISEGNATI (scie, lampi) ---------- */
+let fxObjs=[];
+function updateFxObjs(){for(const o of fxObjs)o.t++;fxObjs=fxObjs.filter(o=>o.t<o.life);}
+function drawFxObjs(){for(const o of fxObjs)o.draw(o);}
+/* scia rossa del fendente: arco davanti al personaggio, segue il personaggio */
+function slashTrail(f){
+  const S=SPRITE_CHARS[f.cfg.id],c=S.slash;
+  fxObjs.push({t:0,life:10,draw(o){
+    const p=spritePoint(f,c.x,c.y),R=c.r*S.scale,k=1-o.t/o.life,dir=f.facing;
+    const a0=-1.45,a1=.15; /* da sopra la testa fino in avanti, verso il basso */
+    ctx.save();ctx.translate(p.x,p.y);ctx.scale(dir,1);
+    ctx.globalAlpha=k*.9;ctx.strokeStyle=c.col;ctx.lineWidth=9;ctx.beginPath();ctx.arc(0,0,R-3,a0+o.t*.04,a1);ctx.stroke();
+    ctx.globalAlpha=k*.7;ctx.strokeStyle='#FF8080';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,R,a0+o.t*.04,a1);ctx.stroke();
+    ctx.globalAlpha=k;ctx.strokeStyle='#FFFFFF';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,R+2,a0+o.t*.06,a1);ctx.stroke();
+    ctx.globalAlpha=k*.3;ctx.fillStyle=c.col;ctx.beginPath();ctx.arc(0,0,R,a0,a1);ctx.arc(0,0,R*.55,a1,a0,true);ctx.fill();
+    ctx.restore();ctx.globalAlpha=1;}});
+  /* bagliore sulla lama */
+  const tip=spritePoint(f,c.x+c.r*.95,c.y-8);
+  spark(tip.x,tip.y,'#FF2A2A',8,3);spark(tip.x,tip.y,'#FFB0B0',4,2);
+}
+function muzzleFlash(x,y,dir){
+  fxObjs.push({t:0,life:4,draw(o){const k=1-o.t/o.life;
+    ctx.globalAlpha=k;ctx.fillStyle='#FFE94A';ctx.beginPath();
+    ctx.moveTo(x,y-6);ctx.lineTo(x+dir*18,y);ctx.lineTo(x,y+6);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#FFFFFF';ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill();ctx.globalAlpha=1;}});
+  spark(x+dir*4,y,'#FFE94A',4,2);
 }
 /* ritratto nella schermata di scelta: primo fotogramma di attesa */
 function drawSpritePortrait(cfg,x,y,s){
@@ -1095,7 +1190,10 @@ function drawBeamFlashes(){
 
 /* effetti al contatto degli attacchi corpo a corpo */
 function meleeFX(f,opp,key){
-  const S=SPRITE_CHARS[f.cfg.id];if(!S||!S.paw||!S.paw[key])return;
+  const S=SPRITE_CHARS[f.cfg.id];
+  if(f.cfg.id==='chiara'&&key==='punch'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.6};
+    spark(p.x,p.y,'#FF2A2A',10,4);spark(p.x,p.y,'#FFFFFF',4,2);return;}
+  if(!S||!S.paw||!S.paw[key])return;
   const p=spritePoint(f,S.paw[key].x,S.paw[key].y);
   if(f.cfg.id==='mango'){
     if(key==='punch'){spark(p.x,p.y,'#00FFFF',8,3);spark(p.x,p.y,'#FFFFFF',3,2);}
@@ -1151,7 +1249,7 @@ function drawFighter(f){
     const sx2=f.x+Math.cos(an)*18,sy2=f.y-c.h-8+Math.sin(an)*5;
     ctx.fillStyle='#FFE94A';ctx.fillRect(sx2-1,sy2-3,2,6);ctx.fillRect(sx2-3,sy2-1,6,2);}}
   // scudo di parata
-  if((f.state==='block'||f.blockFlash>0)&&f.state!=='ko'){
+  if((f.state==='block'||f.blockFlash>0)&&f.state!=='ko'&&!(SPRITE_CHARS[c.id]&&SPRITE_CHARS[c.id].shield)){
     const al=f.blockFlash>0?.6:(.28+.1*Math.sin(frame*.3));
     ctx.globalAlpha=al;ctx.fillStyle=f.blockFlash>0?'#CFE6FF':'#9CC4FF';
     const sx=f.x+f.facing*(f.half+5);
@@ -1719,7 +1817,7 @@ const game={
     return finale?DIFFS.boss:DIFFS[this.difficulty];},
   p:[null,null],round:1,wins:[0,0],timer:99,timerF:0,
   banner:'',bannerT:0,freeze:0,koPending:false,matchWinner:null,
-  reset(){particles=[];projectiles=[];beams=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
+  reset(){particles=[];projectiles=[];beams=[];fxObjs=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
   startMatch(){this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
     this.round=1;this.wins=[0,0];this.startRound();this.state='fight';},
   startTournament(){
@@ -1813,7 +1911,7 @@ function update(){
       const target=clamp(((a.x+b.x)/2-W/2)*.3,-44,44);
       camX+=(target-camX)*.08;
       // proiettili
-      updateBeams();
+      updateBeams();updateFxObjs();
       projectiles=projectiles.filter(p=>{
         p.x+=p.vx;p.y+=p.vy;if(p.grav)p.vy+=p.grav;p.life--;
         if(frame%3===0)particles.push({x:p.x,y:p.y,vx:0,vy:0,life:6,max:6,col:p.col,sz:2});
@@ -1821,7 +1919,10 @@ function update(){
         const hb={x:p.x-p.w/2,y:p.y-p.h/2,w:p.w,h:p.h};
         let boom=false;
         if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox())){boom=true;
-          if(p.aoe)explode(p,tgt);else tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner);}
+          if(p.aoe)explode(p,tgt);else tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner);
+          if(p.starShot){ring(p.x,p.y,'#FFD700',6,90);ring(p.x,p.y,'#FFFFFF',4,50);spark(p.x,p.y,'#FFD700',18,6);
+            for(let i=0;i<6;i++)_padd({star:true,x:p.x,y:p.y,vx:rnd(-3,3),vy:rnd(-3,1),life:24,max:24,col:'#FFF3B0',sz:3});
+            whiteFlash=Math.max(whiteFlash,2);shake=Math.max(shake,8);}}
         if(p.bounceKill&&p.y>=GROUND-4){explode(p,tgt);boom=true;}
         if(p.x<-30||p.x>W+30)return false;
         return !boom&&p.life>0;});
@@ -2012,8 +2113,15 @@ function drawFight(){
   const ps=[...game.p].sort((a,b)=>(a.state==='attack'?1:0)-(b.state==='attack'?1:0));
   drawBeams();
   ps.forEach(drawFighter);
-  drawBeamFlashes();
-  projectiles.forEach(p=>{pxs(p.x-p.w/2,p.y-p.h/2,p.w,p.h,p.col);pxs(p.x-p.w/2,p.y-p.h/2,p.w,1,'#FFF');});
+  drawBeamFlashes();drawFxObjs();
+  projectiles.forEach(p=>{
+    if(p.starShot){p.rot+=.25;
+      ctx.globalAlpha=.3;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(p.x,p.y,26+Math.sin(frame*.6)*3,0,7);ctx.fill();
+      ctx.globalAlpha=.55;drawStar(p.x-p.vx*2,p.y-p.vy*2,16,7,p.rot-.4,'#FF8C00');
+      ctx.globalAlpha=1;drawStar(p.x,p.y,18,8,p.rot,'#FFD700');drawStar(p.x,p.y,9,4,p.rot,'#FFFFFF');
+      if(frame%2===0)_padd({star:true,x:p.x-p.vx*3+rnd(-6,6),y:p.y-p.vy*3+rnd(-6,6),vx:0,vy:0,life:14,max:14,col:'#FFE94A',sz:3});
+      return;}
+    pxs(p.x-p.w/2,p.y-p.h/2,p.w,p.h,p.col);pxs(p.x-p.w/2,p.y-p.h/2,p.w,1,'#FFF');});
   particles.forEach(p=>{
     ctx.globalAlpha=clamp(p.life/(p.max||20),0,1)*(p.fade?.7:1);
     if(p.ring){ctx.strokeStyle=p.col;ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.stroke();
