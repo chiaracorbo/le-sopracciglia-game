@@ -490,7 +490,13 @@ const ROSTER=[
  {id:'ettore',name:'ETTORE',title:'L\u2019Erede della Spada',hp:180,speed:3.4,power:6,h:144,def:5,aer:5,
   fur:'#F5F2EA',brow:'#FFD700',outfit:'#8C97A3',weapon:'spadabianca',species:'alpaca',recMod:.95,
   hair:{t:'pouf',c1:'#F5F2EA'},armor:{plate:'#C9A227',frame:'#AEB6BE'},scarf:'#7A2E2E',mask:'#C9A227',noBelt:true,
-  special:{type:'crit',name:'SPADA BIANCA',dmg:24,kb:30,w:70,hh:56,failChance:.3,st:10,act:5,rec:10,fx:'white',cost:45,cd:104},
+  moves:{
+    punch:{startup:7,active:3,recovery:9,range:52,dmg:5,slashFx:true},
+    kick:{startup:12,active:6,recovery:12,lag:8,range:58,hh:60,dmg:7.2,kb:14,hop:6.5,slashFx:true},
+  },
+  /* teletrasporto: castFr fotogrammi di concentrazione, vanishFr di dissolvenza, poi ricompare e colpisce */
+  special:{type:'teleport',name:'SPADA BIANCA',dmg:22,kb:24,w:58,hh:60,castFr:26,vanishFr:8,st:42,act:4,rec:14,
+    slashFx:true,fx:'gold',cost:45,cd:104},
   quote:'Ce l\u2019ho fatta! ...pi\u00F9 o meno.'},
  {id:'chiara',name:'CHIARA',title:'La Consigliera',hp:190,speed:3.8,power:5,h:140,def:4,aer:6,
   fur:'#4A4A52',brow:'#9B59B6',outfit:'#2E6E7E',weapon:'stiletto',species:'alpaca',recMod:.9,
@@ -741,7 +747,9 @@ class Fighter{
       for(const o of m.shots){const off=typeof o==='number'?o:o.at;
         if(this.moveFr===aS+off)this.fireShot(typeof o==='number'?m:{...m,...o},opp);}}
     if(m.recoil&&this.moveFr>aS&&this.moveFr<=aS+5)this.x-=this.facing*m.recoil/5;
-    if(m.slashFx&&this.moveFr===aS)slashTrail(this);
+    if((m.slashFx||(m.s&&m.s.slashFx))&&this.moveFr===aS)slashTrail(this,m.key==='special'?'punch':m.key);
+    if(m.hop&&this.moveFr===1&&this.onGround()){this.vy=-m.hop;this.y-=1;dust(this.x,GROUND,5);}
+    if(m.sType==='teleport')this.teleportStep(m,opp);
     if(this.moveFr>=aE+m.recovery){this.atkLag=m.lag||0;this.state='idle';this.cur=null;this.pendingWaves=null;}
   }
   resolveSpecialStart(opp){
@@ -798,6 +806,22 @@ class Fighter{
     const ty=opp.y-opp.cfg.h*.55,dx=Math.abs(opp.x-p.x)||1,vy=clamp((ty-p.y)/dx,-.25,.25)*m.shotSpd;
     projectiles.push({x:p.x+this.facing*8,y:p.y,vx:this.facing*m.shotSpd,vy,w:big?20:12,h:big?7:4,dmg:m.shotDmg,
       kb:m.shotKb||5,life:90,owner:this,col:big?'#FFF3B0':(m.shotCol||'#FFE94A'),bigShot:big});}
+  teleportStep(m,opp){
+    const T=m.s,fr=this.moveFr,te=T.castFr+T.vanishFr;
+    if(fr===1)sfx.ready();
+    if(fr===T.castFr){ /* svanisce */
+      const p={x:this.x,y:this.y-this.cfg.h*.5};
+      whiteFlash=Math.max(whiteFlash,1);ring(p.x,p.y,'#FFD700',6,70);ring(p.x,p.y,'#FFFFFF',4,40);
+      spark(p.x,p.y,'#FFE94A',16,5);sfx.blinkS();this.invuln=Math.max(this.invuln,T.vanishFr+10);}
+    if(fr===te){ /* riappare alle spalle dell'avversario, girato verso di lui */
+      const side=opp.x>=this.x?1:-1;
+      let nx=opp.x+side*(opp.half+this.half+8);
+      if(nx<this.half+6||nx>W-this.half-6)nx=opp.x-side*(opp.half+this.half+8); /* spalle al muro: resta davanti */
+      this.x=clamp(nx,this.half+6,W-this.half-6);this.facing=opp.x>=this.x?1:-1;
+      const p={x:this.x,y:this.y-this.cfg.h*.5};
+      ring(p.x,p.y,'#FFD700',5,60);spark(p.x,p.y,'#FFE94A',14,5);spark(p.x,p.y,'#FFFFFF',6,3);
+      whiteFlash=Math.max(whiteFlash,1);sfx.blinkS();}
+  }
   fireBurst(){const s=this.cfg.special;
     projectiles.push({x:this.x+this.facing*24,y:this.y-this.cfg.h*0.6+rnd(-8,8),vx:this.facing*10,vy:0,
       w:9,h:3,dmg:s.dmg,kb:s.kb,life:28,owner:this,col:'#00BFFF'});beep(740,.04,'square',.04);}
@@ -894,7 +918,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'?400:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -1066,6 +1090,30 @@ const SPRITE_CHARS={
     heavyGun:{x:110,y:40},
     burstA:{x:112,y:39},burstB:{x:104,y:46},
   },
+  ettore:{
+    dir:'sprites/ettore/',fw:128,fh:128,ax:56,ay:119,scale:1.3,
+    body:{x0:17,y0:8,x1:109,y1:119},
+    anims:{
+      /* l'attesa ha la spada bassa, tutte le altre partono con la spada alzata: dissolvenza */
+      idle:   {file:'idle',    n:12,fps:7,xfade:true},
+      walk:   {file:'walk',    n:12,fps:14},
+      jump:   {file:'jump',    n:12,jf:{squat:2,up:5,peak:6,down:7,land:8},dy:{6:6}},
+      hurt:   {file:'hurt',    n:12},
+      block:  {file:'block',   n:12,fps:20,holdFrom:5},
+      ko:     {file:'ko',      n:12,fps:12},
+      win:    {file:'win',     n:12,fps:10},
+      cast:   {file:'cast',    n:12,fps:10},
+      punch:  {file:'slash',   n:12,hit:8,act:2},          /* fendente orizzontale */
+      kick:   {file:'overhead',n:12,hit:4,act:3},          /* colpo dall'alto, con balzo */
+      special:{file:'slash',   n:12,hit:8,act:2,teleport:true}, /* cast → svanisce → riappare → fendente */
+    },
+    /* scie blu della lama: centro (mano), raggio, angoli di inizio e fine */
+    trails:{
+      punch:{x:70,y:52,r:40,a0:-1.15,a1:.6,col:'#00E5FF'},
+      kick: {x:68,y:50,r:44,a0:-1.6,a1:.95,col:'#00E5FF'},
+    },
+    glow:{x:60,y:62},
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   for(const k in S.anims){const f=S.anims[k].file;if(S.img[f])continue;left++;
@@ -1087,6 +1135,12 @@ function spriteFrame(f,S){
   else key='idle';
   if(f._sk!==key){f._sk=key;f._st0=f.animT;f._sdur=f.hitstun+1;}
   const t=f.animT-f._st0,a=A[key]||A.idle,n=a.n;
+  if(key==='special'&&a.teleport){
+    const m=f.cur,T=m.s,fr=f.moveFr,c=A.cast,te=T.castFr+T.vanishFr;
+    if(fr<T.castFr)return {a:c,fi:Math.floor(fr*c.fps/60)%9,alpha:1};
+    if(fr<te)return {a:c,fi:8,alpha:1-(fr-T.castFr)/T.vanishFr};
+    if(fr<m.startup){const p=(fr-te)/(m.startup-te);return {a,fi:Math.floor(p*a.hit),alpha:Math.min(1,p*1.5)};}
+  }
   if(key==='punch'||key==='kick'||key==='special'){
     const m=f.cur,s=m.startup,ac=m.active,r=m.recovery,fr=f.moveFr,h=a.hit,k=a.act||1;
     if(fr<s)fi=Math.floor(fr/s*h);
@@ -1129,11 +1183,30 @@ function drawSpriteFrame(S,a,fi,x,y,sc,facing,flash){
 }
 function drawSpriteBody(f){
   const S=SPRITE_CHARS[f.cfg.id];if(!S||!S.ready)return false;
-  const {a,fi}=spriteFrame(f,S);
+  const {a,fi,alpha}=spriteFrame(f,S);
   if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
     ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
     ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
+  /* bagliore giallo di concentrazione */
+  if(S.glow&&f.state==='attack'&&f.cur&&f.cur.key==='special'&&f.cur.s.castFr&&f.moveFr<f.cur.s.castFr+f.cur.s.vanishFr){
+    const g=spritePoint(f,S.glow.x,S.glow.y),k=Math.min(1,f.moveFr/f.cur.s.castFr),r=40+k*30+Math.sin(frame*.5)*4;
+    ctx.globalAlpha=.18+.25*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.75,r,0,0,7);ctx.fill();
+    ctx.globalAlpha=.25*k;ctx.fillStyle='#FFF3B0';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.45,r*.7,0,0,7);ctx.fill();ctx.globalAlpha=1;}
+  if(alpha!==undefined)ctx.globalAlpha=Math.max(0,alpha);
   drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*S.scale,S.scale,f.facing,f.flash>0);
+  /* durante il bagliore lo sprite si illumina di giallo */
+  if(S.glow&&f.state==='attack'&&f.cur&&f.cur.key==='special'&&f.cur.s.castFr&&f.moveFr<f.cur.s.castFr+f.cur.s.vanishFr){
+    const k=Math.min(1,f.moveFr/f.cur.s.castFr);
+    sprTint.width=S.fw;sprTint.height=S.fh;sprTctx.imageSmoothingEnabled=false;
+    sprTctx.drawImage(S.img[a.file],fi*S.fw,0,S.fw,S.fh,0,0,S.fw,S.fh);
+    sprTctx.globalCompositeOperation='source-in';sprTctx.fillStyle='#FFE94A';sprTctx.fillRect(0,0,S.fw,S.fh);
+    sprTctx.globalCompositeOperation='source-over';
+    ctx.save();ctx.globalAlpha=(.15+.35*k)*(alpha===undefined?1:alpha);ctx.imageSmoothingEnabled=false;
+    ctx.translate(Math.round(f.x),Math.round(f.y));if(f.facing<0)ctx.scale(-1,1);
+    ctx.drawImage(sprTint,-S.ax*S.scale,-S.ay*S.scale,S.fw*S.scale,S.fh*S.scale);ctx.restore();
+    if(frame%3===0){const g=spritePoint(f,S.glow.x+rnd(-30,30),S.glow.y+rnd(-50,40));
+      _padd({star:true,x:g.x,y:g.y,vx:0,vy:-.8,life:14,max:14,col:'#FFE94A',sz:3});}}
+  ctx.globalAlpha=1;
   /* dissolvenza rapida (4 fotogrammi) quando cambia la posa di partenza */
   const prev=f._sprPrev;
   if(prev&&prev.a!==a&&(prev.a.xfade||a.xfade)){f._sprFade={a:prev.a,fi:prev.fi,t:4};}
@@ -1169,20 +1242,20 @@ let fxObjs=[];
 function updateFxObjs(){for(const o of fxObjs){o.t++;if(o.update)o.update(o);}fxObjs=fxObjs.filter(o=>o.t<o.life);}
 function drawFxObjs(){for(const o of fxObjs)o.draw(o);}
 /* scia rossa del fendente: arco davanti al personaggio, segue il personaggio */
-function slashTrail(f){
-  const S=SPRITE_CHARS[f.cfg.id],c=S.slash;
+function slashTrail(f,key){
+  const S=SPRITE_CHARS[f.cfg.id],c=(S.trails&&S.trails[key])||S.slash;
   fxObjs.push({t:0,life:10,draw(o){
     const p=spritePoint(f,c.x,c.y),R=c.r*S.scale,k=1-o.t/o.life,dir=f.facing;
-    const a0=-1.45,a1=.15; /* da sopra la testa fino in avanti, verso il basso */
+    const a0=c.a0!==undefined?c.a0:-1.45,a1=c.a1!==undefined?c.a1:.15; /* da sopra fino in avanti, verso il basso */
     ctx.save();ctx.translate(p.x,p.y);ctx.scale(dir,1);
     ctx.globalAlpha=k*.9;ctx.strokeStyle=c.col;ctx.lineWidth=9;ctx.beginPath();ctx.arc(0,0,R-3,a0+o.t*.04,a1);ctx.stroke();
-    ctx.globalAlpha=k*.7;ctx.strokeStyle='#FF8080';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,R,a0+o.t*.04,a1);ctx.stroke();
+    ctx.globalAlpha=k*.7;ctx.strokeStyle=c.col==='#FF2A2A'?'#FF8080':'#B8FFFF';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,R,a0+o.t*.04,a1);ctx.stroke();
     ctx.globalAlpha=k;ctx.strokeStyle='#FFFFFF';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,R+2,a0+o.t*.06,a1);ctx.stroke();
     ctx.globalAlpha=k*.3;ctx.fillStyle=c.col;ctx.beginPath();ctx.arc(0,0,R,a0,a1);ctx.arc(0,0,R*.55,a1,a0,true);ctx.fill();
     ctx.restore();ctx.globalAlpha=1;}});
   /* bagliore sulla lama */
   const tip=spritePoint(f,c.x+c.r*.95,c.y-8);
-  spark(tip.x,tip.y,'#FF2A2A',8,3);spark(tip.x,tip.y,'#FFB0B0',4,2);
+  spark(tip.x,tip.y,c.col,8,3);spark(tip.x,tip.y,'#FFFFFF',4,2);
 }
 /* fumogeno: lampo bianco e nuvola di fumo grigio intorno al personaggio */
 function smokeBomb(f){
