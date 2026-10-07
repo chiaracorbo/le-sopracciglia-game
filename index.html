@@ -1078,6 +1078,20 @@ const sil=document.createElement('canvas');sil.width=360;sil.height=320;
 const sctx=sil.getContext('2d');sctx.imageSmoothingEnabled=false;
 const OX=180,OY=300; // origine piedi dentro l'offscreen
 
+/* ---------- SFONDI DEI COMBATTIMENTI (uno a caso per incontro) ---------- */
+const BACKGROUNDS=['Campo al tramonto','Cripta','Cantiere della Torre','Citta nella caverna','Miniera rossa','Rifugio nella grotta',
+  'Astronave','Horny Alpaca','Salone del Fronte','Villaggio delle due lune','Via dei dinosauri','Tetti in fiamme','Fattoria',
+  'Piazza del borgo','Sala del trono'];
+const BG_IMG={};
+function loadBg(i){if(BG_IMG[i])return;const im=new Image();im.src='backgrounds/bg'+String(i+1).padStart(2,'0')+'.png';BG_IMG[i]=im;}
+/* disegna lo sfondo riempiendo tutta l'arena (taglia i lati, non deforma) */
+function drawBg(i){const im=BG_IMG[i];if(!im||!im.complete||!im.naturalWidth)return false;
+  const sc=Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
+  ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(im,(W-w)/2,H-h,w,h);
+  /* leggera ombra in basso per far risaltare i personaggi */
+  const g=ctx.createLinearGradient(0,GROUND-40,0,H);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.45)');
+  ctx.fillStyle=g;ctx.fillRect(0,GROUND-40,W,H-GROUND+40);ctx.restore();return true;}
+
 /* ---------- SPRITE ANIMATI (pixler.dev) ----------
    Ogni personaggio: strisce PNG orizzontali di fotogrammi fw×fh, tutte rivolte a destra.
    ax,ay = punto d'appoggio (centro corpo, linea dei piedi) dentro il fotogramma.
@@ -2412,6 +2426,7 @@ const game={
   banner:'',bannerT:0,freeze:0,koPending:false,matchWinner:null,
   reset(){particles=[];projectiles=[];beams=[];fxObjs=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
   startMatch(){this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
+    this.bg=(Math.random()*BACKGROUNDS.length)|0;loadBg(this.bg);
     this.round=1;this.wins=[0,0];this.startRound();this.state='fight';},
   startTournament(){
     const me=this.sel[0];
@@ -2702,8 +2717,8 @@ function drawSelect(){
 }
 
 function drawFight(){
-  STAGES[game.stage].draw(camX);
-  text(STAGES[game.stage].name,W/2,H-18,9,'rgba(245,240,225,.35)');
+  if(drawBg(game.bg))text(BACKGROUNDS[game.bg].toUpperCase(),W/2,H-18,9,'rgba(245,240,225,.45)');
+  else{STAGES[game.stage].draw(camX);text(STAGES[game.stage].name,W/2,H-18,9,'rgba(245,240,225,.35)');}
   ctx.save();ctx.translate(-camX*0.0,0); // fighters in world≈screen, cam già nei layer
   const ps=[...game.p].sort((a,b)=>(a.state==='attack'?1:0)-(b.state==='attack'?1:0));
   drawBeams();
