@@ -417,8 +417,8 @@ function ensureMusic(){
   if(!audioUnlocked)return;
   if(musicMuted){if(curTrack&&!curTrack.paused)curTrack.pause();return;}
   const t=tracks[wantTrack];
-  if(!t)return; // music.js non ancora caricato
-  if(curTrack===t){if(t.paused)t.play().catch(()=>{});return;}
+  if(!t){if(wantTrack==='hush'&&curTrack&&!curTrack.paused)curTrack.pause();return;}
+  if(curTrack===t){if(t.paused){t.currentTime=0;t.play().catch(()=>{});}return;}
   if(curTrack){curTrack.pause();curTrack.currentTime=0;}
   curTrack=t;t.play().catch(()=>{});
 }
@@ -487,10 +487,15 @@ const ROSTER=[
   special:{type:'laser',name:'LASER COSMICO',dmg:22.4,airDmg:24,kb:30,st:14,act:16,rec:14,fx:'cyan',cost:45,cd:104},
   quote:'BAU! (trad.: la comunicazione \u00E8 fondamentale per la nostra lotta.)'},
  {id:'pisani',name:'LUCA PISANI',title:'Il Gran Maestro',hp:270,speed:2.1,power:10,h:180,def:7,aer:3,
-  punchDmg:6.4,kickDmg:8.8,meleeR:5,comeback:true,
+  meleeR:5,comeback:true,
   fur:'#C8C2B8',brow:'#8B0000',outfit:'#5A4A3E',weapon:'scettro',species:'alpaca',cape:true,recMod:1.25,
   hair:{t:'plate',c1:'#9A8A78'},cowl:'#6E5A48',chain:true,noBelt:true,
-  special:{type:'waves',name:'SINFONIA REALE',dmg:16,kb:15,radii:[40,70,100],at:[8,12,16],st:6,act:14,rec:10,fx:'purple',cost:50,cd:112},
+  moves:{
+    punch:{startup:7,active:6,recovery:12,lag:6,range:60,hh:70,yFrac:.5,dmg:5.6,kb:10,slashFx:true},
+    kick:{startup:9,active:4,recovery:12,lag:8,range:52,hh:60,yFrac:.35,dmg:6.4,kb:14},
+  },
+  /* affondo insieme a due cloni: tre colpi (il re e i due cloni) */
+  special:{type:'clones',name:'SINFONIA REALE',dmg:3.4,kb:6,w:120,hh:80,st:12,act:16,rec:14,slashFx:true,fx:'purple',cost:50,cd:112},
   quote:'\u00C8 ora di danzare all\u2019unisono!'},
  {id:'zibe',name:'ZIBE',title:'Il Veterano',hp:200,speed:3.4,power:7,h:148,def:6,aer:5,
   fur:'#E8E2D2',brow:'#FF8C00',outfit:'#4A3270',weapon:'pompa',species:'alpaca',recMod:.95,
@@ -783,6 +788,7 @@ class Fighter{
         const c={x:this.x,y:this.y-this.cfg.h*.5};ring(c.x,c.y,'#FFE94A',6,90);ring(c.x,c.y,'#FFFFFF',4,55);
         spark(c.x,c.y,'#FFE94A',18,6);spark(c.x,c.y,'#C0C8D0',12,5);sfx.boom();
         ftext(this.x,this.y-this.cfg.h-30,this.cfg.exoText||'ESOSCHELETRO!','#FFB000',11);}}
+    if(m.sType==='clones'&&(this.moveFr===aS+6||this.moveFr===aS+12)){this.hitConsumed=false;slashTrail(this,'special');}
     if(m.sType==='pump3'){for(const o of m.s.shotsAt)if(this.moveFr===aS+o){this.hitConsumed=true;
         this.fireShot({muzzle:'pumpgun',pellets:true,shotDmg:m.s.dmg,shotKb:9},opp);
         if(o>0)beep(300,.06,'square',.05,-120);}}
@@ -981,7 +987,7 @@ class Fighter{
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
     const hasProj=!!this.cfg.punchProjectile;
-    const sRange=sType==='exo'?999:sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const sRange=sType==='clones'?130:sType==='exo'?999:sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
     // PARRY reattivo: finestra parry aumentata, rispetta parryCD
     if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
@@ -1314,6 +1320,25 @@ const SPRITE_CHARS={
     gun:{x:124,y:72},        /* uscita dell'arma senza rinculo */
     exoBack:{x:60,y:60},
   },
+  pisani:{
+    dir:'sprites/pisani/',fw:128,fh:128,ax:62,ay:113,scale:1.6,
+    body:{x0:35,y0:13,x1:92,y1:113},
+    anims:{
+      idle:   {file:'idle',  n:12,fps:7},
+      walk:   {file:'walk',  n:12,fps:12},
+      jump:   {file:'jump',  n:12,jf:{squat:4,up:6,peak:7,down:8,land:9},dy:{7:13,8:13}},
+      hurt:   {file:'hurt',  n:12},
+      block:  {file:'block', n:12,fps:20,holdFrom:7},
+      ko:     {file:'ko',    n:12,fps:12},
+      win:    {file:'win',   n:12,fps:8},
+      punch:  {file:'slash', n:12,hit:2,act:5},                 /* fendente orizzontale */
+      kick:   {file:'kick',  n:12,hit:5,act:3},                 /* calcio */
+      special:{file:'thrust',n:16,hit:5,act:7,recReverse:true}, /* affondo, con i cloni */
+    },
+    trails:{punch:{x:66,y:72,r:44,a0:-.5,a1:.75,col:'#F0F0F0'},special:{x:62,y:72,r:52,a0:-.35,a1:.35,col:'#F0F0F0'}},
+    eye:{x:72,y:27},
+    clones:true,
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
@@ -1445,6 +1470,14 @@ function drawSpriteBody(f){
     if(frame%3===0){const g=spritePoint(f,S.glow.x+rnd(-30,30),S.glow.y+rnd(-50,40));
       _padd({star:true,x:g.x,y:g.y,vx:0,vy:-.8,life:14,max:14,col:'#FFE94A',sz:3});}}
   ctx.globalAlpha=1;
+  if(S.clones&&f.state==='attack'&&f.cur&&f.cur.key==='special'){
+    const m=f.cur,end=m.startup+m.active+m.recovery,k=Math.min(1,f.moveFr/6,(end-f.moveFr)/8);
+    for(const off of [-1,1]){const cx=f.x+off*58*S.scale/1.6,cy=f.y-off*4;
+      ctx.globalAlpha=.45*k;drawSpriteFrame(S,a,fi,cx,cy,S.scale*.95,f.facing,false);
+      const e=spritePoint({x:cx,y:cy,facing:f.facing,cfg:f.cfg},S.eye.x,S.eye.y);
+      const r=3+Math.sin(frame*.5)*1;ctx.globalAlpha=.9*k;ctx.fillStyle='#FF2020';
+      ctx.beginPath();ctx.arc(e.x,e.y,r,0,7);ctx.fill();ctx.globalAlpha=.35*k;ctx.beginPath();ctx.arc(e.x,e.y,r*3,0,7);ctx.fill();}
+    ctx.globalAlpha=1;}
   /* dissolvenza rapida (4 fotogrammi) quando cambia la posa di partenza */
   const prev=f._sprPrev;
   if(prev&&prev.a!==a&&(prev.a.xfade||a.xfade)){f._sprFade={a:prev.a,fi:prev.fi,t:4};}
@@ -1601,6 +1634,21 @@ function exoBreak(f){
   for(let i=0;i<26;i++){const d=i*1.2;setTimeoutFrames(Math.round(d),()=>{
     _padd({x:b.x+rnd(-4,4),y:b.y,vx:-f.facing*rnd(.5,2.5)+rnd(-.6,.6),vy:-rnd(2.5,4.5),life:rnd(22,34),max:34,
       col:['#FFFFFF','#E8EEF2','#C8D0D8'][i%3],sz:rnd(5,9),fade:true});});}
+}
+function playClassical(){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){return;}
+  /* Mozart, Eine kleine Nachtmusik (inizio) */
+  const N={D4:293.7,Fs4:370,G4:392,A4:440,B4:493.9,C5:523.3,D5:587.3,G3:196,D3:146.8};
+  const mel=[['G4',.4],['D4',.2],['G4',.4],['D4',.2],['G4',.2],['D4',.2],['G4',.2],['B4',.2],['D5',.8],
+    ['C5',.4],['A4',.2],['C5',.4],['A4',.2],['C5',.2],['A4',.2],['Fs4',.2],['A4',.2],['D4',.8]];
+  let t=AC.currentTime+.05;
+  for(const [n,d] of mel){const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=N[n];
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.09,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d*.95);
+    o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);t+=d;}
+  let tb=AC.currentTime+.05;for(const [n,d] of [['G3',1.6],['G3',1.0],['D3',1.6],['D3',1.0]]){const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.value=N[n];g.gain.setValueAtTime(.06,tb);g.gain.exponentialRampToValueAtTime(.0001,tb+d);
+    o.connect(g);g.connect(AC.destination);o.start(tb);o.stop(tb+d);tb+=d;}
+  return t-AC.currentTime;
 }
 function goldReload(f){
   const S=SPRITE_CHARS[f.cfg.id],N=6;
@@ -2382,7 +2430,8 @@ const game={
       if(this.wins[wIdx]>=2){this.matchWinner=this.p[wIdx];
         this.playerLost=(this.mode!==2&&wIdx===1);
         if(this.mode===3&&wIdx===0&&this.tournament)this.tournament.wins++;
-        this.state='victory';if(this.playerLost)sfx.ko();else sfx.ok();}
+        this.state='victory';if(this.playerLost)sfx.ko();else sfx.ok();
+        if(this.matchWinner&&this.matchWinner.cfg.id==='pisani'){const d=playClassical();if(d)this.musicHold=Math.ceil(d*60)+20;}}
       else{this.round++;this.startRound();}});},
   timeout(){if(this.koPending)return;this.koPending=true;
     const h0=this.p[0].hp/this.p[0].maxHp,h1=this.p[1].hp/this.p[1].maxHp;
@@ -2401,7 +2450,8 @@ function kp(code){return !!keys[code]&&!kPrev[code];}
 
 function update(){
   frame++;
-  wantTrack=game.state==='fight'?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
+  if(game.musicHold>0){game.musicHold--;if(game.state!=='victory')game.musicHold=0;}
+  wantTrack=game.musicHold>0?'hush':game.state==='fight'?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
   ensureMusic();
   if(kp('KeyM')){musicMuted=!musicMuted;if(!musicMuted&&curTrack)curTrack.play().catch(()=>{});}
   frameTimers=frameTimers.filter(t=>{if(--t.fr<=0){t.fn();return false}return true});
