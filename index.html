@@ -469,7 +469,7 @@ const ROSTER=[
   special:{type:'barrage',name:'TEMPESTA TURCHESE',dmg:2.6,every:4,kb:2,st:10,act:40,rec:12,fx:'blue',cost:35,cd:80},
   quote:'Non possiamo diventare come loro!'},
  {id:'batteo',name:'BATTEO',title:'Lo Stratega (nano form)',hp:155,speed:4.3,power:4,h:108,def:3,aer:7,
-  meleeR:2,exoH:150,exoTremble:true,exoText:'NANOMACCHINE!',exoEnd:'flash',exoEndText:'DI NUOVO PICCOLO',
+  meleeR:2,exoH:150,exoHalf:30,exoTremble:true,exoText:'NANOMACCHINE!',exoEnd:'flash',exoEndText:'DI NUOVO PICCOLO',
   fur:'#C8CDD2',brow:'#DAA520',outfit:'#5A6E5A',weapon:'serramanico',species:'duck',recMod:.8,
   buff:true,hair:{t:'crest',c1:'#1A1A1A'},legCol:'#8A7D5A',gloves:'#1A1A1A',pouch:true,
   moves:{
@@ -477,7 +477,7 @@ const ROSTER=[
     kick:{startup:12,active:6,recovery:10,lag:6,range:50,hh:70,dmg:11,kb:12,hop:5},
   },
   /* da grande: colpo potentissimo che scaglia via l'avversario "come se fosse di carta" */
-  exoMove:{exo:true,startup:8,active:4,recovery:14,lag:8,range:66,hh:100,yFrac:.5,dmg:21,kb:60,stCost:4},
+  exoMove:{exo:true,startup:8,active:5,recovery:14,lag:8,range:96,hh:110,yFrac:.5,dmg:21,kb:60,stCost:4},
   special:{type:'exo',name:'STRATAGEMMA PAPERO',dmg:0,kb:0,st:28,act:2,rec:8,fx:'yellow',cost:30,cd:72},
   quote:'Tutto secondo il piano.'},
  {id:'mango',name:'MANGO',title:'Il Cane Spaziale',hp:215,speed:3.0,power:7,h:132,bodyHalf:42,def:6,aer:5,
@@ -630,7 +630,7 @@ class Fighter{
     this.jumpV=-Math.sqrt(2*0.6*(45+(cfg.aer||5)*4))*(cfg.heavyJump?Math.sqrt(.9):1);
     this.ai={cool:0,plan:'approach',planT:0};this.animT=0;this.readyPing=false;
   }
-  get half(){return this.cfg.bodyHalf||this.cfg.h*0.17;}
+  get half(){return (this.exo>0&&this.cfg.exoHalf)||this.cfg.bodyHalf||this.cfg.h*0.17;}
   get dmgMul(){return (this.cfg.comeback&&this.hp/this.maxHp<0.4)?1.2:1;}
   get specialReady(){return this.meter>=this.cfg.special.cost&&this.cooldown<=0;}
   hurtbox(){const crouch=this.state==='crouch';const h=((this.exo>0&&this.cfg.exoH)||this.cfg.h)*(crouch?0.6:1);
