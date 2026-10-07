@@ -469,10 +469,16 @@ const ROSTER=[
   special:{type:'barrage',name:'TEMPESTA TURCHESE',dmg:2.6,every:4,kb:2,st:10,act:40,rec:12,fx:'blue',cost:35,cd:80},
   quote:'Non possiamo diventare come loro!'},
  {id:'batteo',name:'BATTEO',title:'Lo Stratega (nano form)',hp:155,speed:4.3,power:4,h:108,def:3,aer:7,
-  punchDmg:4.4,meleeR:2,
+  meleeR:2,exoH:150,exoTremble:true,exoText:'NANOMACCHINE!',exoEnd:'flash',exoEndText:'DI NUOVO PICCOLO',
   fur:'#C8CDD2',brow:'#DAA520',outfit:'#5A6E5A',weapon:'serramanico',species:'duck',recMod:.8,
   buff:true,hair:{t:'crest',c1:'#1A1A1A'},legCol:'#8A7D5A',gloves:'#1A1A1A',pouch:true,
-  special:{type:'blink',name:'STRATAGEMMA PAPERO',dmg:14.4,kb:25,st:6,act:4,rec:6,fx:'yellow',cost:30,cd:72},
+  moves:{
+    punch:{startup:16,active:4,recovery:12,lag:8,shots:[{at:0,muzzle:'gun',shotBig:true}],shotDmg:12.5,shotSpd:15,shotKb:12,recoil:6},
+    kick:{startup:12,active:6,recovery:10,lag:6,range:50,hh:70,dmg:11,kb:12,hop:5},
+  },
+  /* da grande: colpo potentissimo che scaglia via l'avversario "come se fosse di carta" */
+  exoMove:{exo:true,startup:8,active:4,recovery:14,lag:8,range:66,hh:100,yFrac:.5,dmg:21,kb:60,stCost:4},
+  special:{type:'exo',name:'STRATAGEMMA PAPERO',dmg:0,kb:0,st:28,act:2,rec:8,fx:'yellow',cost:30,cd:72},
   quote:'Tutto secondo il piano.'},
  {id:'mango',name:'MANGO',title:'Il Cane Spaziale',hp:215,speed:3.0,power:7,h:132,bodyHalf:42,def:6,aer:5,
   punchDmg:4.8,punchRange:42,
@@ -627,7 +633,7 @@ class Fighter{
   get half(){return this.cfg.bodyHalf||this.cfg.h*0.17;}
   get dmgMul(){return (this.cfg.comeback&&this.hp/this.maxHp<0.4)?1.2:1;}
   get specialReady(){return this.meter>=this.cfg.special.cost&&this.cooldown<=0;}
-  hurtbox(){const crouch=this.state==='crouch';const h=this.cfg.h*(crouch?0.6:1);
+  hurtbox(){const crouch=this.state==='crouch';const h=((this.exo>0&&this.cfg.exoH)||this.cfg.h)*(crouch?0.6:1);
     return {x:this.x-this.half,y:this.y-h,w:this.half*2,h};}
   onGround(){return this.y>=GROUND-0.5;}
 
@@ -776,7 +782,7 @@ class Fighter{
       if(this.moveFr===aS){this.exo=3;this.hitConsumed=true;whiteFlash=Math.max(whiteFlash,2);shake=Math.max(shake,8);
         const c={x:this.x,y:this.y-this.cfg.h*.5};ring(c.x,c.y,'#FFE94A',6,90);ring(c.x,c.y,'#FFFFFF',4,55);
         spark(c.x,c.y,'#FFE94A',18,6);spark(c.x,c.y,'#C0C8D0',12,5);sfx.boom();
-        ftext(this.x,this.y-this.cfg.h-30,'ESOSCHELETRO!','#FFB000',11);}}
+        ftext(this.x,this.y-this.cfg.h-30,this.cfg.exoText||'ESOSCHELETRO!','#FFB000',11);}}
     if(m.sType==='pump3'){for(const o of m.s.shotsAt)if(this.moveFr===aS+o){this.hitConsumed=true;
         this.fireShot({muzzle:'pumpgun',pellets:true,shotDmg:m.s.dmg,shotKb:9},opp);
         if(o>0)beep(300,.06,'square',.05,-120);}}
@@ -1285,6 +1291,29 @@ const SPRITE_CHARS={
     exoFist:{x:107,y:55},    /* pugno meccanico */
     exoBack:{x:44,y:40},     /* tubi idraulici sulla schiena (getto di vapore) */
   },
+  batteo:{
+    dir:'sprites/batteo/',fw:128,fh:128,ax:60,ay:120,scale:.96,
+    body:{x0:22,y0:7,x1:105,y1:120},
+    anims:{
+      idle:   {file:'idle',    n:16,fps:8},
+      walk:   {file:'walk',    n:16,fps:16},
+      jump:   {file:'jump',    n:16,jf:{squat:4,up:8,peak:9,down:10,land:12},dy:{8:0,9:3,10:8}},
+      hurt:   {file:'hurt',    n:16},
+      block:  {file:'block',   n:16,fps:20,holdFrom:9},
+      ko:     {file:'ko',      n:16,fps:14},
+      win:    {file:'win',     n:16,fps:10},
+      punch:  {file:'shot',    n:16,hit:9,act:2},            /* sparo con l'arma senza rinculo */
+      kick:   {file:'wingkick',n:16,hit:8,act:4},            /* calcio volante sbattendo le ali */
+      special:{file:'idle',    n:16,tl:[{to:'end',f0:0,f1:15}]},/* trema (vibrazione nel codice) */
+      /* Batteo grande: stesso disegno, scala più grande */
+      exoIdle:  {file:'big-idle',  n:16,fps:8, sc:1.42,dy:{all:2}},
+      exoHurt:  {file:'big-hurt',  n:16,       sc:1.42,dy:{all:2}},
+      exoPunch: {file:'big-attack',n:16,hit:5,act:3,sc:1.42,dy:{all:2},xfade:true},
+    },
+    exoMap:{idle:'exoIdle',walk:'exoIdle',jump:'exoIdle',block:'exoIdle',special:'exoIdle',hurt:'exoHurt',punch:'exoPunch',kick:'exoPunch'},
+    gun:{x:124,y:72},        /* uscita dell'arma senza rinculo */
+    exoBack:{x:60,y:60},
+  },
 };
 (()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
   const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
@@ -1393,9 +1422,10 @@ function drawSpriteBody(f){
     ctx.globalAlpha=.18+.25*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.75,r,0,0,7);ctx.fill();
     ctx.globalAlpha=.25*k;ctx.fillStyle='#FFF3B0';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.45,r*.7,0,0,7);ctx.fill();ctx.globalAlpha=1;}
   if(alpha!==undefined)ctx.globalAlpha=Math.max(0,alpha);
-  const shakeX=(f.state==='attack'&&f.cur&&f.cur.s&&f.cur.s.chainsaw&&f.moveFr>=f.cur.startup&&f.moveFr<f.cur.startup+f.cur.active)?rnd(-2,2):0;
+  const shakeX=(f.state==='attack'&&f.cur&&f.cur.s&&f.cur.s.chainsaw&&f.moveFr>=f.cur.startup&&f.moveFr<f.cur.startup+f.cur.active)?rnd(-2,2)
+    :(f.state==='attack'&&f.cur&&f.cur.sType==='exo'&&f.cfg.exoTremble&&f.moveFr<f.cur.startup)?rnd(-3,3)*Math.min(1,f.moveFr/10):0;
   if(shakeX){ctx.save();ctx.translate(shakeX,rnd(-1,1));}
-  drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*S.scale,S.scale,f.facing,f.flash>0);
+  drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*(a.sc||S.scale),a.sc||S.scale,f.facing,f.flash>0);
   if(shakeX)ctx.restore();
   if(f.exo>0&&f.state!=='ko'){const hx=f.x,hy=f.y-f.cfg.h-18;
     ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(hx-26,hy-9,52,16);
@@ -1562,6 +1592,9 @@ function exoShock(opp){
 /* l'esoscheletro si rompe: getto di vapore dai tubi idraulici */
 function exoBreak(f){
   const S=SPRITE_CHARS[f.cfg.id],b=spritePoint(f,S.exoBack.x,S.exoBack.y);
+  if(f.cfg.exoEnd==='flash'){const c={x:f.x,y:f.y-f.cfg.h*.6};
+    whiteFlash=Math.max(whiteFlash,2);ring(c.x,c.y,'#FFE94A',6,80);spark(c.x,c.y,'#FFE94A',16,5);spark(c.x,c.y,'#FFFFFF',8,3);
+    sfx.blinkS();ftext(f.x,f.y-f.cfg.h-24,f.cfg.exoEndText||'',"#FFE94A",10);return;}
   noise(.6,.07);beep(180,.3,'sawtooth',.05,-120);shake=Math.max(shake,5);
   spark(b.x,b.y,'#C0C8D0',10,4);spark(b.x,b.y,'#FFE94A',6,3);
   ftext(f.x,f.y-f.cfg.h-24,'ESOSCHELETRO ROTTO!','#C0C8D0',10);
@@ -1683,6 +1716,12 @@ function drawBeamFlashes(){
 /* effetti al contatto degli attacchi corpo a corpo */
 function meleeFX(f,opp,key){
   const S=SPRITE_CHARS[f.cfg.id];
+  if(f.cfg.id==='batteo'&&f.cur&&f.cur.exo){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
+    spark(p.x,p.y,'#FFE94A',12,6);spark(p.x,p.y,'#FFFFFF',6,4);ring(p.x,p.y,'#FFFFFF',5,50);dust(opp.x,GROUND,10,true);
+    shake=Math.max(shake,10);hitstop=Math.max(hitstop,6);
+    if(opp.state!=='ko'){opp.vy=-7;opp.y-=1;} return;}
+  if(f.cfg.id==='batteo'&&key==='kick'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.6};
+    spark(p.x,p.y,'#FFE94A',8,3);spark(p.x,p.y,'#FFFFFF',4,2);return;}
   if(f.cfg.id==='dimauro'&&f.cur&&f.cur.exo){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.55};
     metalSparks(p.x,p.y);spark(p.x,p.y,'#FFB000',8,5);exoShock(opp);return;}
   if(f.cfg.id==='dimauro'&&key==='kick'){const p={x:opp.x-f.facing*opp.half,y:opp.y-opp.cfg.h*.6};
