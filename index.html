@@ -25,7 +25,6 @@
   canvas {
     image-rendering: pixelated; image-rendering: crisp-edges;
     background: #000; display: block;
-    border: 3px solid #2a1f14; border-radius: 4px;
   }
   /* Su mobile: canvas fullscreen senza bordi */
   @media (max-width: 1024px) and (pointer: coarse) {
@@ -284,15 +283,18 @@
 </div>
 <script>
 "use strict";
-const W=854,H=480,GROUND=440;
+let W=854;const H=480,GROUND=440;
 const IS_MOBILE=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=false;
 /* Background cache: ridisegna solo quando camX cambia */
 function fit(){
-  const mobile=('ontouchstart' in window||navigator.maxTouchPoints>0);
-  const s=mobile?Math.min(innerWidth/W,innerHeight/H):Math.min(innerWidth/(W+8),innerHeight/(H+8),4);
-  cv.style.width=(W*s)+'px'; cv.style.height=(H*s)+'px';
+  /* l'arena prende le proporzioni esatte della finestra: niente bande nere, su telefono e computer */
+  const ratio=innerWidth/innerHeight;
+  W=Math.round(Math.min(1700,Math.max(640,H*ratio)));
+  if(cv.width!==W){cv.width=W;ctx.imageSmoothingEnabled=false;}
+  const sc=Math.min(innerWidth/W,innerHeight/H);
+  cv.style.width=Math.round(W*sc)+'px'; cv.style.height=Math.round(H*sc)+'px';
 }
 addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));fit();
 
@@ -2574,7 +2576,7 @@ function drawPortrait(cfg,x,y,s){
 function drawHUD(){
   const [a,b]=game.p;
   for(const[f,side]of[[a,0],[b,1]]){
-    const x=side===0?66:W-66-250,flip=side===1;
+    const mg=Math.max(66,Math.round(118*W/(cv.clientWidth||W))),x=side===0?mg:W-mg-250,flip=side===1;
     pxs(x-1,13,252,18,'#000');pxs(x,14,250,16,'#1A1A1A');
     const r=f.hp/f.maxHp,col=r>.5?'#2ECC40':r>.25?'#FFDC00':'#FF4136';
     const w=246*r;pxs(flip?x+2+246-w:x+2,16,w,12,col);
