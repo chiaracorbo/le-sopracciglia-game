@@ -587,10 +587,12 @@ const MOVES={
   kick: {dmg:6.4, startup:5, active:4, recovery:9, lag:8, range:50, hh:24, yFrac:.34, kb:12, stCost:7, anim:'kick'},
 };
 const DIFFS={
-  facile:   {label:'FACILE',   hp:.8, freq:1.4, parry:0, grab:.3, esc:.15, pun:.3},
-  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.35, pun:.6},
-  difficile:{label:'DIFFICILE',hp:1.2,freq:.7,  parry:.4, grab:.7, esc:.55, pun:.85},
-  boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.6, grab:.7, esc:.7, pun:1},
+  /* react: fotogrammi prima di "vedere" un attacco · punish: punisce dopo una parata · wait: attesa in parata
+     jump: salta i proiettili · err: errori voluti · adapt: para di più contro chi attacca a raffica */
+  facile:   {label:'FACILE',   hp:1,  freq:1.4, parry:0,  grab:.3, esc:.15, pun:.3,  react:22, punish:.2,  wait:.15, jump:0,   err:.2,  adapt:.2},
+  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.35, pun:.6,  react:18, punish:.45, wait:.3,  jump:0,   err:.1,  adapt:.4},
+  difficile:{label:'DIFFICILE',hp:1,  freq:.7,  parry:.4, grab:.7, esc:.55, pun:.85, react:14, punish:.7,  wait:.45, jump:.5,  err:.05, adapt:.6},
+  boss:     {label:'BOSS',     hp:1.2,freq:.55, parry:.6, grab:.7, esc:.7,  pun:1,   react:11, punish:.95, wait:.6,  jump:.75, err:0,   adapt:.8},
 };
 /* danno scalato nelle combo lunghe: in base ai colpi già entrati (1° 100%, 2° 100%, 3° 80% … dal 7° 40%) */
 const COMBO_SCALE=[1,1,.8,.7,.6,.5,.4],COMBO_WIN=45;
@@ -1112,7 +1114,7 @@ class Fighter{
     if(a.jumpAtk===undefined)a.jumpAtk=0;
     if(a.wakeUp===undefined)a.wakeUp=0;
     if(a.zoneT===undefined)a.zoneT=0;
-    const d=this.aiDiff||{freq:1,parry:.2};
+    const d=this.aiDiff||DIFFS.normale;
     const dx=opp.x-this.x,dist=Math.abs(dx)-this.half-opp.half,dir=Math.sign(dx)||1;
     const o={left:false,right:false,up:false,down:false,punch:false,kick:false,block:false,special:false};
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
@@ -1133,72 +1135,111 @@ class Fighter{
         if(this.state!=='attack'&&this.hitstun<=0&&this.onGround()&&opp.onGround()&&opp.state!=='ko'){
           if(dist<=30){o.punch=true;o.block=true;a.grabWant=0;this.aiOut=o;return;}
           if(dist<140){if(dir>0)o.right=true;else o.left=true;this.aiOut=o;return;}}}}
-    const hasProj=!!this.cfg.punchProjectile;
     const sRange=sType==='clones'?130:sType==='exo'?999:sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
+    const rP=this.moveReach('punch'),rK=this.moveReach('kick');
+    const ranged=rP>200||rK>200, rMin=Math.min(rP,rK), rMax=Math.max(rP,rK);
+    /* stile: a distanza (armi da fuoco), aggressivo, tutto-fare */
+    const style=ranged?'range':(['mango','bederico','baumizio'].includes(this.cfg.id)||(this.cfg.id==='batteo'&&this.exo>0))?'aggr':'all';
+    const toward=()=>{if(dir>0)o.right=true;else o.left=true;}, away=()=>{if(dir>0)o.left=true;else o.right=true;};
+    const cornered=dir>0?this.x-this.half<60:this.x+this.half>W-60;
+    /* errori voluti: tasto sbagliato o in ritardo */
+    const press=k=>{if(Math.random()<(d.err||0)){if(Math.random()<.5)o[k==='punch'?'kick':'punch']=true;else a.cool=Math.max(a.cool,6+Math.random()*8);return false;}o[k]=true;return true;};
+    if(a.step===undefined)a.step=0;if(a.waitT===undefined)a.waitT=0;if(a.waitCD===undefined)a.waitCD=0;if(a.guardT===undefined)a.guardT=0;
+    if(a.waitCD>0)a.waitCD--;
 
-    // PARRY reattivo: finestra parry aumentata, rispetta parryCD
-    if(a.parryHold>0){a.parryHold--;o.block=true;this.aiOut=o;return;}
-    if(this.parryCD<=0&&opp.state==='attack'&&opp.cur&&opp.cur.key!=='special'){
-      const fr=opp.cur.startup-opp.moveFr;
-      if(fr<=3&&fr>=0&&dist<70&&Math.random()<d.parry){a.parryHold=8;o.block=true;this.aiOut=o;return;}}
+    /* REAZIONE: vede un attacco solo dopo d.react fotogrammi dall'inizio della mossa (niente lettura dei fotogrammi rimanenti) */
+    const oAtk=opp.state==='attack'&&opp.cur&&opp.cur.key!=='grab'?opp.cur:null;
+    if(oAtk&&oAtk!==a.lastAtk){a.lastAtk=oAtk;a.reacted=false;(a.atkTimes=a.atkTimes||[]).push(frame);}
+    if(!oAtk)a.lastAtk=null;
+    const seen=oAtk&&opp.moveFr>=(d.react||18);
+    /* abitudini: quante volte l'avversario ha attaccato negli ultimi 2 secondi */
+    a.atkTimes=(a.atkTimes||[]).filter(t=>frame-t<120);const masher=a.atkTimes.length>=3;
+
+    /* PUNIRE: appena finito il blockstun, se l'avversario ha appena attaccato colpisce con la mossa più rapida che arriva */
+    if(this.blockstun>0)a.bs=true;
+    else if(a.bs){a.bs=false;
+      if(opp.state==='attack'||opp.atkLag>0){if(Math.random()>=(d.punish||0))a.cool=Math.max(a.cool,(1-(d.punish||0))*30); /* non punisce: esita */
+      else{
+        const opts=['punch','kick'].map(k=>{const m={...MOVES[k],...((this.cfg.moves&&this.cfg.moves[k])||{})};
+          return {k,st:this.exo>0&&this.cfg.exoMove?this.cfg.exoMove.startup:m.startup,r:this.moveReach(k)};}).filter(c=>dist<=c.r).sort((x,y)=>x.st-y.st);
+        if(opts.length&&this.atkLag<=0&&!this.prev.punch&&!this.prev.kick){press(opts[0].k);a.cool=14*d.freq;a.waitT=0;a.guardT=0;this.aiOut=o;return;}}}}
+
+    /* attacco visto in tempo: para o fa parry (solo colpi non ancora andati a segno) */
+    if(seen&&!a.reacted&&dist<Math.max(rMax,90)&&!(oAtk.key!=='special'&&opp.hitConsumed)){a.reacted=true;
+      if(oAtk.key!=='special'&&this.parryCD<=0&&this.parryLock<=0&&Math.random()<d.parry){a.parryHold=8;a.parryRel=!!this.prev.block;}
+      else if(Math.random()<.7+(d.punish||0)*.3)a.guardT=Math.max(a.guardT,10);}
+    /* parry: tocco di PARATA (se stava già parando, prima rilascia un istante) */
+    if(a.parryHold>0){a.parryHold--;if(a.parryRel){a.parryRel=false;a.parryHold++;o.block=false;}else o.block=true;this.aiOut=o;return;}
+
+    /* PROIETTILI in arrivo: visti dopo d.react fotogrammi; salto in avanti (Difficile, Boss) o parata */
+    {let th=null;for(const p of projectiles){if(p.owner!==opp)continue;const dd=(this.x-p.x)*Math.sign(p.vx);
+        if(dd>0&&dd<170){p._aiT=(p._aiT||0)+1;if(p._aiT>=(d.react||18)&&(!th||dd<th.dd))th={p,dd};}}
+      if(th){if(th.p._aiDec===undefined)th.p._aiDec=Math.random()<(d.jump||0)?'jump':Math.random()<.6?'block':'none';
+        if(th.p._aiDec==='jump'&&this.onGround()&&this.state!=='attack'){o.up=true;toward();this.aiOut=o;return;}
+        if(th.p._aiDec==='block'){o.block=true;this.aiOut=o;return;}}}
+
+    if(a.guardT>0){a.guardT--;o.block=true;this.aiOut=o;return;}
 
     // WAKE-UP PRESSURE: insegui dopo knockdown
     if(opp.state==='ko'||opp.hitstun>30)a.wakeUp=22;
     if(a.wakeUp>0){a.wakeUp--;
-      if(dir>0)o.right=true;else o.left=true;
-      if(dist<50&&a.cool<=0){o.punch=true;a.cool=14*d.freq;}
+      toward();
+      if(dist<50&&a.cool<=0){press('punch');a.cool=14*d.freq;}
       this.aiOut=o;return;}
 
-    // ---- distanza e portata reale dei colpi ----
-    const rP=this.moveReach('punch'),rK=this.moveReach('kick');
-    const ranged=rP>200||rK>200, rMin=Math.min(rP,rK), rMax=Math.max(rP,rK);
+    /* ATTESA: ferma in parata a distanza media, per farsi venire incontro */
+    if(a.waitT>0){a.waitT--;o.block=true;if(dist>rMax+160)a.waitT=0;this.aiOut=o;return;}
+    if(style!=='aggr'&&a.waitCD<=0&&dist>rMin&&dist<rMax+140&&opp.state!=='ko'){a.waitCD=90;
+      if(Math.random()<(d.wait||0)*.5){a.waitT=30+Math.random()*40;o.block=true;this.aiOut=o;return;}}
+
+    /* contro chi attacca a raffica: a volte resta in guardia aspettando il colpo, poi punisce */
+    if(masher&&dist<=rMax+20&&a.cool>0&&Math.random()<(d.adapt||0)*.15){a.guardT=10+Math.random()*10;o.block=true;this.aiOut=o;return;}
+
     /* come si muove l'avversario: verso di me (+) o lontano (-) */
     if(a.lastOppX===undefined)a.lastOppX=opp.x;
     const oppVel=(opp.x-a.lastOppX)*-dir;a.lastOppX=opp.x;
-    if(a.step===undefined)a.step=0;
-    const toward=()=>{if(dir>0)o.right=true;else o.left=true;}, away=()=>{if(dir>0)o.left=true;else o.right=true;};
+    const fq=d.freq*(style==='aggr'?.75:1);
     const attack=()=>{ /* sceglie un colpo che arriva davvero */
-      const canP=dist<=rP,canK=dist<=rK;
-      if(canP&&canK){if(Math.random()<.55){o.punch=true;a.cool=(16+Math.random()*10)*d.freq;}else{o.kick=true;a.cool=(24+Math.random()*10)*d.freq;}}
-      else if(canP){o.punch=true;a.cool=(16+Math.random()*10)*d.freq;}
-      else if(canK){o.kick=true;a.cool=(24+Math.random()*10)*d.freq;}
-      else return false;
-      if(Math.random()<.35)a.step=-(10+Math.random()*12); /* dopo il colpo a volte esce di distanza */
+      const canP=dist<=rP,canK=dist<=rK;let k=null;
+      if(canP&&canK)k=Math.random()<.55?'punch':'kick';else if(canP)k='punch';else if(canK)k='kick';
+      if(!k)return false;
+      press(k);a.cool=Math.max(a.cool,(k==='punch'?16:24)+Math.random()*10)*fq;
+      if(Math.random()<(style==='aggr'?.1:.35))a.step=-(10+Math.random()*12); /* dopo il colpo a volte esce di distanza */
       return true;};
     const defensive=hpr<.35&&hpr<ohpr;
 
     a.step=Math.trunc(a.step);a.retreat=Math.trunc(a.retreat); /* passi in numero intero di fotogrammi */
-    if(a.retreat>0){a.retreat--;away();}
-    else if(a.step<0){a.step++;away();}
+    if(a.retreat>0){a.retreat--;if(!cornered)away();}
+    else if(a.step<0){a.step++;if(!cornered)away();}
     else if(a.step>0){a.step--;toward();}
     // SPECIALE quando è carica e l'avversario è a tiro
     else if(this.specialReady&&a.cool<=0&&dist<sRange&&opp.state!=='ko'&&Math.random()<.5){o.special=true;a.cool=36*d.freq;}
-    // l'avversario attacca da vicino: para, schiva indietro o salta
-    else if(opp.state==='attack'&&opp.cur&&dist<Math.max(rMax,70)&&Math.random()<(defensive?.5:.25)){
-      const r=Math.random();if(r<.6)o.block=true;else if(r<.85)a.retreat=12;else{o.up=true;toward();}}
-    else if(ranged){
-      /* armi da fuoco: sta a media distanza (si avvicina e si allontana), spara e da vicino usa il colpo corto */
-      if(a.pd===undefined||Math.random()<.004)a.pd=90+Math.random()*130;
+    // l'avversario attacca da vicino (visto in tempo): schiva indietro o salta
+    else if(seen&&dist<Math.max(rMax,70)&&Math.random()<(defensive?.3:.1)){
+      if(Math.random()<.7)a.retreat=12;else{o.up=true;toward();}}
+    else if(style==='range'){
+      /* a distanza: tiene la distanza, spara, e indietreggia se l'avversario si avvicina */
+      if(a.pd===undefined||Math.random()<.004)a.pd=110+Math.random()*120;
       if(a.cool<=0&&dist<=rMax&&(dist<a.pd+60||Math.random()<.3)){attack();}
       else if(dist>a.pd+30)toward();
-      else if(dist<a.pd-50&&a.cool>0&&Math.random()<.06)a.retreat=14;
-      else if(oppVel<-1.5)toward();
+      else if(dist<a.pd-40&&oppVel>.5&&!cornered)a.retreat=10+Math.random()*8;
+      else if(dist<a.pd-60&&!cornered&&Math.random()<.08)a.retreat=12;
     }
     else if(dist>rMax){
-      /* fuori portata: si avvicina; se l'avversario scappa insegue; ogni tanto salto in avanti */
+      /* fuori portata: si avvicina; ogni tanto salto in avanti */
       toward();
-      if(a.cool<=0&&a.jumpAtk<=0&&dist<rMax+90&&Math.random()<.02){o.up=true;o.kick=true;a.jumpAtk=50;a.cool=26*d.freq;}
+      if(a.cool<=0&&a.jumpAtk<=0&&dist<rMax+90&&Math.random()<(style==='aggr'?.04:.02)){o.up=true;o.kick=true;a.jumpAtk=50;a.cool=26*d.freq;}
     }
     else{
       /* a portata */
       if(a.cool<=0){
-        if(defensive&&oppVel>1&&Math.random()<.4){a.retreat=14;}
+        if(defensive&&oppVel>1&&style!=='aggr'&&Math.random()<.4){a.retreat=14;}
         else if(!attack()){toward();}
       }else{
-        /* tra un colpo e l'altro: piccoli passi avanti e indietro, reagendo all'avversario */
-        if(oppVel>1.5&&Math.random()<.06)a.step=-(8+Math.random()*10);
+        /* tra un colpo e l'altro: piccoli passi avanti e indietro (gli aggressivi restano addosso) */
+        if(style!=='aggr'&&oppVel>1.5&&Math.random()<.06)a.step=-(8+Math.random()*10);
         else if(oppVel<-1.5)toward();
-        else if(Math.random()<.04)a.step=Math.random()<.5?-(6+Math.random()*8):(6+Math.random()*8);
+        else if(style!=='aggr'&&Math.random()<.04)a.step=Math.random()<.5?-(6+Math.random()*8):(6+Math.random()*8);
         if(dist>rMin)toward();
       }
     }
