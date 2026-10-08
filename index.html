@@ -649,7 +649,7 @@ class Fighter{
     Object.assign(this,{cfg,x,facing,ctrl});
     this.name=cfg.name;this.maxHp=cfg.hp;this.hp=cfg.hp;this.stamina=100;this.meter=0;
     this.y=GROUND;this.vy=0;this.state='idle';this.moveFr=0;this.cur=null;
-    this.combo=0;this.comboT=0;this.hitstun=0;this.blockHeld=false;this.hitConsumed=false;
+    this.combo=0;this.comboT=0;this.hitstun=0;this.blockstun=0;this.blockHeld=false;this.hitConsumed=false;
     this.flash=0;this.counterT=0;this.selfStun=0;this.burstLeft=0;this.burstT=0;
     this.input={};this.prev={};this.pBuf=0;this.kBuf=0;this.jumpSquat=0;this.wasAir=false;this.blockFlash=0;
     this.cooldown=0;this.invuln=0;this.spinHits=0;this.spinHitFr=-9;this.comebackOn=false;
@@ -703,9 +703,13 @@ class Fighter{
     if(this.counterT>0)this.counterT--;
     if(this.pBuf>0)this.pBuf--; if(this.kBuf>0)this.kBuf--;
     if(this.selfStun>0){this.selfStun--;return;}
-    if(this.hitstun>0){this.hitstun--;
+    /* lo stordimento inizia a scendere dal fotogramma dopo il colpo (uguale per entrambi i giocatori) */
+    if(this.hitstun>0){if(this._stunFr!==frame)this.hitstun--;
       if(!this.onGround()){this.vy+=0.6;this.y=Math.min(GROUND,this.y+this.vy);}
       if(this.hitstun===0)this.state='idle';return;}
+    if(this.blockstun>0){if(this._stunFr!==frame)this.blockstun--;this.state='block';this.blockHeld=true;
+      if(!this.onGround()){this.vy+=0.6;this.y=Math.min(GROUND,this.y+this.vy);}
+      this.x=clamp(this.x,this.half+4,W-this.half-4);return;}
 
     const i=this.input;
     if(this.burstLeft>0){if(--this.burstT<=0){this.fireBurst();this.burstT=4;this.burstLeft--;}}
@@ -794,7 +798,7 @@ class Fighter{
        Math.abs(opp.x-this.x)-this.half-opp.half<=36){
       this.grabbed=opp;this.grabT=0;this.moveFr=aS+1;
       opp.blockHeld=false;opp.parryT=0;opp.selfStun=0;opp.cur=null;opp.burstLeft=0;opp.pendingWaves=null;
-      opp.state='hitstun';opp.hitstun=10;opp._sk=null;
+      opp.state='hitstun';opp.hitstun=10;opp.blockstun=0;opp._sk=null;
       ftext(opp.x,opp.y-opp.cfg.h-16,'PRESA!','#FF8C00',12);sfx.hit();
       return;}
     if(this.moveFr>=aE+m.recovery){this.state='idle';this.cur=null;}
@@ -1030,6 +1034,10 @@ class Fighter{
       attacker.takeDamage(this.cfg.special.dmg*((this.cfg.power+3)/7),this.cfg.special.kb,this);
       return;}
     let dmg=raw,blocked=false;
+    /* tempo che resta a chi attacca: fotogrammi attivi rimanenti + recupero + lag */
+    const am=attacker&&attacker.state==='attack'&&attacker.cur,
+      resta=am?Math.max(0,am.startup+am.active-attacker.moveFr)+(am.recovery||0)+(am.lag||0):0,
+      akey=am?am.key:null,big=attacker&&attacker.exo>0&&(akey==='punch'||akey==='kick');
     /* colpi che sfondano la guardia: niente parata né parry */
     const gb=attacker&&attacker.cur&&attacker.cur.guardBreak;
     if(gb&&(this.blockHeld||this.parryT>0)){this.parryT=0;this.blockHeld=false;this.state='idle';
@@ -1054,13 +1062,18 @@ class Fighter{
       dmg=fromSp?raw*.1:0;
       this.blockFlash=8;this.gainMeter(2);this.blockStreak=(this.blockStreak||0)+1;
       this.stamina=Math.max(0,this.stamina-Math.max(2,raw*.4));sfx.block(); // parare costa il 40% del danno (minimo 2)
+      /* blockstun: fermo in parata. Attacco 1 -2 (sicuro), attacco 2 -6, speciale -15; proiettili 8 fissi */
+      this._stunFr=frame;this.blockstun=isProj?8:Math.max(0,resta+(akey==='special'?-15:akey==='kick'&&!big?-6:-2));
       spark(this.x+this.facing*this.half,this.y-this.cfg.h*0.55,'#9CC4FF',10,3);
       spark(this.x+this.facing*this.half,this.y-this.cfg.h*0.55,'#FFFFFF',5,2);
       ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*0.55,'#9CC4FF',3,26);
-      if(this.stamina===0){this.blockHeld=false;this.selfStun=20;
+      if(this.stamina===0){this.blockHeld=false;this.selfStun=20;this.blockstun=0;
         ftext(this.x,this.y-this.cfg.h-18,'GUARDIA ROTTA!','#FF4136',11);
         fxBurst(this.x,this.y-this.cfg.h*0.55,'blue',14);sfx.casino();}}
-    else{this.state='hitstun';this.hitstun=8+Math.floor(kb/5);this.blockStreak=0;
+    else{this.state='hitstun';this.blockStreak=0;this.blockstun=0;
+      /* stordimento: chi colpisce resta in vantaggio. Attacco 1 +2, attacco 2 0, speciale 0 (fermo fino al colpo
+         successivo), pugno grande di Batteo / esoscheletro di Luca di Mauro +2; proiettili 14 fissi; minimo 8 */
+      this._stunFr=frame;this.hitstun=isProj?14:Math.max(8,resta+(akey==='punch'||big?2:0));
       if(this.grabbed){this.grabbed.hitstun=0;this.grabbed.state='idle';this.grabbed=null;}
       attacker.registerHit();this.gainMeter(4);this.flash=6;
       blood(this.x,this.y-this.cfg.h*0.6,dmg>10?14:7);
