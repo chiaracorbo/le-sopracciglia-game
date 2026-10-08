@@ -653,7 +653,7 @@ class Fighter{
     this.flash=0;this.counterT=0;this.selfStun=0;this.burstLeft=0;this.burstT=0;
     this.input={};this.prev={};this.pBuf=0;this.kBuf=0;this.jumpSquat=0;this.wasAir=false;this.blockFlash=0;
     this.cooldown=0;this.invuln=0;this.spinHits=0;this.spinHitFr=-9;this.comebackOn=false;
-    this.atkLag=0;this.parryT=0;this.stars=0;this.parryCD=0;
+    this.atkLag=0;this.parryT=0;this.stars=0;this.parryCD=0;this.parryLock=0;
     this.defMod=1.15-(cfg.def||5)*0.03;
     this.jumpV=-Math.sqrt(2*0.6*(45+(cfg.aer||5)*4))*(cfg.heavyJump?Math.sqrt(.9):1);
     this.ai={cool:0,plan:'approach',planT:0};this.animT=0;this.readyPing=false;
@@ -694,7 +694,9 @@ class Fighter{
     if(this.flash>0)this.flash--;
     if(this.blockFlash>0)this.blockFlash--;
     if(this.atkLag>0)this.atkLag--;
-    if(this.parryT>0)this.parryT--;if(this.parryCD>0)this.parryCD--;
+    /* parry mancato: la finestra si chiude senza aver parato nulla → per 30 fotogrammi niente parry (la parata normale resta) */
+    if(this.parryT>0&&--this.parryT===0){this.parryLock=30;ftext(this.x,this.y-this.cfg.h-14,'PARRY MANCATO','#A0A0A0',8);}
+    if(this.parryCD>0)this.parryCD--;if(this.parryLock>0)this.parryLock--;
     if(this.stars>0)this.stars--;
     if(this.counterT>0)this.counterT--;
     if(this.pBuf>0)this.pBuf--; if(this.kBuf>0)this.kBuf--;
@@ -715,7 +717,7 @@ class Fighter{
     }
     else{
       if(this.onGround())this.facing=opp.x>=this.x?1:-1;
-      if(i.blockP&&this.parryCD<=0)this.parryT=12; // finestra di parry: tap appena prima dell'impatto
+      if(i.blockP&&this.parryCD<=0&&this.parryLock<=0)this.parryT=5; // finestra di parry: tap appena prima dell'impatto
       this.blockHeld=i.block&&this.onGround()&&this.stamina>0;
       if(this.blockHeld){this.state='block';}
       else{
@@ -967,7 +969,7 @@ class Fighter{
     const mv=this.cur||this.lastShotMove;if(mv&&mv._metered)return;if(mv)mv._metered=true;
     this.gainMeter(METER_HIT);}
 
-  takeDamage(raw,kb,attacker){
+  takeDamage(raw,kb,attacker,isProj){
     if(this.state==='ko')return;
     if(this.invuln>0){ftext(this.x,this.y-this.cfg.h-10,'MISS!','#FFE94A',10);
       spark(this.x,this.y-this.cfg.h*.5,'#FFE94A',5,2);return;}
@@ -983,14 +985,19 @@ class Fighter{
     const gb=attacker&&attacker.cur&&attacker.cur.guardBreak;
     if(gb&&(this.blockHeld||this.parryT>0)){this.parryT=0;this.blockHeld=false;this.state='idle';
       ftext(this.x,this.y-this.cfg.h-18,'GUARDIA SFONDATA!','#FF8C00',10);sfx.casino();}
+    /* PASSO 5 (presa): qui andrà il controllo — il parry NON deve funzionare contro la presa,
+       quindi se il colpo è una presa si salta questo blocco */
     if(this.blockHeld&&this.parryT>0&&this.state!=='attack'){
       this.parryT=0;this.stamina=Math.max(0,this.stamina-3);this.invuln=Math.max(this.invuln,10);
-      attacker.selfStun=80;attacker.stars=80;attacker.cur=null;attacker.state='idle';
-      attacker.burstLeft=0;attacker.pendingWaves=null;attacker.hitstun=0;
       flash(1);sfx.parry();shake=Math.max(shake,5);hitstop=Math.max(hitstop,5);
-      ftext(this.x,this.y-this.cfg.h-22,'PARRY! +25','#FFE94A',13);this.gainMeter(25);this.parryCD=90;
+      ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*.55,'#FFFFFF',4,42);this.parryCD=90;
+      if(isProj){ /* proiettile parato: si annulla, chi ha sparato non viene stordito */
+        ftext(this.x,this.y-this.cfg.h-22,'PARRY! +10','#FFE94A',13);this.gainMeter(10);
+        return;}
+      attacker.selfStun=30;attacker.stars=30;attacker.cur=null;attacker.state='idle';
+      attacker.burstLeft=0;attacker.pendingWaves=null;attacker.hitstun=0;
+      ftext(this.x,this.y-this.cfg.h-22,'PARRY! +15','#FFE94A',13);this.gainMeter(15);
       ftext(attacker.x,attacker.y-attacker.cfg.h-14,'STORDITO!','#FF8C00',10);
-      ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*.55,'#FFFFFF',4,42);
       fxBurst(attacker.x,attacker.y-attacker.cfg.h*.8,'yellow',10);
       return;}
     if(this.blockHeld&&this.state!=='attack'){dmg=0;blocked=true; /* parata riuscita: nessun danno */
@@ -1742,7 +1749,7 @@ function pointBlank(f,p,opp,dmg,kb,h){
   if(!opp||opp.state==='ko')return false;
   const x2=p.x+f.facing*8,hb={x:Math.min(f.x,x2),y:p.y-h/2,w:Math.abs(x2-f.x),h};
   const ob=opp.hurtbox();if(!aabb(hb,ob))return false;
-  opp.takeDamage(dmg*(f.cfg.power/7)*f.dmgMul,kb,f);
+  opp.takeDamage(dmg*(f.cfg.power/7)*f.dmgMul,kb,f,true);
   const sx=clamp(p.x,ob.x,ob.x+ob.w);spark(sx,p.y,'#FFE94A',10,4);spark(sx,p.y,'#FFFFFF',5,3);
   return true;}
 function shotgunBlast(f,p,opp,m){
@@ -1802,7 +1809,7 @@ function updateBeams(){
     b.x1=b.x0+(tx-b.x0)*full;
     if(inLine&&full>=1&&!b.hit&&b.t<=b.life-8){
       b.hit=true;
-      b.opp.takeDamage(b.dmg*(b.f.cfg.power/7)*b.f.dmgMul,b.kb,b.f);
+      b.opp.takeDamage(b.dmg*(b.f.cfg.power/7)*b.f.dmgMul,b.kb,b.f,true);
       spark(b.x1,b.y,'#7DF9FF',14,5);spark(b.x1,b.y,'#FFFFFF',6,3);
       ring(b.x1,b.y,'#7DF9FF',4,40);flash(1);
       b.impact=12;}
@@ -2587,7 +2594,7 @@ function update(){
         const hb={x:p.x-p.w/2,y:p.y-p.h/2,w:p.w,h:p.h};
         let boom=false;
         if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox())){boom=true;
-          if(p.aoe)explode(p,tgt);else tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner);
+          if(p.aoe)explode(p,tgt);else tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner,true);
           if(p.starShot){ring(p.x,p.y,'#FFD700',6,90);ring(p.x,p.y,'#FFFFFF',4,50);spark(p.x,p.y,'#FFD700',18,6);
             for(let i=0;i<6;i++)_padd({star:true,x:p.x,y:p.y,vx:rnd(-3,3),vy:rnd(-3,1),life:24,max:24,col:'#FFF3B0',sz:3});
             flash(2);shake=Math.max(shake,8);}}
@@ -2626,7 +2633,7 @@ function explode(p,tgt){
     col:['#FF6A00','#FFB000','#FFE94A','#777'][i%4],sz:rnd(3,7)});
   smokePuff(p.x,p.y-8,8);
   const r=p.aoe||50,hb={x:p.x-r,y:p.y-r,w:r*2,h:r*2};
-  if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox()))tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner);
+  if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox()))tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner,true);
 }
 
 /* ---------- DRAW ---------- */
