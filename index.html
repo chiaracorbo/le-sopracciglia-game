@@ -977,7 +977,7 @@ class Fighter{
       ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*.55,'#FFFFFF',4,42);
       fxBurst(attacker.x,attacker.y-attacker.cfg.h*.8,'yellow',10);
       return;}
-    if(this.blockHeld&&this.state!=='attack'){dmg*=0.5;blocked=true;
+    if(this.blockHeld&&this.state!=='attack'){dmg=0;blocked=true; /* parata riuscita: nessun danno */
       this.blockFlash=8;this.gainMeter(2);
       this.stamina=Math.max(0,this.stamina-2);sfx.block(); // costo fisso 2 per parata
       spark(this.x+this.facing*this.half,this.y-this.cfg.h*0.55,'#9CC4FF',10,3);
