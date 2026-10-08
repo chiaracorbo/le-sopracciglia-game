@@ -821,6 +821,8 @@ class Fighter{
         ftext(this.x,this.y-this.cfg.h-30,this.cfg.exoText||'ESOSCHELETRO!','#FFB000',11);}}
     if(m.sType==='clones'&&(this.moveFr===aS+6||this.moveFr===aS+12)){this.hitConsumed=false;slashTrail(this,'special');}
     if(m.sType==='pump3'){for(const o of m.s.shotsAt)if(this.moveFr===aS+o){this.hitConsumed=true;
+        {const gap=Math.abs(opp.x-this.x)-(opp.half+this.half),st=Math.min(20,Math.max(0,gap));
+          this.x=clamp(this.x+this.facing*st,this.half+6,W-this.half-6);if(st>0)dust(this.x-this.facing*20,GROUND,4,true);}
         this.fireShot({muzzle:'pumpgun',pellets:true,shotDmg:m.s.dmg,shotKb:9},opp);
         if(o>0)beep(300,.06,'square',.05,-120);}}
     if(m.sType==='axegun'){
@@ -901,6 +903,7 @@ class Fighter{
     if(big){beep(160,.18,'sawtooth',.09,-80);noise(.12,.1);shake=Math.max(shake,6);ring(p.x,p.y,'#FFF3B0',5,34);}
     else{beep(880,.05,'square',.05);noise(.04,.05);}
     /* il proiettile punta verso l'avversario (anche se è più in alto o più in basso) */
+    if(pointBlank(this,p,opp,m.shotDmg,m.shotKb||5,big?7:4))return;
     const ty=opp.y-opp.cfg.h*.55,dx=Math.abs(opp.x-p.x)||1,vy=clamp((ty-p.y)/dx,-.25,.25)*m.shotSpd;
     projectiles.push({x:p.x+this.facing*8,y:p.y,vx:this.facing*m.shotSpd,vy,w:big?20:12,h:big?7:4,dmg:m.shotDmg,
       kb:m.shotKb||5,life:90,owner:this,col:big?'#FFF3B0':(m.shotCol||'#FFE94A'),bigShot:big});}
@@ -920,10 +923,12 @@ class Fighter{
       ring(p.x,p.y,'#FFD700',5,60);spark(p.x,p.y,'#FFE94A',14,5);spark(p.x,p.y,'#FFFFFF',6,3);
       flash(1);sfx.blinkS();}
   }
-  fireBurst(){const s=this.cfg.special;
-    projectiles.push({x:this.x+this.facing*24,y:this.y-this.cfg.h*0.6+rnd(-8,8),vx:this.facing*10,vy:0,
+  fireBurst(){const s=this.cfg.special,opp=game.p[0]===this?game.p[1]:game.p[0],by=this.y-this.cfg.h*0.6+rnd(-8,8);
+    if(pointBlank(this,{x:this.x+this.facing*16,y:by},opp,s.dmg,s.kb,3)){beep(740,.04,'square',.04);return;}
+    projectiles.push({x:this.x+this.facing*24,y:by,vx:this.facing*10,vy:0,
       w:9,h:3,dmg:s.dmg,kb:s.kb,life:28,owner:this,col:'#00BFFF'});beep(740,.04,'square',.04);}
-  fireProjectile(p){const n=p.pellets||1;
+  fireProjectile(p){const n=p.pellets||1,opp=game.p[0]===this?game.p[1]:game.p[0];
+    if(pointBlank(this,{x:this.x+this.facing*20,y:this.y-this.cfg.h*0.6},opp,p.dmg,4,20)){beep(620,.04,'square',.04);return;}
     for(let k=0;k<n;k++)projectiles.push({x:this.x+this.facing*28,y:this.y-this.cfg.h*0.6+rnd(-10,10),
       vx:this.facing*p.spd,vy:n>1?rnd(-1,1):0,w:p.w,h:p.hh,dmg:p.dmg,kb:4,life:p.life,owner:this,col:p.col});
     beep(620,.04,'square',.04);}
@@ -1731,6 +1736,15 @@ function goldReload(f){
     ctx.globalAlpha=.35+.35*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(c.x,c.y,5+k*2,0,7);ctx.fill();ctx.globalAlpha=1;}});
 }
 function metalSparks(x,y){spark(x,y,'#FFFFFF',8,4);spark(x,y,'#C0C8D0',8,4);spark(x,y,'#FFE94A',5,3);beep(1800,.04,'square',.04,-600);}
+/* sparo a bruciapelo: se il corpo dell'avversario è già tra il centro di chi spara e la bocca
+   dell'arma (all'altezza dello sparo), il colpo va a segno subito invece di "attraversarlo" */
+function pointBlank(f,p,opp,dmg,kb,h){
+  if(!opp||opp.state==='ko')return false;
+  const x2=p.x+f.facing*8,hb={x:Math.min(f.x,x2),y:p.y-h/2,w:Math.abs(x2-f.x),h};
+  const ob=opp.hurtbox();if(!aabb(hb,ob))return false;
+  opp.takeDamage(dmg*(f.cfg.power/7)*f.dmgMul,kb,f);
+  const sx=clamp(p.x,ob.x,ob.x+ob.w);spark(sx,p.y,'#FFE94A',10,4);spark(sx,p.y,'#FFFFFF',5,3);
+  return true;}
 function shotgunBlast(f,p,opp,m){
   const dir=f.facing,spd=12,tx=opp.x-dir*opp.half,dist=Math.max(40,Math.abs(tx-p.x)),life=Math.ceil(dist/spd)+2;
   muzzleFlash(p.x,p.y,dir,true);smokePuff(p.x+dir*10,p.y,5);
@@ -1738,7 +1752,7 @@ function shotgunBlast(f,p,opp,m){
   /* bossolo rosso che vola all'indietro */
   _padd({x:p.x-dir*40,y:p.y+6,vx:-dir*rnd(1.5,2.5),vy:-3,grav:.35,life:30,max:30,col:'#C0392B',sz:3});
   /* colpo invisibile che porta il danno (alto quanto la rosa, così prende anche chi si abbassa) */
-  projectiles.push({x:p.x+dir*8,y:p.y,vx:dir*spd,vy:0,w:18,h:44,dmg:m.shotDmg,kb:m.shotKb||8,life:life+4,owner:f,col:'#000',hidden:true});
+  if(!pointBlank(f,p,opp,m.shotDmg,m.shotKb||8,44))projectiles.push({x:p.x+dir*8,y:p.y,vx:dir*spd,vy:0,w:18,h:44,dmg:m.shotDmg,kb:m.shotKb||8,life:life+4,owner:f,col:'#000',hidden:true});
   /* rosa di pallini: si allarga mentre viaggia verso l'avversario */
   const pel=[];for(let i=0;i<9;i++)pel.push({a:rnd(-.14,.14),s:spd*rnd(.9,1.1),c:i%3?'#FFD27A':'#FFFFFF'});
   fxObjs.push({t:0,life,draw(o){const k=o.t/o.life;
