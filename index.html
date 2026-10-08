@@ -139,7 +139,7 @@
   #dp-u { left: 39%; top: 2%; } #dp-d { left: 39%; bottom: 2%; } #dp-l { left: 2%; top: 39%; } #dp-r { right: 2%; top: 39%; }
   /* pulsanti d'azione a ventaglio intorno allo SPECIAL */
   #m-btns {
-    position: absolute; width: min(40vh, 170px); height: min(40vh, 170px);
+    position: absolute; width: max(142px, min(42vh, 200px)); height: max(142px, min(42vh, 200px));
     right: max(14px, calc(env(safe-area-inset-right) + 8px)); bottom: max(10px, env(safe-area-inset-bottom));
   }
   .ab {
@@ -152,14 +152,20 @@
   }
   .ab .ic { font-size: min(5vh, 20px); line-height: 1; margin-bottom: 1px; }
   .ab.on { transform: scale(.92); background: radial-gradient(circle, rgba(255,255,255,.45), rgba(60,90,120,.55)); }
-  #ab-s { width: 44%; height: 44%; right: 0; bottom: 0;
+  #ab-s { width: 45%; height: 45%; right: 0; bottom: 0;
     background: radial-gradient(circle at 50% 40%, rgba(80,220,255,.55), rgba(0,90,150,.55)); border-color: rgba(125,249,255,.85);
     box-shadow: 0 0 12px rgba(80,220,255,.4); font-size: min(2.1vh, 9px); }
   #ab-s .ic { font-size: min(6.5vh, 26px); }
   #ab-s.on { background: radial-gradient(circle, #7DF9FF, rgba(0,120,190,.75)); }
-  #ab-p { width: 31%; height: 31%; right: 50%; bottom: 2%; }   /* a sinistra dello special */
-  #ab-k { width: 31%; height: 31%; right: 6%;  bottom: 50%; }  /* sopra lo special */
-  #ab-b { width: 27%; height: 27%; right: 44%; bottom: 42%; }  /* in diagonale */
+  /* misure in % del contenitore (min 142 px): PUGNO e CALCIO ≥ 58 px, PARATA = SPECIALE ≥ 64 px;
+     tra PUGNO (sotto) e PARATA (sopra) resta lo spazio per la presa */
+  #ab-p { width: 40.8%; height: 40.8%; right: 54.2%; bottom: 0; }     /* a sinistra dello special */
+  #ab-k { width: 40.8%; height: 40.8%; right: 2.1%;  bottom: 53.5%; } /* sopra lo special */
+  #ab-b { width: 45%;   height: 45%;   right: 52.1%; bottom: 53.5%; } /* sopra il pugno */
+  /* SPECIALE: opaco finché non è pronta, poi pulsa */
+  #ab-s.dim { opacity: .45; }
+  #ab-s.ready { animation: abPulse .9s ease-in-out infinite; }
+  @keyframes abPulse { 0%,100% { box-shadow: 0 0 10px rgba(125,249,255,.5); } 50% { box-shadow: 0 0 26px 7px rgba(125,249,255,.95); } }
 
   /* ===== HOME SCREEN (poster a sinistra, titolo e pulsanti a destra) ===== */
   #home-screen {
@@ -214,9 +220,9 @@
     font-family: 'Helvetica Neue', Arial, sans-serif; font-size: min(1.6vw, 3.6vh);
     touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer;
   }
-  #hb-diff-val, #hb-fx-val { color: #FFC107; font-weight: 700; }
+  #hb-diff-val, #hb-fx-val, #hb-vib-val { color: #FFC107; font-weight: 700; }
   .hs-opts { display: flex; flex-wrap: wrap; justify-content: center; column-gap: 18px; margin-top: -6px; }
-  #hb-fx { background: none; border: none; color: rgba(255,255,255,.6); min-height: 40px;
+  #hb-fx, #hb-vib { background: none; border: none; color: rgba(255,255,255,.6); min-height: 40px;
     font-family: 'Helvetica Neue', Arial, sans-serif; font-size: min(1.6vw, 3.6vh);
     touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer; }
 
@@ -277,7 +283,7 @@
     .hs-poster { -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); }
     .hs-poster img { height: auto; width: 100%; left: 0; top: -4%; }
     .hs-title { font-size: 7.6vw; } .hs-sub { font-size: 3.8vw; }
-    .hs-btn { font-size: 5vw; min-height: 9vh; } #hb-diff, #hb-fx { font-size: 3.6vw; }
+    .hs-btn { font-size: 5vw; min-height: 9vh; } #hb-diff, #hb-fx, #hb-vib { font-size: 3.6vw; }
   }
 </style>
 </head>
@@ -302,6 +308,7 @@
     <div class="hs-opts">
       <button id="hb-diff">Difficoltà CPU: <span id="hb-diff-val">Normale</span></button>
       <button id="hb-fx">Riduci lampi e tremolio: <span id="hb-fx-val">NO</span></button>
+      <button id="hb-vib">Vibrazione: <span id="hb-vib-val">SÌ</span></button>
     </div>
   </div>
 </div>
@@ -617,6 +624,10 @@ let shake=0,hitstop=0,frame=0,whiteFlash=0,specialBanner=null,specialCutIn=null,
 let vcfxFrame=0;
 /* lampo bianco: al massimo uno ogni 20 fotogrammi (WCAG 2.3.1: non più di 3 al secondo); niente lampi con "Riduci lampi" */
 let REDUCE_FX=false;try{REDUCE_FX=localStorage.getItem('reduceFx')==='1';}catch(e){}
+/* vibrazione breve (solo dove il browser la supporta; su iPhone non c'è) */
+let VIBRA=true;try{VIBRA=localStorage.getItem('vibra')!=='0';}catch(e){}
+function vib(ms){if(!VIBRA)return;try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
+const isP1=(...fs)=>game.p&&fs.some(x=>x&&x===game.p[0]&&x.ctrl!=='cpu');
 let _lastFlashFr=-999;
 function flash(n){if(REDUCE_FX)return;if(frame-_lastFlashFr<20)return;_lastFlashFr=frame;whiteFlash=Math.max(whiteFlash,n);}
 function setTimeoutFrames(fr,fn){frameTimers.push({fr,fn});}
@@ -678,6 +689,15 @@ class Fighter{
     else{const m=this.ctrl;for(const k in m)i[k]=!!keys[m[k]];}
     i.punchP=i.punch&&!p.punch;i.kickP=i.kick&&!p.kick;i.upP=i.up&&!p.up;i.specialP=i.special&&!p.special;
     i.blockP=i.block&&!p.block;
+    /* memoria dei comandi: PUGNO, CALCIO o SPECIALE premuti mentre non si può agire vengono ricordati
+       per 8 fotogrammi e partono appena possibile */
+    if(this.ctrl!=='cpu'){
+      const fresh=i.specialP?'special':i.punchP?'punch':i.kickP?'kick':null;
+      const busy=k=>this.state==='attack'||this.state==='ko'||this.hitstun>0||this.blockstun>0||this.selfStun>0||
+        !this.onGround()||this.jumpSquat>0||(this.atkLag>0&&k!=='special');
+      if(fresh){this.inBuf=busy(fresh)?8:0;this.inBufKey=fresh;}
+      else if(this.inBuf>0){if(!busy(this.inBufKey)){i[this.inBufKey+'P']=true;this.inBuf=0;}else this.inBuf--;}
+    }
     this.prev={punch:i.punch,kick:i.kick,up:i.up,special:i.special,block:i.block};
     this.input=i;
   }
@@ -807,7 +827,7 @@ class Fighter{
       this.grabbed=opp;this.grabT=0;this.moveFr=aS+1;
       opp.blockHeld=false;opp.parryT=0;opp.selfStun=0;opp.cur=null;opp.burstLeft=0;opp.pendingWaves=null;
       opp.state='hitstun';opp.hitstun=10;opp.blockstun=0;opp._sk=null;
-      ftext(opp.x,opp.y-opp.cfg.h-16,'PRESA!','#FF8C00',12);sfx.hit();
+      ftext(opp.x,opp.y-opp.cfg.h-16,'PRESA!','#FF8C00',12);sfx.hit();if(isP1(this,opp))vib(30);
       if(opp.ctrl==='cpu')opp.ai.escGrab=Math.random()<((opp.aiDiff&&opp.aiDiff.esc)||0);
       return;}
     if(this.moveFr>=aE+m.recovery){this.state='idle';this.cur=null;}
@@ -1062,7 +1082,7 @@ class Fighter{
     /* la presa non si può parare né parare con parry */
     if(!isGrab&&this.blockHeld&&this.parryT>0&&this.state!=='attack'){
       this.parryT=0;this.stamina=Math.max(0,this.stamina-3);this.invuln=Math.max(this.invuln,10);
-      flash(1);sfx.parry();shake=Math.max(shake,5);hitstop=Math.max(hitstop,5);
+      flash(1);sfx.parry();shake=Math.max(shake,5);hitstop=Math.max(hitstop,5);if(isP1(this,attacker))vib(30);
       ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*.55,'#FFFFFF',4,42);this.parryCD=90;
       if(isProj){ /* proiettile parato: si annulla, chi ha sparato non viene stordito */
         ftext(this.x,this.y-this.cfg.h-22,'PARRY! +10','#FFE94A',13);this.gainMeter(10);
@@ -1086,7 +1106,7 @@ class Fighter{
       if(this.stamina===0){this.blockHeld=false;this.selfStun=20;this.blockstun=0;
         ftext(this.x,this.y-this.cfg.h-18,'GUARDIA ROTTA!','#FF4136',11);
         fxBurst(this.x,this.y-this.cfg.h*0.55,'blue',14);sfx.casino();}}
-    else{this.state='hitstun';this.blockStreak=0;this.blockstun=0;
+    else{this.state='hitstun';this.blockStreak=0;this.blockstun=0;if(isP1(this,attacker))vib(15);
       /* stordimento: chi colpisce resta in vantaggio. Attacco 1 +2, attacco 2 0, speciale 0 (fermo fino al colpo
          successivo), pugno grande di Batteo / esoscheletro di Luca di Mauro +2; proiettili 14 fissi; minimo 8 */
       this._stunFr=frame;this.hitstun=isProj?14:Math.max(8,resta+(akey==='punch'||big?2:0));
@@ -1101,7 +1121,7 @@ class Fighter{
     this.x+=kb*attacker.facing*(blocked?0.4:1);
     if(!blocked)ftext(this.x,this.y-this.cfg.h-8,Math.round(dmg),'#FFF',10);
     if(this.hp===0&&this.exo>0){this.exo=0;exoBreak(this);}
-    if(this.hp===0){this.state='ko';this.vy=-7;this.hitstun=0;sfx.ko();shake=12;
+    if(this.hp===0){this.state='ko';this.vy=-7;this.hitstun=0;sfx.ko();shake=12;if(isP1(this,attacker))vib(60);
       blood(this.x,this.y-this.cfg.h*0.5,26);game.onKO(this);}
   }
 
@@ -3401,6 +3421,12 @@ let _acc=0;
 const DEBUG_UPS=/[?&]debug\b/.test(location.search);
 let _upsCount=0,_upsSec=0,_ups=0;
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){_lastTs=0;_acc=0;}});
+/* pulsante SPECIALE: pulsa quando la speciale del giocatore 1 è pronta, opaco altrimenti */
+let _abS=null,_abSState='';
+function syncSpecialBtn(){
+  const p=game.p&&game.p[0],st=game.state==='fight'&&p?(p.specialReady?'ready':'dim'):'';
+  if(st===_abSState)return;_abSState=st;_abS=_abS||document.getElementById('ab-s');if(!_abS)return;
+  _abS.classList.toggle('ready',st==='ready');_abS.classList.toggle('dim',st==='dim');}
 function loop(ts){
   const dt=_lastTs?Math.min(ts-_lastTs,100):STEP_MS; // cap 100ms
   _lastTs=ts;
@@ -3430,6 +3456,7 @@ function loop(ts){
     ctx.fillStyle='#FF4136';ctx.font='12px monospace';ctx.textAlign='center';
     ctx.fillText('ERR draw: '+e.message,W/2,H/2+40);
   }
+  syncSpecialBtn();
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -3768,6 +3795,13 @@ requestAnimationFrame(loop);
   });
   function showFx(){var v=document.getElementById('hb-fx-val');if(v)v.textContent=REDUCE_FX?'S\u00CC':'NO';}
   showFx();
+  function showVib(){var v=document.getElementById('hb-vib-val');if(v)v.textContent=VIBRA?'S\u00CC':'NO';}
+  showVib();
+  _btn('hb-vib', function(){
+    VIBRA=!VIBRA;
+    try{localStorage.setItem('vibra',VIBRA?'1':'0');}catch(e){}
+    try{sfx.sel();}catch(_){} showVib(); vib(30);
+  });
   _btn('hb-fx', function(){
     REDUCE_FX=!REDUCE_FX;if(REDUCE_FX)whiteFlash=0;
     try{localStorage.setItem('reduceFx',REDUCE_FX?'1':'0');}catch(e){}
