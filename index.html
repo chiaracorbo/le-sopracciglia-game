@@ -586,10 +586,10 @@ const MOVES={
   kick: {dmg:6.4, startup:5, active:4, recovery:9, lag:8, range:50, hh:24, yFrac:.34, kb:12, stCost:7, anim:'kick'},
 };
 const DIFFS={
-  facile:   {label:'FACILE',   hp:.8, freq:1.4, parry:0, grab:.3},
-  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5},
-  difficile:{label:'DIFFICILE',hp:1.2,freq:.7,  parry:.4, grab:.7},
-  boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.6, grab:.7},
+  facile:   {label:'FACILE',   hp:.8, freq:1.4, parry:0, grab:.3, esc:.15, pun:.3},
+  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.35, pun:.6},
+  difficile:{label:'DIFFICILE',hp:1.2,freq:.7,  parry:.4, grab:.7, esc:.55, pun:.85},
+  boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.6, grab:.7, esc:.7, pun:1},
 };
 /* danno scalato nelle combo lunghe: in base ai colpi già entrati (1° 100%, 2° 100%, 3° 80% … dal 7° 40%) */
 const COMBO_SCALE=[1,1,.8,.7,.6,.5,.4],COMBO_WIN=45;
@@ -709,8 +709,8 @@ class Fighter{
     /* lo stordimento inizia a scendere dal fotogramma dopo il colpo (uguale per entrambi i giocatori) */
     if(this.hitstun>0){if(this._stunFr!==frame)this.hitstun--;
       if(!this.onGround()){this.vy+=0.6;this.y=Math.min(GROUND,this.y+this.vy);}
-      if(this.hitstun===0)this.state='idle';return;}
-    if(this.blockstun>0){if(this._stunFr!==frame)this.blockstun--;this.state='block';this.blockHeld=true;
+      if(this.hitstun===0){this.state='idle';this._stunEndFr=frame;}return;}
+    if(this.blockstun>0){if(this._stunFr!==frame)this.blockstun--;this.state='block';this.blockHeld=true;if(this.blockstun===0)this._stunEndFr=frame;
       if(!this.onGround()){this.vy+=0.6;this.y=Math.min(GROUND,this.y+this.vy);}
       this.x=clamp(this.x,this.half+4,W-this.half-4);return;}
 
@@ -773,8 +773,8 @@ class Fighter{
     if(Math.abs(opp.x-this.x)-this.half-opp.half>30)return false;
     this.facing=opp.x>=this.x?1:-1;
     this.state='attack';this.hitConsumed=true;this.moveFr=0;this.blockHeld=false;this.parryT=0;
-    this.cur={key:'grab',startup:5,active:2,recovery:20,dmg:12,kb:0,range:30,hh:30,yFrac:.5};
-    this.grabbed=null;this.grabT=0;this.blockStreak=0;sfx.whoosh();
+    this.cur={key:'grab',startup:5,active:2,recovery:30,dmg:12,kb:0,range:30,hh:30,yFrac:.5};
+    this.grabbed=null;this.grabT=0;this.blockStreak=0;this.grabTry=(this.grabTry||0)+1;sfx.whoosh();
     return true;}
   grabStep(opp){
     const m=this.cur,aS=m.startup,aE=aS+m.active;
@@ -796,13 +796,16 @@ class Fighter{
         this.moveFr=aE+m.recovery-10;}
       return;}
     this.moveFr++;
+    /* protezione: niente presa su chi è in blockstun o nei 5 fotogrammi dopo la fine di uno stordimento */
     if(this.moveFr>aS&&this.moveFr<=aE&&opp.state!=='ko'&&opp.onGround()&&opp.hitstun<=0&&opp.invuln<=0&&
+       opp.blockstun<=0&&!(opp._stunEndFr!==undefined&&frame-opp._stunEndFr<=5)&&
        !(opp.state==='attack'&&opp.cur&&opp.cur.key==='special')&&
        Math.abs(opp.x-this.x)-this.half-opp.half<=36){
       this.grabbed=opp;this.grabT=0;this.moveFr=aS+1;
       opp.blockHeld=false;opp.parryT=0;opp.selfStun=0;opp.cur=null;opp.burstLeft=0;opp.pendingWaves=null;
       opp.state='hitstun';opp.hitstun=10;opp.blockstun=0;opp._sk=null;
       ftext(opp.x,opp.y-opp.cfg.h-16,'PRESA!','#FF8C00',12);sfx.hit();
+      if(opp.ctrl==='cpu')opp.ai.escGrab=Math.random()<((opp.aiDiff&&opp.aiDiff.esc)||0);
       return;}
     if(this.moveFr>=aE+m.recovery){this.state='idle';this.cur=null;}
   }
@@ -1108,6 +1111,15 @@ class Fighter{
     const o={left:false,right:false,up:false,down:false,punch:false,kick:false,block:false,special:false};
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
+    /* afferrata: se ha deciso di liberarsi preme PUGNO + PARATA al 3° fotogramma della presa */
+    if(opp.grabbed===this){if(a.escGrab&&opp.grabT===2){o.punch=true;o.block=true;}this.aiOut=o;return;}
+    /* presa a vuoto dell'avversario: decide una volta sola se punirla, poi si avvicina e colpisce con l'attacco 1 */
+    if(opp.state==='attack'&&opp.cur&&opp.cur.key==='grab'&&!opp.grabbed&&opp.moveFr>opp.cur.startup+opp.cur.active){
+      if(a.punTok!==opp.grabTry){a.punTok=opp.grabTry;a.punWant=Math.random()<(d.pun||0);}
+      if(a.punWant&&this.state!=='attack'&&this.hitstun<=0&&this.onGround()){
+        if(dist<=this.moveReach('punch')){if(this.atkLag<=0)o.punch=!this.prev.punch;}
+        else if(dir>0)o.right=true;else o.left=true;
+        this.aiOut=o;return;}}
     /* PRESA: se il giocatore ha parato 3 colpi di fila ed è vicino, prova ad afferrarlo */
     {const bs=opp.blockStreak||0;if(a.grabSeen===undefined)a.grabSeen=0;
       if(bs<3)a.grabSeen=0;else if(bs!==a.grabSeen){a.grabSeen=bs;if(Math.random()<(d.grab||0))a.grabWant=40;}
