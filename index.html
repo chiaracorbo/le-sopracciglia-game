@@ -118,76 +118,49 @@
   }
   .sel-btn:active { background: rgba(120,85,10,0.95); }
 
-  /* ===== FIGHT OVERLAY (D-pad + Action buttons) ===== */
-  #m-controls {
-    display: none; position: fixed; inset: 0; z-index: 100;
-    pointer-events: auto;
-  }
-
-  /* D-pad — bottom left, sizing via vmin per essere responsive */
-
+  /* ===== COMANDI TOUCH DEL COMBATTIMENTO (stile picchiaduro mobile) ===== */
+  #m-controls { display: none; position: fixed; inset: 0; z-index: 100; pointer-events: auto; }
+  /* joystick: cerchio con manopola che segue il pollice */
   #m-dpad {
-    position: absolute;
-    left:  max(14px, env(safe-area-inset-left,  14px));
-    bottom: max(14px, env(safe-area-inset-bottom, 14px));
-    display: grid;
-    grid-template-columns: repeat(3, clamp(40px, 12.5vh, 48px));
-    grid-template-rows:    repeat(3, clamp(40px, 12.5vh, 48px));
-    gap: 3px;
-    width: auto; height: auto;
+    position: absolute; width: min(36vh, 160px); height: min(36vh, 160px); border-radius: 50%;
+    left: max(18px, calc(env(safe-area-inset-left) + 10px)); bottom: max(14px, env(safe-area-inset-bottom));
+    background: radial-gradient(circle, rgba(255,255,255,.05) 0%, rgba(255,255,255,.12) 70%, rgba(255,255,255,.18) 100%);
+    border: 2px solid rgba(160,230,255,.35); box-shadow: 0 0 18px rgba(80,200,255,.15) inset;
   }
-
+  #m-knob {
+    position: absolute; left: 50%; top: 50%; width: 42%; height: 42%; margin: -21% 0 0 -21%; border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(255,255,255,.95), rgba(210,225,235,.75) 60%, rgba(150,170,185,.7));
+    box-shadow: 0 2px 8px rgba(0,0,0,.5); pointer-events: none; transition: transform .05s;
+  }
   .dp {
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.11);
-    border: 2px solid rgba(255,255,255,0.28);
-    border-radius: 12px;
-    font-size: clamp(18px, 4.5vmin, 28px);
-    color: rgba(255,255,255,0.82);
-    -webkit-user-select: none; touch-action: none;
-    transition: background .06s;
+    position: absolute; width: 22%; height: 22%; display: flex; align-items: center; justify-content: center;
+    color: rgba(160,230,255,.55); font-size: min(4.2vh, 18px); pointer-events: none; touch-action: none;
   }
-  .dp.on { background: rgba(255,255,255,0.36); border-color: rgba(255,255,255,0.7); }
-  /* posizionamento nella griglia 3×3 */
-  #dp-u { grid-column: 2; grid-row: 1; }
-  #dp-l { grid-column: 1; grid-row: 2; }
-  #dp-r { grid-column: 3; grid-row: 2; }
-  #dp-d { grid-column: 2; grid-row: 3; }
-  /* celle vuote (angoli) sono trasparenti e non-interactive */
-  #m-dpad::before { content:''; grid-column:1; grid-row:1; pointer-events:none; }
-
-  /* Action buttons — bottom right */
+  .dp.on { color: #7DF9FF; text-shadow: 0 0 8px #7DF9FF; }
+  #dp-u { left: 39%; top: 2%; } #dp-d { left: 39%; bottom: 2%; } #dp-l { left: 2%; top: 39%; } #dp-r { right: 2%; top: 39%; }
+  /* pulsanti d'azione a ventaglio intorno allo SPECIAL */
   #m-btns {
-    position: absolute;
-    right:  max(14px, env(safe-area-inset-right,  14px));
-    bottom: max(14px, env(safe-area-inset-bottom, 14px));
-    display: grid;
-    grid-template-columns: repeat(2, clamp(52px, 16vh, 66px));
-    grid-template-rows:    repeat(2, clamp(52px, 16vh, 66px)) auto;
-    gap: 6px;
+    position: absolute; width: min(50vh, 220px); height: min(50vh, 220px);
+    right: max(14px, calc(env(safe-area-inset-right) + 8px)); bottom: max(10px, env(safe-area-inset-bottom));
   }
-
   .ab {
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    font-size: clamp(9px, 2.2vmin, 12px); font-weight: bold;
-    font-family: monospace; line-height: 1.25;
-    border-radius: 14px; -webkit-user-select: none; touch-action: none;
-    background: rgba(50,30,5,0.82); border: 2.5px solid rgba(255,215,0,0.4);
-    color: #F5F0E1;
-    transition: background .06s;
+    position: absolute; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: min(2.4vh, 10px); letter-spacing: .03em;
+    color: rgba(255,255,255,.85); -webkit-user-select: none; touch-action: none;
+    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.16), rgba(20,30,45,.45));
+    border: 2px solid rgba(255,255,255,.4); box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    transition: transform .05s, background .06s;
   }
-  .ab.on { background: rgba(210,155,40,0.72); border-color: rgba(255,215,0,0.9); }
-
-  #ab-p { border-color: rgba(255,90,50,0.75);  color: #FF6B47; }
-  #ab-k { border-color: rgba(50,175,255,0.75); color: #4FC3F7; }
-  #ab-b { border-color: rgba(70,195,70,0.75);  color: #7ED98A; }
-  #ab-s {
-    grid-column: 1 / 3;
-    height: clamp(40px, 11vh, 48px);
-    border-color: rgba(255,215,0,0.95); color: #FFD700;
-    background: rgba(80,52,0,0.82); font-size: clamp(11px, 2.8vmin, 15px);
-  }
-  #ab-s.on { background: rgba(200,148,35,0.72); }
+  .ab .ic { font-size: min(6vh, 26px); line-height: 1; margin-bottom: 1px; }
+  .ab.on { transform: scale(.92); background: radial-gradient(circle, rgba(255,255,255,.45), rgba(60,90,120,.55)); }
+  #ab-s { width: 44%; height: 44%; right: 0; bottom: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(80,220,255,.55), rgba(0,90,150,.55)); border-color: rgba(125,249,255,.85);
+    box-shadow: 0 0 16px rgba(80,220,255,.45); font-size: min(2.6vh, 11px); }
+  #ab-s .ic { font-size: min(8vh, 34px); }
+  #ab-s.on { background: radial-gradient(circle, #7DF9FF, rgba(0,120,190,.75)); }
+  #ab-p { width: 31%; height: 31%; right: 50%; bottom: 2%; }   /* a sinistra dello special */
+  #ab-k { width: 31%; height: 31%; right: 6%;  bottom: 50%; }  /* sopra lo special */
+  #ab-b { width: 27%; height: 27%; right: 44%; bottom: 42%; }  /* in diagonale */
 
   /* ===== HOME SCREEN (poster a sinistra, titolo e pulsanti a destra) ===== */
   #home-screen {
@@ -290,45 +263,36 @@
 <div id="m-controls">
   <!-- D-pad: griglia 3×3, solo 4 celle occupate -->
   <div id="m-dpad">
-    <div class="dp" id="dp-u">▲</div>
-    <div class="dp" id="dp-l">◀</div>
-    <div class="dp" id="dp-r">▶</div>
-    <div class="dp" id="dp-d">▼</div>
+    <div class="dp" id="dp-u">⌃</div>
+    <div class="dp" id="dp-l">‹</div>
+    <div class="dp" id="dp-r">›</div>
+    <div class="dp" id="dp-d">⌄</div>
+    <div id="m-knob"></div>
   </div>
   <!-- Action buttons: griglia 2×2 + SPECIAL full-width -->
   <div id="m-btns">
-    <div class="ab" id="ab-p">👊<br>PUGNO</div>
-    <div class="ab" id="ab-k">🦵<br>CALCIO</div>
-    <div class="ab" id="ab-b">🛡<br>PARATA</div>
-    <div class="ab" id="ab-s">⚡ SPECIAL</div>
+    <div class="ab" id="ab-p"><span class="ic">👊</span>PUGNO</div>
+    <div class="ab" id="ab-k"><span class="ic">🦵</span>CALCIO</div>
+    <div class="ab" id="ab-b"><span class="ic">🛡</span>PARATA</div>
+    <div class="ab" id="ab-s"><span class="ic">⚡</span>SPECIAL</div>
   </div>
 </div>
 
 <div id="wrap">
-  <canvas id="cv" width="640" height="480"></canvas>
+  <canvas id="cv" width="854" height="480"></canvas>
   <div id="scan"></div>
 </div>
 <script>
 "use strict";
-const W=640,H=480,GROUND=440;
+const W=854,H=480,GROUND=440;
 const IS_MOBILE=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=false;
 /* Background cache: ridisegna solo quando camX cambia */
 function fit(){
-  const cs=getComputedStyle(document.documentElement);
-  const safe=Math.max(parseFloat(cs.getPropertyValue('--sal'))||0, parseFloat(cs.getPropertyValue('--sar'))||0);
-  const CTRL_COL=Math.max(14,safe)+150;
   const mobile=('ontouchstart' in window||navigator.maxTouchPoints>0);
-  if(mobile){
-    /* in orizzontale lascia due colonne laterali libere per D-pad e pulsanti */
-    const side=innerWidth>innerHeight?CTRL_COL:0;
-    const s=Math.min((innerWidth-2*side)/W, innerHeight/H);
-    cv.style.width=(W*s)+'px'; cv.style.height=(H*s)+'px';
-  } else {
-    const s=Math.min(innerWidth/(W+8),innerHeight/(H+8),4);
-    cv.style.width=(W*s)+'px'; cv.style.height=(H*s)+'px';
-  }
+  const s=mobile?Math.min(innerWidth/W,innerHeight/H):Math.min(innerWidth/(W+8),innerHeight/(H+8),4);
+  cv.style.width=(W*s)+'px'; cv.style.height=(H*s)+'px';
 }
 addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));fit();
 
@@ -2407,8 +2371,8 @@ const game={
     this.tournament={order,idx:0,wins:0};
     this.sel[1]=order[0];this.startMatch();},
   startRound(){this.reset();
-    this.p[0]=new Fighter(ROSTER[this.sel[0]],170,1,P1MAP);
-    this.p[1]=new Fighter(ROSTER[this.sel[1]],470,-1,this.mode===2?P2MAP:'cpu');
+    this.p[0]=new Fighter(ROSTER[this.sel[0]],Math.round(W*.32),1,P1MAP);
+    this.p[1]=new Fighter(ROSTER[this.sel[1]],Math.round(W*.68),-1,this.mode===2?P2MAP:'cpu');
     if(this.p[1].ctrl==='cpu'){const d=this.cpuDiff();this.p[1].aiDiff=d;
       this.p[1].maxHp=this.p[1].hp=Math.round(this.p[1].cfg.hp*d.hp);}
     this.timer=99;this.timerF=0;this.koPending=false;
@@ -2610,7 +2574,7 @@ function drawPortrait(cfg,x,y,s){
 function drawHUD(){
   const [a,b]=game.p;
   for(const[f,side]of[[a,0],[b,1]]){
-    const x=side===0?16:W-16-250,flip=side===1;
+    const x=side===0?66:W-66-250,flip=side===1;
     pxs(x-1,13,252,18,'#000');pxs(x,14,250,16,'#1A1A1A');
     const r=f.hp/f.maxHp,col=r>.5?'#2ECC40':r>.25?'#FFDC00':'#FF4136';
     const w=246*r;pxs(flip?x+2+246-w:x+2,16,w,12,col);
@@ -3208,13 +3172,16 @@ requestAnimationFrame(loop);
     var r = document.getElementById('m-dpad').getBoundingClientRect();
     var dx = cx - (r.left + r.width/2), dy = cy - (r.top + r.height/2);
     var ax = Math.abs(dx), ay = Math.abs(dy), dz = r.width * 0.12;
+    var lim = r.width * 0.3, len = Math.hypot(dx, dy) || 1, k = Math.min(1, lim / len);
+    var kn = document.getElementById('m-knob'); if(kn) kn.style.transform = 'translate('+(dx*k)+'px,'+(dy*k)+'px)';
     var h = ax > dz && ax > ay * 0.45, v = ay > dz && ay > ax * 0.45;
     setKey('ArrowLeft',  h && dx < 0, 'dp-l');
     setKey('ArrowRight', h && dx > 0, 'dp-r');
     setKey('ArrowUp',    v && dy < 0, 'dp-u');
     setKey('ArrowDown',  v && dy > 0, 'dp-d');
   }
-  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); stickId = null; }
+  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); stickId = null;
+    var kn = document.getElementById('m-knob'); if(kn) kn.style.transform = ''; }
   function releaseAll(){
     releaseStick();
     for(var t in btnTouch) setKey(BTN_KEYS[btnTouch[t]], false, btnTouch[t]);
@@ -3282,7 +3249,7 @@ requestAnimationFrame(loop);
       var cvEl = document.getElementById('cv');
       var rect = cvEl ? cvEl.getBoundingClientRect() : null;
       var ty = rect ? (touch.clientY - rect.top) * (480 / rect.height) : 999;
-      var tx = rect ? (touch.clientX - rect.left) * (640 / rect.width) : 999;
+      var tx = rect ? (touch.clientX - rect.left) * (W / rect.width) : 999;
       var inCanvas = rect && touch.clientX>=rect.left && touch.clientX<=rect.right && touch.clientY>=rect.top && touch.clientY<=rect.bottom;
 
       /* In title state la navigazione è gestita dai bottoni HTML home-screen.
@@ -3295,10 +3262,10 @@ requestAnimationFrame(loop);
       var cvEl = document.getElementById('cv');
       var rect = cvEl ? cvEl.getBoundingClientRect() : null;
       if(!rect) return;
-      var tx = (touch.clientX - rect.left) * (640 / rect.width);
+      var tx = (touch.clientX - rect.left) * (W / rect.width);
       var ty = (touch.clientY - rect.top)  * (480 / rect.height);
       /* Griglia personaggi */
-      var cs=86, gx=(640-6*(cs+8))/2+4, gy=56;
+      var cs=86, gx=(W-6*(cs+8))/2+4, gy=56;
       for(var i=0;i<12;i++){
         var col=i%6, row=(i/6)|0;
         var x=gx+col*(cs+8), y=gy+row*(cs+34);
