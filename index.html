@@ -516,7 +516,7 @@ const ROSTER=[
   hair:{t:'pouf',c1:'#7A4E9E'},boa:'#D89020',buttons:'#C0C8D0',strap:'#3A3040',noBelt:true,eyeCol:'#E08020',
   moves:{
     punch:{startup:16,active:4,recovery:12,lag:8,shots:[{at:0,muzzle:'shotgun',pellets:true}],shotDmg:7.6,shotKb:10},
-    kick:{startup:7,active:4,recovery:12,lag:6,dmg:8.0,kb:14,hh:60,guardBreak:true},
+    kick:{startup:7,active:4,recovery:12,lag:6,dmg:8.0,kb:14,hh:60},
   },
   special:{type:'pump3',name:'PIOGGIA DI PALLETTONI',dmg:6.8,shotsAt:[0,18,34],st:10,act:40,rec:12,fx:'orange',cost:35,cd:96},
   quote:'Rapidi e silenziosi.'},
@@ -586,10 +586,10 @@ const MOVES={
   kick: {dmg:6.4, startup:5, active:4, recovery:9, lag:8, range:50, hh:24, yFrac:.34, kb:12, stCost:7, anim:'kick'},
 };
 const DIFFS={
-  facile:   {label:'FACILE',   hp:.8, freq:1.4, parry:0},
-  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2},
-  difficile:{label:'DIFFICILE',hp:1.2,freq:.7,  parry:.4},
-  boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.6},
+  facile:   {label:'FACILE',   hp:.8, freq:1.4, parry:0, grab:.3},
+  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5},
+  difficile:{label:'DIFFICILE',hp:1.2,freq:.7,  parry:.4, grab:.7},
+  boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.6, grab:.7},
 };
 const COMBO_MUL=[1,1.5,2,2.5],COMBO_WIN=45;
 const METER_MAX=100,METER_HIT=18,SPECIAL_MUL=1.8;
@@ -654,6 +654,7 @@ class Fighter{
     this.input={};this.prev={};this.pBuf=0;this.kBuf=0;this.jumpSquat=0;this.wasAir=false;this.blockFlash=0;
     this.cooldown=0;this.invuln=0;this.spinHits=0;this.spinHitFr=-9;this.comebackOn=false;
     this.atkLag=0;this.parryT=0;this.stars=0;this.parryCD=0;this.parryLock=0;
+    this.grabbed=null;this.grabT=0;this.throwT=0;this.throwVX=0;this.blockStreak=0;
     this.defMod=1.15-(cfg.def||5)*0.03;
     this.jumpV=-Math.sqrt(2*0.6*(45+(cfg.aer||5)*4))*(cfg.heavyJump?Math.sqrt(.9):1);
     this.ai={cool:0,plan:'approach',planT:0};this.animT=0;this.readyPing=false;
@@ -682,6 +683,7 @@ class Fighter{
 
   update(opp){
     this.animT++;
+    if(this.throwT>0){this.throwT--;this.x=clamp(this.x+this.throwVX,this.half+4,W-this.half-4);}
     if(this.state==='ko'){if(this.y<GROUND){this.vy+=0.6;this.y=Math.min(GROUND,this.y+this.vy);}return;}
     if(this.cooldown>0)this.cooldown--;
     if(this.invuln>0)this.invuln--;
@@ -710,11 +712,16 @@ class Fighter{
 
     if(this.state==='attack'){
       // cancel normale → special se secondo tasto arriva subito dopo
-      if(this.moveFr<=4&&this.cur&&this.cur.key!=='special'&&
+      if(this.moveFr<=4&&this.cur&&this.cur.key!=='special'&&this.cur.key!=='grab'&&
         ((this.cur.key==='punch'&&i.kickP)||(this.cur.key==='kick'&&i.punchP)||i.specialP))
         this.attemptSpecial(opp,true);
-      this.advanceAttack(opp);
+      /* PUGNO appena partito + PARATA subito dopo (due dita non perfettamente insieme) = presa */
+      if(this.cur&&this.cur.key==='punch'&&this.moveFr<=3&&this.tryGrab(i,opp)){}
+      else if(this.cur&&this.cur.key==='grab')this.grabStep(opp);
+      else this.advanceAttack(opp);
     }
+    /* PRESA: va controllata prima della parata */
+    else if(this.tryGrab(i,opp)){}
     else{
       if(this.onGround())this.facing=opp.x>=this.x?1:-1;
       if(i.blockP&&this.parryCD<=0&&this.parryLock<=0)this.parryT=5; // finestra di parry: tap appena prima dell'impatto
@@ -752,6 +759,47 @@ class Fighter{
     this.x=clamp(this.x,this.half+4,W-this.half-4);
   }
 
+  /* ---- PRESA: PUGNO + PARATA insieme, a terra, corpi a max 30 px ---- */
+  tryGrab(i,opp){
+    if(!((i.punchP&&i.block)||(i.blockP&&i.punch)))return false;
+    if(!this.onGround()||this.jumpSquat>0)return false;
+    if(Math.abs(opp.x-this.x)-this.half-opp.half>30)return false;
+    this.facing=opp.x>=this.x?1:-1;
+    this.state='attack';this.hitConsumed=true;this.moveFr=0;this.blockHeld=false;this.parryT=0;
+    this.cur={key:'grab',startup:5,active:2,recovery:20,dmg:12,kb:0,range:30,hh:30,yFrac:.5};
+    this.grabbed=null;this.grabT=0;this.blockStreak=0;sfx.whoosh();
+    return true;}
+  grabStep(opp){
+    const m=this.cur,aS=m.startup,aE=aS+m.active;
+    if(this.grabbed){const o=this.grabbed,i=o.input||{};this.grabT++;
+      o.state='hitstun';o.hitstun=Math.max(o.hitstun,2);
+      /* fuga: chi è preso preme PUGNO + PARATA entro 7 fotogrammi */
+      if(this.grabT<=7&&((i.punchP&&i.block)||(i.blockP&&i.punch))){
+        this.grabbed=null;o.hitstun=0;o.state='idle';this.state='idle';this.cur=null;
+        const d=o.x>=this.x?1:-1;o.x=clamp(o.x+d*20,o.half+4,W-o.half-4);this.x=clamp(this.x-d*20,this.half+4,W-this.half-4);
+        ftext((this.x+o.x)/2,Math.min(this.y-this.cfg.h,o.y-o.cfg.h)-16,'LIBERATO!','#7DF9FF',12);
+        sfx.parry();spark((this.x+o.x)/2,this.y-this.cfg.h*.55,'#7DF9FF',10,4);
+        return;}
+      if(this.grabT>7){ /* lancio: niente parata né parry, l'avversario vola indietro di 60 px e cade */
+        this.grabbed=null;
+        o.takeDamage(m.dmg*(this.cfg.power/7),0,this);
+        o.throwVX=this.facing*4;o.throwT=15;
+        if(o.state!=='ko'){o.state='hitstun';o.hitstun=40;o._sk=null;o.vy=-6;o.y-=1;}
+        sfx.boom();shake=Math.max(shake,8);dust(o.x,GROUND,8,true);
+        this.moveFr=aE+m.recovery-10;}
+      return;}
+    this.moveFr++;
+    if(this.moveFr>aS&&this.moveFr<=aE&&opp.state!=='ko'&&opp.onGround()&&opp.hitstun<=0&&opp.invuln<=0&&
+       !(opp.state==='attack'&&opp.cur&&opp.cur.key==='special')&&
+       Math.abs(opp.x-this.x)-this.half-opp.half<=36){
+      this.grabbed=opp;this.grabT=0;this.moveFr=aS+1;
+      opp.blockHeld=false;opp.parryT=0;opp.selfStun=0;opp.cur=null;opp.burstLeft=0;opp.pendingWaves=null;
+      opp.state='hitstun';opp.hitstun=10;opp._sk=null;
+      ftext(opp.x,opp.y-opp.cfg.h-16,'PRESA!','#FF8C00',12);sfx.hit();
+      return;}
+    if(this.moveFr>=aE+m.recovery){this.state='idle';this.cur=null;}
+  }
+
   moveReach(key){
     if(this.exo>0&&this.cfg.exoMove)return this.cfg.exoMove.range-12;
     const m={...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
@@ -763,7 +811,7 @@ class Fighter{
   startMove(key){
     const m=this.exo>0&&this.cfg.exoMove?{...MOVES.kick,...this.cfg.exoMove}:{...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
     this.stamina=Math.max(0,this.stamina-m.stCost);
-    this.state='attack';this.hitConsumed=false;this.moveFr=0;
+    this.state='attack';this.hitConsumed=false;this.moveFr=0;this.blockStreak=0;
     this.cur={key,...m,recovery:Math.round(m.recovery*this.cfg.recMod)};
     if(key==='punch'&&this.cfg.punchDmg)this.cur.dmg=this.cfg.punchDmg;
     if(key==='kick'&&this.cfg.kickDmg)this.cur.dmg=this.cfg.kickDmg;
@@ -783,7 +831,7 @@ class Fighter{
   }
   startSpecial(opp){
     const s=this.cfg.special;
-    this.state='attack';this.hitConsumed=false;this.moveFr=0;
+    this.state='attack';this.hitConsumed=false;this.moveFr=0;this.blockStreak=0;
     this.cur={key:'special',dmg:s.dmg,startup:s.st,active:s.act,
       recovery:Math.round(s.rec*this.cfg.recMod),range:s.w||50,hh:s.hh||44,yFrac:.5,kb:s.kb,sType:s.type,s};
     flash(2);specialBanner={txt:s.name+'!',t:22,col:this.cfg.brow};
@@ -973,9 +1021,10 @@ class Fighter{
     if(this.state==='ko')return;
     if(this.invuln>0){ftext(this.x,this.y-this.cfg.h-10,'MISS!','#FFE94A',10);
       spark(this.x,this.y-this.cfg.h*.5,'#FFE94A',5,2);return;}
+    const isGrab=!isProj&&attacker&&attacker.cur&&attacker.cur.key==='grab';
     raw*=this.defMod;
-    if(attacker&&attacker.spT>0)raw*=SPECIAL_MUL;
-    if(this.counterT>0){this.counterT=0;sfx.special();flash(1);
+    if(attacker&&attacker.spT>0&&!isGrab)raw*=SPECIAL_MUL;
+    if(this.counterT>0&&!isGrab){this.counterT=0;sfx.special();flash(1);
       ftext(this.x,this.y-this.cfg.h-26,'CONTROMOSSA!','#9B59B6',11);
       fxBurst(this.x,this.y-this.cfg.h*0.5,'purple',16);
       attacker.takeDamage(this.cfg.special.dmg*((this.cfg.power+3)/7),this.cfg.special.kb,this);
@@ -985,9 +1034,8 @@ class Fighter{
     const gb=attacker&&attacker.cur&&attacker.cur.guardBreak;
     if(gb&&(this.blockHeld||this.parryT>0)){this.parryT=0;this.blockHeld=false;this.state='idle';
       ftext(this.x,this.y-this.cfg.h-18,'GUARDIA SFONDATA!','#FF8C00',10);sfx.casino();}
-    /* PASSO 5 (presa): qui andrà il controllo — il parry NON deve funzionare contro la presa,
-       quindi se il colpo è una presa si salta questo blocco */
-    if(this.blockHeld&&this.parryT>0&&this.state!=='attack'){
+    /* la presa non si può parare né parare con parry */
+    if(!isGrab&&this.blockHeld&&this.parryT>0&&this.state!=='attack'){
       this.parryT=0;this.stamina=Math.max(0,this.stamina-3);this.invuln=Math.max(this.invuln,10);
       flash(1);sfx.parry();shake=Math.max(shake,5);hitstop=Math.max(hitstop,5);
       ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*.55,'#FFFFFF',4,42);this.parryCD=90;
@@ -1000,23 +1048,27 @@ class Fighter{
       ftext(attacker.x,attacker.y-attacker.cfg.h-14,'STORDITO!','#FF8C00',10);
       fxBurst(attacker.x,attacker.y-attacker.cfg.h*.8,'yellow',10);
       return;}
-    if(this.blockHeld&&this.state!=='attack'){dmg=0;blocked=true; /* parata riuscita: nessun danno */
-      this.blockFlash=8;this.gainMeter(2);
-      this.stamina=Math.max(0,this.stamina-2);sfx.block(); // costo fisso 2 per parata
+    if(!isGrab&&this.blockHeld&&this.state!=='attack'){blocked=true;
+      /* parata: nessun danno, tranne le speciali che passano al 10% (senza mandare K.O.) */
+      const fromSp=attacker&&attacker.state==='attack'&&attacker.cur&&attacker.cur.key==='special';
+      dmg=fromSp?raw*.1:0;
+      this.blockFlash=8;this.gainMeter(2);this.blockStreak=(this.blockStreak||0)+1;
+      this.stamina=Math.max(0,this.stamina-Math.max(2,raw*.4));sfx.block(); // parare costa il 40% del danno (minimo 2)
       spark(this.x+this.facing*this.half,this.y-this.cfg.h*0.55,'#9CC4FF',10,3);
       spark(this.x+this.facing*this.half,this.y-this.cfg.h*0.55,'#FFFFFF',5,2);
       ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*0.55,'#9CC4FF',3,26);
       if(this.stamina===0){this.blockHeld=false;this.selfStun=20;
         ftext(this.x,this.y-this.cfg.h-18,'GUARDIA ROTTA!','#FF4136',11);
         fxBurst(this.x,this.y-this.cfg.h*0.55,'blue',14);sfx.casino();}}
-    else{this.state='hitstun';this.hitstun=8+Math.floor(kb/5);
+    else{this.state='hitstun';this.hitstun=8+Math.floor(kb/5);this.blockStreak=0;
+      if(this.grabbed){this.grabbed.hitstun=0;this.grabbed.state='idle';this.grabbed=null;}
       attacker.registerHit();this.gainMeter(4);this.flash=6;
       blood(this.x,this.y-this.cfg.h*0.6,dmg>10?14:7);
       spark((this.x+attacker.x)/2,this.y-this.cfg.h*0.6,'#FFFF00',8,3);
       spark((this.x+attacker.x)/2,this.y-this.cfg.h*0.6,'#FFFFFF',4,2);
       (kb>12?sfx.kick:sfx.hit)();
       hitstop=dmg>14?6:3;shake=Math.max(shake,Math.min(10,kb/4));}
-    this.hp=Math.max(0,this.hp-Math.round(dmg));
+    this.hp=Math.max(blocked?Math.min(1,this.hp):0,this.hp-Math.round(dmg));
     this.x+=kb*attacker.facing*(blocked?0.4:1);
     if(!blocked)ftext(this.x,this.y-this.cfg.h-8,Math.round(dmg),'#FFF',10);
     if(this.hp===0&&this.exo>0){this.exo=0;exoBreak(this);}
@@ -1038,6 +1090,13 @@ class Fighter{
     const o={left:false,right:false,up:false,down:false,punch:false,kick:false,block:false,special:false};
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
+    /* PRESA: se il giocatore ha parato 3 colpi di fila ed è vicino, prova ad afferrarlo */
+    {const bs=opp.blockStreak||0;if(a.grabSeen===undefined)a.grabSeen=0;
+      if(bs<3)a.grabSeen=0;else if(bs!==a.grabSeen){a.grabSeen=bs;if(Math.random()<(d.grab||0))a.grabWant=40;}
+      if(a.grabWant>0){a.grabWant--;
+        if(this.state!=='attack'&&this.hitstun<=0&&this.onGround()&&opp.onGround()&&opp.state!=='ko'){
+          if(dist<=30){o.punch=true;o.block=true;a.grabWant=0;this.aiOut=o;return;}
+          if(dist<140){if(dir>0)o.right=true;else o.left=true;this.aiOut=o;return;}}}}
     const hasProj=!!this.cfg.punchProjectile;
     const sRange=sType==='clones'?130:sType==='exo'?999:sType==='laser'||sType==='star'||sType==='rift'||sType==='barrage'||sType==='teleport'||sType==='axegun'||sType==='pump3'?400:sType==='flurry'?70:sType==='waves'?90:sType==='lightning'?240:sType==='blink'?160:sType==='grenade'?220:sType==='dash'?150:sType==='grab'?130:sType==='cone'?170:90;
 
@@ -1439,7 +1498,7 @@ function spritePoint(f,px,py){const S=SPRITE_CHARS[f.cfg.id];
 function spriteFrame(f,S){
   const A=S.anims;let key,fi=0;
   if(f.state==='ko')key='ko';
-  else if(f.state==='attack'&&f.cur)key=f.cur.key;
+  else if(f.state==='attack'&&f.cur)key=f.cur.key==='grab'?'kick':f.cur.key;
   else if(f.state==='hitstun')key='hurt';
   else if(f.state==='block'||f.state==='crouch')key='block';
   else if(f.state==='jumpsquat'||f.state==='jump'||!f.onGround())key='jump';
@@ -3314,7 +3373,21 @@ requestAnimationFrame(loop);
     var el = document.getElementById(elId);
     if(el) el.classList.toggle('on', val);
   }
+  /* zona tra PUGNO (sotto) e PARATA (sopra): vale come PUGNO + PARATA (presa) */
+  function inGrabGap(cx, cy){
+    var p = document.getElementById('ab-p').getBoundingClientRect(), b = document.getElementById('ab-b').getBoundingClientRect();
+    var l = Math.max(p.left, b.left), r = Math.min(p.right, b.right);
+    return cx >= l && cx <= r && cy >= b.bottom - 8 && cy <= p.top + 8;
+  }
+  function codesOf(id){ return id === 'ab-pb' ? ['KeyZ','KeyC'] : [BTN_KEYS[id]]; }
+  /* ricalcola i tasti da tutte le dita appoggiate (così due dita o la zona centrale non si disturbano) */
+  function refreshBtns(){
+    var on = {};
+    for(var t in btnTouch){ var c = codesOf(btnTouch[t]); for(var j=0;j<c.length;j++) on[c[j]] = true; }
+    for(var id in BTN_KEYS) setKey(BTN_KEYS[id], !!on[BTN_KEYS[id]], id);
+  }
   function btnAtPoint(cx, cy){
+    if(inGrabGap(cx, cy)) return 'ab-pb';
     for(var id in BTN_KEYS){
       var r = document.getElementById(id).getBoundingClientRect();
       if(cx >= r.left-6 && cx <= r.right+6 && cy >= r.top-6 && cy <= r.bottom+6) return id;
@@ -3342,8 +3415,7 @@ requestAnimationFrame(loop);
     var kn = document.getElementById('m-knob'); if(kn) kn.style.transform = ''; }
   function releaseAll(){
     releaseStick();
-    for(var t in btnTouch) setKey(BTN_KEYS[btnTouch[t]], false, btnTouch[t]);
-    btnTouch = {};
+    btnTouch = {}; refreshBtns();
   }
   window._releaseTouchKeys = releaseAll;
 
@@ -3353,7 +3425,7 @@ requestAnimationFrame(loop);
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
       var id = btnAtPoint(t.clientX, t.clientY);
-      if(id){ btnTouch[t.identifier] = id; setKey(BTN_KEYS[id], true, id); }
+      if(id){ btnTouch[t.identifier] = id; refreshBtns(); }
       else if(stickId === null && inStick(t.clientX, t.clientY)){
         stickId = t.identifier; updateStick(t.clientX, t.clientY);
       }
@@ -3370,8 +3442,7 @@ requestAnimationFrame(loop);
       var newId = btnAtPoint(t.clientX, t.clientY);
       /* scivolando su un altro pulsante si cambia tasto; uscendo nel vuoto si resta premuti */
       if(newId && newId !== oldId){
-        setKey(BTN_KEYS[oldId], false, oldId);
-        btnTouch[t.identifier] = newId; setKey(BTN_KEYS[newId], true, newId);
+        btnTouch[t.identifier] = newId; refreshBtns();
       }
     }
   }
@@ -3380,7 +3451,7 @@ requestAnimationFrame(loop);
       var t = e.changedTouches[i];
       if(t.identifier === stickId) releaseStick();
       var id = btnTouch[t.identifier];
-      if(id){ setKey(BTN_KEYS[id], false, id); delete btnTouch[t.identifier]; }
+      if(id){ delete btnTouch[t.identifier]; refreshBtns(); }
     }
     if(game.state === 'fight') e.preventDefault();
   }
