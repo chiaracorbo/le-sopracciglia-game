@@ -457,7 +457,7 @@ const ROSTER=[
     kick:{startup:9,active:5,recovery:13,lag:8,range:60,hh:100,yFrac:.42,dmg:7.8,kb:14,slashFx:true},
   },
   /* la Segaspada accesa trita l'avversario: colpi ripetuti ogni 6 fotogrammi */
-  special:{type:'flurry',chainsaw:true,name:'RIVOLUZIONE DORATA',dmg:1.1,every:6,kb:1,lunge:14,w:78,hh:70,st:10,act:38,rec:22,fx:'gold',cost:40,cd:108},
+  special:{type:'flurry',chainsaw:true,name:'RIVOLUZIONE DORATA',dmg:3.13,every:6,kb:1,lunge:14,w:78,hh:70,st:10,act:38,rec:22,fx:'gold',cost:40,cd:108},
   quote:'\u00C8 un peccato, ma \u00E8 necessario per la causa.'},
  {id:'sito',name:'SITO',title:'Il Generale',hp:260,speed:2.4,power:9,h:162,def:8,aer:4,
   meleeR:2,heavyJump:true,
@@ -480,7 +480,7 @@ const ROSTER=[
     kick:{startup:14,active:4,recovery:14,lag:10,shotSpd:19,shotDmg:6.5,shotKb:14,shotBig:true,recoil:12,
       shots:[{at:0,muzzle:'heavyGun'}]},
   },
-  special:{type:'barrage',name:'TEMPESTA TURCHESE',dmg:2.2,every:4,kb:2,st:10,act:40,rec:12,fx:'blue',cost:35,cd:72},
+  special:{type:'barrage',name:'TEMPESTA TURCHESE',dmg:2.87,every:4,kb:2,st:10,act:40,rec:12,fx:'blue',cost:35,cd:72},
   quote:'Non possiamo diventare come loro!'},
  {id:'batteo',name:'BATTEO',title:'Lo Stratega (nano form)',hp:165,speed:4.5,power:5,h:108,def:3,aer:7,
   meleeR:2,exoH:150,exoHalf:30,exoTremble:true,exoText:'NANOMACCHINE!',exoEnd:'flash',exoEndText:'DI NUOVO PICCOLO',
@@ -509,7 +509,7 @@ const ROSTER=[
     kick:{startup:9,active:4,recovery:12,lag:8,range:52,hh:60,yFrac:.35,dmg:8.5,kb:18},
   },
   /* affondo insieme a due cloni: tre colpi (il re e i due cloni) */
-  special:{type:'clones',name:'SINFONIA REALE',dmg:2.8,kb:8,w:120,hh:80,st:12,act:16,rec:14,slashFx:true,fx:'purple',cost:50,cd:120},
+  special:{type:'clones',name:'SINFONIA REALE',dmg:4.48,kb:8,w:120,hh:80,st:12,act:16,rec:14,slashFx:true,fx:'purple',cost:50,cd:120},
   quote:'\u00C8 ora di danzare all\u2019unisono!'},
  {id:'zibe',name:'ZIBE',title:'Il Veterano',hp:205,speed:3.2,power:7,h:148,def:6,aer:5,
   fur:'#E8E2D2',brow:'#FF8C00',outfit:'#4A3270',weapon:'pompa',species:'alpaca',recMod:.95,
@@ -518,7 +518,7 @@ const ROSTER=[
     punch:{startup:16,active:4,recovery:12,lag:8,shots:[{at:0,muzzle:'shotgun',pellets:true}],shotDmg:7.6,shotKb:10},
     kick:{startup:7,active:4,recovery:12,lag:6,dmg:8.0,kb:14,hh:60},
   },
-  special:{type:'pump3',name:'PIOGGIA DI PALLETTONI',dmg:6.8,shotsAt:[0,18,34],st:10,act:40,rec:12,fx:'orange',cost:35,cd:96},
+  special:{type:'pump3',name:'PIOGGIA DI PALLETTONI',dmg:7.3,shotsAt:[0,18,34],st:10,act:40,rec:12,fx:'orange',cost:35,cd:96},
   quote:'Rapidi e silenziosi.'},
  {id:'dimauro',name:'LUCA DI MAURO',title:'Il Braccio Destro',hp:220,speed:2.9,power:8,h:151,def:6,aer:5,
   fur:'#9A9AA0',brow:'#E03030',outfit:'#141418',weapon:'sciabola',species:'alpaca',recMod:1.0,
@@ -558,7 +558,7 @@ const ROSTER=[
     punch:{startup:7,active:4,recovery:12,lag:6,range:48,dmg:6.0,kb:8,slashFx:true},
     kick:{startup:7,active:12,recovery:12,lag:8,range:56,hh:50,dmg:4.5,kb:3,rehit:[12],trailAt:[0,12],slashFx:true},
   },
-  special:{type:'flurry',name:'GUANTI FALCO',dmg:1.85,every:6,kb:2,w:56,hh:60,st:8,act:36,rec:12,slashFx:true,fx:'white',cost:45,cd:96},
+  special:{type:'flurry',name:'GUANTI FALCO',dmg:4.77,every:6,kb:2,w:56,hh:60,st:8,act:36,rec:12,slashFx:true,fx:'white',cost:45,cd:96},
   quote:'Non \u00E8 una figata?!'},
  {id:'bederico',name:'BEDERICO',title:'Il Supervisore dell\u2019AI',hp:160,speed:3.6,power:9,h:148,def:3,aer:6,
   fur:'#3A3A3E',brow:'#20B2AA',ui:'#7DF9FF',outfit:'#16161A',weapon:'prompt',species:'alpaca',recMod:.9,meta:true,
@@ -591,7 +591,10 @@ const DIFFS={
   difficile:{label:'DIFFICILE',hp:1.2,freq:.7,  parry:.4, grab:.7},
   boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.6, grab:.7},
 };
-const COMBO_MUL=[1,1.5,2,2.5],COMBO_WIN=45;
+/* danno scalato nelle combo lunghe: in base ai colpi già entrati (1° 100%, 2° 100%, 3° 80% … dal 7° 40%) */
+const COMBO_SCALE=[1,1,.8,.7,.6,.5,.4],COMBO_WIN=45;
+/* i colpi della speciale non scendono sotto il 60% */
+function comboScale(n,sp){const k=COMBO_SCALE[Math.min(n,COMBO_SCALE.length-1)];return sp?Math.max(.6,k):k;}
 const METER_MAX=100,METER_HIT=18,SPECIAL_MUL=1.8;
 
 /* ---------- INPUT ---------- */
@@ -935,7 +938,7 @@ class Fighter{
       setTimeoutFrames(18,()=>{spark(tx,GROUND-60,'#FFFFFF',26,6);
         for(let yy=0;yy<GROUND;yy+=14)particles.push({x:tx+rnd(-5,5),y:yy,vx:0,vy:0,life:8,max:8,col:'#FFFF99',sz:6});
         const hb={x:tx-20,y:GROUND-200,w:40,h:200};
-        if(opp.state!=='ko'&&aabb(hb,opp.hurtbox()))opp.takeDamage(s.dmg*(this.cfg.power/7)*this.dmgMul,s.kb,this);
+        if(opp.state!=='ko'&&aabb(hb,opp.hurtbox()))opp.takeDamage(s.dmg*(this.cfg.power/7)*this.dmgMul,s.kb,this,false,true);
         sfx.boom();shake=Math.max(shake,9);flash(2);});
       this.hitConsumed=true;}
     if(t==='crit'&&Math.random()<s.failChance){this.hitConsumed=true;this.selfStun=24;sfx.casino();
@@ -946,7 +949,7 @@ class Fighter{
     fxBurst(this.x,this.y-this.cfg.h*0.5,'purple',8);
     const hb={x:this.x-w.r,y:this.y-this.cfg.h,w:w.r*2,h:this.cfg.h};
     if(opp.state!=='ko'&&aabb(hb,opp.hurtbox()))
-      opp.takeDamage(this.cur.s.dmg*(this.cfg.power/7)*this.dmgMul,this.cur.s.kb,this);
+      opp.takeDamage(this.cur.s.dmg*(this.cfg.power/7)*this.dmgMul,this.cur.s.kb,this,false,true);
   }
   /* sparo dalla bocca dell'arma verso l'avversario */
   fireShot(m,opp){this.lastShotMove=this.cur;const S=SPRITE_CHARS[this.cfg.id],g=S&&S[m.muzzle];
@@ -1001,7 +1004,7 @@ class Fighter{
         if(this.spinHits>=(m.s.hits||3)||this.moveFr-this.spinHitFr<3)return;
         this.spinHits++;this.spinHitFr=this.moveFr;
         const tick=(m.dmg/(m.s.hits||3))*(this.cfg.power/7)*this.dmgMul;
-        opp.takeDamage(tick*COMBO_MUL[Math.min(this.combo,3)],m.kb/(m.s.hits||3)+6,this);
+        opp.takeDamage(tick,m.kb/(m.s.hits||3)+6,this);
         fxBurst(opp.x,opp.y-opp.cfg.h*0.6,m.s.fx,8);
         return;}
       this.hitConsumed=true;
@@ -1010,7 +1013,7 @@ class Fighter{
       let dmgBase=m.dmg;
       if(m.key==='special'&&m.s.airDmg&&!opp.onGround())dmgBase=m.s.airDmg;
       const base=dmgBase*(this.cfg.power/7)*this.dmgMul;
-      opp.takeDamage(base*COMBO_MUL[Math.min(this.combo,3)],m.kb,this);
+      opp.takeDamage(base,m.kb,this);
       if(m.key==='special')fxBurst(opp.x,opp.y-opp.cfg.h*0.6,m.s.fx,16);
       if(m.sType==='grab'){sfx.boom();shake=Math.max(shake,10);flash(1);}
     }
@@ -1021,17 +1024,20 @@ class Fighter{
     const mv=this.cur||this.lastShotMove;if(mv&&mv._metered)return;if(mv)mv._metered=true;
     this.gainMeter(METER_HIT);}
 
-  takeDamage(raw,kb,attacker,isProj){
+  /* fromSp: il colpo appartiene alla speciale (se non indicato: chi attacca sta eseguendo la speciale) */
+  takeDamage(raw,kb,attacker,isProj,fromSp){
     if(this.state==='ko')return;
     if(this.invuln>0){ftext(this.x,this.y-this.cfg.h-10,'MISS!','#FFE94A',10);
       spark(this.x,this.y-this.cfg.h*.5,'#FFE94A',5,2);return;}
     const isGrab=!isProj&&attacker&&attacker.cur&&attacker.cur.key==='grab';
     raw*=this.defMod;
-    if(attacker&&attacker.spT>0&&!isGrab)raw*=SPECIAL_MUL;
+    const sp=fromSp!==undefined?!!fromSp:!!(attacker&&attacker.state==='attack'&&attacker.cur&&attacker.cur.key==='special');
+    /* scala combo + bonus ×1.8 solo per i colpi della speciale stessa */
+    if(attacker&&!isGrab){raw*=comboScale(attacker.combo||0,sp);if(sp)raw*=SPECIAL_MUL;}
     if(this.counterT>0&&!isGrab){this.counterT=0;sfx.special();flash(1);
       ftext(this.x,this.y-this.cfg.h-26,'CONTROMOSSA!','#9B59B6',11);
       fxBurst(this.x,this.y-this.cfg.h*0.5,'purple',16);
-      attacker.takeDamage(this.cfg.special.dmg*((this.cfg.power+3)/7),this.cfg.special.kb,this);
+      attacker.takeDamage(this.cfg.special.dmg*((this.cfg.power+3)/7),this.cfg.special.kb,this,false,true);
       return;}
     let dmg=raw,blocked=false;
     /* tempo che resta a chi attacca: fotogrammi attivi rimanenti + recupero + lag */
@@ -1058,8 +1064,7 @@ class Fighter{
       return;}
     if(!isGrab&&this.blockHeld&&this.state!=='attack'){blocked=true;
       /* parata: nessun danno, tranne le speciali che passano al 10% (senza mandare K.O.) */
-      const fromSp=attacker&&attacker.state==='attack'&&attacker.cur&&attacker.cur.key==='special';
-      dmg=fromSp?raw*.1:0;
+      dmg=sp?raw*.1:0;
       this.blockFlash=8;this.gainMeter(2);this.blockStreak=(this.blockStreak||0)+1;
       this.stamina=Math.max(0,this.stamina-Math.max(2,raw*.4));sfx.block(); // parare costa il 40% del danno (minimo 2)
       /* blockstun: fermo in parata. Attacco 1 -2 (sicuro), attacco 2 -6, speciale -15; proiettili 8 fissi */
@@ -1726,7 +1731,7 @@ function openRifts(f,opp){
     if(!hit&&outAt(o.t)>=1&&opp.state!=='ko'){hit=true;
       const tip={x:bx+(-f.facing)*c.w*S.scale,y:by},hb=opp.hurtbox();
       if(aabb({x:Math.min(bx,tip.x)-6,y:by-14,w:Math.abs(tip.x-bx)+12,h:28},hb)){
-        opp.takeDamage(dmg*(f.cfg.power/7)*f.dmgMul,kb,f);
+        opp.takeDamage(dmg*(f.cfg.power/7)*f.dmgMul,kb,f,false,true);
         spark(tip.x,tip.y,'#7DF9FF',14,5);spark(tip.x,tip.y,'#FFFFFF',6,3);ring(tip.x,tip.y,'#1E90FF',4,36);}}},
   draw(o){
     const open=Math.min(1,o.t/5,(o.life-o.t)/6);
@@ -1881,7 +1886,7 @@ function updateBeams(){
     b.x1=b.x0+(tx-b.x0)*full;
     if(inLine&&full>=1&&!b.hit&&b.t<=b.life-8){
       b.hit=true;
-      b.opp.takeDamage(b.dmg*(b.f.cfg.power/7)*b.f.dmgMul,b.kb,b.f,true);
+      b.opp.takeDamage(b.dmg*(b.f.cfg.power/7)*b.f.dmgMul,b.kb,b.f,true,true);
       spark(b.x1,b.y,'#7DF9FF',14,5);spark(b.x1,b.y,'#FFFFFF',6,3);
       ring(b.x1,b.y,'#7DF9FF',4,40);flash(1);
       b.impact=12;}
@@ -2660,13 +2665,14 @@ function update(){
       // proiettili
       updateBeams();updateFxObjs();
       projectiles=projectiles.filter(p=>{
+        if(p.sp===undefined)p.sp=!!(p.owner.state==='attack'&&p.owner.cur&&p.owner.cur.key==='special');
         p.x+=p.vx;p.y+=p.vy;if(p.grav)p.vy+=p.grav;p.life--;
         if(!p.hidden&&frame%3===0)particles.push({x:p.x,y:p.y,vx:0,vy:0,life:6,max:6,col:p.col,sz:2});
         const tgt=p.owner===game.p[0]?game.p[1]:game.p[0];
         const hb={x:p.x-p.w/2,y:p.y-p.h/2,w:p.w,h:p.h};
         let boom=false;
         if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox())){boom=true;
-          if(p.aoe)explode(p,tgt);else tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner,true);
+          if(p.aoe)explode(p,tgt);else tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner,true,p.sp);
           if(p.starShot){ring(p.x,p.y,'#FFD700',6,90);ring(p.x,p.y,'#FFFFFF',4,50);spark(p.x,p.y,'#FFD700',18,6);
             for(let i=0;i<6;i++)_padd({star:true,x:p.x,y:p.y,vx:rnd(-3,3),vy:rnd(-3,1),life:24,max:24,col:'#FFF3B0',sz:3});
             flash(2);shake=Math.max(shake,8);}}
@@ -2705,7 +2711,7 @@ function explode(p,tgt){
     col:['#FF6A00','#FFB000','#FFE94A','#777'][i%4],sz:rnd(3,7)});
   smokePuff(p.x,p.y-8,8);
   const r=p.aoe||50,hb={x:p.x-r,y:p.y-r,w:r*2,h:r*2};
-  if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox()))tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner,true);
+  if(tgt.state!=='ko'&&aabb(hb,tgt.hurtbox()))tgt.takeDamage(p.dmg*(p.owner.cfg.power/7)*p.owner.dmgMul,p.kb,p.owner,true,p.sp);
 }
 
 /* ---------- DRAW ---------- */
@@ -2801,7 +2807,7 @@ function drawHUD0(){
     else if(ready)outlineText('SPECIAL!',flip?x+250:x,52,8,'#FFD700',flip?'right':'left');
     outlineText(f.cfg.name,flip?x+250:x,66,12,f.cfg.ui||f.cfg.brow,flip?'right':'left');
     for(let i=0;i<2;i++)pxs(flip?x+250-12-i*14:x+i*14,71,10,6,game.wins[side]>i?'#FFD700':'#3A3A3A');
-    if(f.combo>1)outlineText(f.combo+' COMBO x'+COMBO_MUL[Math.min(f.combo,3)],flip?x+250:x,92,13,'#FFD700',flip?'right':'left');
+    if(f.combo>1)outlineText(f.combo+' COMBO',flip?x+250:x,92,13,'#FFD700',flip?'right':'left');
   }
   outlineText(game.timer,W/2,30,22,'#F5F0E1');
   if(game.mode===3&&game.tournament)
@@ -3292,7 +3298,7 @@ function drawVictory(){
   ctx.save();ctx.globalAlpha=introT*.75;ctx.font='11px monospace';ctx.textAlign='left';ctx.fillStyle='#D0C8A0';
   if(wf.hp===wf.maxHp){ctx.fillStyle='#FFD700';ctx.fillText('\u2605 VITTORIA PERFETTA \u2605',px2+18,ptop+106);}
   else ctx.fillText('HP rimanenti: '+wf.hp+'/'+wf.maxHp,px2+18,ptop+106);
-  if(wf.combo>1)ctx.fillText('Combo max: \u00d7'+COMBO_MUL[Math.min(wf.combo,3)],px2+18,ptop+122);
+  if(wf.combo>1)ctx.fillText('Combo: '+wf.combo+' colpi',px2+18,ptop+122);
   if(game.mode===3&&R)ctx.fillText('Torneo: '+R.wins+'/'+(R.idx+1)+' vittorie',px2+18,ptop+138);
   ctx.restore();
 
