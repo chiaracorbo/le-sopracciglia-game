@@ -3224,24 +3224,37 @@ function wrapText(t,x,y,maxW,lh){
 
 /* ---------- LOOP con delta-time ---------- */
 let _lastTs=0, _fpsSmooth=60, _fpsCount=0, _fpsSec=0;
+/* passo fisso: il gioco avanza sempre a 60 aggiornamenti al secondo, qualunque sia la frequenza dello schermo */
+const STEP_MS=1000/60, MAX_STEPS=5;
+let _acc=0;
+const DEBUG_UPS=/[?&]debug\b/.test(location.search);
+let _upsCount=0,_upsSec=0,_ups=0;
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){_lastTs=0;_acc=0;}});
 function loop(ts){
-  const dt=_lastTs?Math.min(ts-_lastTs,100):16.67; // cap 100ms (evita spiral of death)
+  const dt=_lastTs?Math.min(ts-_lastTs,100):STEP_MS; // cap 100ms
   _lastTs=ts;
 
   /* FPS smoothed */
   _fpsCount++; _fpsSec+=dt;
   if(_fpsSec>=1000){_fpsSmooth=Math.round(_fpsCount*1000/_fpsSec);_fpsCount=0;_fpsSec=0;}
 
-  /* Quanti step di gioco (a 60fps) simulare in questo frame */
-  const steps=Math.min(Math.round(dt/16.67),3);
-  for(let s=0;s<steps;s++){
+  /* accumulatore: esegue tanti update da 16.667 ms quanti ne servono per il tempo trascorso */
+  _acc+=dt;
+  let steps=0;
+  while(_acc>=STEP_MS){
+    if(steps>=MAX_STEPS){_acc=0;break;} /* troppo indietro (es. dopo un blocco): non recuperare */
     try{update();}catch(e){
       ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
       ctx.fillStyle='#FF4136';ctx.font='14px monospace';ctx.textAlign='center';
       ctx.fillText('ERR: '+e.message,W/2,H/2);
-      break;
+      _acc=0;break;
     }
+    _acc-=STEP_MS;steps++;_upsCount++;
   }
+  _upsSec+=dt;if(_upsSec>=1000){_ups=Math.round(_upsCount*1000/_upsSec);_upsCount=0;_upsSec=0;
+    if(DEBUG_UPS){let el=document.getElementById('dbg-ups');
+      if(!el){el=document.createElement('div');el.id='dbg-ups';el.style.cssText='position:fixed;left:6px;bottom:6px;z-index:99999;pointer-events:none;font:bold 13px monospace;padding:3px 7px;border-radius:5px;background:rgba(0,0,0,.75)';document.body.appendChild(el);}
+      el.textContent='UPS '+_ups+'  FPS '+_fpsSmooth;el.style.color=_ups>=58&&_ups<=62?'#2ECC40':'#FF4136';}}
   try{draw();}catch(e){
     ctx.fillStyle='#FF4136';ctx.font='12px monospace';ctx.textAlign='center';
     ctx.fillText('ERR draw: '+e.message,W/2,H/2+40);
