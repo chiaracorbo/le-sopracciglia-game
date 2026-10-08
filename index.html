@@ -333,9 +333,7 @@ const sfx={
   parry:()=>{beep(1568,.12,'triangle',.09);setTimeout(()=>beep(784,.16,'square',.05,-200),60);noise(.06,.05);},
 };
 
-const SPRITE_SRC=Object.fromEntries(["iacopo","sito","alice","batteo","mango","pisani","zibe","dimauro","ettore","chiara","baumizio","bederico"].map(k=>[k,'sprites/'+k+'.png']));
-const SPRITES={};
-(()=>{for(const k in SPRITE_SRC){const i=new Image();i.src=SPRITE_SRC[k];SPRITES[k]=i;}})();
+const SPRITES={}; /* i vecchi ritratti non esistono più */
 
 /* ---------- MUSICA (tracce embedded) ---------- */
 const MUSIC_SRC={menu:'music/menu.mp3',fight:'music/fight.mp3',win:'music/win.mp3',lose:'music/lose.mp3'};
@@ -1656,7 +1654,7 @@ function muzzleFlash(x,y,dir,big){
 }
 /* ritratto nella schermata di scelta: primo fotogramma di attesa */
 function drawSpritePortrait(cfg,x,y,s){
-  const S=SPRITE_CHARS[cfg.id];if(!S||!S.ready)return false;
+  const S=SPRITE_CHARS[cfg.id];if(!S||!S.img)return false;
   if(!imgOk(S.img[(S.portrait&&S.portrait.file)||'idle']))return false;
   const b=S.portrait||S.body,bw=b.x1-b.x0,bh=b.y1-b.y0,sc=(s-8)/Math.max(bw,bh);
   pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
@@ -1752,7 +1750,8 @@ function opx(x,y,w,h,c){octx.fillStyle=c;octx.fillRect(Math.round(x),Math.round(
 
 function drawFighter(f){
   const c=f.cfg;
-  if(!drawSpriteBody(f)){
+  if(!drawSpriteBody(f))return;
+  if(false){
   octx.clearRect(0,0,360,320);
   octx.save();octx.translate(OX,OY);
   const koLay=f.state==='ko';
@@ -2517,6 +2516,10 @@ function outlineText(t,x,y,sz,col,align='center'){ctx.font='bold '+sz+'px monosp
 
 function drawPortrait(cfg,x,y,s){
   if(drawSpritePortrait(cfg,x,y,s))return;
+  /* immagine ancora in arrivo: riquadro vuoto con puntini */
+  pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
+  for(let k=0;k<3;k++){ctx.globalAlpha=.3+.5*((((frame/12)|0)%3)===k);pxs(x+s/2-10+k*8,y+s/2-2,4,4,'#B7A98C');}
+  ctx.globalAlpha=1;return;
   pxs(x,y,s,s,'#1A140C');pxs(x+2,y+2,s-4,s-4,'#241B10');
   const hw=s*.56,hx=x+s*.16,hy=y+s*.36;
   // cranio arrotondato (outline + base)
