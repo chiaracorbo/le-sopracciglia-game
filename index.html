@@ -3179,7 +3179,7 @@ requestAnimationFrame(loop);
    ============================================================ */
 (function(){
   var IS_MOB = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  if(!IS_MOB) return;
+  /* da computer: home, pulsanti e menu sì; i controlli touch del combattimento no */
 
   /* Pulsanti d'azione: elemento → codice tasto */
   var BTN_KEYS = { 'ab-p':'KeyZ', 'ab-k':'KeyX', 'ab-b':'KeyC', 'ab-s':'Space' };
@@ -3331,7 +3331,7 @@ requestAnimationFrame(loop);
     sh('home-screen', s==='title'  ? 'grid' : 'none');
     document.body.classList.toggle('in-title', s==='title');
     sh('select-btns', s==='select' ? 'flex' : 'none');
-    sh('m-controls',  s==='fight'  ? 'block' : 'none');
+    sh('m-controls',  s==='fight'&&IS_MOB ? 'block' : 'none');
     sh('m-esc',       s==='fight'  ? 'flex' : 'none');
     sh('m-back',      (s==='select'||s==='victory') ? 'flex' : 'none');
     sh('m-music',     'flex');
