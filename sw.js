@@ -1,4 +1,4 @@
-const CACHE = 'sopracciglia-v36';
+const CACHE = 'sopracciglia-v37';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -28,6 +28,6 @@ self.addEventListener('fetch', e => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return res;
-    }).catch(() => caches.match(e.request))
+    }).catch(() => caches.match(e.request).then(r => r || Response.error()))
   );
 });

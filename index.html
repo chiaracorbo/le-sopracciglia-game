@@ -1375,12 +1375,23 @@ const SPRITE_CHARS={
     clones:true,
   },
 };
-(()=>{for(const id in SPRITE_CHARS){const S=SPRITE_CHARS[id];S.img={};let left=0;
-  const files=Object.values(S.anims).map(a=>a.file);if(S.portrait)files.push(S.portrait.file);
-  for(const f of files){if(S.img[f])continue;left++;
-    const im=new Image();im.onload=()=>{if(--left===0){S.ready=true;measureReach(S);}};
-    im.onerror=()=>console.warn('Sprite mancante: '+S.dir+f+'.png');
-    im.src=S.dir+f+'.png';S.img[f]=im;}}})();
+/* scarica gli sprite di un personaggio solo quando serve; se un'immagine non arriva riprova fino a 4 volte */
+for(const id in SPRITE_CHARS)SPRITE_CHARS[id].img={};
+function loadChar(id){const S=SPRITE_CHARS[id];if(!S||S.loading)return;S.loading=true;
+  const files=[...new Set(Object.values(S.anims).map(a=>a.file).concat(S.portrait?[S.portrait.file]:[]))];
+  let left=files.length;
+  for(const f of files){const im=new Image();let tries=0;S.img[f]=im;
+    im.onload=()=>{if(--left===0){S.ready=true;measureReach(S);}};
+    im.onerror=()=>{if(++tries<=4)setTimeout(()=>{im.src=S.dir+f+'.png?r='+tries+'-'+Date.now();},400*tries);
+      else{console.warn('Sprite non caricato: '+S.dir+f+'.png');if(--left===0){S.ready=true;measureReach(S);}}};
+    im.src=S.dir+f+'.png';}
+}
+/* in sottofondo, dopo l'avvio, scarica a poco a poco anche gli altri (uno alla volta) */
+setTimeout(function preload(){const next=Object.keys(SPRITE_CHARS).find(id=>!SPRITE_CHARS[id].loading);
+  if(!next)return;loadChar(next);const S=SPRITE_CHARS[next];
+  (function wait(){if(S.ready)setTimeout(preload,300);else setTimeout(wait,500);})();},4000);
+/* pronto per combattere: almeno l'animazione di attesa è arrivata (le altre possono arrivare dopo) */
+function charReady(id){const S=SPRITE_CHARS[id];return !S||S.ready||imgOk(S.img.idle);}
 /* fin dove arriva l'arma (in pixel dal centro del personaggio) durante la fase attiva di pugno e calcio */
 function measureReach(S){
   S.reach={};
@@ -1470,9 +1481,10 @@ function drawSpriteFrame(S,a,fi,x,y,sc,facing,flash){
   ctx.restore();
 }
 function drawSpriteBody(f){
-  const S=SPRITE_CHARS[f.cfg.id];if(!S||!S.ready)return false;
-  const {a,fi,alpha}=spriteFrame(f,S);
-  if(!imgOk(S.img[a.file]))return false;
+  const S=SPRITE_CHARS[f.cfg.id];if(!S)return false;
+  let {a,fi,alpha}=spriteFrame(f,S);
+  /* se questa animazione non è ancora arrivata usa la posa di attesa */
+  if(!imgOk(S.img[a.file])){if(!imgOk(S.img.idle))return false;a=S.anims.idle;fi=Math.floor(f.animT*a.fps/60)%a.n;}
   if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
     ctx.globalAlpha=.35*Math.max(.3,1-lift/150);ctx.fillStyle='#000';
     ctx.beginPath();ctx.ellipse(f.x,GROUND+1,sw*Math.max(.5,1-lift/200),5,0,0,7);ctx.fill();ctx.globalAlpha=1;}
@@ -2443,7 +2455,7 @@ const game={
   p:[null,null],round:1,wins:[0,0],timer:99,timerF:0,
   banner:'',bannerT:0,freeze:0,koPending:false,matchWinner:null,
   reset(){particles=[];projectiles=[];beams=[];fxObjs=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
-  startMatch(){this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
+  startMatch(){loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.loadWait=0;this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
     this.bg=(Math.random()*BACKGROUNDS.length)|0;loadBg(this.bg);
     this.round=1;this.wins=[0,0];this.startRound();this.state='fight';},
   startTournament(){
@@ -2524,8 +2536,10 @@ function update(){
   else if(game.state==='fight'){
     if(hitstop>0){hitstop--;}
     else{
-      if(game.freeze>0)game.freeze--;
       const [a,b]=game.p;
+      /* aspetta gli sprite dei due combattenti (massimo 12 secondi) */
+      if(!(charReady(a.cfg.id)&&charReady(b.cfg.id))&&(game.loadWait=(game.loadWait||0)+1)<720){game.freeze=Math.max(game.freeze,40);game.bannerT=Math.max(game.bannerT,30);}
+      if(game.freeze>0)game.freeze--;
       if(game.freeze<=0&&!game.koPending){
         a.readInput(b);b.readInput(a);
         a.update(b);b.update(a);
@@ -2778,6 +2792,8 @@ function drawFight(){
   ctx.restore();
   drawHUD();
   fullView(()=>{
+    if(game.p[0]&&!(charReady(game.p[0].cfg.id)&&charReady(game.p[1].cfg.id))&&(game.loadWait||0)<720)
+      outlineText('CARICAMENTO'+'.'.repeat(1+((frame/20|0)%3)),W/2,H/2+30,18,'#F5F0E1');
     if(specialBanner)outlineText(specialBanner.txt,W/2,H/2-70,22,'#FF2222');
     if(game.bannerT>0){const big=game.banner==='K.O.';
       outlineText(game.banner,W/2,H/2-20,big?64:34,big?'#FF4136':'#FFD700');}
@@ -3036,7 +3052,7 @@ const VICTORY_CFG={
 /* Victory-pose: usa l'immagine reale del personaggio */
 function drawVictoryPose(f,vcfg,t){
   const SV=SPRITE_CHARS[f.cfg.id];
-  if(SV&&SV.ready&&imgOk(SV.img[SV.anims.win.file])){const a=SV.anims.win,sc=3,cx=W*.26,fy=H*.92;
+  if(SV&&imgOk(SV.img[SV.anims.win.file])){const a=SV.anims.win,sc=3,cx=W*.26,fy=H*.92;
     ctx.globalAlpha=.35;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx,fy+4,90,10,0,0,7);ctx.fill();ctx.globalAlpha=1;
     drawSpriteFrame(SV,a,Math.floor(t*a.fps/60)%a.n,cx,fy+((a.dy&&a.dy.all)||0)*sc,sc,1,false);return;}
   const img=SPRITES[f.cfg.id];
@@ -3429,6 +3445,7 @@ requestAnimationFrame(loop);
   function hexA(h,a){h=(h||'#FFC107').replace('#','');var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return 'rgba('+r+','+g+','+b+','+a+')';}
   function renderSelect(){
     var i=game.sel[game.pickTurn],c=ROSTER[i],I=SEL_INFO[c.id],key=game.pickTurn+':'+i+':'+game.mode;
+    loadChar(c.id);
     if(SS.last===key)return;var changed=SS.last.split(':')[1]!==String(i);SS.last=key;
     var head=document.getElementById('ss-head');
     head.firstChild.nodeValue=game.pickTurn===1?'SCEGLI L\u2019AVVERSARIO':'SCEGLI IL TUO COMBATTENTE';
