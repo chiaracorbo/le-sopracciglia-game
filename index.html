@@ -739,6 +739,14 @@ class Fighter{
     this.x=clamp(this.x,this.half+4,W-this.half-4);
   }
 
+  moveReach(key){
+    if(this.exo>0&&this.cfg.exoMove)return this.cfg.exoMove.range-12;
+    const m={...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
+    if(m.shots)return 330;
+    let r=m.range+(this.cfg.meleeR||0);if(key==='punch'&&this.cfg.punchRange)r=this.cfg.punchRange;
+    const SR=SPRITE_CHARS[this.cfg.id];if(SR&&SR.reach&&SR.reach[key])r=Math.max(r,Math.round(SR.reach[key]-(this.half-6)));
+    return r-12;
+  }
   startMove(key){
     const m=this.exo>0&&this.cfg.exoMove?{...MOVES.kick,...this.cfg.exoMove}:{...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
     this.stamina=Math.max(0,this.stamina-m.stCost);
@@ -1023,65 +1031,58 @@ class Fighter{
       if(dist<50&&a.cool<=0){o.punch=true;a.cool=14*d.freq;}
       this.aiOut=o;return;}
 
-    // ZONING: proiettile a media distanza
-    if(a.zoneT>0)a.zoneT--;
-    if(hasProj&&dist>90&&dist<200&&a.cool<=0&&a.zoneT<=0&&Math.random()<.35){
-      o.punch=true;a.cool=22*d.freq;a.zoneT=60;this.aiOut=o;return;}
+    // ---- distanza e portata reale dei colpi ----
+    const rP=this.moveReach('punch'),rK=this.moveReach('kick');
+    const ranged=rP>200||rK>200, rMin=Math.min(rP,rK), rMax=Math.max(rP,rK);
+    /* come si muove l'avversario: verso di me (+) o lontano (-) */
+    if(a.lastOppX===undefined)a.lastOppX=opp.x;
+    const oppVel=(opp.x-a.lastOppX)*-dir;a.lastOppX=opp.x;
+    if(a.step===undefined)a.step=0;
+    const toward=()=>{if(dir>0)o.right=true;else o.left=true;}, away=()=>{if(dir>0)o.left=true;else o.right=true;};
+    const attack=()=>{ /* sceglie un colpo che arriva davvero */
+      const canP=dist<=rP,canK=dist<=rK;
+      if(canP&&canK){if(Math.random()<.55){o.punch=true;a.cool=(16+Math.random()*10)*d.freq;}else{o.kick=true;a.cool=(24+Math.random()*10)*d.freq;}}
+      else if(canP){o.punch=true;a.cool=(16+Math.random()*10)*d.freq;}
+      else if(canK){o.kick=true;a.cool=(24+Math.random()*10)*d.freq;}
+      else return false;
+      if(Math.random()<.35)a.step=-(10+Math.random()*12); /* dopo il colpo a volte esce di distanza */
+      return true;};
+    const defensive=hpr<.35&&hpr<ohpr;
 
-    // STATO: 6 stati
-    let st;
-    if(hpr<0.25)st='comeback';
-    else if(hpr<0.5)st='defensive';
-    else if(ohpr<0.3&&dist<80)st='finisher';
-    else if(dist>90)st='approach';
-    else if(dist>35)st='neutral';
-    else st='aggression';
-
-    if(a.retreat>0){a.retreat--;if(dir>0)o.left=true;else o.right=true;}
-
-    if(st==='approach'){
-      if(dir>0)o.right=true;else o.left=true;
-      if(a.cool<=0&&dist<130&&Math.random()<.18&&a.jumpAtk<=0){
-        o.up=true;if(dir>0)o.right=true;else o.left=true;o.kick=true;a.jumpAtk=40;a.cool=28*d.freq;}
-      if(opp.cur&&opp.cur.key==='special'&&Math.random()<.5)o.up=true;
-    }else if(st==='neutral'){
-      if(a.cool<=0&&a.retreat<=0){const r=Math.random();
-        if(r<.35){o.punch=true;a.cool=14*d.freq;}
-        else if(r<.60){o.kick=true;a.cool=22*d.freq;}
-        else if(r<.74){a.retreat=18;a.cool=10;}
-        else if(r<.88){o.up=true;if(dir>0)o.right=true;else o.left=true;a.cool=22;}
-        else if(r<.95){o.down=true;a.cool=10;}
-        else{o.block=true;a.cool=16;}}
-    }else if(st==='aggression'){
-      if(this.specialReady&&dist<sRange&&a.cool<=0&&opp.onGround()&&Math.random()<.8){o.punch=true;o.kick=true;a.cool=36*d.freq;}
-      else if(opp.blockHeld&&Math.random()<.45&&a.retreat<=0){a.retreat=14;}
-      else if(a.cool<=0&&a.retreat<=0){
-        if(a.doublePunch>0){a.doublePunch--;o.punch=true;a.cool=15*d.freq;}
-        else{const r=Math.random();
-          if(r<.5){o.punch=true;a.doublePunch=1;a.cool=15*d.freq;}
-          else if(r<.78){o.kick=true;a.cool=22*d.freq;}
-          else{o.up=true;o.kick=true;a.cool=22;}}}
-    }else if(st==='defensive'){
-      if(opp.state==='attack'&&dist<80)o.block=Math.random()<(.55+d.parry*.3);
-      if(a.cool<=0&&a.retreat<=0){const r=Math.random();
-        if(r<.32){a.retreat=20;a.cool=12;}
-        else if(r<.55&&dist<65){o.kick=true;a.cool=24*d.freq;}
-        else if(r<.68&&this.specialReady&&dist<sRange){o.punch=true;o.kick=true;a.cool=40*d.freq;}
-        else if(r<.82&&dist<50){o.punch=true;a.cool=16*d.freq;}
-        else a.cool=10;}
-      if(dist>110){if(dir>0)o.right=true;else o.left=true;}
-    }else if(st==='finisher'){
-      if(this.specialReady&&dist<Math.max(sRange,100)&&a.cool<=0){o.punch=true;o.kick=true;a.cool=30*d.freq;}
-      else if(a.cool<=0){if(dist>36){if(dir>0)o.right=true;else o.left=true;}
-        else{const r=Math.random();
-          if(r<.55){o.punch=true;a.cool=13*d.freq;}else{o.kick=true;a.cool=20*d.freq;}}}
-    }else if(st==='comeback'){
-      if(this.specialReady&&dist<Math.max(sRange,130)&&a.cool<=0){o.punch=true;o.kick=true;a.cool=32*d.freq;}
-      else if(a.cool<=0){const r=Math.random();
-        if(r<.28){o.up=true;if(dir>0)o.right=true;else o.left=true;a.cool=16;}
-        else if(r<.55){if(dist>36){if(dir>0)o.right=true;else o.left=true;}else{o.punch=true;a.cool=12*d.freq;}}
-        else if(r<.8&&dist<65){o.kick=true;a.cool=22*d.freq;}
-        else{o.block=true;a.cool=14;}}
+    a.step=Math.trunc(a.step);a.retreat=Math.trunc(a.retreat); /* passi in numero intero di fotogrammi */
+    if(a.retreat>0){a.retreat--;away();}
+    else if(a.step<0){a.step++;away();}
+    else if(a.step>0){a.step--;toward();}
+    // SPECIALE quando è carica e l'avversario è a tiro
+    else if(this.specialReady&&a.cool<=0&&dist<sRange&&opp.state!=='ko'&&Math.random()<.5){o.special=true;a.cool=36*d.freq;}
+    // l'avversario attacca da vicino: para, schiva indietro o salta
+    else if(opp.state==='attack'&&opp.cur&&dist<Math.max(rMax,70)&&Math.random()<(defensive?.5:.25)){
+      const r=Math.random();if(r<.6)o.block=true;else if(r<.85)a.retreat=12;else{o.up=true;toward();}}
+    else if(ranged){
+      /* armi da fuoco: sta a media distanza (si avvicina e si allontana), spara e da vicino usa il colpo corto */
+      if(a.pd===undefined||Math.random()<.004)a.pd=90+Math.random()*130;
+      if(a.cool<=0&&dist<=rMax&&(dist<a.pd+60||Math.random()<.3)){attack();}
+      else if(dist>a.pd+30)toward();
+      else if(dist<a.pd-50&&a.cool>0&&Math.random()<.06)a.retreat=14;
+      else if(oppVel<-1.5)toward();
+    }
+    else if(dist>rMax){
+      /* fuori portata: si avvicina; se l'avversario scappa insegue; ogni tanto salto in avanti */
+      toward();
+      if(a.cool<=0&&a.jumpAtk<=0&&dist<rMax+90&&Math.random()<.02){o.up=true;o.kick=true;a.jumpAtk=50;a.cool=26*d.freq;}
+    }
+    else{
+      /* a portata */
+      if(a.cool<=0){
+        if(defensive&&oppVel>1&&Math.random()<.4){a.retreat=14;}
+        else if(!attack()){toward();}
+      }else{
+        /* tra un colpo e l'altro: piccoli passi avanti e indietro, reagendo all'avversario */
+        if(oppVel>1.5&&Math.random()<.06)a.step=-(8+Math.random()*10);
+        else if(oppVel<-1.5)toward();
+        else if(Math.random()<.04)a.step=Math.random()<.5?-(6+Math.random()*8):(6+Math.random()*8);
+        if(dist>rMin)toward();
+      }
     }
     if(a.jumpAtk>0)a.jumpAtk--;
     this.aiOut=o;
