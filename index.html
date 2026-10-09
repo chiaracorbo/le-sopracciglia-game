@@ -190,7 +190,11 @@
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     padding: max(40px, calc(env(safe-area-inset-top) + 34px)) max(20px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) 8px;
     gap: min(5vh, 26px);
+    /* se lo schermo è troppo basso la colonna scorre con il dito (centrata quando c'è spazio) */
+    justify-content: flex-start; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
   }
+  .hs-right > :first-child { margin-top: auto; }
+  .hs-right > :last-child { margin-bottom: auto; }
   .hs-title {
     margin: 0; text-align: center; color: #FFC107; text-transform: uppercase;
     font-family: 'Arial Black', 'Helvetica Neue', Impact, sans-serif; font-weight: 900;
@@ -212,6 +216,18 @@
     .hs-btn.hs-btn-sm { min-height: 40px !important; }
     #hb-diff, #hb-fx, #hb-vib { min-height: 34px !important; }
     .hs-opts { margin-top: -2px; }
+  }
+  /* schermi molto bassi (telefono con le barre del browser): ancora più compatta */
+  @media (max-height: 340px) {
+    .hs-right { gap: 6px !important; padding-top: max(10px, env(safe-area-inset-top)) !important; padding-bottom: 6px !important;
+      padding-right: max(64px, calc(env(safe-area-inset-right) + 58px)) !important; } /* spazio per il pulsante ♪ */
+    .hs-title { font-size: min(3.6vw, 9vh) !important; }
+    .hs-sub { margin: 0 !important; }
+    .hs-menu { gap: 6px !important; }
+    .hs-btn { min-height: 42px !important; }
+    .hs-btn.hs-btn-sm { min-height: 36px !important; }
+    .hs-opts { margin-top: 0; column-gap: 14px; }
+    #hb-diff, #hb-fx, #hb-vib { min-height: 32px !important; font-size: 12px !important; }
   }
   /* proposta di allenamento alla prima apertura */
   #tr-offer { display: none; position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,.72);
@@ -4009,7 +4025,7 @@ requestAnimationFrame(loop);
   },80);
 
   updateOverlay();
-  document.addEventListener('touchmove', function(e){ if(e.target.closest&&e.target.closest('#ss-thumbs,#ss-panel'))return; e.preventDefault(); },{passive:false});
+  document.addEventListener('touchmove', function(e){ if(e.target.closest&&e.target.closest('#ss-thumbs,#ss-panel,.hs-right'))return; e.preventDefault(); },{passive:false});
 
 })();
 
