@@ -685,8 +685,8 @@ const DIFFS={
      jump: salta i proiettili · err: errori voluti · adapt: para di più contro chi attacca a raffica */
   facile:   {label:'FACILE',   hp:1,  freq:1.4, parry:0,  grab:.3, esc:.15, pun:.3,  react:22, punish:.2,  wait:.15, jump:0,   err:.2,  adapt:.2},
   normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.35, pun:.6,  react:18, punish:.45, wait:.3,  jump:0,   err:.1,  adapt:.4},
-  difficile:{label:'DIFFICILE',hp:1,  freq:.7,  parry:.4, grab:.7, esc:.55, pun:.85, react:14, punish:.7,  wait:.45, jump:.5,  err:.05, adapt:.6},
-  boss:     {label:'BOSS',     hp:1.2,freq:.55, parry:.6, grab:.7, esc:.7,  pun:1,   react:11, punish:.95, wait:.6,  jump:.75, err:0,   adapt:.8},
+  difficile:{label:'DIFFICILE',hp:1,  freq:.7,  parry:.4, grab:.7, esc:.55, pun:.85, react:14, punish:.7,  wait:.45, jump:.5,  err:.05, adapt:.6, airk:.4},
+  boss:     {label:'BOSS',     hp:1.2,freq:.55, parry:.6, grab:.7, esc:.7,  pun:1,   react:11, punish:.95, wait:.6,  jump:.75, err:0,   adapt:.8, airk:.55},
 };
 /* danno scalato nelle combo lunghe: in base ai colpi già entrati (1° 100%, 2° 100%, 3° 80% … dal 7° 40%) */
 const COMBO_SCALE=[1,1,.8,.7,.6,.5,.4],COMBO_WIN=45;
@@ -833,10 +833,14 @@ class Fighter{
 
     if(this.state==='attack'){
       // cancel normale → special se secondo tasto arriva subito dopo
-      if(this.moveFr<=4&&this.cur&&this.cur.key!=='special'&&this.cur.key!=='grab'&&
+      if(this.moveFr<=4&&this.cur&&this.cur.key!=='special'&&this.cur.key!=='grab'&&this.cur.key!=='jkick'&&
         ((this.cur.key==='punch'&&i.kickP)||(this.cur.key==='kick'&&i.punchP)||i.specialP))
         this.attemptSpecial(opp,true);
       /* PUGNO appena partito + PARATA subito dopo (due dita non perfettamente insieme) = presa */
+      if(this.cur&&this.cur.key==='jkick'&&!this.onGround()){
+        this.x+=this.cur.airVX;
+        let y=this.y,vy=this.vy,t=0;while(y<GROUND&&t<120){vy+=0.6;y+=vy;t++;}
+        const aE=this.cur.startup+this.cur.active;this.cur.recovery=Math.max(aE,this.moveFr+1+t)+4-aE;}
       if(this.cur&&this.cur.key==='punch'&&this.moveFr<=3&&this.tryGrab(i,opp)){}
       else if(this.cur&&this.cur.key==='grab')this.grabStep(opp);
       else this.advanceAttack(opp);
@@ -865,6 +869,8 @@ class Fighter{
           if(i.left)this.x-=this.cfg.speed*0.8;
           if(i.right)this.x+=this.cfg.speed*0.8;
           this.state='jump';
+          /* ATTACCO IN SALTO: CALCIO in aria, uno solo per salto */
+          if(i.kickP&&!this.airAtk&&(this.ctrl!=='cpu'||(this.aiDiff&&this.aiDiff.airk)))this.startAirKick(i); /* CPU: solo Difficile e Boss */
         }
         // attacchi (solo a terra, non in crouch)
         if(this.onGround()&&!i.down&&this.jumpSquat===0){
@@ -876,10 +882,22 @@ class Fighter{
       }
     }
     if(!this.onGround()){this.vy+=0.6;const wasAir=this.y<GROUND;this.y=Math.min(GROUND,this.y+this.vy);
-      if(wasAir&&this.onGround()){dust(this.x,GROUND,7,true);if(this.state==='jump')this.state='idle';}}
+      if(wasAir&&this.onGround()){dust(this.x,GROUND,7,true);if(this.state==='jump')this.state='idle';
+        this.airAtk=false;
+        if(this.state==='attack'&&this.cur&&this.cur.key==='jkick'){const aE=this.cur.startup+this.cur.active;
+          this.moveFr=Math.max(this.moveFr,aE);this.cur.recovery=this.moveFr-aE+4;}}}
     this.x=clamp(this.x,this.half+4,W-this.half-4);
   }
 
+  /* ---- ATTACCO IN SALTO: fotogrammi attivi dell'attacco 2, avvio 6, attivo 6, 80% del danno dell'attacco 2 ---- */
+  startAirKick(i){
+    const k={...MOVES.kick,...((this.cfg.moves&&this.cfg.moves.kick)||{})};
+    let dmg=this.cfg.kickDmg||k.dmg;if(k.shots)dmg=k.shotDmg||dmg;
+    if(this.exo>0&&this.cfg.exoMove)dmg=this.cfg.exoMove.dmg;
+    this.state='attack';this.hitConsumed=false;this.moveFr=0;this.blockStreak=0;this.airAtk=true;this.inBuf=0;
+    this.cur={key:'jkick',startup:6,active:6,recovery:30,lag:0,dmg:dmg*.8,kb:k.kb||12,range:40,hh:40,yFrac:.3,
+      airVX:(i.left?-1:i.right?1:0)*this.cfg.speed*0.8};
+    sfx.whoosh();}
   /* ---- PRESA: PUGNO + PARATA insieme, a terra, corpi a max 30 px ---- */
   tryGrab(i,opp){
     if(!((i.punchP&&i.block)||(i.blockP&&i.punch)))return false;
@@ -1121,6 +1139,7 @@ class Fighter{
     if(m.sType==='grab'){reach=m.s.reach*Math.min(1,(this.moveFr-m.startup+1)/m.active);hh=30;}
     let hb;
     if(m.sType==='spin'){const r=m.s.r;hb={x:this.x-r,y:this.y-this.cfg.h*0.9,w:r*2,h:this.cfg.h*0.9};}
+    else if(m.key==='jkick'){const w=this.half+m.range;hb={x:this.facing>0?this.x:this.x-w,y:this.y-this.cfg.h*.5,w,h:this.cfg.h*.5+28};}
     else hb={x:this.facing>0?this.x+this.half-6:this.x-this.half+6-reach,
       y:this.y-this.cfg.h*m.yFrac-hh/2,w:reach,h:hh};
     if(opp.state!=='ko'&&aabb(hb,opp.hurtbox())){
@@ -1132,7 +1151,7 @@ class Fighter{
         fxBurst(opp.x,opp.y-opp.cfg.h*0.6,m.s.fx,8);
         return;}
       this.hitConsumed=true;
-      if(m.key==='punch'||m.key==='kick'||m.sType==='flurry')meleeFX(this,opp,m.key);
+      if(m.key==='punch'||m.key==='kick'||m.key==='jkick'||m.sType==='flurry')meleeFX(this,opp,m.key==='jkick'?'kick':m.key);
       if(m.s&&m.s.chainsaw)blood(opp.x,opp.y-opp.cfg.h*.5,3);
       let dmgBase=m.dmg;
       if(m.key==='special'&&m.s.airDmg&&!opp.onGround())dmgBase=m.s.airDmg;
@@ -1189,7 +1208,7 @@ class Fighter{
       return;}
     /* categoria del colpo per la micro-pausa: le speciali a più colpi pesano come un attacco 1 a ogni colpo */
     const am2=attacker&&attacker.cur,multi=sp&&am2&&am2.s&&(am2.s.every||['clones','pump3','barrage','axegun'].includes(am2.sType)),
-      hsCat=isGrab?'grab':sp?(multi?'punch':'special'):isProj?'proj':(attacker&&attacker.exo>0)||(am2&&am2.key==='kick')?'kick':'punch';
+      hsCat=isGrab?'grab':sp?(multi?'punch':'special'):isProj?'proj':(attacker&&attacker.exo>0)||(am2&&(am2.key==='kick'||am2.key==='jkick'))?'kick':'punch';
     if(!isGrab&&this.blockHeld&&this.state!=='attack'){blocked=true;setHitstop(HITSTOP.blocked,this,attacker);
       if(game.mode===4&&this===game.p[0])trainEv('block');
       /* parata: nessun danno, tranne le speciali che passano al 10% (senza mandare K.O.) */
@@ -1240,6 +1259,11 @@ class Fighter{
     const o={left:false,right:false,up:false,down:false,punch:false,kick:false,block:false,special:false};
     const hpr=this.hp/this.maxHp,ohpr=opp.hp/opp.maxHp;
     const sType=this.cfg.special.type;
+    /* attacco in salto (Difficile, Boss): decide una volta per salto, se salta in avanti; colpisce scendendo, da vicino */
+    if(!this.onGround()&&this.state!=='attack'){
+      if(a.airPlan===undefined){const fw=this.input&&((dir>0&&this.input.right)||(dir<0&&this.input.left));a.airPlan=!!fw&&Math.random()<(d.airk||0);}
+      if(a.airPlan&&!this.airAtk&&this.vy>-3&&dist<70){o.kick=!this.prev.kick;if(dir>0)o.right=true;else o.left=true;this.aiOut=o;return;}}
+    else if(this.onGround())a.airPlan=undefined;
     /* afferrata: se ha deciso di liberarsi preme PUGNO + PARATA al 3° fotogramma della presa */
     if(opp.grabbed===this){if(a.escGrab&&opp.grabT===2){o.punch=true;o.block=true;}this.aiOut=o;return;}
     /* presa a vuoto dell'avversario: decide una volta sola se punirla, poi si avvicina e colpisce con l'attacco 1 */
@@ -1696,6 +1720,12 @@ function spritePoint(f,px,py){const S=SPRITE_CHARS[f.cfg.id];
 function spriteFrame(f,S){
   const A=S.anims;let key,fi=0;
   if(f.state==='ko')key='ko';
+  else if(f.state==='attack'&&f.cur&&f.cur.key==='jkick'){
+    let k='kick';if(f.exo>0&&S.exoMap&&S.exoMap.kick&&A[S.exoMap.kick])k=S.exoMap.kick;
+    const a=A[k]||A.kick,g=a.tl&&a.tl.find(x=>x.to==='a'),f0=g?g.f0:(a.hit||0),f1=g?g.f1:(a.hit||0)+(a.act||1)-1,m=f.cur;
+    const fi=f.moveFr<m.startup?Math.max(0,f0-1):Math.min(f1,f0+Math.floor((f.moveFr-m.startup)/m.active*(f1-f0+1)));
+    if(f._sk!=='jkick'){f._sk='jkick';f._st0=f.animT;}
+    return {a,fi:Math.max(0,Math.min(a.n-1,fi)),bob:0};}
   else if(f.state==='attack'&&f.cur)key=f.cur.key==='grab'?'kick':f.cur.key;
   else if(f.state==='hitstun')key='hurt';
   else if(f.state==='block')key='block';
