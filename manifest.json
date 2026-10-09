@@ -1,7 +1,7 @@
 {
   "name": "Le Sopracciglia della Guerra",
   "short_name": "Sopracciglia",
-  "description": "Arena Combat — Metal Slug Edition. Gioco di combattimento mobile.",
+  "description": "Arena Combat. Gioco di combattimento mobile.",
   "start_url": "./",
   "display": "fullscreen",
   "orientation": "landscape",

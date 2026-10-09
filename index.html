@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Le Sopracciglia della Guerra: Arena Combat — Metal Slug Edition</title>
+<title>Le Sopracciglia della Guerra: Arena Combat</title>
 <style>
   /* ===== BASE ===== */
   *, *::before, *::after { box-sizing: border-box; }
@@ -452,7 +452,7 @@
     <div class="ab" id="ab-p"><span class="ic">👊</span>PUGNO</div>
     <div class="ab" id="ab-k"><span class="ic">🦵</span>CALCIO</div>
     <div class="ab" id="ab-b"><span class="ic">🛡</span>PARATA</div>
-    <div class="ab" id="ab-s"><span class="ic">⚡</span>SPECIAL</div>
+    <div class="ab" id="ab-s"><span class="ic">⚡</span>SPECIALE</div>
   </div>
 </div>
 
@@ -811,7 +811,7 @@ class Fighter{
   gainMeter(v){const was=this.specialReady;
     this.meter=clamp(this.meter+v,0,METER_MAX);
     if(!was&&this.specialReady){sfx.ready();this.readyPing=true;
-      ftext(this.x,this.y-this.cfg.h-16,'SPECIAL PRONTA!',this.cfg.brow,9);}}
+      ftext(this.x,this.y-this.cfg.h-16,'SPECIALE PRONTA!',this.cfg.brow,9);}}
 
   update(opp){
     this.animT++;
@@ -3203,7 +3203,7 @@ function drawHUD0(){
   outlineText(game.timer,W/2,top+u(26),u(28),'#F5F0E1');
   if(game.mode===3&&game.tournament)
     outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,top+u(44),u(13),'#FF8C00');
-  if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIAL quando la barra gialla \u00E8 piena',W/2,H-u(6),u(12),'rgba(245,240,225,.45)');
+  if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIALE quando la barra gialla \u00E8 piena',W/2,H-u(6),u(12),'rgba(245,240,225,.45)');
 }
 
 function draw(){
@@ -3231,7 +3231,6 @@ function drawTitle(){
   outlineText('LE SOPRACCIGLIA',W/2,140,38,'#FFD700');
   outlineText('DELLA GUERRA',W/2,185,38,'#FFD700');
   text('A R E N A   C O M B A T',W/2,218,16,'#DC143C');
-  text('\u2014 METAL SLUG EDITION \u2014',W/2,240,11,'#FF8C00');
   text('Dal racconto corale dell\u2019ufficio di Siena',W/2,262,11,'#B7A98C');
   if(frame%60<40){outlineText('[1] GIOCATORE vs CPU',W/2,312,15,'#F5F0E1');
     outlineText('[2] GIOCATORI',W/2,336,15,'#F5F0E1');
@@ -3239,7 +3238,7 @@ function drawTitle(){
   outlineText('[D] Difficolt\u00E0 CPU: '+DIFFS[game.difficulty].label,W/2,384,12,game.difficulty==='difficile'?'#FF4136':game.difficulty==='facile'?'#2ECC40':'#F5F0E1');
   text('P1: frecce + Z pugno / X calcio / C parata / SPAZIO special',W/2,406,10,'#8A7E68');
   text('P2: WASD + L pugno / K calcio / J parata / I special',W/2,422,10,'#8A7E68');
-  text('SPECIAL = Pugno+Calcio INSIEME quando la barra gialla supera la tacca',W/2,444,10,'#FFD700');
+  text('SPECIALE = Pugno+Calcio INSIEME quando la barra gialla supera la tacca',W/2,444,10,'#FFD700');
   text('PARRY: tocca la parata un istante prima dell\u2019impatto \u2192 stordisce 2s  \u2022  [M] musica on/off',W/2,460,9,'#8A7E68');
 }
 
@@ -3256,7 +3255,7 @@ function drawSelect(){
   });
   const cur=ROSTER[game.sel[game.pickTurn]],s=cur.special;
   outlineText(cur.name+' \u2014 '+cur.title,W/2,gy+2*(cs+34)+22,14,cur.ui||cur.brow);
-  text('SPECIAL: '+s.name+'  ('+s.dmg+' dmg \u2022 costo '+s.cost+' \u2022 CD '+(s.cd/60).toFixed(1)+'s)   |   HP '+cur.hp+'  VEL '+Math.round(cur.speed*2)+'  POT '+cur.power+'  DEF '+cur.def,W/2,gy+2*(cs+34)+42,10,'#B7A98C');
+  text('SPECIALE: '+s.name+'  ('+s.dmg+' dmg \u2022 costo '+s.cost+' \u2022 CD '+(s.cd/60).toFixed(1)+'s)   |   HP '+cur.hp+'  VEL '+Math.round(cur.speed*2)+'  POT '+cur.power+'  DEF '+cur.def,W/2,gy+2*(cs+34)+42,10,'#B7A98C');
   const hint1=game.mode===2?'P2: scegli il tuo lottatore (L o Z conferma \u2022 R casuale)':'Scegli l\u2019AVVERSARIO della CPU (Z conferma \u2022 R casuale \u2022 ESC indietro)';
   const hint0=game.mode===3?'TORNEO: scegli il tuo CAMPIONE (Z conferma \u2022 R casuale)':'P1: scegli il tuo lottatore (Z conferma \u2022 R casuale)';
   if(!IS_MOBILE)text(game.pickTurn===0?hint0:hint1,W/2,H-12,11,game.pickTurn===0?(game.mode===3?'#FF8C00':'#FFD700'):'#DC143C');
@@ -3609,7 +3608,7 @@ function drawVictory(){
 
   if(lost){
     // === SCHERMATA SCONFITTA (invariata, semplice) ===
-    STAGES[game.stage].draw(camX);
+    if(!drawBg(game.bg))STAGES[game.stage].draw(camX); /* sfondo dell'incontro appena giocato */
     drawFighter(wf);
     ctx.fillStyle='rgba(40,0,0,.68)';ctx.fillRect(0,0,W,H);
     outlineText('SCONFITTA',W/2,130,44,'#FF4136');
@@ -3670,7 +3669,8 @@ function drawVictory(){
   /* misure del contenuto (titolo e frase vanno a capo): il riquadro si allunga quanto serve */
   const wrapN=(txt,font,maxW)=>{ctx.font=font;const out=[];let ln='';for(const w of txt.split(' ')){const t2=ln?ln+' '+w:w;if(ctx.measureText(t2).width>maxW&&ln){out.push(ln);ln=w;}else ln=t2;}out.push(ln);return out;};
   const tLines=wrapN(wf.cfg.title,'italic '+fsTitle+'px monospace',pw-28),tLh=Math.round(fsTitle*1.2),tEx=(tLines.length-1)*tLh;
-  const qN=wrapN('\u201C'+vcfg.quote+'\u201D','italic '+fsQuote+'px monospace',pw-28).length,qLh=Math.round(fsQuote*1.3);
+  const bookQuote=(SEL_INFO[wf.cfg.id]&&SEL_INFO[wf.cfg.id][1])||vcfg.quote; /* citazione del libro */
+  const qN=wrapN('\u201C'+bookQuote+'\u201D','italic '+fsQuote+'px monospace',pw-28).length,qLh=Math.round(fsQuote*1.3);
   const Rt=game.tournament,statN=1+(wf.combo>1?1:0)+(game.mode===3&&Rt?1:0);
   const contentEnd=84+fsTitle*.6+tEx+fsStat+4+(fsStat+5)*statN+fsQuote+8+(qN-1)*qLh+12;
   const ph=Math.max(H*.58,contentEnd+(game.mode===3&&Rt?58:0));
@@ -3711,7 +3711,7 @@ function drawVictory(){
   if(textT>0){
     ctx.save();ctx.globalAlpha=textT*.9;
     ctx.font='italic '+fsQuote+'px monospace';ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
-    wrapText('\u201C'+vcfg.quote+'\u201D',px2+pw/2,sy+sl*sn+fsQuote+8,pw-28,Math.round(fsQuote*1.3));
+    wrapText('\u201C'+bookQuote+'\u201D',px2+pw/2,sy+sl*sn+fsQuote+8,pw-28,Math.round(fsQuote*1.3));
     ctx.restore();}
 
   // TORNEO: prossimo sfidante
@@ -3727,8 +3727,8 @@ function drawVictory(){
   const pTxt=IS_MOBILE?(game.mode===3&&R&&R.idx<R.order.length-1?'Tocca per il prossimo incontro':'Tocca per una nuova sfida'):(game.mode===3&&R&&R.idx<R.order.length-1?'[INVIO] prossimo incontro   [ESC] abbandona':'[INVIO] nuova sfida   [ESC] titolo');
   ctx.globalAlpha=promptA;text(pTxt,W/2,H-10,fsPrompt,'#B7A98C');ctx.globalAlpha=1;
 
-  // screen flash all'inizio (0-10fr)
-  if(t<10){ctx.globalAlpha=(1-t/10)*.85;ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;}
+  // lampo all'ingresso nella schermata: passa da flash() (limite di frequenza e opzione "Riduci lampi")
+  if(game._vfWinner!==wf){game._vfWinner=wf;flash(2);}
 }
 function wrapText(t,x,y,maxW,lh){
   const words=t.split(' ');let line='',yy=y;
