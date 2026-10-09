@@ -2864,36 +2864,65 @@ function drawPortrait(cfg,x,y,s){
 }
 
 function drawHUD(){fullView(drawHUD0);}
+/* miniature dei personaggi per l'HUD (le stesse della schermata di selezione) */
+const HUD_THUMB={};
+/* zone occupate dai pulsanti "✕ Menu" e "♪" (in px dello schermo), ricalcolate ogni mezzo secondo */
+let _hudZ={key:''};
+function hudZones(){
+  const r=cv.getBoundingClientRect(),key=r.width+'x'+r.height+':'+game.state+':'+Math.floor(frame/30);
+  if(_hudZ.key===key)return _hudZ;
+  const vis=id=>{const e=document.getElementById(id);if(!e)return null;const b=e.getBoundingClientRect();return b.width>0?b:null;};
+  const esc=vis('m-esc'),mus=vis('m-music');
+  _hudZ={key,cv:r,left:esc?esc.right-r.left+8:12,right:mus?r.right-mus.left+8:12};
+  return _hudZ;}
+/* fulmine della speciale: grigio, giallo acceso e luminoso quando è pronta */
+function hudBolt(x,y,sz,on){
+  const p=[[.55,0],[.1,.55],[.45,.55],[.3,1],[.9,.4],[.55,.4],[.75,0]];
+  ctx.save();if(on){ctx.shadowColor='#FFE94A';ctx.shadowBlur=sz*(.6+.4*Math.sin(frame*.2));}
+  ctx.beginPath();p.forEach((q,i)=>{const X=x+q[0]*sz*.75,Y=y+q[1]*sz;i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.closePath();
+  ctx.fillStyle=on?'#FFE94A':'#5A5040';ctx.fill();ctx.lineWidth=Math.max(1,sz*.08);ctx.strokeStyle=on?'#FFFFFF':'#2A2418';ctx.stroke();
+  ctx.restore();}
 function drawHUD0(){
-  const [a,b]=game.p;
+  const [a,b]=game.p,Z=hudZones();
+  /* k = pixel del canvas per ogni pixel dello schermo: misure e testi sono decisi in px reali (testi ≥ 12 px) */
+  const k=cv.width/(Z.cv.width||cv.width),u=v=>v*k;
+  const top=u(8),T=u(42),gap=u(6),barH=u(18),stH=u(4),spH=u(7),timerW=u(116);
+  const avail=(W-u(Z.left)-u(Z.right)-timerW)/2;
+  const bw=Math.max(u(90),Math.min(u(300),avail-T-gap));
   for(const[f,side]of[[a,0],[b,1]]){
-    const mg=Math.max(66,Math.round(118*W/(cv.clientWidth||W))),x=side===0?mg:W-mg-250,flip=side===1;
-    pxs(x-1,13,252,18,'#000');pxs(x,14,250,16,'#1A1A1A');
+    const flip=side===1,al=flip?'right':'left';
+    /* gruppo: [miniatura][barre] per il G1 (dopo il pulsante Menu), specchiato per il G2 */
+    const gx=flip?W-u(Z.right)-T-gap-bw:u(Z.left),tx=flip?gx+bw+gap:gx,bx=flip?gx:gx+T+gap;
+    const fill=(y,h,frac,col)=>{const w=Math.max(0,(bw-u(2))*frac);pxs(flip?bx+bw-u(1)-w:bx+u(1),y,w,h,col);return w;};
+    // miniatura
+    const th=HUD_THUMB[f.cfg.id],uc=f.cfg.ui||f.cfg.brow;
+    pxs(tx-u(2),top-u(2),T+u(4),T+u(4),uc);pxs(tx,top,T,T,'#1A1A1A');
+    if(th){ctx.imageSmoothingEnabled=false;ctx.drawImage(th,tx,top,T,T);}
+    // vita (alta il doppio)
+    pxs(bx-u(1),top-u(1),bw+u(2),barH+u(2),'#000');pxs(bx,top,bw,barH,'#1A1A1A');
     const r=f.hp/f.maxHp,col=r>.5?'#2ECC40':r>.25?'#FFDC00':'#FF4136';
-    const w=246*r;pxs(flip?x+2+246-w:x+2,16,w,12,col);
-    pxs(flip?x+2+246-w:x+2,16,w,4,lift(col,.4));
-    // stamina
-    pxs(x,33,250,7,'#0B3954');
-    const sw=246*f.stamina/100;pxs(flip?x+2+246-sw:x+2,34,sw,5,'#39CCCC');
-    // SPECIAL METER (giallo) con tacca del costo + cooldown
-    pxs(x,42,250,8,'#3A3000');
-    const cost=f.cfg.special.cost,ready=f.specialReady;
-    const mw=246*f.meter/METER_MAX;
-    pxs(flip?x+2+246-mw:x+2,43,mw,6,ready?(frame%20<10?'#FFFFFF':'#FFD700'):'#B89000');
-    const tk=246*cost/METER_MAX;
-    pxs(flip?x+2+246-tk:x+2+tk,42,2,8,'#F5F0E1');
-    if(f.cooldown>0){const cw=246*f.cooldown/f.cfg.special.cd;
-      ctx.globalAlpha=.55;pxs(flip?x+2+246-cw:x+2,43,cw,6,'#222');ctx.globalAlpha=1;
-      outlineText('RICARICA',flip?x+250:x,52,8,'#8A7E68',flip?'right':'left');}
-    else if(ready)outlineText('SPECIAL!',flip?x+250:x,52,8,'#FFD700',flip?'right':'left');
-    outlineText(f.cfg.name,flip?x+250:x,66,12,f.cfg.ui||f.cfg.brow,flip?'right':'left');
-    for(let i=0;i<2;i++)pxs(flip?x+250-12-i*14:x+i*14,71,10,6,game.wins[side]>i?'#FFD700':'#3A3A3A');
-    if(f.combo>1)outlineText(f.combo+' COMBO',flip?x+250:x,92,13,'#FFD700',flip?'right':'left');
+    fill(top+u(1),barH-u(2),r,col);fill(top+u(1),u(4),r,lift(col,.4));
+    let y=top+barH+u(3);
+    // resistenza: solo se sotto il 100%
+    if(f.stamina<100){pxs(bx,y,bw,stH,'#0B3954');fill(y+u(.5),stH-u(1),f.stamina/100,'#39CCCC');}
+    y+=stH+u(3);
+    // speciale: fulmine (lato esterno) + barra
+    const ready=f.specialReady,bolt=u(16),sbw=bw-bolt-u(4),sbx=flip?bx:bx+bolt+u(4);
+    pxs(sbx,y,sbw,spH,'#3A3000');
+    {const w=Math.max(0,(sbw-u(2))*f.meter/METER_MAX);pxs(flip?sbx+sbw-u(1)-w:sbx+u(1),y+u(1),w,spH-u(2),ready?(frame%20<10?'#FFFFFF':'#FFD700'):'#B89000');}
+    hudBolt(flip?bx+bw-bolt+u(2):bx,y-u(5),bolt,ready);
+    // nome e round vinti
+    const nameY=y+spH+u(15),fs=u(13);
+    outlineText(f.cfg.name,flip?bx+bw:bx,nameY,fs,uc,al);
+    ctx.font='bold '+fs+'px monospace';const nw=ctx.measureText(f.cfg.name).width;
+    for(let i=0;i<2;i++){const pw=u(10),px=flip?bx+bw-nw-u(8)-pw-i*u(13):bx+nw+u(8)+i*u(13);
+      pxs(px,nameY-u(9),pw,u(8),game.wins[side]>i?'#FFD700':'#3A3A3A');}
+    if(f.combo>1)outlineText(f.combo+' COMBO',flip?bx+bw:bx,nameY+u(18),u(14),'#FFD700',al);
   }
-  outlineText(game.timer,W/2,30,22,'#F5F0E1');
+  outlineText(game.timer,W/2,top+u(26),u(28),'#F5F0E1');
   if(game.mode===3&&game.tournament)
-    outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,46,10,'#FF8C00');
-  if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIAL quando la barra gialla \u00E8 piena',W/2,H-6,8.5,'rgba(245,240,225,.45)');
+    outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,top+u(44),u(13),'#FF8C00');
+  if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIAL quando la barra gialla \u00E8 piena',W/2,H-u(6),u(12),'rgba(245,240,225,.45)');
 }
 
 function draw(){
@@ -3663,7 +3692,7 @@ requestAnimationFrame(loop);
   }
   (function(){var row=document.getElementById('ss-thumbs');if(!row)return;
     ROSTER.forEach(function(c,i){var b=document.createElement('div');b.className='ss-th';b.title=c.name;
-      makeThumb(c.id,function(t){b.appendChild(t);});
+      makeThumb(c.id,function(t){b.appendChild(t);HUD_THUMB[c.id]=t;});
       b.addEventListener('click',function(){if(game.state!=='select')return;game.sel[game.pickTurn]=i;try{sfx.sel();}catch(_){}renderSelect();});
       row.appendChild(b);SS.th.push(b);});})();
   function hexA(h,a){h=(h||'#FFC107').replace('#','');var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return 'rgba('+r+','+g+','+b+','+a+')';}
