@@ -620,6 +620,10 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const rnd=(a,b)=>a+Math.random()*(b-a);
 function aabb(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
 let particles=[],projectiles=[],floatTexts=[],frameTimers=[];
+/* micro-pausa all'impatto per categoria (fotogrammi); 12 è il tetto massimo */
+const HITSTOP={punch:5,kick:8,special:12,blocked:3,proj:4,grab:10,max:12};
+let hsVictim=null,hsAttacker=null; /* durante la pausa chi viene colpito trema di 2 px, chi colpisce di 1 px */
+function setHitstop(v,victim,attacker){hitstop=Math.min(HITSTOP.max,Math.max(hitstop,v));hsVictim=victim;hsAttacker=attacker;}
 let shake=0,hitstop=0,frame=0,whiteFlash=0,specialBanner=null,specialCutIn=null,camX=0;
 let vcfxFrame=0;
 /* lampo bianco: al massimo uno ogni 20 fotogrammi (WCAG 2.3.1: non più di 3 al secondo); niente lampi con "Riduci lampi" */
@@ -1093,7 +1097,10 @@ class Fighter{
       ftext(attacker.x,attacker.y-attacker.cfg.h-14,'STORDITO!','#FF8C00',10);
       fxBurst(attacker.x,attacker.y-attacker.cfg.h*.8,'yellow',10);
       return;}
-    if(!isGrab&&this.blockHeld&&this.state!=='attack'){blocked=true;
+    /* categoria del colpo per la micro-pausa: le speciali a più colpi pesano come un attacco 1 a ogni colpo */
+    const am2=attacker&&attacker.cur,multi=sp&&am2&&am2.s&&(am2.s.every||['clones','pump3','barrage','axegun'].includes(am2.sType)),
+      hsCat=isGrab?'grab':sp?(multi?'punch':'special'):isProj?'proj':(attacker&&attacker.exo>0)||(am2&&am2.key==='kick')?'kick':'punch';
+    if(!isGrab&&this.blockHeld&&this.state!=='attack'){blocked=true;setHitstop(HITSTOP.blocked,this,attacker);
       /* parata: nessun danno, tranne le speciali che passano al 10% (senza mandare K.O.) */
       dmg=sp?raw*.1:0;
       this.blockFlash=8;this.gainMeter(2);this.blockStreak=(this.blockStreak||0)+1;
@@ -1116,7 +1123,7 @@ class Fighter{
       spark((this.x+attacker.x)/2,this.y-this.cfg.h*0.6,'#FFFF00',8,3);
       spark((this.x+attacker.x)/2,this.y-this.cfg.h*0.6,'#FFFFFF',4,2);
       (kb>12?sfx.kick:sfx.hit)();
-      hitstop=dmg>14?6:3;shake=Math.max(shake,Math.min(10,kb/4));}
+      setHitstop(HITSTOP[hsCat],this,attacker);shake=Math.max(shake,Math.min(10,kb/4));}
     this.hp=Math.max(blocked?Math.min(1,this.hp):0,this.hp-Math.round(dmg));
     this.x+=kb*attacker.facing*(blocked?0.4:1);
     if(!blocked)ftext(this.x,this.y-this.cfg.h-8,Math.round(dmg),'#FFF',10);
@@ -1597,11 +1604,16 @@ function spriteFrame(f,S){
   if(f.state==='ko')key='ko';
   else if(f.state==='attack'&&f.cur)key=f.cur.key==='grab'?'kick':f.cur.key;
   else if(f.state==='hitstun')key='hurt';
-  else if(f.state==='block'||f.state==='crouch')key='block';
+  else if(f.state==='block')key='block';
+  else if(f.state==='crouch')key='jump'; /* accovacciato: fotogramma "squat" del salto */
   else if(f.state==='jumpsquat'||f.state==='jump'||!f.onGround())key='jump';
   else if(f.state==='walk')key='walk';
   else key='idle';
   if(f.exo>0&&S.exoMap&&S.exoMap[key]&&A[S.exoMap[key]])key=S.exoMap[key];
+  /* camminata mancante (Luca di Mauro, forme grandi): posa di attesa con un dondolio di 2 px in base al passo */
+  let bob=0;
+  if(f.state==='walk'&&((key==='walk'&&!A.walk)||(f.exo>0&&S.exoMap&&key===S.exoMap.walk&&!/walk/i.test(key)))){
+    if(key==='walk')key='idle';bob=-Math.abs(Math.sin(f.x*.11))*2;}
   if(f._sk!==key){f._sk=key;f._st0=f.animT;f._sdur=f.hitstun+1;}
   const t=f.animT-f._st0,a=A[key]||A.idle,n=a.n;
   if(key==='special'&&a.teleport){
@@ -1631,7 +1643,7 @@ function spriteFrame(f,S){
   else if(key==='block'){const h=a.holdFrom;fi=Math.floor(t*a.fps/60);
     if(fi>=h)fi=h+Math.floor((t*8/60))%(n-h);}
   else if(key==='jump'){const j=a.jf;
-    if(f.state==='jumpsquat')fi=j.squat;
+    if(f.state==='jumpsquat'||f.state==='crouch')fi=j.squat;
     else if(f.vy<-2)fi=j.up;
     else if(f.vy<2)fi=j.peak;
     else fi=f.y>GROUND-30?j.land:j.down;
@@ -1642,7 +1654,7 @@ function spriteFrame(f,S){
     /* camminando all'indietro l'animazione va al contrario */
     if(key==='walk'&&f.input&&((f.facing>0&&f.input.left)||(f.facing<0&&f.input.right)))fi=n-1-fi;
   }
-  return {a,fi:Math.max(0,Math.min(n-1,fi))};
+  return {a,fi:Math.max(0,Math.min(n-1,fi)),bob};
 }
 
 const sprTint=document.createElement('canvas');const sprTctx=sprTint.getContext('2d');
@@ -1662,7 +1674,7 @@ function drawSpriteFrame(S,a,fi,x,y,sc,facing,flash){
 }
 function drawSpriteBody(f){
   const S=SPRITE_CHARS[f.cfg.id];if(!S)return false;
-  let {a,fi,alpha}=spriteFrame(f,S);
+  let {a,fi,alpha,bob}=spriteFrame(f,S);
   /* se questa animazione non è ancora arrivata usa la posa di attesa */
   if(!imgOk(S.img[a.file])){if(!imgOk(S.img.idle))return false;a=S.anims.idle;fi=Math.floor(f.animT*a.fps/60)%a.n;}
   if(f.state!=='ko'){const sw=(S.body.x1-S.body.x0)*S.scale*.42,lift=Math.max(0,GROUND-f.y);
@@ -1674,11 +1686,15 @@ function drawSpriteBody(f){
     ctx.globalAlpha=.18+.25*k;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.75,r,0,0,7);ctx.fill();
     ctx.globalAlpha=.25*k;ctx.fillStyle='#FFF3B0';ctx.beginPath();ctx.ellipse(g.x,g.y,r*.45,r*.7,0,0,7);ctx.fill();ctx.globalAlpha=1;}
   if(alpha!==undefined)ctx.globalAlpha=Math.max(0,alpha);
+  /* durante la micro-pausa: chi viene colpito trema di 2 px, chi colpisce di 1 px (le aree di colpo restano ferme) */
+  const hsAmp=hitstop>0?(f===hsVictim?2:f===hsAttacker?1:0):0;
+  if(hsAmp){ctx.save();ctx.translate(hitstop%2?hsAmp:-hsAmp,0);}
   const shakeX=(f.state==='attack'&&f.cur&&f.cur.s&&f.cur.s.chainsaw&&f.moveFr>=f.cur.startup&&f.moveFr<f.cur.startup+f.cur.active)?rnd(-2,2)
     :(f.state==='attack'&&f.cur&&f.cur.sType==='exo'&&f.cfg.exoTremble&&f.moveFr<f.cur.startup)?rnd(-3,3)*Math.min(1,f.moveFr/10):0;
   if(shakeX){ctx.save();ctx.translate(shakeX,rnd(-1,1));}
-  drawSpriteFrame(S,a,fi,f.x,f.y+((a.dy&&(a.dy[fi]||a.dy.all))||0)*(a.sc||S.scale),a.sc||S.scale,f.facing,f.flash>0);
+  drawSpriteFrame(S,a,fi,f.x,f.y+(bob||0)+((a.dy&&(a.dy[fi]||a.dy.all))||0)*(a.sc||S.scale),a.sc||S.scale,f.facing,f.flash>0);
   if(shakeX)ctx.restore();
+  if(hsAmp)ctx.restore();
   if(f.exo>0&&f.state!=='ko'){const hx=f.x,hy=f.y-f.cfg.h-18;
     ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(hx-26,hy-9,52,16);
     for(let i=0;i<3;i++){const on=i<f.exo,px=hx-17+i*17;
