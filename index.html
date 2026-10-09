@@ -1344,12 +1344,30 @@ class Fighter{
     if(a.lastOppX===undefined)a.lastOppX=opp.x;
     const oppVel=(opp.x-a.lastOppX)*-dir;a.lastOppX=opp.x;
     const fq=d.freq*(style==='aggr'?.75:1);
+
+    /* ---- DISTANZA BILANCIATA: niente avversario schiacciato all'angolo ---- */
+    /* spazio alle spalle dell'avversario (dal suo corpo al bordo dello schermo) */
+    const oppBack=dir>0?W-(opp.x+opp.half):opp.x-opp.half,oppCornered=oppBack<80;
+    if(a.cornerT===undefined){a.cornerT=0;a.release=0;a.advT=0;}
+    a.cornerT=oppCornered&&dist<110?a.cornerT+1:Math.max(0,a.cornerT-3);
+    /* dopo circa un secondo e mezzo di pressione all'angolo, la CPU lascia spazio e torna a metà distanza */
+    if(a.cornerT>90&&a.release<=0){a.release=45+Math.random()*30;a.cornerT=0;}
+    if(a.release>0&&this.state!=='attack'){a.release--;
+      if(dist<150&&!cornered)away();
+      if(dist>=150)a.release=0;
+      this.aiOut=o;return;}
+    /* se l'avversario avanza, la CPU fa un passo indietro (più spesso chi combatte a distanza, meno gli aggressivi) */
+    if(oppVel>.8&&!cornered&&dist<Math.max(rMax,70)+40&&this.state!=='attack'&&a.step>=0&&a.retreat<=0){
+      if(++a.advT>=8){a.advT=0;if(Math.random()<(style==='aggr'?.35:style==='range'?.8:.55))a.step=-(10+Math.random()*8);}}
+    else a.advT=0;
+    /* l'avversario indietreggia verso l'angolo: la CPU non lo insegue fino al bordo */
+    const noChase=oppCornered&&dist>=Math.min(rMax,90)&&dist<150;
     const attack=()=>{ /* sceglie un colpo che arriva davvero */
       const canP=dist<=rP,canK=dist<=rK;let k=null;
       if(canP&&canK)k=Math.random()<.55?'punch':'kick';else if(canP)k='punch';else if(canK)k='kick';
       if(!k)return false;
       press(k);a.cool=Math.max(a.cool,(k==='punch'?16:24)+Math.random()*10)*fq;
-      if(Math.random()<(style==='aggr'?.1:.35))a.step=-(10+Math.random()*12); /* dopo il colpo a volte esce di distanza */
+      if(Math.random()<(oppCornered?.7:style==='aggr'?.1:.35))a.step=-(10+Math.random()*12); /* dopo il colpo a volte esce di distanza (all'angolo quasi sempre) */
       return true;};
     const defensive=hpr<.35&&hpr<ohpr;
 
@@ -1371,8 +1389,9 @@ class Fighter{
       else if(dist<a.pd-60&&!cornered&&Math.random()<.08)a.retreat=12;
     }
     else if(dist>rMax){
-      /* fuori portata: si avvicina; ogni tanto salto in avanti */
-      toward();
+      /* fuori portata: si avvicina; ogni tanto salto in avanti. Se l'avversario è all'angolo non lo insegue:
+         aspetta e solo ogni tanto entra per attaccare */
+      if(!noChase)toward();else if(a.cool<=0&&Math.random()<.03)a.step=14+Math.random()*8;
       if(a.cool<=0&&a.jumpAtk<=0&&dist<rMax+90&&Math.random()<(style==='aggr'?.04:.02)){o.up=true;o.kick=true;a.jumpAtk=50;a.cool=26*d.freq;}
     }
     else{
@@ -1383,9 +1402,9 @@ class Fighter{
       }else{
         /* tra un colpo e l'altro: piccoli passi avanti e indietro (gli aggressivi restano addosso) */
         if(style!=='aggr'&&oppVel>1.5&&Math.random()<.06)a.step=-(8+Math.random()*10);
-        else if(oppVel<-1.5)toward();
+        else if(oppVel<-1.5&&!oppCornered)toward();
         else if(style!=='aggr'&&Math.random()<.04)a.step=Math.random()<.5?-(6+Math.random()*8):(6+Math.random()*8);
-        if(dist>rMin)toward();
+        if(dist>rMin&&!noChase)toward();
       }
     }
     if(a.jumpAtk>0)a.jumpAtk--;
