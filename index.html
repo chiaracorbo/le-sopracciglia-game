@@ -214,7 +214,6 @@
     .hs-menu { gap: 8px !important; }
     .hs-btn { min-height: 46px !important; }
     .hs-btn.hs-btn-sm { min-height: 40px !important; }
-    #hb-diff, #hb-fx, #hb-vib { min-height: 34px !important; }
     .hs-opts { margin-top: -2px; }
   }
   /* schermi molto bassi (telefono con le barre del browser): ancora più compatta */
@@ -227,8 +226,26 @@
     .hs-btn { min-height: 42px !important; }
     .hs-btn.hs-btn-sm { min-height: 36px !important; }
     .hs-opts { margin-top: 0; column-gap: 14px; }
-    #hb-diff, #hb-fx, #hb-vib { min-height: 32px !important; font-size: 12px !important; }
   }
+  /* home alta quanto la parte visibile dello schermo (esclude le barre del browser) */
+  @supports (height: 100dvh) { #home-screen { bottom: auto; height: 100dvh; } }
+  /* icona impostazioni in alto a sinistra */
+  #hb-set { position: absolute; z-index: 15; left: max(10px, env(safe-area-inset-left, 10px)); top: max(10px, env(safe-area-inset-top, 10px));
+    min-width: 52px; min-height: 44px; border-radius: 10px; background: rgba(10,7,3,0.82); border: 1.5px solid rgba(255,255,255,0.22);
+    color: #FFC107; font-size: 24px; line-height: 1; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  #hb-set.pressed, #hb-set:active { background: rgba(100,70,10,0.85); }
+  /* pannello impostazioni */
+  #set-pop { display: none; position: absolute; inset: 0; z-index: 25; background: rgba(0,0,0,.72); align-items: center; justify-content: center; }
+  #set-pop .set-box { width: min(88vw, 420px); max-height: 92%; overflow-y: auto; background: #120f22; border: 2px solid #FFC107; border-radius: 16px;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 0 30px rgba(255,193,7,.25);
+    font-family: 'Helvetica Neue', Arial, sans-serif; }
+  #set-pop .set-h { color: #FFC107; font-weight: 900; font-size: 16px; letter-spacing: .08em; text-align: center; margin-bottom: 2px; }
+  #set-pop #hb-diff, #set-pop #hb-fx, #set-pop #hb-vib { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    width: 100%; min-height: 48px; padding: 0 14px; border-radius: 10px; background: rgba(255,255,255,.06);
+    border: 1.5px solid rgba(255,255,255,.18); color: #fff; font-size: 16px !important; text-align: left; }
+  #set-pop #hb-diff-val, #set-pop #hb-fx-val, #set-pop #hb-vib-val { color: #FFC107; font-weight: 800; white-space: nowrap; }
+  #set-close { min-height: 44px; margin-top: 4px; border-radius: 10px; border: none; background: #FFC107; color: #1a1300;
+    font-weight: 900; font-size: 15px; letter-spacing: .06em; cursor: pointer; touch-action: manipulation; }
   /* proposta di allenamento alla prima apertura */
   #tr-offer { display: none; position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,.72);
     align-items: center; justify-content: center; }
@@ -338,11 +355,12 @@
 
   /* telefono in verticale: poster in alto, titolo e pulsanti sotto */
   @media (orientation: portrait) {
-    #home-screen { grid-template-columns: 1fr; grid-template-rows: 46% 54%; }
+    #home-screen { grid-template-columns: 1fr; grid-template-rows: 42% 58%; }
     .hs-poster { -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); }
     .hs-poster img { height: auto; width: 100%; left: 0; top: -4%; }
     .hs-title { font-size: 7.6vw; } .hs-sub { font-size: 3.8vw; }
-    .hs-btn { font-size: 5vw; min-height: 9vh; } #hb-diff, #hb-fx, #hb-vib { font-size: 3.6vw; }
+    .hs-btn { font-size: 5vw; min-height: 8vh; } .hs-btn.hs-btn-sm { font-size: 4.2vw; min-height: 6.5vh; }
+    .hs-right { padding-bottom: max(16px, env(safe-area-inset-bottom)) !important; }
   }
 </style>
 </head>
@@ -369,12 +387,16 @@
       <button class="hs-btn" id="hb-3">TORNEO</button>
       <button class="hs-btn hs-btn-sm" id="hb-4">ALLENAMENTO</button>
     </div>
-    <div class="hs-opts">
-      <button id="hb-diff">Difficoltà CPU: <span id="hb-diff-val">Normale</span></button>
-      <button id="hb-fx">Riduci lampi e tremolio: <span id="hb-fx-val">NO</span></button>
-      <button id="hb-vib">Vibrazione: <span id="hb-vib-val">SÌ</span></button>
-    </div>
   </div>
+  <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
+  <button id="hb-set" aria-label="Impostazioni">⚙</button>
+  <div id="set-pop"><div class="set-box">
+    <div class="set-h">IMPOSTAZIONI</div>
+    <button id="hb-diff"><span>Difficoltà CPU</span><span id="hb-diff-val">Normale</span></button>
+    <button id="hb-fx"><span>Riduci lampi e tremolio</span><span id="hb-fx-val">NO</span></button>
+    <button id="hb-vib"><span>Vibrazione</span><span id="hb-vib-val">SÌ</span></button>
+    <button id="set-close">CHIUDI</button>
+  </div></div>
 </div>
 
 <!-- SELEZIONE PERSONAGGIO -->
@@ -3826,6 +3848,7 @@ requestAnimationFrame(loop);
     sh('home-screen', s==='title'  ? 'grid' : 'none');
     var offered=false;try{offered=localStorage.getItem('trainOffered')==='1';}catch(e){offered=true;}
     sh('tr-offer', s==='title'&&!offered ? 'flex' : 'none');
+    if(s!=='title') sh('set-pop','none');
     document.body.classList.toggle('in-title', s==='title');
     sh('select-btns', 'none');
     sh('select-screen', s==='select' ? 'block' : 'none');
@@ -3983,6 +4006,13 @@ requestAnimationFrame(loop);
     try{sfx.ok();}catch(_){} updateOverlay();
   }
   _btn('hb-4', startTrainingSelect);
+  function showSettings(v){ var p=document.getElementById('set-pop'); if(p) p.style.display=v?'flex':'none'; }
+  _btn('hb-set', function(){ try{sfx.sel();}catch(_){} showSettings(true); });
+  _btn('set-close', function(){ try{sfx.sel();}catch(_){} showSettings(false); });
+  (function(){ var p=document.getElementById('set-pop'); if(!p)return;
+    /* tocco fuori dal riquadro: chiude */
+    p.addEventListener('click', function(e){ if(e.target===p) showSettings(false); });
+    p.addEventListener('touchend', function(e){ if(e.target===p){ e.preventDefault(); showSettings(false); } }, {passive:false}); })();
   _btn('tro-yes', startTrainingSelect);
   _btn('tro-no', function(){ try{localStorage.setItem('trainOffered','1');}catch(e){} try{sfx.sel();}catch(_){} updateOverlay(); });
   _btn('tr-skip', function(){ if(game.mode===4&&game.train&&!game.train.free){ try{sfx.sel();}catch(_){} trainNext(); } });
