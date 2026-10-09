@@ -683,10 +683,10 @@ const MOVES={
 const DIFFS={
   /* react: fotogrammi prima di "vedere" un attacco · punish: punisce dopo una parata · wait: attesa in parata
      jump: salta i proiettili · err: errori voluti · adapt: para di più contro chi attacca a raffica */
-  facile:   {label:'FACILE',   hp:1,  freq:1.4, parry:0,  grab:.3, esc:.15, pun:.3,  react:22, punish:.2,  wait:.15, jump:0,   err:.2,  adapt:.2},
-  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.35, pun:.6,  react:18, punish:.45, wait:.3,  jump:0,   err:.1,  adapt:.4},
-  difficile:{label:'DIFFICILE',hp:1,  freq:.7,  parry:.4, grab:.7, esc:.55, pun:.85, react:14, punish:.7,  wait:.45, jump:.5,  err:.05, adapt:.6, airk:.4},
-  boss:     {label:'BOSS',     hp:1.2,freq:.55, parry:.6, grab:.7, esc:.7,  pun:1,   react:11, punish:.95, wait:.6,  jump:.75, err:0,   adapt:.8, airk:.55},
+  facile:   {label:'FACILE',   hp:1,  freq:1.4, parry:0,  grab:0,  esc:.15, pun:.3,  react:22, punish:.2,  wait:.15, jump:0,   err:.2,  adapt:.2, pguard:0},
+  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.5,  pun:.6,  react:18, punish:.45, wait:.3,  jump:0,   err:.1,  adapt:.4, pguard:.25},
+  difficile:{label:'DIFFICILE',hp:1,  freq:.7,  parry:.3, grab:.7, esc:.55, pun:.85, react:14, punish:.6,  wait:.45, jump:.5,  err:.05, adapt:.6, airk:.4, pguard:.3},
+  boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.45,grab:.7, esc:.7,  pun:1,   react:11, punish:.8,  wait:.6,  jump:.75, err:0,   adapt:.8, airk:.55, pguard:.4},
 };
 /* danno scalato nelle combo lunghe: in base ai colpi già entrati (1° 100%, 2° 100%, 3° 80% … dal 7° 40%) */
 const COMBO_SCALE=[1,1,.8,.7,.6,.5,.4],COMBO_WIN=45;
@@ -1176,6 +1176,8 @@ class Fighter{
     if(this.invuln>0){ftext(this.x,this.y-this.cfg.h-10,'MISS!','#FFE94A',10);
       spark(this.x,this.y-this.cfg.h*.5,'#FFE94A',5,2);return;}
     const isGrab=!isProj&&attacker&&attacker.cur&&attacker.cur.key==='grab';
+    /* la CPU impara l'avvio di una mossa solo dopo averla subita o parata */
+    if(this.ctrl==='cpu'&&attacker&&attacker.state==='attack'&&attacker.cur&&!isGrab)(this.ai.knownSt=this.ai.knownSt||{})[attacker.cur.key]=attacker.cur.startup;
     raw*=this.defMod;
     const sp=fromSp!==undefined?!!fromSp:!!(attacker&&attacker.state==='attack'&&attacker.cur&&attacker.cur.key==='special');
     /* scala combo + bonus ×1.8 solo per i colpi della speciale stessa */
@@ -1310,7 +1312,27 @@ class Fighter{
       else{
         const opts=['punch','kick'].map(k=>{const m={...MOVES[k],...((this.cfg.moves&&this.cfg.moves[k])||{})};
           return {k,st:this.exo>0&&this.cfg.exoMove?this.cfg.exoMove.startup:m.startup,r:this.moveReach(k)};}).filter(c=>dist<=c.r).sort((x,y)=>x.st-y.st);
-        if(opts.length&&this.atkLag<=0&&!this.prev.punch&&!this.prev.kick){press(opts[0].k);a.cool=14*d.freq;a.waitT=0;a.guardT=0;this.aiOut=o;return;}}}}
+        /* da vicino, a volte la PRESA invece del colpo più rapido */
+        if(dist<=30&&opp.onGround()&&!this.prev.punch&&Math.random()<(d.grab||0)*.6){o.punch=true;o.block=true;a.cool=14*d.freq;a.waitT=0;a.guardT=0;a.pgT=0;this.aiOut=o;return;}
+        if(opts.length&&this.atkLag<=0&&!this.prev.punch&&!this.prev.kick){press(opts[0].k);a.pgT=0;a.cool=14*d.freq;a.waitT=0;a.guardT=0;this.aiOut=o;return;}}}}
+
+    /* GUARDIA PREVENTIVA: in guardia per previsione quando l'avversario è vicino (non per reazione) */
+    {const oR=Math.max(40,...['punch','kick'].map(k=>opp.moveReach(k)).filter(r=>r<=200));
+      const oRec=opp.state==='attack'&&opp.cur&&opp.moveFr>opp.cur.startup+opp.cur.active;
+      const stunned=this.hitstun>0||this.blockstun>0;
+      const stop=oRec||dist>oR+20||opp.state==='ko'||this.state==='attack'||!this.onGround();
+      if(a.pgT===undefined){a.pgT=0;a.pgNext=0;}
+      if(a.pgNext>0)a.pgNext--;
+      if(stunned)a.pgNext=0; /* decisione pronta per il primo fotogramma libero */
+      else if(stop)a.pgT=0;
+      else{
+        if(a.pgT<=0&&a.pgNext<=0){a.pgNext=20;if(Math.random()<Math.min(.9,(d.pguard||0)*(masher?1.5:1)))a.pgT=15+Math.random()*15;}
+        if(a.pgT>0){a.pgT--;
+          /* Boss: contro chi attacca a raffica, parry sulle mosse già subite o parate (avvio imparato - 3) */
+          const kst=oAtk&&a.knownSt&&a.knownSt[oAtk.key];
+          if((d.parry||0)>=.45&&masher&&kst&&oAtk!==a.pgParryOf&&opp.moveFr===Math.max(0,kst-3)&&this.parryCD<=0&&this.parryLock<=0){
+            a.pgParryOf=oAtk;if(Math.random()<d.parry*.5){a.parryHold=8;a.parryRel=true;}}
+          if(!(a.parryHold>0)){o.block=true;this.aiOut=o;return;}}}}
 
     /* attacco visto in tempo: para o fa parry (solo colpi non ancora andati a segno) */
     if(seen&&!a.reacted&&dist<Math.max(rMax,90)&&!(oAtk.key!=='special'&&opp.hitConsumed)){a.reacted=true;
