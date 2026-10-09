@@ -1244,7 +1244,12 @@ class Fighter{
       (kb>12?sfx.kick:sfx.hit)();
       setHitstop(HITSTOP[hsCat],this,attacker);shake=Math.max(shake,Math.min(10,kb/4));}
     this.hp=Math.max(blocked?Math.min(1,this.hp):0,this.hp-Math.round(dmg));
-    this.x+=kb*attacker.facing*(blocked?0.4:1);
+    /* spinta del colpo: se chi subisce è contro il bordo, la spinta persa va a chi attacca (indietro).
+       Sui colpi parati chi attacca arretra anche di 4 px per ogni parata di fila (max 20 px). Non per i proiettili. */
+    {const want=this.x+kb*attacker.facing*(blocked?0.4:1),nx=clamp(want,this.half+4,W-this.half-4);
+      this.x=nx;
+      if(!isProj){let back=Math.abs(want-nx);if(blocked)back+=4*Math.min(5,this.blockStreak||0);
+        if(back>0)attacker.x=clamp(attacker.x-attacker.facing*back,attacker.half+4,W-attacker.half-4);}}
     if(!blocked)ftext(this.x,this.y-this.cfg.h-8,Math.round(dmg),'#FFF',10);
     if(this.hp===0&&this.exo>0){this.exo=0;exoBreak(this);}
     if(this.hp===0){this.state='ko';this.vy=-7;this.hitstun=0;sfx.ko();shake=12;if(isP1(this,attacker))vib(60);
