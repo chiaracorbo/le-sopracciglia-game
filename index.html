@@ -784,7 +784,9 @@ class Fighter{
        per 8 fotogrammi e partono appena possibile */
     if(this.ctrl!=='cpu'){
       const fresh=i.specialP?'special':i.punchP?'punch':i.kickP?'kick':null;
-      const busy=k=>this.state==='attack'||this.state==='ko'||this.hitstun>0||this.blockstun>0||this.selfStun>0||
+      const busy=k=>(k==='kick'&&!this.onGround()&&!this.airAtk&&this.state!=='attack'&&this.hitstun<=0&&this.selfStun<=0)?false: /* in aria il CALCIO fa l'attacco in salto */
+        (k==='kick'&&i.upP&&this.onGround())|| /* CALCIO insieme al salto: parte appena si è in aria */
+        this.state==='attack'||this.state==='ko'||this.hitstun>0||this.blockstun>0||this.selfStun>0||
         !this.onGround()||this.jumpSquat>0||(this.atkLag>0&&k!=='special');
       if(fresh){this.inBuf=busy(fresh)?8:0;this.inBufKey=fresh;}
       else if(this.inBuf>0){if(!busy(this.inBufKey)){i[this.inBufKey+'P']=true;this.inBuf=0;}else this.inBuf--;}
@@ -885,7 +887,8 @@ class Fighter{
       if(wasAir&&this.onGround()){dust(this.x,GROUND,7,true);if(this.state==='jump')this.state='idle';
         this.airAtk=false;
         if(this.state==='attack'&&this.cur&&this.cur.key==='jkick'){const aE=this.cur.startup+this.cur.active;
-          this.moveFr=Math.max(this.moveFr,aE);this.cur.recovery=this.moveFr-aE+4;}}}
+          /* se atterra prima della fine della parte attiva, il colpo si completa a terra; poi 4 fotogrammi di recupero */
+          this.cur.recovery=Math.max(this.moveFr,aE)-aE+4;}}}
     this.x=clamp(this.x,this.half+4,W-this.half-4);
   }
 
