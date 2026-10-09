@@ -684,7 +684,7 @@ const DIFFS={
   /* react: fotogrammi prima di "vedere" un attacco · punish: punisce dopo una parata · wait: attesa in parata
      jump: salta i proiettili · err: errori voluti · adapt: para di più contro chi attacca a raffica */
   facile:   {label:'FACILE',   hp:1,  freq:1.4, parry:0,  grab:0,  esc:.15, pun:.3,  react:22, punish:.2,  wait:.15, jump:0,   err:.2,  adapt:.2, pguard:0},
-  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.5,  pun:.6,  react:18, punish:.45, wait:.3,  jump:0,   err:.1,  adapt:.4, pguard:.25},
+  normale:  {label:'NORMALE',  hp:1,  freq:1,   parry:.2, grab:.5, esc:.5,  pun:.6,  react:18, punish:.45, wait:.3,  jump:.3,   err:.1,  adapt:.4, pguard:.25},
   difficile:{label:'DIFFICILE',hp:1,  freq:.7,  parry:.3, grab:.7, esc:.55, pun:.85, react:14, punish:.6,  wait:.45, jump:.5,  err:.05, adapt:.6, airk:.4, pguard:.3},
   boss:     {label:'BOSS',     hp:1,  freq:.55, parry:.45,grab:.7, esc:.7,  pun:1,   react:11, punish:.8,  wait:.6,  jump:.75, err:0,   adapt:.8, airk:.55, pguard:.4},
 };
@@ -958,6 +958,8 @@ class Fighter{
   }
   startMove(key){
     const m=this.exo>0&&this.cfg.exoMove?{...MOVES.kick,...this.cfg.exoMove}:{...MOVES[key],...((this.cfg.moves&&this.cfg.moves[key])||{})};
+    /* un solo proiettile per personaggio: se un suo sparo normale è ancora sullo schermo, l'attacco con sparo non parte */
+    if(m.shots&&!(this.exo>0)&&projectiles.some(p=>p.owner===this&&p.normal))return;
     this.stamina=Math.max(0,this.stamina-m.stCost);
     this.state='attack';this.hitConsumed=false;this.moveFr=0;this.blockStreak=0;
     this.cur={key,...m,recovery:Math.round(m.recovery*this.cfg.recMod)};
@@ -1107,7 +1109,7 @@ class Fighter{
     /* il proiettile punta verso l'avversario (anche se è più in alto o più in basso) */
     if(pointBlank(this,p,opp,m.shotDmg,m.shotKb||5,big?7:4))return;
     const ty=opp.y-opp.cfg.h*.55,dx=Math.abs(opp.x-p.x)||1,vy=clamp((ty-p.y)/dx,-.25,.25)*m.shotSpd;
-    projectiles.push({x:p.x+this.facing*8,y:p.y,vx:this.facing*m.shotSpd,vy,w:big?20:12,h:big?7:4,dmg:m.shotDmg,
+    projectiles.push({normal:!(this.cur&&this.cur.key==='special'),x:p.x+this.facing*8,y:p.y,vx:this.facing*m.shotSpd,vy,w:big?20:12,h:big?7:4,dmg:m.shotDmg,
       kb:m.shotKb||5,life:90,owner:this,col:big?'#FFF3B0':(m.shotCol||'#FFE94A'),bigShot:big});}
   teleportStep(m,opp){
     const T=m.s,fr=this.moveFr,te=T.castFr+T.vanishFr;
@@ -1343,8 +1345,9 @@ class Fighter{
 
     /* PROIETTILI in arrivo: visti dopo d.react fotogrammi; salto in avanti (Difficile, Boss) o parata */
     {let th=null;for(const p of projectiles){if(p.owner!==opp)continue;const dd=(this.x-p.x)*Math.sign(p.vx);
-        if(dd>0&&dd<170){p._aiT=(p._aiT||0)+1;if(p._aiT>=(d.react||18)&&(!th||dd<th.dd))th={p,dd};}}
-      if(th){if(th.p._aiDec===undefined)th.p._aiDec=Math.random()<(d.jump||0)?'jump':Math.random()<.6?'block':'none';
+        /* il tempo di reazione parte quando vede lo sparo partire; decide quando il proiettile è a meno di 220 px */
+        if(dd>0){p._aiT=(p._aiT||0)+1;if(dd<220&&p._aiT>=(d.react||18)&&(!th||dd<th.dd))th={p,dd};}}
+      if(th){if(th.p._aiDec===undefined)th.p._aiDec=Math.random()<(d.jump||0)?'jump':(style!=='range'||Math.random()<.6)?'block':'none';
         if(th.p._aiDec==='jump'&&this.onGround()&&this.state!=='attack'){o.up=true;toward();this.aiOut=o;return;}
         if(th.p._aiDec==='block'){o.block=true;this.aiOut=o;return;}}}
 
@@ -1376,7 +1379,8 @@ class Fighter{
     if(a.cornerT===undefined){a.cornerT=0;a.release=0;a.advT=0;}
     a.cornerT=oppCornered&&dist<110?a.cornerT+1:Math.max(0,a.cornerT-3);
     /* dopo circa un secondo e mezzo di pressione all'angolo, la CPU lascia spazio e torna a metà distanza */
-    if(a.cornerT>90&&a.release<=0){a.release=45+Math.random()*30;a.cornerT=0;}
+    const oppRanged=opp.moveReach('punch')>200||opp.moveReach('kick')>200; /* l'avversario ha un attacco a distanza */
+    if(a.cornerT>90&&a.release<=0&&!oppRanged){a.release=45+Math.random()*30;a.cornerT=0;}
     if(a.release>0&&this.state!=='attack'){a.release--;
       if(dist<150&&!cornered)away();
       if(dist>=150)a.release=0;
@@ -1386,7 +1390,7 @@ class Fighter{
       if(++a.advT>=8){a.advT=0;if(Math.random()<(style==='aggr'?.35:style==='range'?.8:.55))a.step=-(10+Math.random()*8);}}
     else a.advT=0;
     /* l'avversario indietreggia verso l'angolo: la CPU non lo insegue fino al bordo */
-    const noChase=oppCornered&&dist>=Math.min(rMax,90)&&dist<150;
+    const noChase=!oppRanged&&oppCornered&&dist>=Math.min(rMax,90)&&dist<150;
     const attack=()=>{ /* sceglie un colpo che arriva davvero */
       const canP=dist<=rP,canK=dist<=rK;let k=null;
       if(canP&&canK)k=Math.random()<.55?'punch':'kick';else if(canP)k='punch';else if(canK)k='kick';
@@ -2099,7 +2103,7 @@ function shotgunBlast(f,p,opp,m){
   /* bossolo rosso che vola all'indietro */
   _padd({x:p.x-dir*40,y:p.y+6,vx:-dir*rnd(1.5,2.5),vy:-3,grav:.35,life:30,max:30,col:'#C0392B',sz:3});
   /* colpo invisibile che porta il danno (alto quanto la rosa, così prende anche chi si abbassa) */
-  if(!pointBlank(f,p,opp,m.shotDmg,m.shotKb||8,44))projectiles.push({x:p.x+dir*8,y:p.y,vx:dir*spd,vy:0,w:18,h:44,dmg:m.shotDmg,kb:m.shotKb||8,life:life+4,owner:f,col:'#000',hidden:true});
+  if(!pointBlank(f,p,opp,m.shotDmg,m.shotKb||8,44))projectiles.push({normal:!(f.cur&&f.cur.key==='special'),x:p.x+dir*8,y:p.y,vx:dir*spd,vy:0,w:18,h:44,dmg:m.shotDmg,kb:m.shotKb||8,life:life+4,owner:f,col:'#000',hidden:true});
   /* rosa di pallini: si allarga mentre viaggia verso l'avversario */
   const pel=[];for(let i=0;i<9;i++)pel.push({a:rnd(-.14,.14),s:spd*rnd(.9,1.1),c:i%3?'#FFD27A':'#FFFFFF'});
   fxObjs.push({t:0,life,draw(o){const k=o.t/o.life;
