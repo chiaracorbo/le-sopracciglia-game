@@ -144,7 +144,7 @@
   }
   .ab {
     position: absolute; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: min(2vh, 8px); letter-spacing: .03em;
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: max(10px, min(2vh, 8px)); letter-spacing: .03em;
     color: rgba(255,255,255,.8); -webkit-user-select: none; touch-action: none;
     background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.16), rgba(20,30,45,.45));
     border: 2px solid rgba(255,255,255,.4); box-shadow: 0 2px 10px rgba(0,0,0,.35);
@@ -154,7 +154,7 @@
   .ab.on { transform: scale(.92); background: radial-gradient(circle, rgba(255,255,255,.45), rgba(60,90,120,.55)); }
   #ab-s { width: 45%; height: 45%; right: 0; bottom: 0;
     background: radial-gradient(circle at 50% 40%, rgba(80,220,255,.55), rgba(0,90,150,.55)); border-color: rgba(125,249,255,.85);
-    box-shadow: 0 0 12px rgba(80,220,255,.4); font-size: min(2.1vh, 9px); }
+    box-shadow: 0 0 12px rgba(80,220,255,.4); font-size: max(10px, min(2.1vh, 9px)); }
   #ab-s .ic { font-size: min(6.5vh, 26px); }
   #ab-s.on { background: radial-gradient(circle, #7DF9FF, rgba(0,120,190,.75)); }
   /* misure in % del contenitore (min 142 px): PUGNO e CALCIO ≥ 58 px, PARATA = SPECIALE ≥ 64 px;
@@ -213,7 +213,7 @@
     .hs-right { gap: 8px !important; padding-top: max(30px, calc(env(safe-area-inset-top) + 24px)) !important; }
     .hs-menu { gap: 8px !important; }
     .hs-btn { min-height: 46px !important; }
-    .hs-btn.hs-btn-sm { min-height: 40px !important; }
+    .hs-btn.hs-btn-sm { min-height: 44px !important; }
     .hs-opts { margin-top: -2px; }
   }
   /* schermi molto bassi (telefono con le barre del browser): ancora più compatta */
@@ -223,8 +223,9 @@
     .hs-title { font-size: min(3.6vw, 9vh) !important; }
     .hs-sub { margin: 0 !important; }
     .hs-menu { gap: 6px !important; }
-    .hs-btn { min-height: 42px !important; }
-    .hs-btn.hs-btn-sm { min-height: 36px !important; }
+    .hs-btn { min-height: 44px !important; }
+    .hs-btn.hs-btn-sm { min-height: 44px !important; }
+    .hs-menu { gap: 4px !important; }
     .hs-opts { margin-top: 0; column-gap: 14px; }
   }
   /* home alta quanto la parte visibile dello schermo (esclude le barre del browser) */
@@ -269,7 +270,7 @@
   #tr-key { color: #7DF9FF; }
   #tr-dots { display: inline-block; vertical-align: middle; margin-top: 2px; font-size: 15px; letter-spacing: 4px; color: #FFC107; }
   #tr-skip { pointer-events: auto; margin: 2px 0 0 10px; vertical-align: middle; background: none; border: 1px solid rgba(255,255,255,.35); color: rgba(255,255,255,.75);
-    border-radius: 8px; font-size: 12px; min-height: 28px; padding: 0 10px; cursor: pointer; touch-action: manipulation; }
+    border-radius: 8px; font-size: 12px; min-height: 44px; padding: 0 12px; cursor: pointer; touch-action: manipulation; }
   /* pulsante da usare, evidenziato */
   .tr-hl { animation: trHl .8s ease-in-out infinite; }
   @keyframes trHl { 0%,100% { box-shadow: 0 0 0 3px rgba(255,193,7,.9), 0 0 10px rgba(255,193,7,.6); }
@@ -312,7 +313,7 @@
     color:#FFC107; font:900 min(2vw,4.4vh)/1 'Arial Black',Arial,sans-serif; letter-spacing:.04em; touch-action:manipulation; cursor:pointer; }
   #ss-head { position:absolute; z-index:2; top:max(14px,env(safe-area-inset-top)); left:0; right:0; text-align:center; pointer-events:none;
     font:900 min(2.6vw,5.4vh)/1.1 'Arial Black',Arial,sans-serif; color:#FFC107; letter-spacing:.05em; text-shadow:0 2px 0 #6b4800; }
-  #ss-head small { display:block; font:700 min(1.5vw,3.2vh) 'Helvetica Neue',Arial,sans-serif; color:rgba(255,255,255,.7); letter-spacing:.02em; margin-top:3px; text-shadow:none; }
+  #ss-head small { display:block; font:700 max(12px,min(1.5vw,3.2vh)) 'Helvetica Neue',Arial,sans-serif; color:rgba(255,255,255,.7); letter-spacing:.02em; margin-top:3px; text-shadow:none; }
   :root { --th: clamp(62px, 19vh, 96px); }
   #ss-stage { position:absolute; left:0; right:min(41vw,380px); top:11vh; bottom:calc(var(--th) + 6px);
     display:flex; align-items:flex-end; justify-content:center; pointer-events:none; }
@@ -325,12 +326,24 @@
   #ss-panel { position:absolute; z-index:2; right:max(12px,env(safe-area-inset-right)); top:max(62px,calc(env(safe-area-inset-top) + 56px));
     bottom:calc(var(--th) + 70px); width:min(41vw,370px); overflow-y:auto; touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:12px 14px; box-sizing:border-box;
     background:rgba(8,8,28,.72); border:1px solid rgba(255,255,255,.14); border-radius:12px; backdrop-filter:blur(3px); }
+  /* sfumatura in fondo al pannello: c'è altro da leggere scorrendo */
+  #ss-panel::after { content:''; display:block; position:sticky; bottom:-12px; height:34px; margin:-34px -14px -12px;
+    background:linear-gradient(rgba(8,8,28,0), rgba(8,8,28,.97)); pointer-events:none; opacity:0; transition:opacity .2s; }
+  #ss-panel.more::after { opacity:1; }
+  /* schermi molto bassi: statistiche su due colonne, così si vedono senza scorrere */
+  @media (max-height: 340px) {
+    #ss-panel { padding:6px 12px; }
+    #ss-stats { display:grid; grid-template-columns:1fr 1fr; column-gap:12px; row-gap:1px; margin-top:2px; }
+    #ss-stats .ss-stat { flex-direction:column; align-items:stretch; gap:2px; margin-top:0; line-height:1; }
+    #ss-stats .ss-stat span { width:auto; } #ss-stats .ss-stat .ss-bar { flex:none; width:100%; height:6px; }
+    #ss-panel #ss-title { margin-top:1px; } #ss-panel #ss-style { margin-top:3px; }
+  }
   #ss-name { font:900 min(3.4vw,7.4vh)/1 'Arial Black',Arial,sans-serif; color:#FFC107; letter-spacing:.02em; }
-  #ss-title { font-weight:700; font-size:min(1.55vw,3.4vh); color:rgba(255,255,255,.85); margin-top:3px; }
-  #ss-quote { font-style:italic; font-size:min(1.45vw,3.2vh); color:#d9d2ff; margin:8px 0; line-height:1.3; }
-  .ss-ab { font-size:min(1.4vw,3.1vh); line-height:1.3; margin:5px 0; color:rgba(255,255,255,.88); }
-  .ss-ab b { color:#fff; } .ss-ab i { color:#FFC107; font-style:normal; font-size:.85em; }
-  .ss-stat { display:flex; align-items:center; gap:8px; font-size:min(1.2vw,2.7vh); font-weight:700; color:rgba(255,255,255,.75); margin-top:4px; }
+  #ss-title { font-weight:700; font-size:max(12px,min(1.55vw,3.4vh)); color:rgba(255,255,255,.85); margin-top:3px; }
+  #ss-quote { font-style:italic; font-size:max(12px,min(1.45vw,3.2vh)); color:#d9d2ff; margin:8px 0; line-height:1.3; }
+  .ss-ab { font-size:max(12px,min(1.4vw,3.1vh)); line-height:1.3; margin:5px 0; color:rgba(255,255,255,.88); }
+  .ss-ab b { color:#fff; } .ss-ab i { color:#FFC107; font-style:normal; font-size:max(12px,.85em); }
+  .ss-stat { display:flex; align-items:center; gap:8px; font-size:max(12px,min(1.2vw,2.7vh)); font-weight:700; color:rgba(255,255,255,.75); margin-top:4px; }
   .ss-stat span { width:6.5em; } .ss-bar { flex:1; height:7px; background:rgba(255,255,255,.12); border-radius:4px; overflow:hidden; }
   .ss-bar > div { height:100%; background:linear-gradient(90deg,#FF8F00,#FFC107); border-radius:4px; transition:width .25s; }
   #ss-actions { position:absolute; z-index:3; right:max(12px,env(safe-area-inset-right)); bottom:calc(var(--th) + 10px);
@@ -351,7 +364,7 @@
     transition:transform .14s, border-color .14s, box-shadow .14s; -webkit-tap-highlight-color:transparent; }
   .ss-th canvas { width:100%; height:100%; image-rendering:pixelated; display:block; }
   .ss-th.on { border-color:#FFC107; transform:scale(1.14); box-shadow:0 0 14px rgba(255,193,7,.75); z-index:1; }
-  .ss-th.p1::after { content:'P1'; position:absolute; left:2px; top:1px; font:900 10px Arial,sans-serif; color:#FFC107; text-shadow:0 1px 2px #000; }
+  .ss-th.p1::after { content:'P1'; position:absolute; left:2px; top:1px; font:900 12px Arial,sans-serif; color:#FFC107; text-shadow:0 1px 2px #000; }
 
   /* telefono in verticale: poster in alto, titolo e pulsanti sotto */
   @media (orientation: portrait) {
@@ -359,7 +372,7 @@
     .hs-poster { -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); }
     .hs-poster img { height: auto; width: 100%; left: 0; top: -4%; }
     .hs-title { font-size: 7.6vw; } .hs-sub { font-size: 3.8vw; }
-    .hs-btn { font-size: 5vw; min-height: 8vh; } .hs-btn.hs-btn-sm { font-size: 4.2vw; min-height: 6.5vh; }
+    .hs-btn { font-size: 5vw; min-height: 8vh; } .hs-btn.hs-btn-sm { font-size: 4.2vw; min-height: max(44px, 6.5vh); }
     .hs-right { padding-bottom: max(16px, env(safe-area-inset-bottom)) !important; }
   }
 </style>
@@ -406,8 +419,8 @@
   <div id="ss-head">SCEGLI IL TUO COMBATTENTE<small></small></div>
   <div id="ss-stage"><div id="ss-glow"></div><img id="ss-pose" alt=""></div>
   <div id="ss-panel">
-    <div id="ss-name"></div><div id="ss-title"></div><div id="ss-style"></div><div id="ss-quote"></div>
-    <div id="ss-abs"></div><div id="ss-stats"></div>
+    <div id="ss-name"></div><div id="ss-title"></div><div id="ss-style"></div><div id="ss-stats"></div>
+    <div id="ss-quote"></div><div id="ss-abs"></div>
   </div>
   <div id="ss-actions"><button id="ss-random">CASUALE</button><button id="ss-confirm">CONFERMA</button></div>
   <div id="ss-thumbs"></div>
@@ -3589,6 +3602,10 @@ function hexToRgba(hex,a){
 function drawVictory(){
   const wf=game.matchWinner,lost=game.playerLost;
   const t=frame; // timer globale dell'animazione
+  /* testi in pixel reali come nell'HUD: k = pixel del canvas per pixel dello schermo */
+  const k=cv.width/(cv.getBoundingClientRect().width||cv.width),px=(base,min)=>Math.max(base,Math.ceil(min*k));
+  const fsStat=px(11,12),fsQuote=px(12,13),fsTitle=px(14,15),fsPrompt=px(10,12);
+  const promptA=.8+.2*Math.sin(t*.1); /* il prompt pulsa tra 60% e 100% invece di sparire */
 
   if(lost){
     // === SCHERMATA SCONFITTA (invariata, semplice) ===
@@ -3597,12 +3614,13 @@ function drawVictory(){
     ctx.fillStyle='rgba(40,0,0,.68)';ctx.fillRect(0,0,W,H);
     outlineText('SCONFITTA',W/2,130,44,'#FF4136');
     outlineText(wf.cfg.name+' trionfa',W/2,175,20,wf.cfg.ui||wf.cfg.brow);
-    ctx.font='italic 12px monospace';ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
-    wrapText('\u201C'+wf.cfg.quote+'\u201D',W/2,220,440,16);
-    text('Le tue sopracciglia si spengono lentamente...',W/2,278,11,'#B05050');
+    ctx.font='italic '+fsQuote+'px monospace';ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
+    wrapText('\u201C'+wf.cfg.quote+'\u201D',W/2,220,Math.max(440,W*.6),Math.round(fsQuote*1.3));
+    text('Le tue sopracciglia si spengono lentamente...',W/2,220+fsQuote*3+12,fsStat,'#B05050');
     if(game.mode===3&&game.tournament)
-      outlineText('TORNEO CONCLUSO \u2014 VITTORIE: '+game.tournament.wins+'/'+game.tournament.order.length,W/2,302,14,'#FF8C00');
-    if(frame%60<40)text(game.mode===3?'[INVIO] nuovo torneo   [ESC] titolo':'[INVIO] riprova   [ESC] titolo',W/2,328,12,'#B7A98C');
+      outlineText('TORNEO CONCLUSO \u2014 VITTORIE: '+game.tournament.wins+'/'+game.tournament.order.length,W/2,220+fsQuote*3+fsStat+28,Math.max(14,fsStat),'#FF8C00');
+    {const lp=IS_MOBILE?(game.mode===3?'Tocca per un nuovo torneo':'Tocca per riprovare'):(game.mode===3?'[INVIO] nuovo torneo   [ESC] titolo':'[INVIO] riprova   [ESC] titolo');
+      ctx.globalAlpha=promptA;text(lp,W/2,H-12,fsPrompt,'#B7A98C');ctx.globalAlpha=1;}
     return;
   }
 
@@ -3648,7 +3666,14 @@ function drawVictory(){
   ctx.globalAlpha=1;
 
   // PANNELLO TESTO: semi-trasparente a destra
-  const px2=W*.48,pw=W*.48,ptop=H*.1,ph=H*.58;
+  const px2=W*.48,pw=W*.48,ptop=H*.1;
+  /* misure del contenuto (titolo e frase vanno a capo): il riquadro si allunga quanto serve */
+  const wrapN=(txt,font,maxW)=>{ctx.font=font;const out=[];let ln='';for(const w of txt.split(' ')){const t2=ln?ln+' '+w:w;if(ctx.measureText(t2).width>maxW&&ln){out.push(ln);ln=w;}else ln=t2;}out.push(ln);return out;};
+  const tLines=wrapN(wf.cfg.title,'italic '+fsTitle+'px monospace',pw-28),tLh=Math.round(fsTitle*1.2),tEx=(tLines.length-1)*tLh;
+  const qN=wrapN('\u201C'+vcfg.quote+'\u201D','italic '+fsQuote+'px monospace',pw-28).length,qLh=Math.round(fsQuote*1.3);
+  const Rt=game.tournament,statN=1+(wf.combo>1?1:0)+(game.mode===3&&Rt?1:0);
+  const contentEnd=84+fsTitle*.6+tEx+fsStat+4+(fsStat+5)*statN+fsQuote+8+(qN-1)*qLh+12;
+  const ph=Math.max(H*.58,contentEnd+(game.mode===3&&Rt?58:0));
   ctx.globalAlpha=introT*.55;ctx.fillStyle='#000';
   ctx.fillRect(px2,ptop,pw,ph);
   ctx.globalAlpha=introT*.7;ctx.strokeStyle=wf.cfg.brow||'#FFD700';ctx.lineWidth=2;
@@ -3664,27 +3689,29 @@ function drawVictory(){
   ctx.shadowBlur=0;ctx.restore();
 
   // TITOLO
-  ctx.globalAlpha=introT*.8;ctx.font='italic 14px monospace';ctx.textAlign='center';
-  ctx.fillStyle='#F5F0E1';ctx.fillText(wf.cfg.title,px2+pw/2,ptop+74);ctx.globalAlpha=1;
+  ctx.globalAlpha=introT*.8;ctx.font='italic '+fsTitle+'px monospace';ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
+  /* il titolo va a capo se è più largo del riquadro */
+  tLines.forEach((ln,i)=>ctx.fillText(ln,px2+pw/2,ptop+70+fsTitle*.3+i*tLh));ctx.globalAlpha=1;
 
   // SEPARATORE
   if(introT>.5){ctx.globalAlpha=(introT-.5)/.5;ctx.fillStyle=wf.cfg.brow||'#FFD700';
-    ctx.fillRect(px2+16,ptop+84,pw-32,2);ctx.globalAlpha=1;}
+    ctx.fillRect(px2+16,ptop+78+fsTitle*.6+tEx,pw-32,2);ctx.globalAlpha=1;}
 
   // STATISTICHE match
   const R=game.tournament;
-  ctx.save();ctx.globalAlpha=introT*.75;ctx.font='11px monospace';ctx.textAlign='left';ctx.fillStyle='#D0C8A0';
-  if(wf.hp===wf.maxHp){ctx.fillStyle='#FFD700';ctx.fillText('\u2605 VITTORIA PERFETTA \u2605',px2+18,ptop+106);}
-  else ctx.fillText('HP rimanenti: '+wf.hp+'/'+wf.maxHp,px2+18,ptop+106);
-  if(wf.combo>1)ctx.fillText('Combo: '+wf.combo+' colpi',px2+18,ptop+122);
-  if(game.mode===3&&R)ctx.fillText('Torneo: '+R.wins+'/'+(R.idx+1)+' vittorie',px2+18,ptop+138);
+  const sy=ptop+84+fsTitle*.6+tEx+fsStat+4,sl=fsStat+5;let sn=0;
+  ctx.save();ctx.globalAlpha=introT*.75;ctx.font=fsStat+'px monospace';ctx.textAlign='left';ctx.fillStyle='#D0C8A0';
+  if(wf.hp===wf.maxHp){ctx.fillStyle='#FFD700';ctx.fillText('\u2605 VITTORIA PERFETTA \u2605',px2+18,sy);}
+  else ctx.fillText('HP rimanenti: '+Math.round(wf.hp)+'/'+wf.maxHp,px2+18,sy);
+  sn=1;if(wf.combo>1){ctx.fillText('Combo: '+wf.combo+' colpi',px2+18,sy+sl*sn);sn++;}
+  if(game.mode===3&&R){ctx.fillText('Torneo: '+R.wins+'/'+(R.idx+1)+' vittorie',px2+18,sy+sl*sn);sn++;}
   ctx.restore();
 
   // CITAZIONE PERSONALIZZATA (fade-in dopo 1s)
   if(textT>0){
     ctx.save();ctx.globalAlpha=textT*.9;
-    ctx.font='italic 12px monospace';ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
-    wrapText('\u201C'+vcfg.quote+'\u201D',px2+pw/2,ptop+172,pw-28,16);
+    ctx.font='italic '+fsQuote+'px monospace';ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
+    wrapText('\u201C'+vcfg.quote+'\u201D',px2+pw/2,sy+sl*sn+fsQuote+8,pw-28,Math.round(fsQuote*1.3));
     ctx.restore();}
 
   // TORNEO: prossimo sfidante
@@ -3692,13 +3719,13 @@ function drawVictory(){
     ctx.globalAlpha=(textT-.5)/.5*.85;ctx.fillStyle='rgba(0,0,0,.5)';
     ctx.fillRect(px2,ptop+ph-54,pw,54);ctx.globalAlpha=1;
     if(R.idx<R.order.length-1){
-      outlineText('INCONTRO '+(R.idx+1)+'/'+R.order.length+' SUPERATO',px2+pw/2,ptop+ph-30,11,'#FF8C00');
-      text('Prossimo: '+ROSTER[R.order[R.idx+1]].name,px2+pw/2,ptop+ph-14,11,'#F5F0E1');
+      outlineText('INCONTRO '+(R.idx+1)+'/'+R.order.length+' SUPERATO',px2+pw/2,ptop+ph-32,fsStat,'#FF8C00');
+      text('Prossimo: '+ROSTER[R.order[R.idx+1]].name,px2+pw/2,ptop+ph-12,fsStat,'#F5F0E1');
     }else outlineText('\u2605 CAMPIONE DEL TORNEO! '+R.wins+'/'+R.order.length+' \u2605',px2+pw/2,ptop+ph-20,14,'#FFD700');}
 
   // PROMPT
   const pTxt=IS_MOBILE?(game.mode===3&&R&&R.idx<R.order.length-1?'Tocca per il prossimo incontro':'Tocca per una nuova sfida'):(game.mode===3&&R&&R.idx<R.order.length-1?'[INVIO] prossimo incontro   [ESC] abbandona':'[INVIO] nuova sfida   [ESC] titolo');
-  if(frame%60<40)text(pTxt,W/2,H-10,10,'#B7A98C');
+  ctx.globalAlpha=promptA;text(pTxt,W/2,H-10,fsPrompt,'#B7A98C');ctx.globalAlpha=1;
 
   // screen flash all'inizio (0-10fr)
   if(t<10){ctx.globalAlpha=(1-t/10)*.85;ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;}
@@ -3967,6 +3994,9 @@ requestAnimationFrame(loop);
       b.addEventListener('click',function(){if(game.state!=='select')return;game.sel[game.pickTurn]=i;try{sfx.sel();}catch(_){}renderSelect();});
       row.appendChild(b);SS.th.push(b);});})();
   function hexA(h,a){h=(h||'#FFC107').replace('#','');var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return 'rgba('+r+','+g+','+b+','+a+')';}
+  /* sfumatura del pannello: visibile solo se sotto c'è altro contenuto */
+  function ssFade(){var p=document.getElementById('ss-panel');if(!p)return;p.classList.toggle('more',p.scrollHeight-p.scrollTop-p.clientHeight>4);}
+  (function(){var p=document.getElementById('ss-panel');if(p)p.addEventListener('scroll',ssFade,{passive:true});addEventListener('resize',function(){setTimeout(ssFade,50);});})();
   function renderSelect(){
     var i=game.sel[game.pickTurn],c=ROSTER[i],I=SEL_INFO[c.id],key=game.pickTurn+':'+i+':'+game.mode;
     loadChar(c.id);
@@ -3984,6 +4014,7 @@ requestAnimationFrame(loop);
       document.getElementById('ss-title').textContent=I[0];
       var STY={mango:'DA VICINO',bederico:'DA VICINO',baumizio:'DA VICINO',batteo:'DA VICINO',alice:'A DISTANZA',zibe:'A DISTANZA',chiara:'A DISTANZA',dimauro:'A DISTANZA'};
       document.getElementById('ss-style').textContent='STILE: '+(STY[c.id]||'TUTTO-FARE');
+      setTimeout(ssFade,30);
       document.getElementById('ss-quote').textContent='\u201C'+I[1]+'\u201D';
       document.getElementById('ss-abs').innerHTML=I[2].map(function(a){return '<div class="ss-ab"><b>'+a[0]+'</b> <i>('+a[1]+')</i>: '+a[2]+'</div>';}).join('');
       var st=[['VITA',c.hp/280],['VELOCIT\u00C0',c.speed/4.5],['POTENZA',c.power/10],['DIFESA',(c.def||5)/8]];
