@@ -342,6 +342,35 @@
     touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer; }
 
   /* ===== SELEZIONE PERSONAGGIO ===== */
+  /* ===== SCHERMATA VS (tra la scelta e il combattimento) ===== */
+  #vs-screen { display:none; position:fixed; inset:0; z-index:520; overflow:hidden; color:var(--testo);
+    background: radial-gradient(ellipse at 50% 40%, #1a1430 0%, var(--fondo-notte) 60%, #020206 100%); }
+  @supports (height: 100dvh) { #vs-screen { bottom:auto; height:100dvh; } }
+  #vs-top { position:absolute; top:max(12px,env(safe-area-inset-top)); left:0; right:0; text-align:center;
+    font-family:var(--font-gioco); color:var(--oro); font-size:clamp(14px,4.4vh,20px); letter-spacing:.1em; }
+  .vs-side { position:absolute; bottom:max(10px,env(safe-area-inset-bottom)); width:44%; display:flex; flex-direction:column; align-items:center; }
+  #vs-l { left:2%; animation: vsInL .45s cubic-bezier(.2,.9,.3,1.1) both; }
+  #vs-r { right:2%; animation: vsInR .45s cubic-bezier(.2,.9,.3,1.1) both; }
+  @keyframes vsInL { from { transform: translateX(-70vw); } to { transform: none; } }
+  @keyframes vsInR { from { transform: translateX(70vw); } to { transform: none; } }
+  .vs-side img { height: min(54vh, 34vw); width: auto; image-rendering: pixelated; filter: drop-shadow(0 6px 10px rgba(0,0,0,.6)); }
+  #vs-r img { transform: scaleX(-1); }
+  .vs-name { font-family:var(--font-gioco); font-size:clamp(17px,5.2vh,26px); line-height:1; margin-top:2px; }
+  .vs-title { font-family:var(--font-testo); font-style:italic; font-size:max(12px,min(1.5vw,3.4vh)); color:var(--testo-tenue); text-align:center; margin-top:3px; max-width:100%; }
+  .vs-tags { display:flex; gap:6px; margin-top:5px; flex-wrap:wrap; justify-content:center; }
+  .vs-tag { font-family:var(--font-gioco); font-size:12px; padding:2px 8px; border-radius:9px; background:var(--oro); color:#120f22; }
+  .vs-tag.lv { background:none; color:var(--oro); border:1.5px solid var(--oro); }
+  #vs-mid { position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); font-family:var(--font-gioco); color:var(--oro);
+    font-size:clamp(48px,20vh,110px); line-height:1; text-shadow:4px 4px 0 var(--oro-scuro), 0 0 30px rgba(255,193,7,.55); animation: vsPop .5s .3s both; }
+  @keyframes vsPop { 0% { transform:translate(-50%,-50%) scale(2.4); opacity:0; } 60% { transform:translate(-50%,-50%) scale(.9); opacity:1; } 100% { transform:translate(-50%,-50%) scale(1); } }
+  #vs-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+  #vs-flash.on { animation: vsFlash .35s ease-out; }
+  @keyframes vsFlash { 0% { opacity:.3; } 100% { opacity:0; } } /* lampo tenue (30%), come gli altri del gioco */
+  #vs-dots { position:absolute; left:50%; top:calc(46% + min(11vh,60px)); transform:translateX(-50%); display:none; gap:6px; }
+  #vs-dots.on { display:flex; }
+  #vs-dots i { width:8px; height:8px; background:var(--oro); animation: vsDot 1s infinite; }
+  #vs-dots i:nth-child(2) { animation-delay:.2s; } #vs-dots i:nth-child(3) { animation-delay:.4s; }
+  @keyframes vsDot { 0%,100% { opacity:.25; } 50% { opacity:1; } }
   #select-screen { display:none; position:fixed; inset:0; z-index:500; overflow:hidden; color:var(--testo);
     font-family:var(--font-testo);
     background: radial-gradient(ellipse at 35% 45%, #2a2160 0%, #14103a 38%, #07061a 75%, #030210 100%); }
@@ -507,6 +536,14 @@
     <div class="pp-row"><button id="pp-exit-no" class="btn-secondario">ANNULLA</button><button id="pp-exit-yes" class="btn-primario">SÌ, ESCI</button></div>
   </div>
 </div></div>
+<div id="vs-screen" aria-live="polite">
+  <div id="vs-top"></div>
+  <div class="vs-side" id="vs-l"><img alt=""><div class="vs-name"></div><div class="vs-title"></div><div class="vs-tags"></div></div>
+  <div class="vs-side" id="vs-r"><img alt=""><div class="vs-name"></div><div class="vs-title"></div><div class="vs-tags"></div></div>
+  <div id="vs-mid">VS</div>
+  <div id="vs-dots"><i></i><i></i><i></i></div>
+  <div id="vs-flash"></div>
+</div>
 <div id="vic-pop"><div id="vic-panel"><div id="vic-body">
   <div id="vic-title">VITTORIA</div>
   <div id="vic-name"></div><div id="vic-sub"></div>
@@ -2983,7 +3020,12 @@ const game={
   startMatch(){this.stats={maxHit:0,parry:0}; /* statistiche per la schermata finale */
     loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.loadWait=0;this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
     this.bg=(Math.random()*BACKGROUNDS.length)|0;loadBg(this.bg);
-    this.round=1;this.wins=[0,0];this.startRound();this.state='fight';},
+    this.round=1;this.wins=[0,0];
+    /* prima del combattimento la schermata VS (non nell'allenamento) */
+    if(this.mode!==4){this.state='vs';this.vsT=0;return;}
+    this.startRound();this.state='fight';},
+  /* fine della schermata VS: parte il primo round */
+  beginFight(){if(this.state!=='vs')return;this.loadWait=Math.min(720,this.vsT||0);this.startRound();this.state='fight';},
   /* allenamento: avversario fisso che non attacca, lezioni una dopo l'altra */
   startTraining(){
     const me=this.sel[0],ids=ROSTER.map(c=>c.id);
@@ -3061,7 +3103,7 @@ function update(){
     kPrev={...keys};return;}
   frame++;
   if(game.musicHold>0){game.musicHold--;if(game.state!=='victory')game.musicHold=0;}
-  wantTrack=game.musicHold>0?'hush':game.state==='fight'?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
+  wantTrack=game.musicHold>0?'hush':(game.state==='fight'||game.state==='vs')?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
   ensureMusic();
   if(kp('KeyM')){musicMuted=!musicMuted;if(!musicMuted&&curTrack)curTrack.play().catch(()=>{});}
   frameTimers=frameTimers.filter(t=>{if(--t.fr<=0){t.fn();return false}return true});
@@ -3139,6 +3181,13 @@ function update(){
     if(game.bannerT>0)game.bannerT--;
     updateFx();
     if(kp('Escape')||kp('KeyP'))setPause(true);
+  }
+  else if(game.state==='vs'){
+    /* almeno 1,5 s; si allunga finché gli sprite dei due personaggi sono pronti (massimo 12 s) */
+    game.vsT=(game.vsT||0)+1;const ready=vsReady();
+    if((ready&&game.vsT>=90)||game.vsT>=720)game.beginFight();
+    else if(ready&&(kp('Enter')||kp('KeyZ')||kp('Space')))game.beginFight();
+    const d=document.getElementById('vs-dots');if(d)d.classList.toggle('on',!ready&&game.vsT>90);
   }
   else if(game.state==='victory'){
     if(!game.playerLost){vcfxFrame=vcfxFrame||0;vcfxFrame++;}
@@ -3464,7 +3513,7 @@ function drawFight(){
   drawHUD();
   fullView(()=>{
     if(game.p[0]&&!(charReady(game.p[0].cfg.id)&&charReady(game.p[1].cfg.id))&&(game.loadWait||0)<720)
-      outlineText('CARICAMENTO'+'.'.repeat(1+((frame/20|0)%3)),W/2,H/2+30,18,'#F5F0E1');
+      for(let i=0;i<3;i++){ctx.globalAlpha=(frame/10|0)%3===i?1:.3;pxs(W/2-20+i*16,H/2+30,8,8,COL.oro);}ctx.globalAlpha=1;
     if(specialBanner)outlineText(specialBanner.txt,W/2,H/2-70,22,'#FF2222');
     if(game.bannerT>0){const big=game.banner==='K.O.';
       outlineText(game.banner,W/2,H/2-20,big?64:34,big?COL.rosso:COL.oro);}
@@ -3813,6 +3862,26 @@ document.addEventListener('visibilitychange',()=>{
   if(!document.hidden){_lastTs=0;_acc=0;}
   else if(game.state==='fight'&&!game.paused)setPause(true); /* app in secondo piano durante un incontro: pausa automatica */
 });
+/* ===== SCHERMATA VS ===== */
+const CHAR_STYLE={mango:'DA VICINO',bederico:'DA VICINO',baumizio:'DA VICINO',batteo:'DA VICINO',alice:'A DISTANZA',zibe:'A DISTANZA',chiara:'A DISTANZA',dimauro:'A DISTANZA'};
+function vsReady(){return charReady(ROSTER[game.sel[0]].id)&&charReady(ROSTER[game.sel[1]].id);}
+function showVs(){
+  const t=game.tournament,top=document.getElementById('vs-top');
+  top.textContent=game.mode===3&&t?'INCONTRO '+(t.idx+1)+'/'+t.order.length:'';
+  const lvl=game.mode===2?null:game.cpuDiff().label;
+  [['vs-l',game.sel[0],null],['vs-r',game.sel[1],lvl]].forEach(([id,i,lv])=>{const c=ROSTER[i],box=document.getElementById(id),info=SEL_INFO[c.id]||[];
+    const el=box.cloneNode(true);box.replaceWith(el); /* ricomincia l'animazione di entrata */
+    el.querySelector('img').src=SEL_POSE[c.id]||'';
+    const nm=el.querySelector('.vs-name');nm.textContent=c.name;nm.style.color=c.ui||c.brow||COL.oro;
+    el.querySelector('.vs-title').textContent=info[0]||c.title||'';
+    const tg=el.querySelector('.vs-tags');tg.innerHTML='';const a=document.createElement('span');a.className='vs-tag';a.textContent=CHAR_STYLE[c.id]||'TUTTO-FARE';tg.appendChild(a);
+    if(lv){const b=document.createElement('span');b.className='vs-tag lv';b.textContent='CPU \u00B7 '+lv.charAt(0)+lv.slice(1).toLowerCase();tg.appendChild(b);}});
+  const mid=document.getElementById('vs-mid'),m2=mid.cloneNode(true);mid.replaceWith(m2);
+  document.getElementById('vs-dots').classList.remove('on');
+  /* breve lampo sul VS, solo se i lampi non sono ridotti */
+  const fl=document.getElementById('vs-flash');fl.classList.remove('on');
+  if(!REDUCE_FX)setTimeout(()=>{void fl.offsetWidth;fl.classList.add('on');},450);
+}
 /* ===== SCHERMATA DI FINE INCONTRO ===== */
 let _vicShownAt=0,_vicTimer=null;
 /* azione del pulsante principale nel contesto attuale */
@@ -4122,6 +4191,8 @@ function loop(ts){
     if(s!=='fight'&&game.paused) setPause(false);
     sh('m-back',      'none'); /* nella schermata finale ci sono i pulsanti del pannello */
     sh('vic-pop',     s==='victory' ? 'block' : 'none');
+    sh('vs-screen',   s==='vs' ? 'block' : 'none');
+    if(s==='vs') showVs();
     if(s==='victory') showVictoryPanel();
     sh('m-music',     s==='fight' ? 'none' : 'flex');
     /* Sincronizza label difficoltà nella home */
@@ -4242,6 +4313,10 @@ function loop(ts){
   /* PAUSA: icona in alto al centro; pop-up con RIPRENDI e TORNA AL MENU */
   _btn('m-pause', function(){ if(game.state==='fight') setPause(!game.paused); });
   _btn('pp-resume', function(){ setPause(false); });
+  /* VS: toccare salta la schermata, ma solo quando i personaggi sono pronti */
+  (function(){var v=document.getElementById('vs-screen');if(!v)return;
+    var skip=function(e){if(game.state!=='vs')return;if(e&&e.cancelable)e.preventDefault();if(vsReady()&&(game.vsT||0)>=20)game.beginFight();};
+    v.addEventListener('touchstart',skip,{passive:false});v.addEventListener('click',skip);})();
   _btn('pp-restart', function(){ /* stesso incontro, stessi personaggi */
     try{sfx.ok();}catch(_){} setPause(false); game.startMatch(); updateOverlay();
   });
