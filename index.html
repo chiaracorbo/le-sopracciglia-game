@@ -4474,14 +4474,23 @@ function loop(ts){
     sfx:{label:'Effetti sonori',get:function(){return SFX_VOL;},set:function(v){setSfxVol(v);}}
   };
   /* i tocchi sulle righe non devono arrivare ai comandi delle schermate sotto */
-  function guard(el){el.addEventListener('touchstart',function(e){e.stopPropagation();},{passive:true});}
+  function guard(el){el.addEventListener('touchstart',function(e){e.stopPropagation();},{passive:true});
+    el.addEventListener('touchend',function(e){e.stopPropagation();},{passive:true});}
+  /* tocco affidabile su telefono: si gestisce direttamente il dito (il "click" può essere bloccato da altri gestori), il click resta per il mouse */
+  function tap(el,fn){var t0=0;
+    el.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();el.classList.add('pressed');},{passive:false});
+    el.addEventListener('touchend',function(e){e.preventDefault();e.stopPropagation();el.classList.remove('pressed');
+      var t=e.changedTouches[0],r=el.getBoundingClientRect();
+      if(t&&t.clientX>=r.left-6&&t.clientX<=r.right+6&&t.clientY>=r.top-6&&t.clientY<=r.bottom+6){t0=Date.now();fn();}},{passive:false});
+    el.addEventListener('touchcancel',function(){el.classList.remove('pressed');});
+    el.addEventListener('click',function(){if(Date.now()-t0<700)return;fn();});}
   function buildRows(box){
     var withDiff=box.getAttribute('data-diff')==='1';box.innerHTML='';
     if(withDiff){var r=document.createElement('div');r.className='srow col';
       r.innerHTML='<span class="sl">Difficoltà CPU</span><div class="seg" role="radiogroup" aria-label="Difficoltà CPU"></div>';
       var seg=r.querySelector('.seg');
       DIFF_KEYS.forEach(function(k){var b=document.createElement('button');b.type='button';b.textContent=DIFF_LBL[k];b.setAttribute('role','radio');b.dataset.diff=k;
-        b.addEventListener('click',function(){game.difficulty=k;try{sfx.sel();}catch(_){}refreshOpts();updateOverlay();});seg.appendChild(b);});
+        tap(b,function(){game.difficulty=k;try{sfx.sel();}catch(_){}refreshOpts();updateOverlay();});seg.appendChild(b);});
       guard(r);box.appendChild(r);}
     ['music','sfx'].forEach(function(k){var o=VOLUMES[k],r=document.createElement('div');r.className='srow';
       r.innerHTML='<span class="sl">'+o.label+'</span><div class="vol" role="slider" tabindex="0" aria-label="'+o.label+'" aria-valuemin="0" aria-valuemax="100"><div class="vb">'+
@@ -4498,7 +4507,7 @@ function loop(ts){
     ['fx','vib'].forEach(function(k){var o=SWITCHES[k],r=document.createElement('div');r.className='srow';
       r.innerHTML='<span class="sl">'+o.label+'</span><button type="button" class="sw" role="switch" aria-label="'+o.label+'"><span class="k"></span><span class="t"></span></button>';
       var b=r.querySelector('.sw');b.dataset.sw=k;
-      b.addEventListener('click',function(){o.set(!o.get());try{sfx.sel();}catch(_){}refreshOpts();});
+      tap(b,function(){o.set(!o.get());try{sfx.sel();}catch(_){}refreshOpts();});
       guard(r);box.appendChild(r);});
   }
   function refreshOpts(){
