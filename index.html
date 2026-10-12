@@ -46,7 +46,7 @@
   @media (orientation: portrait) { body:not(.in-title) #rotate-hint { display: flex !important; } }
 
   /* ===== FLOATING TOP BAR (Indietro / ♪ / Menu) ===== */
-  #m-back, #m-esc, #m-music {
+  #m-back, #m-music {
     display: none; position: fixed; z-index: 200;
     background: rgba(10,7,3,0.82); border: 1.5px solid rgba(255,255,255,0.22);
     border-radius: 10px; color: #C8BC9E; font-family: monospace;
@@ -60,9 +60,8 @@
   }
   #m-back  { left:  max(10px, env(safe-area-inset-left,  10px)); }
   #m-music { right: max(10px, env(safe-area-inset-right, 10px)); z-index: 600; }
-  #m-esc   { left:  max(10px, env(safe-area-inset-left,  10px)); }
-  #m-back.pressed, #m-esc.pressed, #m-music.pressed { background: rgba(100,70,10,0.85); color: #FFD700; }
-  #m-back:active, #m-esc:active, #m-music:active {
+  #m-back.pressed, #m-music.pressed { background: rgba(100,70,10,0.85); color: #FFD700; }
+  #m-back:active, #m-music:active {
     background: rgba(100,70,10,0.85); color: #FFD700;
   }
 
@@ -210,8 +209,26 @@
   #tro-yes { background: #FFC107; color: #1a1300; border: none; }
   #tro-no { background: none; color: rgba(255,255,255,.75); border: 1.5px solid rgba(255,255,255,.35); }
   /* riquadro della lezione durante l'allenamento */
+  /* pulsante PAUSA: solo icona, in alto al centro sopra il tempo */
+  #m-pause { display: none; position: fixed; z-index: 200; left: 50%; transform: translateX(-50%);
+    top: max(2px, env(safe-area-inset-top)); width: 48px; height: 38px; padding: 0; border: none; background: none;
+    align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  #m-pause .pz { display: flex; gap: 5px; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(10,7,3,.55); border: 1.5px solid rgba(255,255,255,.35); }
+  #m-pause .pz i { display: block; width: 4px; height: 13px; border-radius: 1px; background: #F5F0E1; }
+  #m-pause.pressed .pz, #m-pause:active .pz { background: rgba(100,70,10,.85); }
+  /* pop-up della pausa */
+  #pause-pop { display: none; position: fixed; inset: 0; z-index: 700; background: rgba(0,0,0,.66); align-items: center; justify-content: center; }
+  #pause-pop .pp-box { width: min(80vw, 340px); background: #120f22; border: 2px solid #FFC107; border-radius: 16px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 30px rgba(255,193,7,.25); font-family: 'Helvetica Neue', Arial, sans-serif; }
+  #pause-pop .pp-h { color: #FFC107; font-weight: 900; font-size: 18px; letter-spacing: .1em; text-align: center; margin-bottom: 2px; }
+  #pause-pop button { min-height: 48px; border-radius: 12px; font-weight: 900; font-size: 16px; letter-spacing: .05em; cursor: pointer;
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+  #pp-resume { background: #FFC107; color: #1a1300; border: none; }
+  #pp-menu { background: none; color: #F5F0E1; border: 1.5px solid rgba(255,255,255,.35); }
+  #pp-resume.pressed { filter: brightness(.85); } #pp-menu.pressed { background: rgba(100,70,10,.85); }
   #tr-box { display: none; position: fixed; z-index: 150; left: 50%; transform: translateX(-50%);
-    top: max(74px, calc(env(safe-area-inset-top) + 66px)); width: max-content; max-width: min(60vw, 500px);
+    top: max(84px, calc(env(safe-area-inset-top) + 76px)); width: max-content; max-width: min(60vw, 500px);
     background: rgba(10,8,20,.72); border: 2px solid #FFC107; border-radius: 10px; padding: 5px 12px 5px;
     color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; pointer-events: none; }
   #tr-title { color: #FFC107; font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
@@ -376,7 +393,12 @@
 </div>
 
 <button id="m-back">← Indietro</button>
-<button id="m-esc">✕ Menu</button>
+<button id="m-pause" aria-label="Pausa"><span class="pz"><i></i><i></i></span></button>
+<div id="pause-pop"><div class="pp-box">
+  <div class="pp-h">PAUSA</div>
+  <button id="pp-resume">▶ RIPRENDI</button>
+  <button id="pp-menu">TORNA AL MENU</button>
+</div></div>
 <div id="tr-box"><div id="tr-title"></div><div id="tr-text"></div><div id="tr-dots"></div><button id="tr-skip">Salta ›</button></div>
 <button id="m-music">♪</button>
 
@@ -2842,7 +2864,16 @@ const game={
 let kPrev={};
 function kp(code){return !!keys[code]&&!kPrev[code];}
 
+/* PAUSA: il combattimento si ferma finché non si riprende */
+function setPause(v){
+  game.paused=!!v&&game.state==='fight';
+  const p=document.getElementById('pause-pop');if(p)p.style.display=game.paused?'flex':'none';
+  if(game.paused){for(const k in keys)keys[k]=false;try{window._releaseTouchKeys&&window._releaseTouchKeys();}catch(e){}try{sfx.sel();}catch(e){}}
+}
 function update(){
+  if(game.state==='fight'&&game.paused){ /* in pausa: tutto fermo; ESC o P riprendono */
+    if(kp('Escape')||kp('KeyP'))setPause(false);
+    kPrev={...keys};return;}
   frame++;
   if(game.musicHold>0){game.musicHold--;if(game.state!=='victory')game.musicHold=0;}
   wantTrack=game.musicHold>0?'hush':game.state==='fight'?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
@@ -2919,7 +2950,7 @@ function update(){
     }
     if(game.bannerT>0)game.bannerT--;
     updateFx();
-    if(kp('Escape')){game.state='select';game.pickTurn=0;}
+    if(kp('Escape')||kp('KeyP'))setPause(true);
   }
   else if(game.state==='victory'){
     if(!game.playerLost){vcfxFrame=vcfxFrame||0;vcfxFrame++;}
@@ -3080,7 +3111,7 @@ function syncTraining(){
   const ti=document.getElementById('tr-title'),tx=document.getElementById('tr-text'),dt=document.getElementById('tr-dots'),sk=document.getElementById('tr-skip');
   if(T.free){
     ti.textContent=T.doneT>0?'Pronto per combattere!':'Modalit\u00E0 libera';
-    tx.textContent=T.doneT>0?'Hai finito le lezioni. Ora allenati liberamente.':'Avversario fermo \u00B7 speciale sempre piena \u00B7 esci con \u2715 Menu';
+    tx.textContent=T.doneT>0?'Hai finito le lezioni. Ora allenati liberamente.':'Avversario fermo \u00B7 speciale sempre piena \u00B7 esci con la pausa \u23F8';
     dt.textContent='';sk.style.display='none';return;}
   ti.textContent='Lezione '+(st.li+1)+'/'+TRAIN.length+' \u00B7 '+TRAIN[st.li].t;
   tx.innerHTML='';tx.appendChild(document.createTextNode(st.txt));
@@ -3092,10 +3123,10 @@ const HUD_THUMB={};
 /* zone occupate dai pulsanti "✕ Menu" e "♪" (in px dello schermo), ricalcolate ogni mezzo secondo */
 let _hudZ={key:''};
 function hudZones(){
-  const r=cv.getBoundingClientRect(),key=r.width+'x'+r.height+':'+game.state+':'+Math.floor(frame/30)+':'+(document.getElementById('m-esc')||{style:{}}).style.display;
+  const r=cv.getBoundingClientRect(),key=r.width+'x'+r.height+':'+game.state+':'+Math.floor(frame/30);
   if(_hudZ.key===key)return _hudZ;
   const vis=id=>{const e=document.getElementById(id);if(!e)return null;const b=e.getBoundingClientRect();return b.width>0?b:null;};
-  const esc=vis('m-esc'),mus=vis('m-music');
+  const esc=null,mus=vis('m-music'); /* in combattimento non ci sono più pulsanti ai lati della barra */
   _hudZ={key,cv:r,left:esc?esc.right-r.left+8:12,right:mus?r.right-mus.left+8:12};
   return _hudZ;}
 /* fulmine della speciale: grigio, giallo acceso e luminoso quando è pronta */
@@ -3144,9 +3175,9 @@ function drawHUD0(){
       else{ctx.lineWidth=u(1.5);ctx.strokeStyle='rgba(245,240,225,.8)';ctx.stroke();}}
     if(f.combo>1)outlineText(f.combo+' COMBO',flip?bx+bw:bx,nameY+u(18),u(14),'#FFD700',al);
   }
-  outlineText(game.timer,W/2,top+u(26),u(28),'#F5F0E1');
+  outlineText(game.timer,W/2,top+u(58),u(26),'#F5F0E1'); /* sotto il pulsante di pausa */
   if(game.mode===3&&game.tournament)
-    outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,top+u(44),u(13),'#FF8C00');
+    outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,top+u(74),u(13),'#FF8C00');
   if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIALE quando la barra gialla \u00E8 piena',W/2,H-u(6),u(12),'rgba(245,240,225,.45)');
 }
 
@@ -3210,7 +3241,7 @@ function drawFight(){
     /* nome dello sfondo solo all'inizio del round, insieme al banner "ROUND …", poi sfuma */
     const k=cv.width/(cv.getBoundingClientRect().width||cv.width);
     ctx.globalAlpha=Math.min(1,game.bannerT/12);
-    text(BACKGROUNDS[game.bg].toUpperCase(),W/2,H-18,Math.max(9,13*k/ZOOM),'rgba(245,240,225,.75)');
+    text(BACKGROUNDS[game.bg].toUpperCase(),W/2,IS_MOBILE?H-18:H-30,Math.max(9,13*k/ZOOM),'rgba(245,240,225,.75)');
     ctx.globalAlpha=1;}
   else{STAGES[game.stage].draw(camX);text(STAGES[game.stage].name,W/2,H-18,9,'rgba(245,240,225,.35)');}
   ctx.save();ctx.translate(-camX*0.0,0); // fighters in world≈screen, cam già nei layer
@@ -3912,7 +3943,8 @@ requestAnimationFrame(loop);
     sh('select-screen', s==='select' ? 'block' : 'none');
     if(s==='select'&&window.renderSelect){SS.last='';renderSelect();}
     sh('m-controls',  s==='fight'&&IS_MOB ? 'block' : 'none');
-    sh('m-esc',       s==='fight'  ? 'flex' : 'none');
+    sh('m-pause',     s==='fight'  ? 'flex' : 'none');
+    if(s!=='fight'&&game.paused) setPause(false);
     sh('m-back',      s==='victory' ? 'flex' : 'none');
     sh('m-music',     s==='fight' ? 'none' : 'flex');
     /* Sincronizza label difficoltà nella home */
@@ -4030,10 +4062,12 @@ requestAnimationFrame(loop);
     el.addEventListener('click', fn);
   }
 
-  /* m-esc: durante il fight → torna al menu */
-  _btn('m-esc', function(){
+  /* PAUSA: icona in alto al centro; pop-up con RIPRENDI e TORNA AL MENU */
+  _btn('m-pause', function(){ if(game.state==='fight') setPause(!game.paused); });
+  _btn('pp-resume', function(){ setPause(false); });
+  _btn('pp-menu', function(){
     try{sfx.sel();}catch(_){}
-    game.state='title'; game.tournament=null;
+    setPause(false); game.state='title'; game.tournament=null;
     updateOverlay();
   });
 
