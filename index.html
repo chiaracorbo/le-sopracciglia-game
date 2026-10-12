@@ -39,10 +39,13 @@
     image-rendering: pixelated; image-rendering: crisp-edges;
     background: #000; display: block;
   }
+  /* la pagina è fissata allo schermo: Safari su iPhone non può spostarla (altrimenti grafica e tocchi non coincidono più) */
+  html { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: none; }
+  body { position: fixed; inset: 0; overscroll-behavior: none; }
   /* Su mobile: canvas fullscreen senza bordi */
   @media (max-width: 1024px) and (pointer: coarse) {
     html, body { width: 100%; height: 100%; }
-    #wrap { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+    #wrap { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
     canvas { border: none; border-radius: 0; }
   }
   #scan { display: none; }
@@ -557,6 +560,11 @@
     #ss-pg-st { display:flex; flex-direction:column; min-height:100%; }
     #ss-stats { flex:1; justify-content:space-evenly; max-height:340px; }
   }
+  /* una fila da 12 ma colonne strette: i nomi lunghi vanno su due righe (LUCA DI / MAURO), così non si toccano */
+  @media (min-width: 720px) and (max-width: 939px) {
+    :root { --th: calc(var(--tsz) + 34px + var(--sb)); }
+    .ss-nm { white-space:normal; text-align:center; max-width:100%; font-size:11px; line-height:12px; overflow-wrap:normal; }
+  }
   /* larghezza media (iPhone piccoli in orizzontale): due file da 6 */
   @media (max-width: 719px) {
     :root { --tsz: clamp(30px, 10vh, 60px); --th: calc(2 * var(--tsz) + 40px + var(--sb)); }
@@ -578,8 +586,8 @@
     #ss-actions button { min-height:44px; }
   }
   /* telefono largo e basso: le quattro barre su una sola riga, così si vedono senza scorrere */
-  @media (max-height: 420px) and (min-width: 720px) {
-    #ss-stats { grid-template-columns:repeat(4,1fr); column-gap:10px; margin-top:5px; }
+  @media (max-height: 420px) and (min-width: 820px) {
+    #ss-stats { grid-template-columns:repeat(4,1fr); column-gap:14px; margin-top:5px; }
     #ss-stats .ss-stat { flex-direction:column; align-items:stretch; gap:3px; } #ss-stats .ss-stat { min-width:0; } #ss-stats .ss-stat span { min-width:0; } #ss-stats .ss-bar { flex:none; }
     #ss-pg-st #ss-style { line-height:13px; } #ss-stats .ss-stat { gap:2px; }
   }
@@ -4065,6 +4073,10 @@ function syncSpecialBtn(){
   if(st===_abSState)return;_abSState=st;_abS=_abS||document.getElementById('ab-s');if(!_abS)return;
   _abS.classList.toggle('ready',st==='ready');_abS.classList.toggle('dim',st==='dim');}
 function loop(ts){
+  /* se la pagina si è spostata (iPhone), rimettila al suo posto */
+  if(window.scrollX||window.scrollY){window.scrollTo(0,0);}
+  {const se=document.scrollingElement;if(se&&(se.scrollLeft||se.scrollTop)){se.scrollLeft=0;se.scrollTop=0;}}
+  if(document.body.scrollLeft||document.body.scrollTop){document.body.scrollLeft=0;document.body.scrollTop=0;}
   /* a tutto schermo: se le misure della finestra sono cambiate (rotazione, barre del browser) ricalcola il campo */
   if(innerWidth!==_fitW||innerHeight!==_fitH)fit();
   const dt=_lastTs?Math.min(ts-_lastTs,100):STEP_MS; // cap 100ms
@@ -4359,7 +4371,9 @@ function loop(ts){
     head.lastChild.textContent=game.mode===4?'Allenamento: scegli con chi imparare':game.mode===3?'Torneo: sfiderai tutti gli altri, uno dopo l’altro':opp?'Oppure lascia scegliere alla CPU con CASUALE':'Battaglia singola';
     document.getElementById('ss-random').style.display=opp?'':'none';
     SS.th.forEach(function(b,k){b.classList.toggle('on',k===i);b.classList.toggle('p1',opp&&k===game.sel[0]);});
-    if(SS.th[i]&&SS.th[i].scrollIntoView)SS.th[i].scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+    /* centra la miniatura scelta spostando SOLO la fila (scrollIntoView sposterebbe anche la pagina su iPhone) */
+    if(SS.th[i]){var row=document.getElementById('ss-thumbs'),el=SS.th[i];if(row&&row.scrollWidth>row.clientWidth){
+      var x=el.offsetLeft+el.offsetWidth/2-row.clientWidth/2;try{row.scrollTo({left:Math.max(0,x),behavior:'smooth'});}catch(_){row.scrollLeft=Math.max(0,x);}}}
     if(SS.edges)setTimeout(SS.edges,400);
     var pose=document.getElementById('ss-pose');
     var fill=function(){SS.pose=c.id;SS.ani='';
