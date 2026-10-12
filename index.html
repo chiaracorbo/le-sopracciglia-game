@@ -1867,7 +1867,7 @@ function loadChar(id){const S=SPRITE_CHARS[id];if(!S||S.loading)return;S.loading
   const files=[...new Set(Object.values(S.anims).map(a=>a.file).concat(S.portrait?[S.portrait.file]:[]))];
   let left=files.length;
   for(const f of files){const im=new Image();let tries=0;S.img[f]=im;
-    im.onload=()=>{if(--left===0){S.ready=true;measureReach(S);}};
+    im.onload=()=>{if(S.anims.jump&&f===S.anims.jump.file)fixJumpFrames(S);if(--left===0){S.ready=true;measureReach(S);}};
     im.onerror=()=>{if(++tries<=4)setTimeout(()=>{im.src=S.dir+f+'.png?r='+tries+'-'+Date.now();},400*tries);
       else{console.warn('Sprite non caricato: '+S.dir+f+'.png');if(--left===0){S.ready=true;measureReach(S);}}};
     im.src=S.dir+f+'.png';}
@@ -1879,6 +1879,20 @@ setTimeout(function preload(){const next=Object.keys(SPRITE_CHARS).find(id=>!SPR
 /* pronto per combattere: almeno l'animazione di attesa è arrivata (le altre possono arrivare dopo) */
 function charReady(id){const S=SPRITE_CHARS[id];return !S||S.ready||imgOk(S.img.idle);}
 /* fin dove arriva l'arma (in pixel dal centro del personaggio) durante la fase attiva di pugno e calcio */
+/* SALTO: alcuni fotogrammi del salto hanno il disegno tagliato dal bordo alto dell'immagine (testa o capelli mancanti).
+   Quando l'animazione è caricata, ogni fotogramma in aria (up, peak, down) che tocca il bordo alto viene sostituito
+   dal fotogramma integro più vicino tra la spinta (squat) e l'atterraggio (land). */
+function fixJumpFrames(S){
+  const a=S.anims&&S.anims.jump,im=a&&S.img[a.file];if(!a||!a.jf||!imgOk(im)||S.jfFix)return;
+  try{const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=Math.min(im.naturalHeight,2);
+    const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,1).data;
+    const cut=[];for(let fi=0;fi<a.n;fi++){let hit=false;for(let xx=fi*S.fw;xx<(fi+1)*S.fw;xx++)if(d[xx*4+3]>30){hit=true;break;}cut.push(hit);}
+    const lo=a.jf.squat,hi=a.jf.land,fix={};
+    for(const k of ['up','peak','down']){const v=a.jf[k];if(!cut[v])continue;let best=null;
+      for(let i=lo;i<=hi;i++)if(!cut[i]&&(best===null||Math.abs(i-v)<Math.abs(best-v)))best=i;
+      if(best!==null)fix[k]=best;}
+    S.jfFix=fix;}catch(e){S.jfFix={};}
+}
 function measureReach(S){
   S.reach={};
   try{const c=document.createElement('canvas');c.width=S.fw;c.height=S.fh;const x=c.getContext('2d');
@@ -1949,9 +1963,10 @@ function spriteFrame(f,S){
     if(fi>=h)fi=h+Math.floor((t*8/60))%(n-h);}
   else if(key==='jump'){const j=a.jf;
     if(f.state==='jumpsquat'||f.state==='crouch')fi=j.squat;
-    else if(f.vy<-2)fi=j.up;
-    else if(f.vy<2)fi=j.peak;
-    else fi=f.y>GROUND-30?j.land:j.down;
+    else{const jx=S.jfFix||{};
+      if(f.vy<-2)fi=jx.up??j.up;
+      else if(f.vy<2)fi=jx.peak??j.peak;
+      else fi=f.y>GROUND-30?j.land:(jx.down??j.down);}
   }
   else{
     fi=Math.floor(t*a.fps/60);
