@@ -342,6 +342,59 @@
     touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer; }
 
   /* ===== SELEZIONE PERSONAGGIO ===== */
+  /* ===== PERCORSO DEL TORNEO (dopo la scelta e dopo ogni vittoria, prima del VS) ===== */
+  #path-screen { display:none; position:fixed; inset:0; z-index:515; overflow:hidden; color:var(--testo); font-family:var(--font-testo);
+    flex-direction:column; align-items:center; box-sizing:border-box;
+    padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    background: radial-gradient(ellipse at 50% 45%, #2a2160 0%, #14103a 40%, var(--fondo-notte) 78%, #030210 100%); }
+  @supports (height: 100dvh) { #path-screen { bottom:auto; height:100dvh; } }
+  /* il lato delle caselle: una riga da 11 se c'è spazio, altrimenti due righe (6 + 5) */
+  #path-screen { --pt: clamp(34px, min(calc((100vw - 120px) / 11 - 8px), calc(100dvh - 190px)), 84px); }
+  #pt-top { position:relative; width:100%; min-height:48px; display:flex; align-items:center; justify-content:center; flex:none; }
+  #pt-me { position:absolute; left:0; top:0; display:flex; align-items:center; gap:8px; max-width:30%; }
+  #pt-me canvas { width:44px; height:44px; flex:none; image-rendering:pixelated; border:2px solid var(--oro); border-radius:8px; background:rgba(20,18,50,.85); }
+  #pt-me small { display:block; font-size:12px; color:var(--testo-tenue); line-height:1.1; }
+  #pt-me b { display:block; font:400 clamp(13px, min(1.8vw,4vh), 20px)/1.15 var(--font-gioco); color:var(--oro); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #pt-head { font:400 clamp(16px, min(2.8vw,6vh), 34px)/1.1 var(--font-gioco); color:var(--oro); letter-spacing:.05em; text-align:center;
+    text-shadow:2px 2px 0 #6b4800; padding:0 calc(30% + 8px) 0 calc(30% + 8px); }
+  #path-screen.champ #pt-head { color:var(--oro-chiaro, #FFE08A); text-shadow:2px 2px 0 #6b4800, 0 0 18px rgba(255,193,7,.6); }
+  #pt-grid { flex:1; min-height:0; width:100%; display:flex; flex-wrap:wrap; align-content:center; justify-content:center; gap:14px 8px; }
+  .pt-c { position:relative; width:var(--pt); height:var(--pt); flex:none; box-sizing:border-box; border:2px solid rgba(255,255,255,.3); border-radius:8px;
+    background:rgba(20,18,50,.85); transition:transform .2s; }
+  .pt-c canvas { width:100%; height:100%; display:block; image-rendering:pixelated; border-radius:6px; }
+  /* linea del percorso verso la casella successiva */
+  .pt-c:not(:last-child)::before { content:''; position:absolute; top:50%; right:-10px; width:8px; height:2px; background:rgba(255,255,255,.22); }
+  .pt-c.won:not(:last-child)::before { background:var(--oro); }
+  .pt-c.won canvas { filter:brightness(.38) grayscale(.5); }
+  .pt-c.won { border-color:rgba(255,193,7,.45); }
+  .pt-c .pt-ok { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .pt-c .pt-ok svg { width:58%; height:58%; }
+  .pt-c.todo canvas { opacity:.45; }
+  .pt-c.next { border:3px solid var(--oro); transform:scale(1.18); z-index:1; box-shadow:0 0 14px rgba(255,193,7,.8), 0 0 30px rgba(255,193,7,.3); }
+  .pt-c.boss { border-color:var(--rosso); box-shadow:0 0 10px rgba(255,65,54,.55); }
+  .pt-c.boss.next { border-color:var(--rosso); box-shadow:0 0 0 2px var(--oro), 0 0 16px rgba(255,65,54,.85); }
+  .pt-c .pt-boss { position:absolute; left:50%; bottom:-9px; transform:translateX(-50%); padding:1px 5px 0; border-radius:4px;
+    font:400 12px/14px var(--font-gioco); color:#fff; background:var(--rosso); letter-spacing:.05em; white-space:nowrap; }
+  #pt-info { flex:none; margin:12px 0 8px; text-align:center; line-height:1.35; }
+  #pt-count { display:block; font:400 clamp(14px, min(2vw,4.4vh), 24px) var(--font-gioco); color:var(--testo); letter-spacing:.04em; }
+  #pt-sub { display:block; font-size:clamp(12px, min(1.4vw,3.2vh), 17px); color:var(--testo-tenue); }
+  #pt-sub b { color:var(--oro); font-weight:700; }
+  #pt-sub .lv { color:var(--testo); font-weight:700; } #pt-sub .lv.boss { color:var(--rosso); }
+  #pt-btns { flex:none; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px; width:min(100%, 520px); }
+  #pt-btns button { flex:1 1 0; min-width:140px; min-height:48px; padding:0 14px; font-size:clamp(14px, min(1.8vw,4vh), 22px); letter-spacing:.05em; }
+  #pt-btns .pt-msg { flex:1 1 100%; text-align:center; font-size:clamp(12px, min(1.4vw,3.2vh), 16px); color:var(--testo); }
+  /* schermi stretti: due righe di caselle */
+  @media (max-width: 759px) {
+    #path-screen { --pt: clamp(34px, min(calc((100vw - 90px) / 6 - 10px), calc((100dvh - 210px) / 2)), 76px); }
+    #pt-grid { max-width:calc(6 * var(--pt) + 5 * 14px + 4px); gap:16px 14px; margin:0 auto; }
+    .pt-c:not(:last-child)::before { right:-14px; width:14px; }
+    .pt-c:nth-child(6)::before { display:none; }
+  }
+  /* telefono in orizzontale molto basso: tutto più compatto */
+  @media (max-height: 340px) {
+    #pt-top { min-height:44px; } #pt-me canvas { width:40px; height:40px; }
+    #pt-info { margin:8px 0 6px; } #pt-btns button { min-height:44px; }
+  }
   /* ===== SCHERMATA VS (tra la scelta e il combattimento) ===== */
   #vs-screen { display:none; position:fixed; inset:0; z-index:520; overflow:hidden; color:var(--testo);
     background: radial-gradient(ellipse at 50% 40%, #1a1430 0%, var(--fondo-notte) 60%, #020206 100%); }
@@ -623,6 +676,13 @@
   <div id="vs-mid">VS</div>
   <div id="vs-dots"><i></i><i></i><i></i></div>
   <div id="vs-flash"></div>
+</div>
+<div id="path-screen" aria-live="polite">
+  <div id="pt-top"><div id="pt-me"><canvas width="64" height="64"></canvas><div><small>Il tuo campione</small><b></b></div></div>
+    <div id="pt-head">PERCORSO DEL TORNEO</div></div>
+  <div id="pt-grid"></div>
+  <div id="pt-info"><span id="pt-count"></span><span id="pt-sub"></span></div>
+  <div id="pt-btns"></div>
 </div>
 <div id="vic-pop"><div id="vic-panel"><div id="vic-body">
   <div id="vic-title">VITTORIA</div>
@@ -2944,7 +3004,9 @@ const game={
     const order=ROSTER.map((c,i)=>({i,s:c.hp*0.4+c.power*7+c.speed*12+(c.def||5)*5+(c.id==='pisani'?999:0)}))
       .filter(o=>o.i!==me).sort((a,b)=>a.s-b.s).map(o=>o.i);
     this.tournament={order,idx:0,wins:0};
-    this.sel[1]=order[0];this.startMatch();},
+    this.sel[1]=order[0];this.showPath();},
+  /* torneo: schermata del percorso prima di ogni incontro (COMBATTI porta al VS) */
+  showPath(){loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.state='path';},
   startRound(){this.reset();
     this.p[0]=new Fighter(ROSTER[this.sel[0]],Math.round(W*.32),1,P1MAP);
     this.p[1]=new Fighter(ROSTER[this.sel[1]],Math.round(W*.68),-1,this.mode===2?P2MAP:'cpu');
@@ -3096,6 +3158,11 @@ function update(){
     if((ready&&game.vsT>=90)||game.vsT>=720)game.beginFight();
     else if(ready&&(kp('Enter')||kp('KeyZ')||kp('Space')))game.beginFight();
     const d=document.getElementById('vs-dots');if(d)d.classList.toggle('on',!ready&&game.vsT>90);
+  }
+  else if(game.state==='path'){
+    /* INVIO = COMBATTI (o MENU a torneo vinto), ESC = ABBANDONA */
+    if(kp('Enter')||kp('KeyZ'))pathAction(game.tournament&&game.tournament.done?'menu':_ptConfirm?'back':'fight');
+    else if(kp('Escape'))pathAction(_ptConfirm?'back':game.tournament&&game.tournament.done?'menu':'abandon');
   }
   else if(game.state==='victory'){
     if(!game.playerLost){vcfxFrame=vcfxFrame||0;vcfxFrame++;}
@@ -3790,11 +3857,63 @@ function showVs(){
   const fl=document.getElementById('vs-flash');fl.classList.remove('on');
   if(!REDUCE_FX)setTimeout(()=>{void fl.offsetWidth;fl.classList.add('on');},450);
 }
+/* ===== PERCORSO DEL TORNEO ===== */
+let _ptConfirm=false;
+/* spunta pixel 16x16 (contorno scuro + verde) */
+const PT_CHECK=(()=>{const pts=[[2,8],[3,9],[4,10],[5,11],[6,10],[7,9],[8,8],[9,7],[10,6],[11,5],[12,4]];
+  return '<svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true">'+pts.map(([x,y])=>'<rect x="'+(x-1)+'" y="'+(y-1)+'" width="4" height="4" fill="#0b2a10"/>').join('')+
+    pts.map(([x,y])=>'<rect x="'+x+'" y="'+y+'" width="2" height="2" fill="#2ECC40"/>').join('')+'</svg>';})();
+function ptThumb(cv,id){const c=cv.getContext('2d'),th=HUD_THUMB[id];c.clearRect(0,0,64,64);c.imageSmoothingEnabled=false;if(th){c.drawImage(th,0,0,64,64);return true;}return false;}
+function renderPath(confirm){
+  const t=game.tournament,P=document.getElementById('path-screen');if(!t||!P)return;
+  _ptConfirm=!!confirm;const done=!!t.done,n=t.order.length,me=ROSTER[game.sel[0]];
+  P.classList.toggle('champ',done);
+  document.getElementById('pt-head').textContent=done?'CAMPIONE DEL TORNEO':'PERCORSO DEL TORNEO';
+  document.querySelector('#pt-me b').textContent=me.name;
+  let missing=!ptThumb(document.querySelector('#pt-me canvas'),me.id);
+  const g=document.getElementById('pt-grid');g.innerHTML='';
+  t.order.forEach((ri,k)=>{const c=ROSTER[ri],d=document.createElement('div');
+    const st=done||k<t.idx?'won':k===t.idx?'next':'todo';
+    d.className='pt-c '+st+(k===n-1?' boss':'');
+    d.setAttribute('aria-label',(k+1)+'. '+c.name+(st==='won'?' (battuto)':st==='next'?' (prossimo)':''));
+    const cv=document.createElement('canvas');cv.width=cv.height=64;d.appendChild(cv);if(!ptThumb(cv,c.id))missing=true;
+    if(st==='won'){const o=document.createElement('div');o.className='pt-ok';o.innerHTML=PT_CHECK;d.appendChild(o);}
+    if(k===n-1){const b=document.createElement('span');b.className='pt-boss';b.textContent='BOSS';d.appendChild(b);}
+    g.appendChild(d);});
+  const cnt=document.getElementById('pt-count'),sub=document.getElementById('pt-sub');
+  if(done){cnt.textContent=t.wins+' vittorie su '+n;sub.textContent='Hai battuto tutti gli avversari!';}
+  else{cnt.textContent='Incontro '+(t.idx+1)+' di '+n;
+    const nx=ROSTER[t.order[t.idx]],lv=game.cpuDiff().label,boss=lv==='BOSS';
+    sub.innerHTML='Prossimo: <b></b> \u00B7 CPU <span class="lv'+(boss?' boss':'')+'"></span>';
+    sub.querySelector('b').textContent=nx.name;sub.querySelector('.lv').textContent=lv.charAt(0)+lv.slice(1).toLowerCase();}
+  /* pulsanti */
+  const box=document.getElementById('pt-btns');box.innerHTML='';
+  const add=(label,cls,act)=>{const b=document.createElement('button');b.className=cls;b.textContent=label;
+    const go=e=>{if(e){e.preventDefault();e.stopPropagation();}pathAction(act);};
+    b.addEventListener('touchend',go,{passive:false});b.addEventListener('click',go);
+    b.addEventListener('touchstart',e=>{e.stopPropagation();b.classList.add('pressed');},{passive:true});
+    b.addEventListener('touchcancel',()=>b.classList.remove('pressed'));box.appendChild(b);};
+  if(done)add('MENU','btn-primario','menu');
+  else if(_ptConfirm){const m=document.createElement('div');m.className='pt-msg';m.textContent='Abbandonare il torneo? I progressi andranno persi.';box.appendChild(m);
+    add('ANNULLA','btn-secondario','back');add('S\u00CC, ABBANDONA','btn-secondario','menu');}
+  else{add('ABBANDONA','btn-secondario','abandon');add('COMBATTI','btn-primario','fight');}
+  /* miniature non ancora pronte: riprova tra poco */
+  if(missing)setTimeout(()=>{if(game.state==='path')renderPath(_ptConfirm);},400);
+}
+function pathAction(a){
+  if(game.state!=='path')return;
+  if(a==='abandon'){try{sfx.sel();}catch(e){}renderPath(true);return;}
+  if(a==='back'){try{sfx.sel();}catch(e){}renderPath(false);return;}
+  try{sfx.ok();}catch(e){}
+  _ptConfirm=false;
+  if(a==='fight')game.startMatch();
+  else{game.tournament=null;game.state='title';}
+}
 /* ===== SCHERMATA DI FINE INCONTRO ===== */
 let _vicShownAt=0,_vicTimer=null;
 /* azione del pulsante principale nel contesto attuale */
 function vicPrimary(){const t=game.tournament;
-  if(game.mode===3&&t)return (!game.playerLost&&t.idx<t.order.length-1)?'continue':'newtour';
+  if(game.mode===3&&t)return game.playerLost?'newtour':t.idx<t.order.length-1?'continue':'champion';
   return 'rematch';}
 function vicAction(a){
   if(game.state!=='victory')return;
@@ -3802,7 +3921,8 @@ function vicAction(a){
   try{sfx.ok();}catch(e){}vcfxFrame=0;
   const t=game.tournament;
   if(a==='rematch'){game.startMatch();}
-  else if(a==='continue'&&t){t.idx++;game.sel[1]=t.order[t.idx];game.startMatch();}
+  else if(a==='continue'&&t){t.idx++;game.sel[1]=t.order[t.idx];game.showPath();}
+  else if(a==='champion'&&t){t.done=true;game.state='path';}
   else if(a==='newtour'){game.startTournament();}
   else if(a==='change'){game.tournament=null;game.state='select';game.pickTurn=0;}
   else if(a==='abandon'){vicButtons(true);return;}
@@ -3823,6 +3943,7 @@ function vicButtons(confirmAbandon){
   const t=game.tournament,lost=game.playerLost;
   if(game.mode===3&&t){
     if(!lost&&t.idx<t.order.length-1){add('CONTINUA','btn-primario','continue');add('ABBANDONA','btn-secondario','abandon');}
+    else if(!lost){add('CONTINUA','btn-primario','champion');add('MENU','btn-secondario','menu');}
     else{add('NUOVO TORNEO','btn-primario','newtour');add('MENU','btn-secondario','menu');}}
   else{add(lost?'RIPROVA':'RIVINCITA','btn-primario','rematch');add('CAMBIA PERSONAGGIO','btn-secondario','change');add('MENU','btn-secondario','menu');}
   box.dataset.n=box.querySelectorAll('button').length;
@@ -4101,6 +4222,8 @@ function loop(ts){
     sh('vic-pop',     s==='victory' ? 'block' : 'none');
     sh('vs-screen',   s==='vs' ? 'block' : 'none');
     if(s==='vs') showVs();
+    sh('path-screen', s==='path' ? 'flex' : 'none');
+    if(s==='path') renderPath(false);
     if(s==='victory') showVictoryPanel();
     sh('m-music',     s==='fight' ? 'none' : 'flex');
     /* Sincronizza label difficoltà nella home */
