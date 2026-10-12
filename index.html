@@ -2920,6 +2920,7 @@ const game={
       /* Luca Pisani versione BOSS: vita 280 e potenza 10 (ROSTER resta invariato) */
       if(d===DIFFS.boss&&this.p[1].cfg.id==='pisani')this.p[1].cfg={...this.p[1].cfg,hp:280,power:10};
       this.p[1].maxHp=this.p[1].hp=Math.round(this.p[1].cfg.hp*d.hp);}
+    for(const f of this.p){f.hpTrail=f.hp;f._trailHp=f.hp;f.trailWait=0;f.trailSpd=0;} /* scia della vita: parte uguale alla vita */
     this.timer=99;this.timerF=0;this.koPending=false;
     this.banner='ROUND '+this.round;this.bannerT=IS_MOBILE?30:70;this.freeze=IS_MOBILE?40:100;
     setTimeoutFrames(IS_MOBILE?30:70,()=>{this.banner='COMBATTETE!';this.bannerT=IS_MOBILE?15:30;sfx.ok();});},
@@ -2959,6 +2960,18 @@ function setPause(v){
 }
 /* pagine del pannello di pausa */
 function pausePage(id){['pp-main','pp-set','pp-confirm'].forEach(x=>{const e=document.getElementById(x);if(e)e.hidden=(x!==id);});}
+/* SCIA DELLA VITA: dopo un colpo la parte persa resta visibile 30 fotogrammi, poi scende in circa 20.
+   Un nuovo colpo durante la scia fa ripartire l'attesa, così una combo mostra tutta la vita persa insieme. */
+function trailTick(f){
+  if(f.hpTrail===undefined){f.hpTrail=f.hp;f._trailHp=f.hp;f.trailWait=0;f.trailSpd=0;}
+  if(f.hp<f._trailHp){f.trailWait=30;f.trailSpd=0;}
+  f._trailHp=f.hp;
+  if(f.hpTrail<f.hp){f.hpTrail=f.hp;return;} /* vita che risale (es. allenamento): la scia la segue subito */
+  if(f.hpTrail>f.hp){
+    if(f.trailWait>0){f.trailWait--;return;}
+    if(!f.trailSpd)f.trailSpd=Math.max(.5,(f.hpTrail-f.hp)/20);
+    f.hpTrail=Math.max(f.hp,f.hpTrail-f.trailSpd);if(f.hpTrail===f.hp)f.trailSpd=0;}
+}
 function update(){
   if(game.state==='fight'&&game.paused){ /* in pausa: tutto fermo; ESC o P riprendono */
     if(kp('Escape')||kp('KeyP'))setPause(false);
@@ -3000,6 +3013,7 @@ function update(){
     if(kp('Escape')){if(game.pickTurn===1)game.pickTurn=0;else game.state='title';}
   }
   else if(game.state==='fight'){
+    for(const f of game.p)if(f)trailTick(f);
     if(hitstop>0){hitstop--;}
     else{
       const [a,b]=game.p;
@@ -3245,6 +3259,8 @@ function drawHUD0(){
     // vita (alta il doppio)
     pxs(bx-u(1),top-u(1),bw+u(2),barH+u(2),'#000');pxs(bx,top,bw,barH,'#1A1A1A');
     const r=f.hp/f.maxHp,col=r>.5?COL.verde:r>.25?COL.oro:COL.rosso;
+    /* prima la scia (vita appena persa, rosso chiaro), poi sopra la vita */
+    {const tr=Math.min(1,(f.hpTrail===undefined?f.hp:f.hpTrail)/f.maxHp);if(tr>r)fill(top+u(1),barH-u(2),tr,'#FF8A80');}
     fill(top+u(1),barH-u(2),r,col);fill(top+u(1),u(4),r,lift(col,.4));
     let y=top+barH+u(3);
     // resistenza: solo se sotto il 100%
