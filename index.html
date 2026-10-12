@@ -61,61 +61,10 @@
   #m-back  { left:  max(10px, env(safe-area-inset-left,  10px)); }
   #m-music { right: max(10px, env(safe-area-inset-right, 10px)); z-index: 600; }
   #m-esc   { left:  max(10px, env(safe-area-inset-left,  10px)); }
-  #m-back.pressed, #m-esc.pressed, #m-music.pressed, .sel-btn.pressed { background: rgba(100,70,10,0.85); color: #FFD700; }
+  #m-back.pressed, #m-esc.pressed, #m-music.pressed { background: rgba(100,70,10,0.85); color: #FFD700; }
   #m-back:active, #m-esc:active, #m-music:active {
     background: rgba(100,70,10,0.85); color: #FFD700;
   }
-
-  /* ===== TITLE MENU BUTTONS ===== */
-  #menu-btns {
-    display: none; position: fixed;
-    bottom: max(12px, env(safe-area-inset-bottom, 12px));
-    left: 0; right: 0; z-index: 101;
-    flex-direction: column; align-items: center;
-    gap: clamp(6px, 1.5vh, 12px);
-    padding: 0 clamp(12px, 4vw, 32px);
-  }
-  .menu-btn {
-    width: 100%; max-width: 380px;
-    min-height: 52px;
-    padding: 0 20px;
-    font-size: clamp(14px, 3.5vw, 18px);
-    font-family: monospace; font-weight: bold;
-    color: #F5F0E1; text-align: center; cursor: pointer;
-    background: rgba(28,18,5,0.94);
-    border: 2px solid rgba(255,215,0,0.5);
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    -webkit-user-select: none;
-    transition: background .1s;
-  }
-  .menu-btn:active { background: rgba(120,85,10,0.95); border-color: #FFD700; }
-  #mb-3 { color: #FF8C00; border-color: rgba(255,140,0,0.65); }
-  #diff-btn {
-    font-size: clamp(11px, 2.5vw, 14px); min-height: 40px;
-    color: #B7A98C; border-color: rgba(255,255,255,0.18);
-    background: rgba(15,10,4,0.88);
-  }
-
-  /* ===== SELECT SCREEN BUTTONS ===== */
-  #select-btns {
-    display: none; position: fixed;
-    bottom: max(12px, env(safe-area-inset-bottom, 12px));
-    left: 0; right: 0; z-index: 101;
-    flex-direction: row; justify-content: center;
-    gap: clamp(8px, 2vw, 18px);
-    padding: 0 clamp(12px, 4vw, 32px);
-  }
-  .sel-btn {
-    flex: 1; max-width: 180px; min-height: 52px;
-    padding: 0 16px;
-    font-size: clamp(13px, 3.2vw, 16px); font-family: monospace; font-weight: bold;
-    color: #F5F0E1; cursor: pointer; border-radius: 14px;
-    background: rgba(28,18,5,0.95); border: 2px solid rgba(255,215,0,0.5);
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    -webkit-user-select: none;
-  }
-  .sel-btn:active { background: rgba(120,85,10,0.95); }
 
   /* ===== COMANDI TOUCH DEL COMBATTIMENTO (stile picchiaduro mobile) ===== */
   #m-controls { display: none; position: fixed; inset: 0; z-index: 100; pointer-events: auto; }
@@ -424,13 +373,6 @@
   </div>
   <div id="ss-actions"><button id="ss-random">CASUALE</button><button id="ss-confirm">CONFERMA</button></div>
   <div id="ss-thumbs"></div>
-</div>
-
-<div id="menu-btns" style="display:none"><!-- legacy, tenuto per compatibilità JS --></div>
-
-<div id="select-btns">
-  <button class="sel-btn" id="sel-random">🎲 Casuale</button>
-  <button class="sel-btn" id="sel-confirm" style="border-color:rgba(255,215,0,0.8);color:#FFD700;">✓ Conferma</button>
 </div>
 
 <button id="m-back">← Indietro</button>
@@ -1467,7 +1409,7 @@ const sctx=sil.getContext('2d');sctx.imageSmoothingEnabled=false;
 const OX=180,OY=300; // origine piedi dentro l'offscreen
 
 /* ---------- SFONDI DEI COMBATTIMENTI (uno a caso per incontro) ---------- */
-const BACKGROUNDS=['Campo al tramonto','Cripta','Cantiere della Torre','Citta nella caverna','Miniera rossa','Rifugio nella grotta',
+const BACKGROUNDS=['Campo al tramonto','Cripta','Cantiere della Torre','Citt\u00E0 nella caverna','Miniera rossa','Rifugio nella grotta',
   'Astronave','Horny Alpaca','Salone del Fronte','Villaggio delle due lune','Via dei dinosauri','Tetti in fiamme','Fattoria',
   'Piazza del borgo','Sala del trono'];
 const BG_IMG={};
@@ -3196,8 +3138,10 @@ function drawHUD0(){
     const nameY=y+spH+u(15),fs=u(13);
     outlineText(f.cfg.name,flip?bx+bw:bx,nameY,fs,uc,al);
     ctx.font='bold '+fs+'px monospace';const nw=ctx.measureText(f.cfg.name).width;
-    for(let i=0;i<2;i++){const pw=u(10),px=flip?bx+bw-nw-u(8)-pw-i*u(13):bx+nw+u(8)+i*u(13);
-      pxs(px,nameY-u(9),pw,u(8),game.wins[side]>i?'#FFD700':'#3A3A3A');}
+    for(let i=0;i<2;i++){const ds=u(12),px=flip?bx+bw-nw-u(8)-ds-i*u(16):bx+nw+u(8)+i*u(16),cx=px+ds/2,cy=nameY-u(5),won=game.wins[side]>i;
+      ctx.beginPath();ctx.moveTo(cx,cy-ds/2);ctx.lineTo(cx+ds/2,cy);ctx.lineTo(cx,cy+ds/2);ctx.lineTo(cx-ds/2,cy);ctx.closePath();
+      if(won){ctx.fillStyle='#FFD700';ctx.fill();ctx.lineWidth=u(1.5);ctx.strokeStyle='#7A5A00';ctx.stroke();}
+      else{ctx.lineWidth=u(1.5);ctx.strokeStyle='rgba(245,240,225,.8)';ctx.stroke();}}
     if(f.combo>1)outlineText(f.combo+' COMBO',flip?bx+bw:bx,nameY+u(18),u(14),'#FFD700',al);
   }
   outlineText(game.timer,W/2,top+u(26),u(28),'#F5F0E1');
@@ -3262,7 +3206,12 @@ function drawSelect(){
 }
 
 function drawFight(){
-  if(drawBg(game.bg))text(BACKGROUNDS[game.bg].toUpperCase(),W/2,H-18,9,'rgba(245,240,225,.45)');
+  if(drawBg(game.bg)&&game.bannerT>0&&/^ROUND/.test(game.banner)){
+    /* nome dello sfondo solo all'inizio del round, insieme al banner "ROUND …", poi sfuma */
+    const k=cv.width/(cv.getBoundingClientRect().width||cv.width);
+    ctx.globalAlpha=Math.min(1,game.bannerT/12);
+    text(BACKGROUNDS[game.bg].toUpperCase(),W/2,H-18,Math.max(9,13*k/ZOOM),'rgba(245,240,225,.75)');
+    ctx.globalAlpha=1;}
   else{STAGES[game.stage].draw(camX);text(STAGES[game.stage].name,W/2,H-18,9,'rgba(245,240,225,.35)');}
   ctx.save();ctx.translate(-camX*0.0,0); // fighters in world≈screen, cam già nei layer
   const ps=[...game.p].sort((a,b)=>(a.state==='attack'?1:0)-(b.state==='attack'?1:0));
@@ -3960,13 +3909,12 @@ requestAnimationFrame(loop);
     sh('tr-offer', s==='title'&&!offered ? 'flex' : 'none');
     if(s!=='title') sh('set-pop','none');
     document.body.classList.toggle('in-title', s==='title');
-    sh('select-btns', 'none');
     sh('select-screen', s==='select' ? 'block' : 'none');
     if(s==='select'&&window.renderSelect){SS.last='';renderSelect();}
     sh('m-controls',  s==='fight'&&IS_MOB ? 'block' : 'none');
     sh('m-esc',       s==='fight'  ? 'flex' : 'none');
     sh('m-back',      s==='victory' ? 'flex' : 'none');
-    sh('m-music',     'flex');
+    sh('m-music',     s==='fight' ? 'none' : 'flex');
     /* Sincronizza label difficoltà nella home */
     var dv = document.getElementById('hb-diff-val');
     if(dv){ var dl={facile:'Facile',normale:'Normale',difficile:'Difficile'};
@@ -4134,15 +4082,10 @@ requestAnimationFrame(loop);
     game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0;
     try{sfx.ok();}catch(_){} updateOverlay();
   });
-  _btn('sel-confirm', confirmPick);
   _btn('ss-confirm', function(){ if(game.state==='select'){ confirmPick(); SS.last=''; if(game.state==='select')renderSelect(); } });
   _btn('ss-random', function(){ if(game.state!=='select')return; game.sel[1]=(Math.random()*ROSTER.length)|0; confirmPick(); SS.last=''; if(game.state==='select')renderSelect(); });
   _btn('ss-back', function(){ if(game.state!=='select')return; try{sfx.sel();}catch(_){}
     if(game.pickTurn===1) game.pickTurn=0; else game.state='title'; SS.last=''; updateOverlay(); if(game.state==='select')renderSelect(); });
-  _btn('sel-random', function(){
-    game.sel[game.pickTurn]=(Math.random()*12)|0;
-    try{sfx.sel();}catch(_){}
-  });
   function showFx(){var v=document.getElementById('hb-fx-val');if(v)v.textContent=REDUCE_FX?'S\u00CC':'NO';}
   showFx();
   function showVib(){var v=document.getElementById('hb-vib-val');if(v)v.textContent=VIBRA?'S\u00CC':'NO';}
