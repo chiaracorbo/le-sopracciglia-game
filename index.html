@@ -822,7 +822,10 @@ let vcfxFrame=0;
 let REDUCE_FX=false;try{REDUCE_FX=localStorage.getItem('reduceFx')==='1';}catch(e){}
 /* vibrazione breve (solo dove il browser la supporta; su iPhone non c'è) */
 let VIBRA=true;try{VIBRA=localStorage.getItem('vibra')!=='0';}catch(e){}
-function vib(ms){if(!VIBRA)return;try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
+function vib(ms){if(!VIBRA)return;
+  /* il browser permette la vibrazione solo dopo che il giocatore ha toccato lo schermo */
+  if(navigator.userActivation&&!navigator.userActivation.hasBeenActive)return;
+  try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 const isP1=(...fs)=>game.p&&fs.some(x=>x&&x===game.p[0]&&x.ctrl!=='cpu');
 let _lastFlashFr=-999;
 function flash(n){if(REDUCE_FX)return;if(frame-_lastFlashFr<20)return;_lastFlashFr=frame;whiteFlash=Math.max(whiteFlash,n);}
@@ -1569,8 +1572,21 @@ const OX=180,OY=300; // origine piedi dentro l'offscreen
 const BACKGROUNDS=['Campo al tramonto','Cripta','Cantiere della Torre','Citt\u00E0 nella caverna','Miniera rossa','Rifugio nella grotta',
   'Astronave','Horny Alpaca','Salone del Fronte','Villaggio delle due lune','Via dei dinosauri','Tetti in fiamme','Fattoria',
   'Piazza del borgo','Sala del trono'];
-const BG_IMG={};
-function loadBg(i){if(BG_IMG[i])return;const im=new Image();im.src='backgrounds/bg'+String(i+1).padStart(2,'0')+'.png';BG_IMG[i]=im;}
+const BG_IMG={},BG_STATE={}; /* stato di ogni sfondo: loading / ok / failed */
+/* scarica uno sfondo; se il download fallisce riprova fino a 4 volte (come gli sprite) */
+function loadBg(i){
+  if(BG_IMG[i]&&BG_STATE[i]!=='failed')return; /* già pronto o in arrivo; se era fallito, riprova */
+  const src='backgrounds/bg'+String(i+1).padStart(2,'0')+'.png',im=new Image();let tries=0;
+  BG_IMG[i]=im;BG_STATE[i]='loading';
+  im.onload=()=>{BG_STATE[i]='ok';};
+  im.onerror=()=>{if(++tries<=4)setTimeout(()=>{im.src=src+'?r='+tries+'-'+Date.now();},400*tries);
+    else{BG_STATE[i]='failed';console.warn('Sfondo non caricato: '+src);}};
+  im.src=src;}
+/* sfondo pronto (o definitivamente non disponibile: allora si usa quello disegnato) */
+function bgReady(i){return BG_STATE[i]==='ok'||BG_STATE[i]==='failed';}
+/* in sottofondo scarica a poco a poco tutti gli sfondi, uno alla volta, così di solito sono già pronti */
+setTimeout(function preloadBg(){const next=BACKGROUNDS.findIndex((_,i)=>!BG_IMG[i]);if(next<0)return;loadBg(next);
+  (function wait(){if(bgReady(next))setTimeout(preloadBg,200);else setTimeout(wait,400);})();},2500);
 /* disegna lo sfondo riempiendo tutta l'arena (taglia i lati, non deforma) */
 function drawBg(i){const im=BG_IMG[i];if(!im||!im.complete||!im.naturalWidth)return false;
   const sc=Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
@@ -3070,7 +3086,9 @@ function update(){
     else{
       const [a,b]=game.p;
       /* aspetta gli sprite dei due combattenti (massimo 12 secondi) */
-      if(!(charReady(a.cfg.id)&&charReady(b.cfg.id))&&(game.loadWait=(game.loadWait||0)+1)<720){game.freeze=Math.max(game.freeze,40);game.bannerT=Math.max(game.bannerT,30);}
+      /* aspetta anche lo sfondo dell'incontro (al massimo 6 secondi, poi si usa quello disegnato) */
+      const waitBg=!bgReady(game.bg)&&(game.loadWait||0)<360;
+      if((!(charReady(a.cfg.id)&&charReady(b.cfg.id))||waitBg)&&(game.loadWait=(game.loadWait||0)+1)<720){game.freeze=Math.max(game.freeze,40);game.bannerT=Math.max(game.bannerT,30);}
       if(game.freeze>0)game.freeze--;
       if(game.freeze<=0&&!game.koPending){
         a.readInput(b);b.readInput(a);
