@@ -379,87 +379,122 @@
   #ss-head { position:absolute; z-index:2; top:max(14px,env(safe-area-inset-top)); left:0; right:0; text-align:center; pointer-events:none;
     font:700 min(2.6vw,5.4vh)/1.1 var(--font-gioco); color:var(--oro); letter-spacing:.05em; text-shadow:2px 2px 0 #6b4800; }
   #ss-head small { display:block; font:700 max(12px,min(1.5vw,3.2vh)) var(--font-testo); color:rgba(255,255,255,.7); letter-spacing:.02em; margin-top:3px; text-shadow:none; }
-  /* miniature: due file da 6 sotto posa e pannello; --tsz = lato del ritratto, --th = altezza dell'intera griglia */
-  :root { --tsz: clamp(30px, 10vh, 60px); --th: calc(2 * (var(--tsz) + 18px) + 14px); --ss-acc: var(--oro); --ss-acc-rgb: 255,193,7; }
+  /* --hh = fondo dell'intestazione, --pw = larghezza della colonna destra, --sb = margine sotto (barra home dell'iPhone),
+     --tsz = lato del ritratto in miniatura, --th = altezza della fascia delle miniature */
+  :root { --hh: calc(max(14px,env(safe-area-inset-top)) + min(2.6vw,5.4vh) * 1.1 + max(12px,min(1.5vw,3.2vh)) * 1.25 + 4px);
+    --pw: min(38vw, 420px); --sb: max(4px, calc(env(safe-area-inset-bottom) * .5));
+    --tsz: clamp(36px, min(15vh, calc((100vw - 40px) / 12 - 24px)), 110px); --th: calc(var(--tsz) + 20px + var(--sb));
+    --ss-acc: var(--oro); --ss-acc-rgb: 255,193,7; }
   #select-screen.opp { --ss-acc: var(--rosso); --ss-acc-rgb: 255,65,54; }
   #select-screen.opp #ss-head { color:var(--rosso); text-shadow:2px 2px 0 #5a0d08; }
-  #ss-stage { position:absolute; left:0; right:calc(min(41vw,370px) + 18px); top:calc(max(14px,env(safe-area-inset-top)) + 44px); bottom:calc(var(--th) + 4px);
+  /* a sinistra: nome sopra e posa animata grande */
+  #ss-stage { position:absolute; left:max(0px,env(safe-area-inset-left)); right:calc(var(--pw) + 24px); top:calc(var(--hh) + 4px); bottom:calc(var(--th) + 4px);
     display:flex; flex-direction:column; align-items:center; pointer-events:none; }
-  #ss-id { flex:none; text-align:center; line-height:1.1; padding:0 8px; }
-  #ss-name { display:inline; font:400 max(16px,min(3vw,6vh)) var(--font-gioco); color:var(--ss-acc); letter-spacing:.03em; text-shadow:2px 2px 0 rgba(0,0,0,.55); }
-  #ss-title { display:inline; margin-left:.6em; font-weight:700; font-size:max(12px,min(1.5vw,3.3vh)); color:rgba(255,255,255,.85); }
+  #ss-id { flex:none; text-align:center; line-height:1.15; padding:0 8px; }
+  #ss-name { display:inline; font:400 clamp(16px, min(2.6vw,5.4vh), 40px) var(--font-gioco); color:var(--ss-acc); letter-spacing:.03em; text-shadow:2px 2px 0 rgba(0,0,0,.55); }
+  #ss-title { display:inline; margin-left:.6em; font-weight:700; font-size:clamp(12px, min(1.4vw,3vh), 22px); color:rgba(255,255,255,.85); }
   #ss-pw { position:relative; flex:1; min-height:0; width:100%; display:flex; align-items:flex-end; justify-content:center; }
-  #ss-glow { position:absolute; left:50%; bottom:0; height:100%; aspect-ratio:1/1; transform:translateX(-50%) scale(1.15);
+  #ss-glow { position:absolute; left:50%; bottom:0; height:100%; aspect-ratio:1/1; transform:translateX(-50%) scale(1.1);
     border-radius:50%; filter:blur(14px); opacity:.7; transition:background .3s; }
   #ss-pose { position:relative; height:100%; max-width:100%; width:auto; aspect-ratio:1/1; image-rendering:pixelated; transition:opacity .14s, transform .14s; }
   #ss-pose.static { animation:ss-breath 2.6s ease-in-out infinite; }
   #ss-pose.swap { opacity:0; transform:translateX(-26px); }
   @keyframes ss-breath { 0%,100%{ translate:0 0 } 50%{ translate:0 -1.6% } }
-  #ss-panel { position:absolute; z-index:2; right:max(12px,env(safe-area-inset-right)); top:max(58px,calc(env(safe-area-inset-top) + 52px));
-    bottom:calc(var(--th) + 62px); width:min(41vw,370px); display:flex; flex-direction:column; box-sizing:border-box; padding:6px;
+  /* a destra: pannello a schede e, sotto, i pulsanti */
+  #ss-side { position:absolute; z-index:3; right:max(12px,env(safe-area-inset-right)); width:var(--pw);
+    top:max(calc(var(--hh) + 6px), calc(env(safe-area-inset-top) + 62px)); bottom:calc(var(--th) + 6px);
+    display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  #ss-panel { flex:1 1 auto; min-height:0; max-height:560px; display:flex; flex-direction:column; box-sizing:border-box; padding:clamp(5px,1.2vh,12px);
     background:rgba(8,8,28,.78); border:1px solid rgba(255,255,255,.14); border-radius:12px; backdrop-filter:blur(3px); }
-  /* due schede in alto nel pannello */
   #ss-tabs { flex:none; display:flex; gap:6px; }
-  .ss-tab { flex:1; min-height:36px; padding:0 6px; border-radius:9px; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
-    font:400 max(12px,min(1.5vw,3.4vh))/1 var(--font-gioco); letter-spacing:.05em;
+  .ss-tab { flex:1; min-height:max(36px, 6vh); padding:0 6px; border-radius:9px; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+    font:400 clamp(12px, min(1.3vw,2.6vh), 20px)/1 var(--font-gioco); letter-spacing:.05em;
     background:rgba(255,255,255,.06); color:rgba(255,255,255,.75); border:2px solid rgba(255,255,255,.18); }
   .ss-tab.on { background:var(--ss-acc); color:#1a1205; border-color:var(--ss-acc); }
   #select-screen.opp .ss-tab.on { color:#fff; }
-  #ss-pages { flex:1; min-height:0; overflow-y:auto; touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:4px 8px 2px; position:relative; }
+  #ss-pages { flex:1; min-height:0; overflow-x:hidden; overflow-y:auto; touch-action:pan-y; -webkit-overflow-scrolling:touch; padding:clamp(6px,2vh,18px) clamp(6px,1vw,14px) 4px; position:relative; }
   #ss-pages[data-t="st"] #ss-pg-ab, #ss-pages[data-t="ab"] #ss-pg-st { display:none; }
   /* sfumatura in fondo: c'è altro da leggere scorrendo */
-  #ss-pages::after { content:''; display:block; position:sticky; bottom:-2px; height:26px; margin:-26px -8px -2px;
+  #ss-pages::after { content:''; display:block; position:sticky; bottom:-4px; height:26px; margin:-26px -14px -4px;
     background:linear-gradient(rgba(8,8,28,0), rgba(8,8,28,.97)); pointer-events:none; opacity:0; transition:opacity .2s; }
   #ss-pages.more::after { opacity:1; }
-  #ss-pg-st #ss-style { margin-top:0; padding:2px 9px 1px; font-size:max(12px,min(1.3vw,3vh)); color:#1a1205; background:var(--ss-acc); }
+  /* STATISTICHE: stile in alto, poi una barra per riga, ben distanziate */
+  #ss-pg-st #ss-style { align-self:flex-start; margin-top:0; padding:3px 10px 2px; font-size:clamp(12px, min(1.2vw,2.4vh), 18px); color:#1a1205; background:var(--ss-acc); }
   #select-screen.opp #ss-pg-st #ss-style { color:#fff; }
-  #ss-stats { display:grid; grid-template-columns:1fr 1fr; column-gap:14px; row-gap:5px; margin-top:5px; }
-  #ss-stats .ss-stat { display:flex; flex-direction:column; gap:3px; font-size:max(12px,min(1.2vw,2.7vh)); font-weight:700; color:rgba(255,255,255,.8); line-height:1.1; }
-  .ss-bar { height:7px; background:rgba(255,255,255,.12); border-radius:4px; overflow:hidden; }
+  #ss-stats { display:flex; flex-direction:column; gap:clamp(8px,2.6vh,26px); margin-top:clamp(8px,2.4vh,24px); }
+  #ss-stats .ss-stat { display:flex; align-items:center; gap:10px; font-size:clamp(13px, min(1.5vw,2.8vh), 20px); font-weight:700; color:rgba(255,255,255,.85); line-height:1.1; }
+  #ss-stats .ss-stat span { flex:none; width:6.2em; }
+  .ss-bar { flex:1; height:clamp(8px,1.8vh,16px); background:rgba(255,255,255,.12); border-radius:4px; overflow:hidden; }
   .ss-bar > div { height:100%; background:linear-gradient(90deg,#FF8F00,var(--oro)); border-radius:4px; transition:width .25s; }
-  #ss-quote { font-style:italic; font-size:max(12px,min(1.45vw,3.2vh)); color:#d9d2ff; margin:0 0 6px; line-height:1.3; }
-  .ss-ab { font-size:max(12px,min(1.4vw,3.1vh)); line-height:1.3; margin:5px 0; color:rgba(255,255,255,.88); }
+  /* ABILITÀ: la frase e le tre abilità separate */
+  #ss-quote { font-style:italic; font-size:clamp(12px, min(1.5vw,2.9vh), 21px); color:#d9d2ff; margin:0 0 clamp(6px,1.8vh,18px); line-height:1.35; }
+  .ss-ab { font-size:clamp(12px, min(1.45vw,2.8vh), 20px); line-height:1.35; margin:0 0 clamp(6px,1.6vh,16px); padding-left:8px;
+    border-left:3px solid rgba(var(--ss-acc-rgb),.6); color:rgba(255,255,255,.88); }
   .ss-ab b { color:var(--testo); } .ss-ab i { color:var(--oro); font-style:normal; font-size:max(12px,.85em); }
-  #ss-actions { position:absolute; z-index:3; right:max(12px,env(safe-area-inset-right)); bottom:calc(var(--th) + 8px);
-    display:flex; gap:10px; width:min(41vw,370px); }
-  #ss-actions button { flex:1; min-height:46px;
-    font:700 max(14px,min(2.2vw,4.8vh))/1 var(--font-gioco); letter-spacing:.04em; transition:background .12s, box-shadow .12s, color .12s; }
+  #ss-actions { flex:none; display:flex; gap:10px; }
+  #ss-actions button { flex:1; min-height:clamp(44px, 8vh, 64px);
+    font:700 clamp(14px, min(1.8vw,3.6vh), 26px)/1 var(--font-gioco); letter-spacing:.04em; transition:background .12s, box-shadow .12s, color .12s; }
   #select-screen.opp #ss-confirm { background:var(--rosso); color:#fff; }
   #select-screen.opp #ss-random { color:var(--rosso); border-color:var(--rosso); }
+  /* in basso: tutte le miniature, ognuna col nome */
   #ss-tw { position:absolute; z-index:3; left:0; right:0; bottom:0; height:var(--th);
     background:linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,0)); }
-  #ss-thumbs { height:100%; box-sizing:border-box; display:grid; grid-template-columns:repeat(6, minmax(0,112px)); grid-template-rows:repeat(2, auto);
-    justify-content:center; align-content:center; column-gap:8px; row-gap:6px;
-    padding:4px max(12px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+  #ss-thumbs { height:100%; box-sizing:border-box; display:grid; grid-template-columns:repeat(12, minmax(0, calc(var(--tsz) + 30px))); grid-template-rows:auto;
+    justify-content:center; align-content:start; column-gap:4px; row-gap:4px;
+    padding:4px max(12px,env(safe-area-inset-right)) var(--sb) max(12px,env(safe-area-inset-left));
     overflow-x:auto; overflow-y:hidden; touch-action:pan-x; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
   #ss-thumbs::-webkit-scrollbar { display:none; }
   .ss-th { min-width:0; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
-  .ss-img { position:relative; width:var(--tsz); height:var(--tsz); box-sizing:border-box; border:2px solid rgba(255,255,255,.28); border-radius:8px;
+  .ss-img { position:relative; flex:none; width:var(--tsz); height:var(--tsz); box-sizing:border-box; border:2px solid rgba(255,255,255,.28); border-radius:8px;
     background:rgba(20,18,50,.85); overflow:hidden; transition:transform .14s, border-color .14s, box-shadow .14s; }
   .ss-img canvas { width:100%; height:100%; image-rendering:pixelated; display:block; }
-  .ss-nm { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 12px/14px var(--font-gioco); letter-spacing:.02em;
-    color:rgba(255,255,255,.78); text-shadow:1px 1px 0 #000; }
-  .ss-th.on .ss-img { border-color:var(--ss-acc); transform:scale(1.08); box-shadow:0 0 12px rgba(var(--ss-acc-rgb),.8); }
+  /* il nome può uscire un po' dalla sua colonna (i vicini hanno nomi corti), così non viene mai tagliato */
+  .ss-nm { white-space:nowrap; font:400 clamp(11px, calc(var(--tsz) * .2), 16px)/14px var(--font-gioco); letter-spacing:0;
+    color:rgba(255,255,255,.8); text-shadow:1px 1px 0 #000; }
+  .ss-th.on .ss-img { border-color:var(--ss-acc); transform:scale(1.06); box-shadow:0 0 12px rgba(var(--ss-acc-rgb),.8); }
   .ss-th.on .ss-nm { color:var(--ss-acc); }
   /* il personaggio già scelto dal giocatore, durante la scelta dell'avversario */
   .ss-th.p1 .ss-img::after { content:'TU'; position:absolute; left:0; top:0; padding:1px 4px 0; border-radius:0 0 6px 0;
     font:400 12px/14px var(--font-gioco); color:#1a1205; background:var(--oro); }
-  /* schermi stretti: nomi a 11 px, così anche LUCA DI MAURO entra intero */
-  @media (max-width: 640px) { #ss-thumbs { column-gap:4px; } .ss-nm { font-size:11px; letter-spacing:0; } }
-  /* schermi bassi: miniature più compatte, così il pannello ha più spazio */
-  @media (max-height: 340px) {
-    :root { --tsz: 30px; --th: calc(2 * (var(--tsz) + 14px) + 10px); }
-    #ss-thumbs { row-gap:3px; padding-top:2px; } .ss-th { gap:1px; } .ss-nm { line-height:13px; }
-    #ss-panel { top:max(51px,calc(env(safe-area-inset-top) + 45px)); bottom:calc(var(--th) + 54px); padding:5px; } #ss-actions { bottom:calc(var(--th) + 5px); } #ss-actions button { min-height:44px; }
-    #ss-pages { padding:3px 6px 0; } #ss-pg-st #ss-style { padding:1px 8px 0; line-height:15px; }
-    #ss-stats { row-gap:2px; margin-top:3px; } #ss-stats .ss-stat { gap:2px; line-height:1; } .ss-bar { height:5px; }
+  /* schermi alti: le barre si distribuiscono su tutta l'altezza del pannello */
+  @media (min-height: 421px) {
+    #ss-pg-st { display:flex; flex-direction:column; min-height:100%; }
+    #ss-stats { flex:1; justify-content:space-evenly; max-height:340px; }
   }
-  /* schermi grandi: tutti e 12 su una fila */
-  @media (min-width: 1000px) { :root { --th: calc(var(--tsz) + 18px + 16px); } #ss-thumbs { grid-template-columns:repeat(12, minmax(0,96px)); grid-template-rows:auto; } }
+  /* larghezza media (iPhone piccoli in orizzontale): due file da 6 */
+  @media (max-width: 719px) {
+    :root { --tsz: clamp(30px, 10vh, 60px); --th: calc(2 * var(--tsz) + 40px + var(--sb)); }
+    #ss-thumbs { grid-template-columns:repeat(6, minmax(0, 104px)); column-gap:6px; }
+  }
+  /* telefono in orizzontale (schermo basso): il nome va sotto il pulsante INDIETRO, così la posa usa tutta l'altezza */
+  @media (max-height: 420px) {
+    #ss-stage { top:max(26px, 9vh); }
+    #ss-id { position:absolute; left:max(10px,env(safe-area-inset-left)); top:calc(max(62px, env(safe-area-inset-top) + 52px) - max(26px, 9vh));
+      z-index:2; max-width:30%; text-align:left; padding:0; overflow-wrap:break-word; }
+    #ss-name { display:block; } #ss-title { display:block; margin:2px 0 0; text-shadow:1px 1px 0 #000; }
+    #ss-side { top:max(60px, calc(env(safe-area-inset-top) + 52px)); gap:6px; }
+    #ss-panel { padding:3px; } .ss-tab { min-height:36px; }
+    #ss-pages { padding:3px 6px 0; }
+    #ss-pg-st #ss-style { padding:1px 8px 0; line-height:15px; }
+    #ss-stats { display:grid; grid-template-columns:1fr 1fr; column-gap:12px; row-gap:4px; margin-top:4px; }
+    #ss-stats .ss-stat { gap:6px; line-height:1; } #ss-stats .ss-stat span { width:auto; min-width:4.6em; } .ss-bar { height:6px; }
+    #ss-quote { margin-bottom:4px; } .ss-ab { margin-bottom:5px; }
+    #ss-actions button { min-height:44px; }
+  }
+  /* telefono largo e basso: le quattro barre su una sola riga, così si vedono senza scorrere */
+  @media (max-height: 420px) and (min-width: 720px) {
+    #ss-stats { grid-template-columns:repeat(4,1fr); column-gap:10px; margin-top:5px; }
+    #ss-stats .ss-stat { flex-direction:column; align-items:stretch; gap:3px; } #ss-stats .ss-stat { min-width:0; } #ss-stats .ss-stat span { min-width:0; } #ss-stats .ss-bar { flex:none; }
+    #ss-pg-st #ss-style { line-height:13px; } #ss-stats .ss-stat { gap:2px; }
+  }
+  @media (max-height: 420px) and (max-width: 719px) {
+    :root { --tsz: clamp(30px, calc(25vh - 50px), 44px); --th: calc(2 * var(--tsz) + 34px + var(--sb)); }
+    #ss-thumbs { row-gap:2px; } .ss-th { gap:1px; } .ss-nm { line-height:13px; }
+  }
   /* schermi molto stretti: le miniature scorrono di lato, con freccia e sfumatura dove ce ne sono altre */
   @media (max-width: 559px) {
-    :root { --th: calc(var(--tsz) + 18px + 14px); }
-    #ss-thumbs { grid-template-columns:none; grid-template-rows:auto; grid-auto-flow:column; grid-auto-columns:80px; justify-content:start; }
+    :root { --th: calc(var(--tsz) + 20px + var(--sb)); }
+    #ss-thumbs { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:80px; justify-content:start; }
     #ss-head small { display:none; }
     #ss-tw::before, #ss-tw::after { position:absolute; z-index:1; top:0; bottom:0; width:34px; display:flex; align-items:center; justify-content:center;
       font:400 22px var(--font-gioco); color:var(--ss-acc); text-shadow:1px 1px 0 #000; pointer-events:none; opacity:0; transition:opacity .2s; }
@@ -545,12 +580,14 @@
   <div id="ss-head">SCEGLI IL TUO COMBATTENTE<small></small></div>
   <div id="ss-stage"><div id="ss-id"><div id="ss-name"></div><div id="ss-title"></div></div>
     <div id="ss-pw"><div id="ss-glow"></div><canvas id="ss-pose" class="static" width="128" height="128"></canvas></div></div>
+  <div id="ss-side">
   <div id="ss-panel">
     <div id="ss-tabs" role="tablist"><button class="ss-tab on" data-t="st" role="tab">STATISTICHE</button><button class="ss-tab" data-t="ab" role="tab">ABILITÀ</button></div>
     <div id="ss-pages" data-t="st"><div id="ss-pg-st"><div id="ss-style"></div><div id="ss-stats"></div></div>
       <div id="ss-pg-ab"><div id="ss-quote"></div><div id="ss-abs"></div></div></div>
   </div>
   <div id="ss-actions"><button id="ss-random" class="btn-secondario">CASUALE</button><button id="ss-confirm" class="btn-primario">CONFERMA</button></div>
+  </div>
   <div id="ss-tw"><div id="ss-thumbs"></div></div>
 </div>
 
@@ -1662,11 +1699,13 @@ function loadBg(i){
   im.onerror=()=>{if(++tries<=4)setTimeout(()=>{im.src=src+'?r='+tries+'-'+Date.now();},400*tries);
     else{BG_STATE[i]='failed';console.warn('Sfondo non caricato: '+src);}};
   im.src=src;}
-/* sfondo pronto (o definitivamente non disponibile: allora si usa quello disegnato) */
+/* sfondo pronto (o definitivamente non disponibile) */
 function bgReady(i){return BG_STATE[i]==='ok'||BG_STATE[i]==='failed';}
 /* in sottofondo scarica a poco a poco tutti gli sfondi, uno alla volta, così di solito sono già pronti */
 setTimeout(function preloadBg(){const next=BACKGROUNDS.findIndex((_,i)=>!BG_IMG[i]);if(next<0)return;loadBg(next);
   (function wait(){if(bgReady(next))setTimeout(preloadBg,200);else setTimeout(wait,400);})();},2500);
+/* mentre lo sfondo arriva: solo un fondo scuro (niente scenari disegnati col codice) */
+function bgPlaceholder(){ctx.fillStyle='#07061a';ctx.fillRect(0,0,W,H);}
 /* disegna lo sfondo riempiendo tutta l'arena (taglia i lati, non deforma) */
 function drawBg(i){const im=BG_IMG[i];if(!im||!im.complete||!im.naturalWidth)return false;
   const sc=Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
@@ -2873,187 +2912,13 @@ function drawWeapon(f,wx,wy,att,t){
   octx.restore();
 }
 
-/* ---------- STAGES con PARALLASSE ---------- */
-function skyGrad(c1,c2){const g=ctx.createLinearGradient(0,0,0,GROUND);g.addColorStop(0,c1);g.addColorStop(1,c2);
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,GROUND);}
+/* ---------- piccoli aiuti di disegno ---------- */
 function pxs(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
-const STAGES=[
- {name:'PALAZZO DEL TRONO',draw(cx){
-   // === LAYER 0: cielo/volta decorata ===
-   const g0=ctx.createLinearGradient(0,0,0,GROUND);
-   g0.addColorStop(0,'#1A0F08');g0.addColorStop(.4,'#3A1E0C');g0.addColorStop(1,'#5C3018');
-   ctx.fillStyle=g0;ctx.fillRect(0,0,W,GROUND);
-   // polvere dorata fluttuante
-   for(let i=0;i<18;i++){const px2=(i*137+frame*.4)%(W+40)-20,py2=20+(i*53)%120+Math.sin(frame*.04+i)*8;
-     ctx.globalAlpha=.18+.08*Math.sin(frame*.06+i);ctx.fillStyle='#FFD700';ctx.fillRect(px2,py2,2,2);ctx.globalAlpha=1;}
-   // stemma imperiale sulla parete (lontano, .1x)
-   const embX=W/2-cx*.1;ctx.globalAlpha=.18;ctx.fillStyle='#C9A227';ctx.beginPath();
-   ctx.arc(embX,80,36,0,7);ctx.fill();ctx.globalAlpha=.12;ctx.fillStyle='#FFD700';
-   ctx.beginPath();ctx.arc(embX,80,28,0,7);ctx.fill();ctx.globalAlpha=1;
-   // === LAYER 1: archi gotici lontani (.2x) ===
-   for(let i=-1;i<5;i++){const x=i*180-cx*.2;
-     pxs(x,40,30,GROUND-40,'#2A180A');pxs(x+8,36,14,12,'#1A0C04');// arco
-     pxs(x-4,200,38,GROUND-200,'#3A1E0C');
-     // torcia che vacilla
-     const fl=Math.sin(frame*.28+i*1.9)*4;const fr2=Math.cos(frame*.18+i*2.3)*2;
-     pxs(x+11,190,6,14,'#5C3317');pxs(x+10,178-fl,8,14+fl,'#FF6A00');
-     pxs(x+12,174-fl,5,10,'#FFB000');pxs(x+13,170-fl-fr2,3,7,'#FFE94A');}
-   // === LAYER 2: colonne marmo con base/capitello dorati (.5x) ===
-   for(let i=-1;i<6;i++){const x=42+i*140-cx*.5;
-     // ombra colonna
-     ctx.globalAlpha=.3;pxs(x+32,80,10,GROUND-80,'#000');ctx.globalAlpha=1;
-     // fusto colonna marmo (3 tonalità)
-     pxs(x,80,36,GROUND-80,'#D8D0C0');pxs(x,80,10,GROUND-80,'#C8BEB0');pxs(x+28,80,8,GROUND-80,'#E8E2D8');
-     // scanalature
-     for(let s=0;s<8;s++)pxs(x+2+s*4,84,1,GROUND-90,'#C0B8A8');
-     // capitello
-     pxs(x-6,70,48,12,'#C9A227');pxs(x-6,70,48,3,lift('#C9A227',.5));pxs(x-6,78,48,3,shade('#C9A227',.7));
-     // base
-     pxs(x-6,GROUND-14,48,14,'#B89020');pxs(x-6,GROUND-14,48,2,lift('#B89020',.4));
-     // bandiera imperiale che sventola
-     const wv=Math.sin(frame*.14+i*1.3);const wv2=Math.sin(frame*.14+i*1.3+1);
-     pxs(x+38,76,4,44,'#5C3317');// asta
-     for(let fy=0;fy<22;fy++){const xo=Math.sin((frame*.14+i*1.3+fy*.12))*8+wv*4;
-       pxs(x+42+xo,78+fy*2,28+wv2*6,2,fy<11?'#DC143C':'#FFD700');}
-     pxs(x+42+wv*6,78,4,4,'#FFD700');}
-   // === LAYER 3: trono con decorazioni (.7x) ===
-   const tx=W/2-cx*.7;
-   pxs(tx-48,GROUND-160,96,160,'#2A1308');pxs(tx-44,GROUND-164,88,160,'#3A1E0E');
-   pxs(tx-44,GROUND-164,20,160,shade('#3A1E0E',.72));pxs(tx+24,GROUND-164,20,160,lift('#3A1E0E',.15));
-   // schienale
-   pxs(tx-30,GROUND-190,60,36,'#4A2010');pxs(tx-26,GROUND-186,52,28,'#C9A227');pxs(tx-22,GROUND-183,44,22,shade('#C9A227',.8));
-   pxs(tx-10,GROUND-178,20,14,'#8B0000');pxs(tx-10,GROUND-178,20,3,lift('#8B0000',.4));
-   // bracioli con gemme
-   pxs(tx-48,GROUND-88,22,12,'#C9A227');pxs(tx+26,GROUND-88,22,12,'#C9A227');
-   pxs(tx-44,GROUND-90,8,6,'#8B0000');pxs(tx+34,GROUND-90,8,6,'#0A40A0');
-   // seduta con cuscino
-   pxs(tx-44,GROUND-76,88,18,'#7A0E0E');pxs(tx-44,GROUND-76,88,4,lift('#7A0E0E',.3));
-   // === LAYER 4: pavimento marmo con riflessi (.9x) ===
-   pxs(0,GROUND,W,H-GROUND,'#1A0A04');
-   // tappeto rosso
-   pxs(W*.15,GROUND,W*.7,H-GROUND,'#7A0E0E');pxs(W*.15,GROUND,W*.7,4,'#9B1B1B');
-   // bordi dorati tappeto
-   pxs(W*.15,GROUND,W*.7,2,'#C9A227');pxs(W*.15,GROUND+8,W*.7,2,'#C9A227');
-   // motivo tappeto
-   for(let t2=0;t2<W*.7-20;t2+=28)pxs(W*.15+10+t2,GROUND+4,14,4,'#8B1010');
-   // grout marmo pavimento
-   for(let row=0;row<4;row++)for(let col=0;col<10;col++){pxs(col*66,GROUND+row*10,65,9,'#C8C0B4');
-     pxs(col*66,GROUND+row*10,20,9,lift('#C8C0B4',.12));pxs(col*66+44,GROUND+row*10,21,9,shade('#C8C0B4',.12));}
-   // riflessi luce sul marmo (dinamici)
-   for(let i=0;i<4;i++){const rx=80+i*150+Math.sin(frame*.04+i)*8;
-     ctx.globalAlpha=.12+.06*Math.sin(frame*.06+i);pxs(rx,GROUND,30,8,'#FFD700');ctx.globalAlpha=1;}
-   pxs(0,GROUND,W,3,'#7A0E0E');
- }},
- {name:'CAMPO DI BATTAGLIA',draw(cx){
-   // === LAYER 0: cielo rosso-apocalisse ===
-   const g0=ctx.createLinearGradient(0,0,0,GROUND);
-   g0.addColorStop(0,'#1E0C08');g0.addColorStop(.35,'#8C2B10');g0.addColorStop(.7,'#C04420');g0.addColorStop(1,'#2B1814');
-   ctx.fillStyle=g0;ctx.fillRect(0,0,W,GROUND);
-   // sole rosso
-   ctx.globalAlpha=.7;ctx.fillStyle='#C04418';ctx.beginPath();ctx.arc(W*.72-cx*.05,60,28,0,7);ctx.fill();
-   ctx.globalAlpha=.4;ctx.fillStyle='#FF6030';ctx.beginPath();ctx.arc(W*.72-cx*.05,60,20,0,7);ctx.fill();
-   ctx.globalAlpha=1;
-   // === LAYER 1: esplosioni lontane + montagne (.2x) ===
-   for(let i=0;i<5;i++){const mh=60+((i*73)%80),mx=40+i*120-cx*.2;
-     pxs(mx,GROUND-mh,90,mh,'#3A2010');pxs(mx,GROUND-mh,24,mh,shade('#3A2010',.75));
-     pxs(mx+70,GROUND-mh,20,mh,lift('#3A2010',.18));}
-   for(let i=0;i<3;i++){const ph=(frame+i*61)%110;
-     if(ph<20){const ex=80+i*220-cx*.2,er=ph*4;
-       ctx.globalAlpha=(1-ph/20)*.8;ctx.fillStyle='#FF8030';ctx.beginPath();ctx.arc(ex,90,er,0,7);ctx.fill();
-       ctx.fillStyle='#FFE050';ctx.beginPath();ctx.arc(ex,90,er*.5,0,7);ctx.fill();ctx.globalAlpha=1;}}
-   // === LAYER 2: fumo animato (.35x) ===
-   for(let i=0;i<6;i++){const sx=(i*143+frame*.18)%(W+120)-60-cx*.35,sy=40+(i*47)%80;
-     ctx.globalAlpha=.28+.1*Math.sin(frame*.04+i);pxs(sx,sy,90+i*10,30,'#4A4040');
-     ctx.globalAlpha=.15;pxs(sx+20,sy-8,60,20,'#6A5858');ctx.globalAlpha=1;}
-   // === LAYER 3: edifici rotti (.55x) ===
-   for(let i=-1;i<6;i++){const x=i*160-cx*.55,h=90+(i*43)%80;
-     pxs(x,GROUND-h,80,h,'#2A2820');pxs(x,GROUND-h,18,h,shade('#2A2820',.72));pxs(x+62,GROUND-h,18,h,lift('#2A2820',.15));
-     pxs(x,GROUND-h,80,4,'#3A3830');
-     // buchi nelle mura
-     if((i*17)%3===0)pxs(x+18,GROUND-h*.6,16,20,'#111');
-     if((i*23)%3!==0)pxs(x+44,GROUND-h*.4,14,18,'#111');
-     // filo spinato
-     for(let f2=0;f2<5;f2++)pxs(x+f2*16,GROUND-h-3,3,3,'#808080');
-   }
-   // fuochi medi (.7x)
-   for(let i=0;i<5;i++){const x=50+i*130-cx*.7,fl=Math.sin(frame*.22+i*2.1)*5,fl2=Math.cos(frame*.17+i*1.7)*3;
-     pxs(x,GROUND-68-fl,24,68+fl,'#C03C00');pxs(x+4,GROUND-52-fl,15,52+fl,'#FF6A00');
-     pxs(x+8,GROUND-36-fl,9,36+fl,'#FFB000');pxs(x+10,GROUND-20-fl,6,20,'#FFE94A');
-     // fumo dal fuoco
-     ctx.globalAlpha=.3;pxs(x-4+fl2,GROUND-82-fl,30,24,'#555');ctx.globalAlpha=1;}
-   // === LAYER 4: macerie e rovine foreground (.85x) ===
-   for(let i=0;i<12;i++){const mx=(i*87+W*.1)%W-cx*.85%60,my=GROUND-3-(i*13)%18;
-     pxs(mx,my,8+(i*11)%20,4+(i*7)%12,'#6A6460');pxs(mx,my,4+(i*5)%8,2,'#8A8480');}
-   // casse/barricate rotte
-   pxs(0,GROUND-28,44,28,'#5C4030');pxs(0,GROUND-28,12,28,shade('#5C4030',.72));pxs(W-52,GROUND-28,52,28,'#5C4030');
-   // terra screpolata
-   pxs(0,GROUND,W,H-GROUND,'#3A3030');pxs(0,GROUND,W,3,'#1A1818');
-   for(let i=0;i<8;i++)pxs((i*88)%W-cx*.85%88,GROUND+6,4+(i*13)%8,2,'#2A2828');
-   // brace e cenere
-   for(let i=0;i<14;i++){const bx=(i*67+frame*.5)%(W+40)-20,by=GROUND-2+(i*11)%6;
-     ctx.globalAlpha=.5+.3*Math.sin(frame*.1+i);ctx.fillStyle=Math.random()<.5?'#FF6030':'#FF3010';
-     ctx.fillRect(bx,by,2,2);ctx.globalAlpha=1;}
- }},
- {name:'ARENA DEL FRONTE',draw(cx){
-   // === LAYER 0: cielo tramonto / stelle emergenti ===
-   const g0=ctx.createLinearGradient(0,0,0,GROUND);
-   g0.addColorStop(0,'#0A0818');g0.addColorStop(.22,'#1A1048');g0.addColorStop(.5,'#5A1C28');
-   g0.addColorStop(.78,'#C04820');g0.addColorStop(1,'#E06018');
-   ctx.fillStyle=g0;ctx.fillRect(0,0,W,GROUND);
-   // stelle che lampeggiano
-   for(let i=0;i<22;i++){const sx=(i*137+cx*.02)%W,sy=4+(i*43)%55;
-     const twk=.4+.6*Math.abs(Math.sin(frame*.08+i*.7));
-     ctx.globalAlpha=twk*.7;ctx.fillStyle='#E8E4F0';ctx.fillRect(sx,sy,i%3===0?2:1,i%3===0?2:1);ctx.globalAlpha=1;}
-   // strutture imperiali lontane in controluce
-   for(let i=0;i<4;i++){const ix=60+i*160-cx*.08;ctx.globalAlpha=.35;
-     pxs(ix,GROUND-90,20,90,'#0A0610');pxs(ix+22,GROUND-120,18,120,'#0A0610');pxs(ix+10,GROUND-60,10,60,'#0A0610');
-     ctx.globalAlpha=.18;pxs(ix+24,GROUND-122,4,3,'#FF4030');ctx.globalAlpha=1;} // luce imperiale
-   // === LAYER 1: montagne rocciose (.25x) ===
-   for(let i=-1;i<5;i++){const x=i*180-cx*.25,mh=80+(i*53)%60;
-     pxs(x,GROUND-mh,130,mh,'#2A2434');pxs(x,GROUND-mh,30,mh,shade('#2A2434',.75));
-     pxs(x+100,GROUND-mh,30,mh,lift('#2A2434',.18));}
-   // === LAYER 2: tende militari (.45x) ===
-   for(let i=-1;i<5;i++){const x=i*190-cx*.45;
-     pxs(x,GROUND-58,80,58,'#4A3A2C');pxs(x,GROUND-58,20,58,shade('#4A3A2C',.72));pxs(x+62,GROUND-58,18,58,lift('#4A3A2C',.2));
-     pxs(x-4,GROUND-60,88,4,'#5C4A38');// tettuccio
-     pxs(x+38,GROUND-76,3,18,'#5C4030');// asta tenda
-     pxs(x,GROUND-62,88,4,shade('#4A3A2C',.65));// ombra tetto
-     // finestra tenda con luce dentro
-     ctx.globalAlpha=.35;pxs(x+16,GROUND-38,18,22,'#C08030');ctx.globalAlpha=1;}
-   // === LAYER 3: bandiere del Fronte + fuoco campo (.65x) ===
-   for(let i=-1;i<6;i++){const x=28+i*130-cx*.65;
-     pxs(x,GROUND-80,3,80,'#5C4030');// asta bandiera
-     const wv=Math.sin(frame*.15+i*1.8);const wv2=Math.sin(frame*.15+i*1.8+.8);
-     for(let fy=0;fy<22;fy++){const xo=Math.sin((frame*.15+i*1.8+fy*.1))*10+wv*5;
-       pxs(x+3+xo,GROUND-80+fy*2,32+wv2*7,2,fy<11?'#2E6E7E':'#DC143C');}
-     // simbolo Fronte (F)
-     const bx=x+7+wv*3;pxs(bx,GROUND-78,2,14,'#F5F0E1');pxs(bx,GROUND-78,8,2,'#F5F0E1');pxs(bx,GROUND-72,6,2,'#F5F0E1');}
-   // fuoco da campo
-   for(let i=0;i<3;i++){const fx=90+i*200-cx*.65,fl=Math.sin(frame*.2+i*2)*4;
-     pxs(fx-8,GROUND-6,16,6,'#3A2A1A');// base
-     pxs(fx-5,GROUND-20-fl,10,18+fl,'#A03000');pxs(fx-3,GROUND-16-fl,7,13+fl,'#FF6A00');
-     pxs(fx-1,GROUND-12-fl,4,9,'#FFB000');pxs(fx,GROUND-8-fl,2,5,'#FFE94A');
-     ctx.globalAlpha=.3;pxs(fx-9,GROUND-28-fl,18,12,'#5A5050');ctx.globalAlpha=1;// fumo
-     // alone di luce sul terreno
-     ctx.globalAlpha=.2;ctx.fillStyle='#FF8030';ctx.beginPath();ctx.ellipse(fx,GROUND,20,4,0,0,7);ctx.fill();ctx.globalAlpha=1;}
-   // armi appoggiate (fucili fantascientifico)
-   for(let i=0;i<4;i++){const ax=44+i*160-cx*.65;
-     pxs(ax,GROUND-34,3,34,'#4A5058');pxs(ax,GROUND-34,3,8,'#6A7078');// canna
-     pxs(ax-2,GROUND-22,7,8,'#3A4048');// calcio
-     ctx.globalAlpha=.4;pxs(ax+1,GROUND-30,1,12,'#9AF0FF');ctx.globalAlpha=1;}// led
-   // === LAYER 4: sacchi sabbia e barricate foreground (.85x) ===
-   for(let i=0;i<8;i++){const sx=(i*118)%W-cx*.85%118,sy=GROUND-22+(i%3)*8;
-     pxs(sx,sy,28,22,'#8B7355');pxs(sx,sy,8,22,shade('#8B7355',.72));pxs(sx+20,sy,8,22,lift('#8B7355',.2));}
-   pxs(0,GROUND-36,60,36,'#5C4030');pxs(W-70,GROUND-36,70,36,'#5C4030');
-   // suolo sabbia con crepe
-   pxs(0,GROUND,W,H-GROUND,'#5C4A30');pxs(0,GROUND,W,3,'#C04820');
-   for(let i=0;i<10;i++)pxs((i*74)%W-cx*.85%74,GROUND+6,i%2===0?10:6,1,shade('#5C4A30',.75));
- }},
-];
+/* (gli sfondi disegnati col codice sono stati eliminati: si usano solo le immagini pixel in backgrounds/) */
 
 /* ---------- GAME STATE ---------- */
 const game={
-  state:'title',mode:1,stage:0,sel:[0,1],pickTurn:0,tournament:null,difficulty:'normale',
+  state:'title',mode:1,sel:[0,1],pickTurn:0,tournament:null,difficulty:'normale',
   cpuDiff(){
     const finale=this.mode===3&&this.tournament&&this.tournament.idx===this.tournament.order.length-1;
     return finale?DIFFS.boss:DIFFS[this.difficulty];},
@@ -3061,8 +2926,7 @@ const game={
   banner:'',bannerT:0,freeze:0,koPending:false,matchWinner:null,
   reset(){particles=[];projectiles=[];beams=[];fxObjs=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
   startMatch(){this.stats={maxHit:0,parry:0}; /* statistiche per la schermata finale */
-    loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.loadWait=0;this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
-    this.bg=(Math.random()*BACKGROUNDS.length)|0;loadBg(this.bg);
+    loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.loadWait=0;this.reset();this.playerLost=false;    this.bg=(Math.random()*BACKGROUNDS.length)|0;loadBg(this.bg);
     this.round=1;this.wins=[0,0];
     /* prima del combattimento la schermata VS (non nell'allenamento) */
     if(this.mode!==4){this.state='vs';this.vsT=0;return;}
@@ -3186,9 +3050,10 @@ function update(){
     else{
       const [a,b]=game.p;
       /* aspetta gli sprite dei due combattenti (massimo 12 secondi) */
-      /* aspetta anche lo sfondo dell'incontro (al massimo 6 secondi, poi si usa quello disegnato) */
-      const waitBg=!bgReady(game.bg)&&(game.loadWait||0)<360;
-      if((!(charReady(a.cfg.id)&&charReady(b.cfg.id))||waitBg)&&(game.loadWait=(game.loadWait||0)+1)<720){game.freeze=Math.max(game.freeze,40);game.bannerT=Math.max(game.bannerT,30);}
+      /* aspetta anche lo sfondo dell'incontro (al massimo 20 secondi); se proprio non arriva, ne usa un altro già scaricato */
+      if(BG_STATE[game.bg]==='failed'){const alt=BACKGROUNDS.findIndex((_,i)=>BG_STATE[i]==='ok');if(alt>=0)game.bg=alt;else loadBg(game.bg);}
+      const waitBg=BG_STATE[game.bg]!=='ok'&&(game.loadWait||0)<1200;
+      if((!(charReady(a.cfg.id)&&charReady(b.cfg.id))||waitBg)&&(game.loadWait=(game.loadWait||0)+1)<1200){game.freeze=Math.max(game.freeze,40);game.bannerT=Math.max(game.bannerT,30);}
       if(game.freeze>0)game.freeze--;
       if(game.freeze<=0&&!game.koPending){
         a.readInput(b);b.readInput(a);
@@ -3519,13 +3384,13 @@ function drawSelect(){
 }
 
 function drawFight(){
-  if(drawBg(game.bg)&&game.bannerT>0&&/^ROUND/.test(game.banner)){
+  if(!drawBg(game.bg))bgPlaceholder();
+  if(BG_STATE[game.bg]==='ok'&&game.bannerT>0&&/^ROUND/.test(game.banner)){
     /* nome dello sfondo solo all'inizio del round, insieme al banner "ROUND …", poi sfuma */
     const k=cv.width/(cv.getBoundingClientRect().width||cv.width);
     ctx.globalAlpha=Math.min(1,game.bannerT/12);
     text(BACKGROUNDS[game.bg].toUpperCase(),W/2,IS_MOBILE?H-18:H-30,Math.max(9,13*k/ZOOM),'rgba(245,240,225,.75)');
     ctx.globalAlpha=1;}
-  else{STAGES[game.stage].draw(camX);text(STAGES[game.stage].name,W/2,H-18,9,'rgba(245,240,225,.35)');}
   ctx.save();ctx.translate(-camX*0.0,0); // fighters in world≈screen, cam già nei layer
   const ps=[...game.p].sort((a,b)=>(a.state==='attack'?1:0)-(b.state==='attack'?1:0));
   drawBeams();
@@ -3865,7 +3730,7 @@ function drawVictory(){
      a sinistra il vincitore con i suoi effetti; il testo e i pulsanti sono nel pannello HTML (#vic-pop) */
   const wf=game.matchWinner,lost=game.playerLost,t=frame;
   const vcfg=VICTORY_CFG[wf.cfg.id]||VICTORY_CFG.iacopo;
-  if(!drawBg(game.bg))STAGES[game.stage].draw(camX);
+  if(!drawBg(game.bg))bgPlaceholder();
   ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(0,0,W,H);
   ctx.save();const vg=ctx.createRadialGradient(W*.3,H*.5,H*.2,W*.45,H*.5,H*.9);
   vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,lost?'rgba(40,0,0,.75)':'rgba(0,0,0,.75)');
