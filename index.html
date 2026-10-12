@@ -228,6 +228,42 @@
   .opt-hint { font-family: var(--font-testo); font-size: 12px; color: var(--testo-tenue); text-align: center; }
   #pause-pop .pp-row { display: flex; gap: 10px; } #pause-pop .pp-row button { flex: 1; }
   .opt.pressed { background: rgba(100,70,10,.85); }
+  /* ===== SCHERMATA DI FINE INCONTRO (vittoria / sconfitta): pannello HTML a destra ===== */
+  #vic-pop { display: none; position: fixed; inset: 0; z-index: 180; pointer-events: none; }
+  @supports (height: 100dvh) { #vic-pop { bottom: auto; height: 100dvh; } }
+  #vic-panel { position: absolute; left: 47%; right: max(70px, calc(env(safe-area-inset-right) + 64px)); top: max(10px, env(safe-area-inset-top));
+    max-height: calc(100% - 20px); overflow: hidden; pointer-events: auto; box-sizing: border-box;
+    background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 14px; padding: 10px 14px;
+    display: flex; flex-direction: column; gap: 6px; box-shadow: 0 0 26px rgba(0,0,0,.5); }
+  #vic-panel.lost { border-color: var(--rosso); }
+  /* i testi scorrono se serve, i pulsanti restano sempre visibili in fondo */
+  #vic-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+  #vic-btns { flex: none; }
+  #vic-title { font-family: var(--font-gioco); font-size: clamp(22px, 7vh, 34px); line-height: 1; text-align: center; color: var(--oro);
+    letter-spacing: .06em; text-shadow: 2px 2px 0 var(--oro-scuro); }
+  #vic-panel.lost #vic-title { color: var(--rosso); text-shadow: 2px 2px 0 #6a1010; }
+  #vic-name { font-family: var(--font-gioco); font-size: 17px; text-align: center; line-height: 1.1; }
+  #vic-sub { font-family: var(--font-testo); font-size: 12px; color: var(--testo-tenue); text-align: center; font-style: italic; }
+  #vic-quote { font-family: var(--font-testo); font-size: 13px; color: var(--testo); text-align: center; font-style: italic; line-height: 1.3; }
+  #vic-stats { display: flex; flex-direction: column; gap: 3px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 6px; }
+  .vs { display: flex; align-items: center; gap: 8px; font-family: var(--font-testo); font-size: 13px; color: var(--testo); }
+  .vs .pxi { width: 16px; height: 16px; flex: none; }
+  .vs .vs-v { margin-left: auto; font-family: var(--font-gioco); color: var(--oro); font-size: 14px; }
+  #vic-tour { display: flex; align-items: center; gap: 8px; font-family: var(--font-testo); font-size: 13px; color: var(--testo);
+    background: rgba(255,193,7,.08); border: 1px solid rgba(255,193,7,.35); border-radius: 10px; padding: 5px 8px; }
+  #vic-tour[hidden] { display: none; }
+  #vic-tour canvas { width: 32px; height: 32px; image-rendering: pixelated; border: 1.5px solid var(--oro); border-radius: 4px; flex: none; }
+  #vic-tour canvas[hidden] { display: none; }
+  #vic-tour b { color: var(--oro); font-family: var(--font-gioco); font-weight: 400; }
+  #vic-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  #vic-btns.show { opacity: 1; pointer-events: auto; }
+  #vic-btns button { flex: 1 1 30%; min-width: 0; min-height: 44px; font-size: 13px; padding: 0 8px; white-space: normal; line-height: 1.15; }
+  #vic-btns button.btn-primario { flex-basis: 100%; min-height: 46px; font-size: 15px; }
+  #vic-btns .vic-msg { flex-basis: 100%; text-align: center; font-family: var(--font-testo); font-size: 13px; color: var(--testo); }
+  @media (max-height: 380px) { #vic-quote { font-size: 12px; } #vic-panel, #vic-body { gap: 4px; } #vic-panel { padding: 8px 12px; } #vic-name { font-size: 15px; }
+    #vic-btns { flex-wrap: nowrap; } #vic-btns.confirm, #vic-btns[data-n="3"] { flex-wrap: wrap; } #vic-btns button, #vic-btns button.btn-primario { flex: 1 1 0; min-width: 0; font-size: 12px; min-height: 44px; padding: 0 4px; white-space: normal; line-height: 1.15; }
+    #vic-btns[data-n="3"] button.btn-primario { flex-basis: 100%; } }
+  @media (max-height: 340px) { #vic-sub { display: none; } #vic-title { font-size: 22px; } .vs { font-size: 12px; } #vic-stats { gap: 1px; padding-top: 4px; } }
   /* pannello di pausa: pagine principale / impostazioni / conferma */
   #pause-pop .pp-box { max-height: 94%; overflow-y: auto; }
   /* la pausa occupa solo la parte di schermo visibile (senza le barre del browser) */
@@ -470,6 +506,19 @@
     <div class="pp-msg" id="pp-confirm-msg">Uscire dall’incontro?</div>
     <div class="pp-row"><button id="pp-exit-no" class="btn-secondario">ANNULLA</button><button id="pp-exit-yes" class="btn-primario">SÌ, ESCI</button></div>
   </div>
+</div></div>
+<div id="vic-pop"><div id="vic-panel"><div id="vic-body">
+  <div id="vic-title">VITTORIA</div>
+  <div id="vic-name"></div><div id="vic-sub"></div>
+  <div id="vic-quote"></div>
+  <div id="vic-stats">
+    <div class="vs"><svg class="pxi" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="3" y="2" width="3" height="1"/><rect class="px-o" x="9" y="2" width="3" height="1"/><rect class="px-o" x="2" y="3" width="1" height="1"/><rect class="px-r" x="3" y="3" width="3" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="1" height="1"/><rect class="px-r" x="9" y="3" width="3" height="1"/><rect class="px-o" x="12" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-r" x="2" y="4" width="1" height="1"/><rect class="px-w" x="3" y="4" width="1" height="1"/><rect class="px-r" x="4" y="4" width="3" height="1"/><rect class="px-o" x="7" y="4" width="1" height="1"/><rect class="px-r" x="8" y="4" width="5" height="1"/><rect class="px-o" x="13" y="4" width="1" height="1"/><rect class="px-o" x="1" y="5" width="1" height="1"/><rect class="px-r" x="2" y="5" width="1" height="1"/><rect class="px-w" x="3" y="5" width="1" height="1"/><rect class="px-r" x="4" y="5" width="9" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="1" height="1"/><rect class="px-r" x="2" y="6" width="11" height="1"/><rect class="px-o" x="13" y="6" width="1" height="1"/><rect class="px-o" x="2" y="7" width="1" height="1"/><rect class="px-r" x="3" y="7" width="9" height="1"/><rect class="px-o" x="12" y="7" width="1" height="1"/><rect class="px-o" x="3" y="8" width="1" height="1"/><rect class="px-r" x="4" y="8" width="7" height="1"/><rect class="px-o" x="11" y="8" width="1" height="1"/><rect class="px-o" x="4" y="9" width="1" height="1"/><rect class="px-r" x="5" y="9" width="5" height="1"/><rect class="px-o" x="10" y="9" width="1" height="1"/><rect class="px-o" x="5" y="10" width="1" height="1"/><rect class="px-r" x="6" y="10" width="3" height="1"/><rect class="px-o" x="9" y="10" width="1" height="1"/><rect class="px-o" x="6" y="11" width="1" height="1"/><rect class="px-r" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-o" x="7" y="12" width="1" height="1"/></svg><span class="vs-l" id="vs-hp-l">Vita rimasta</span><span class="vs-v" id="vs-hp"></span></div>
+    <div class="vs"><svg class="pxi" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="3" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="2" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="2" y="3" width="1" height="1"/><rect class="px-f" x="3" y="3" width="2" height="1"/><rect class="px-o" x="5" y="3" width="1" height="1"/><rect class="px-f" x="6" y="3" width="2" height="1"/><rect class="px-o" x="8" y="3" width="1" height="1"/><rect class="px-f" x="9" y="3" width="2" height="1"/><rect class="px-o" x="11" y="3" width="1" height="1"/><rect class="px-f" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="2" y="4" width="1" height="1"/><rect class="px-f" x="3" y="4" width="2" height="1"/><rect class="px-o" x="5" y="4" width="1" height="1"/><rect class="px-f" x="6" y="4" width="2" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-f" x="9" y="4" width="2" height="1"/><rect class="px-o" x="11" y="4" width="1" height="1"/><rect class="px-f" x="12" y="4" width="2" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-s" x="3" y="5" width="1" height="1"/><rect class="px-f" x="4" y="5" width="1" height="1"/><rect class="px-o" x="5" y="5" width="1" height="1"/><rect class="px-s" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-s" x="9" y="5" width="1" height="1"/><rect class="px-f" x="10" y="5" width="1" height="1"/><rect class="px-o" x="11" y="5" width="1" height="1"/><rect class="px-s" x="12" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="1" height="1"/><rect class="px-o" x="14" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="15" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-f" x="1" y="7" width="12" height="1"/><rect class="px-s" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="2" height="1"/><rect class="px-s" x="2" y="8" width="12" height="1"/><rect class="px-f" x="14" y="8" width="1" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="1" height="1"/><rect class="px-f" x="2" y="9" width="12" height="1"/><rect class="px-s" x="14" y="9" width="1" height="1"/><rect class="px-o" x="15" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="12" height="1"/><rect class="px-s" x="14" y="10" width="1" height="1"/><rect class="px-o" x="15" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-s" x="2" y="11" width="1" height="1"/><rect class="px-f" x="3" y="11" width="11" height="1"/><rect class="px-s" x="14" y="11" width="1" height="1"/><rect class="px-o" x="15" y="11" width="1" height="1"/><rect class="px-o" x="2" y="12" width="1" height="1"/><rect class="px-s" x="3" y="12" width="12" height="1"/><rect class="px-o" x="15" y="12" width="1" height="1"/><rect class="px-o" x="3" y="13" width="12" height="1"/></svg><span class="vs-l">Il tuo colpo più forte</span><span class="vs-v" id="vs-hit"></span></div>
+    <div class="vs"><svg class="pxi" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="2" y="1" width="12" height="1"/><rect class="px-o" x="1" y="2" width="1" height="1"/><rect class="px-f" x="2" y="2" width="5" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-f" x="9" y="2" width="4" height="1"/><rect class="px-s" x="13" y="2" width="1" height="1"/><rect class="px-o" x="14" y="2" width="1" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-f" x="2" y="3" width="5" height="1"/><rect class="px-g" x="7" y="3" width="2" height="1"/><rect class="px-f" x="9" y="3" width="4" height="1"/><rect class="px-s" x="13" y="3" width="1" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-f" x="2" y="4" width="5" height="1"/><rect class="px-g" x="7" y="4" width="2" height="1"/><rect class="px-f" x="9" y="4" width="4" height="1"/><rect class="px-s" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="1" y="5" width="1" height="1"/><rect class="px-g" x="2" y="5" width="12" height="1"/><rect class="px-o" x="14" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="1" height="1"/><rect class="px-f" x="2" y="6" width="5" height="1"/><rect class="px-g" x="7" y="6" width="2" height="1"/><rect class="px-f" x="9" y="6" width="4" height="1"/><rect class="px-s" x="13" y="6" width="1" height="1"/><rect class="px-o" x="14" y="6" width="1" height="1"/><rect class="px-o" x="1" y="7" width="1" height="1"/><rect class="px-f" x="2" y="7" width="5" height="1"/><rect class="px-g" x="7" y="7" width="2" height="1"/><rect class="px-f" x="9" y="7" width="4" height="1"/><rect class="px-s" x="13" y="7" width="1" height="1"/><rect class="px-o" x="14" y="7" width="1" height="1"/><rect class="px-o" x="2" y="8" width="1" height="1"/><rect class="px-f" x="3" y="8" width="4" height="1"/><rect class="px-g" x="7" y="8" width="2" height="1"/><rect class="px-f" x="9" y="8" width="3" height="1"/><rect class="px-s" x="12" y="8" width="1" height="1"/><rect class="px-o" x="13" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="1" height="1"/><rect class="px-f" x="3" y="9" width="4" height="1"/><rect class="px-g" x="7" y="9" width="2" height="1"/><rect class="px-f" x="9" y="9" width="3" height="1"/><rect class="px-s" x="12" y="9" width="1" height="1"/><rect class="px-o" x="13" y="9" width="1" height="1"/><rect class="px-o" x="3" y="10" width="1" height="1"/><rect class="px-f" x="4" y="10" width="3" height="1"/><rect class="px-g" x="7" y="10" width="2" height="1"/><rect class="px-f" x="9" y="10" width="2" height="1"/><rect class="px-s" x="11" y="10" width="1" height="1"/><rect class="px-o" x="12" y="10" width="1" height="1"/><rect class="px-o" x="4" y="11" width="1" height="1"/><rect class="px-f" x="5" y="11" width="2" height="1"/><rect class="px-g" x="7" y="11" width="2" height="1"/><rect class="px-f" x="9" y="11" width="1" height="1"/><rect class="px-s" x="10" y="11" width="1" height="1"/><rect class="px-o" x="11" y="11" width="1" height="1"/><rect class="px-o" x="5" y="12" width="1" height="1"/><rect class="px-f" x="6" y="12" width="2" height="1"/><rect class="px-g" x="8" y="12" width="1" height="1"/><rect class="px-s" x="9" y="12" width="1" height="1"/><rect class="px-o" x="10" y="12" width="1" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-s" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="7" y="14" width="2" height="1"/></svg><span class="vs-l">Parry riusciti</span><span class="vs-v" id="vs-parry"></span></div>
+  </div>
+  <div id="vic-tour" hidden><canvas width="64" height="64"></canvas><span></span></div>
+  </div>
+  <div id="vic-btns"></div>
 </div></div>
 <div id="tr-box"><div id="tr-title"></div><div id="tr-text"></div><div id="tr-dots"></div><button id="tr-skip">Salta ›</button></div>
 <button id="m-music" class="btn-icona" aria-label="Musica"><span class="mi-on"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="6" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="4" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="4" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="1" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-f" x="7" y="6" width="1" height="1"/><rect class="px-o" x="8" y="6" width="1" height="1"/><rect class="px-o" x="6" y="7" width="1" height="1"/><rect class="px-f" x="7" y="7" width="1" height="1"/><rect class="px-o" x="8" y="7" width="1" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-f" x="7" y="8" width="1" height="1"/><rect class="px-o" x="8" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="5" height="1"/><rect class="px-f" x="7" y="9" width="1" height="1"/><rect class="px-o" x="8" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="6" height="1"/><rect class="px-o" x="8" y="10" width="1" height="1"/><rect class="px-o" x="0" y="11" width="1" height="1"/><rect class="px-f" x="1" y="11" width="6" height="1"/><rect class="px-s" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-o" x="0" y="12" width="1" height="1"/><rect class="px-f" x="1" y="12" width="6" height="1"/><rect class="px-s" x="7" y="12" width="1" height="1"/><rect class="px-o" x="8" y="12" width="1" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-s" x="2" y="13" width="6" height="1"/><rect class="px-o" x="8" y="13" width="1" height="1"/><rect class="px-o" x="2" y="14" width="6" height="1"/></svg></span><span class="mi-off"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-r" x="0" y="1" width="2" height="1"/><rect class="px-o" x="6" y="1" width="6" height="1"/><rect class="px-r" x="0" y="2" width="3" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="4" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-r" x="1" y="3" width="3" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="4" height="1"/><rect class="px-r" x="2" y="4" width="3" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="1" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-r" x="3" y="5" width="3" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-r" x="4" y="6" width="3" height="1"/><rect class="px-f" x="7" y="6" width="1" height="1"/><rect class="px-o" x="8" y="6" width="1" height="1"/><rect class="px-r" x="6" y="7" width="3" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-r" x="7" y="8" width="3" height="1"/><rect class="px-o" x="2" y="9" width="5" height="1"/><rect class="px-f" x="7" y="9" width="1" height="1"/><rect class="px-r" x="8" y="9" width="3" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="6" height="1"/><rect class="px-o" x="8" y="10" width="1" height="1"/><rect class="px-r" x="10" y="10" width="3" height="1"/><rect class="px-o" x="0" y="11" width="1" height="1"/><rect class="px-f" x="1" y="11" width="6" height="1"/><rect class="px-s" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-r" x="11" y="11" width="3" height="1"/><rect class="px-o" x="0" y="12" width="1" height="1"/><rect class="px-f" x="1" y="12" width="6" height="1"/><rect class="px-s" x="7" y="12" width="1" height="1"/><rect class="px-o" x="8" y="12" width="1" height="1"/><rect class="px-r" x="12" y="12" width="3" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-s" x="2" y="13" width="6" height="1"/><rect class="px-o" x="8" y="13" width="1" height="1"/><rect class="px-r" x="13" y="13" width="3" height="1"/><rect class="px-o" x="2" y="14" width="6" height="1"/><rect class="px-r" x="14" y="14" width="2" height="1"/></svg></span></button>
@@ -1264,6 +1313,7 @@ class Fighter{
       this.parryT=0;this.stamina=Math.max(0,this.stamina-3);this.invuln=Math.max(this.invuln,10);
       flash(1);sfx.parry();shake=Math.max(shake,5);hitstop=Math.max(hitstop,5);if(isP1(this,attacker))vib(30);
       if(game.mode===4&&this===game.p[0])trainEv('parry');
+      if(game.stats&&this===game.p[0])game.stats.parry++;
       ring(this.x+this.facing*(this.half+6),this.y-this.cfg.h*.55,'#FFFFFF',4,42);this.parryCD=90;
       if(isProj){ /* proiettile parato: si annulla, chi ha sparato non viene stordito */
         ftext(this.x,this.y-this.cfg.h-22,'PARRY! +10','#FFE94A',13);this.gainMeter(10);
@@ -1305,6 +1355,7 @@ class Fighter{
       (kb>12?sfx.kick:sfx.hit)();
       setHitstop(HITSTOP[hsCat],this,attacker);shake=Math.max(shake,Math.min(10,kb/4));}
     this.hp=Math.max(blocked?Math.min(1,this.hp):0,this.hp-Math.round(dmg));
+    if(!blocked&&game.stats&&attacker===game.p[0]&&game.mode!==4)game.stats.maxHit=Math.max(game.stats.maxHit,Math.round(dmg));
     /* spinta del colpo: se chi subisce è contro il bordo, la spinta persa va a chi attacca (indietro).
        Sui colpi parati chi attacca arretra anche di 4 px per ogni parata di fila (max 20 px). Non per i proiettili. */
     {const want=this.x+kb*attacker.facing*(blocked?0.4:1),nx=clamp(want,this.half+4,W-this.half-4);
@@ -2898,7 +2949,8 @@ const game={
   p:[null,null],round:1,wins:[0,0],timer:99,timerF:0,
   banner:'',bannerT:0,freeze:0,koPending:false,matchWinner:null,
   reset(){particles=[];projectiles=[];beams=[];fxObjs=[];floatTexts=[];frameTimers=[];shake=0;hitstop=0;whiteFlash=0;specialBanner=null;specialCutIn=null;},
-  startMatch(){loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.loadWait=0;this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
+  startMatch(){this.stats={maxHit:0,parry:0}; /* statistiche per la schermata finale */
+    loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.loadWait=0;this.reset();this.playerLost=false;this.stage=(Math.random()*STAGES.length)|0;
     this.bg=(Math.random()*BACKGROUNDS.length)|0;loadBg(this.bg);
     this.round=1;this.wins=[0,0];this.startRound();this.state='fight';},
   /* allenamento: avversario fisso che non attacca, lezioni una dopo l'altra */
@@ -3058,12 +3110,10 @@ function update(){
   else if(game.state==='victory'){
     if(!game.playerLost){vcfxFrame=vcfxFrame||0;vcfxFrame++;}
     updateFx();
-    if(kp('Enter')||kp('KeyZ')){sfx.ok();vcfxFrame=0;
-      const t=game.tournament;
-      if(game.mode===3&&t&&!game.playerLost&&t.idx<t.order.length-1){
-        t.idx++;game.sel[1]=t.order[t.idx];game.startMatch();}
-      else{game.tournament=null;game.state='select';game.pickTurn=0;}}
-    if(kp('Escape')){game.tournament=null;game.state='title';}
+    /* INVIO = pulsante principale, ESC = MENU (solo quando i pulsanti sono comparsi) */
+    if(window.vicReady&&window.vicReady()){
+      if(kp('Enter')||kp('KeyZ'))vicAction(vicPrimary());
+      else if(kp('Escape'))vicAction('menu');}
   }
   kPrev={...keys};
 }
@@ -3686,45 +3736,15 @@ function hexToRgba(hex,a){
   return 'rgba('+r+','+g+','+b+','+a.toFixed(2)+')';}
 
 function drawVictory(){
-  const wf=game.matchWinner,lost=game.playerLost;
-  const t=frame; // timer globale dell'animazione
-  /* testi in pixel reali come nell'HUD: k = pixel del canvas per pixel dello schermo */
-  const k=cv.width/(cv.getBoundingClientRect().width||cv.width),px=(base,min)=>Math.max(base,Math.ceil(min*k));
-  const fsStat=px(11,12),fsQuote=px(12,13),fsTitle=px(14,15),fsPrompt=px(10,12);
-  const promptA=.8+.2*Math.sin(t*.1); /* il prompt pulsa tra 60% e 100% invece di sparire */
-
-  if(lost){
-    // === SCHERMATA SCONFITTA (invariata, semplice) ===
-    if(!drawBg(game.bg))STAGES[game.stage].draw(camX); /* sfondo dell'incontro appena giocato */
-    drawFighter(wf);
-    ctx.fillStyle='rgba(40,0,0,.68)';ctx.fillRect(0,0,W,H);
-    outlineText('SCONFITTA',W/2,130,44,COL.rosso);
-    outlineText(wf.cfg.name+' trionfa',W/2,175,20,wf.cfg.ui||wf.cfg.brow);
-    ctx.font='italic '+fsQuote+'px '+FONT_GIOCO;ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
-    wrapText('\u201C'+wf.cfg.quote+'\u201D',W/2,220,Math.max(440,W*.6),Math.round(fsQuote*1.3));
-    text('Le tue sopracciglia si spengono lentamente...',W/2,220+fsQuote*3+12,fsStat,'#B05050');
-    if(game.mode===3&&game.tournament)
-      outlineText('TORNEO CONCLUSO \u2014 VITTORIE: '+game.tournament.wins+'/'+game.tournament.order.length,W/2,220+fsQuote*3+fsStat+28,Math.max(14,fsStat),COL.oro);
-    {const lp=IS_MOBILE?(game.mode===3?'Tocca per un nuovo torneo':'Tocca per riprovare'):(game.mode===3?'[INVIO] nuovo torneo   [ESC] titolo':'[INVIO] riprova   [ESC] titolo');
-      ctx.globalAlpha=promptA;text(lp,W/2,H-12,fsPrompt,'#B7A98C');ctx.globalAlpha=1;}
-    return;
-  }
-
-  // === VICTORY SCREEN PERSONALIZZATA ===
+  /* sfondo: l'immagine dell'incontro appena giocato, scurita al 65% e con una vignetta;
+     a sinistra il vincitore con i suoi effetti; il testo e i pulsanti sono nel pannello HTML (#vic-pop) */
+  const wf=game.matchWinner,lost=game.playerLost,t=frame;
   const vcfg=VICTORY_CFG[wf.cfg.id]||VICTORY_CFG.iacopo;
-  const introT=Math.min(t,30)/30; // 0→1 nei primi 30 frame
-  const textT=Math.max(0,Math.min(t-60,30))/30; // testo appare dopo 1s
-
-  // BG personalizzato
-  vcfg.bg(t);
-
-  // vignetta nera ai bordi
-  ctx.save();
-  const vg=ctx.createRadialGradient(W/2,H*.45,H*.18,W/2,H*.45,H*.72);
-  vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.72)');
+  if(!drawBg(game.bg))STAGES[game.stage].draw(camX);
+  ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(0,0,W,H);
+  ctx.save();const vg=ctx.createRadialGradient(W*.3,H*.5,H*.2,W*.45,H*.5,H*.9);
+  vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,lost?'rgba(40,0,0,.75)':'rgba(0,0,0,.75)');
   ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);ctx.restore();
-
-  // fighter effetti speciali (prima del fighter per stay under)
   vcfg.wfx(wf,t);
   particles.forEach(p=>{
     ctx.globalAlpha=clamp(p.life/(p.max||20),0,1)*(p.fade?.7:1);
@@ -3733,89 +3753,14 @@ function drawVictory(){
     else if(p.star){pxs(p.x-1,p.y-3,3,7,p.col);pxs(p.x-3,p.y-1,7,3,p.col);}
     else pxs(p.x,p.y,p.sz,p.sz,p.col);
     ctx.globalAlpha=1;});
-
-  // fighter grande al centro-sinistra
   drawVictoryPose(wf,vcfg,t);
-
-  // RIM LIGHT esagerato in victory
-  ctx.globalAlpha=.4+.2*Math.sin(t*.06);
-  ctx.fillStyle=wf.cfg.brow||COL.oro;
-  ctx.fillRect(Math.round(W*.48-4),Math.round(H*.15),3,Math.round(H*.7));
-  ctx.globalAlpha=1;
-
-  // GLOW SOPRACCIGLIA pulsante intenso
-  const browPulse=.45+.45*Math.sin(t*.07);
-  ctx.globalAlpha=browPulse*.6;
+  /* bagliore delle sopracciglia */
+  const browPulse=.45+.45*Math.sin(t*.07);ctx.globalAlpha=browPulse*.6;
   const bg2=ctx.createRadialGradient(W*.38+wf.cfg.h*.06,GROUND-wf.cfg.h*1.47,4,W*.38+wf.cfg.h*.06,GROUND-wf.cfg.h*1.47,28);
   bg2.addColorStop(0,wf.cfg.brow||COL.oro);bg2.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=bg2;ctx.fillRect(W*.26-50,H*.08,140,50);
-  ctx.globalAlpha=1;
-
-  // PANNELLO TESTO: semi-trasparente a destra
-  const px2=W*.48,pw=W*.48,ptop=H*.1;
-  /* misure del contenuto (titolo e frase vanno a capo): il riquadro si allunga quanto serve */
-  const wrapN=(txt,font,maxW)=>{ctx.font=font;const out=[];let ln='';for(const w of txt.split(' ')){const t2=ln?ln+' '+w:w;if(ctx.measureText(t2).width>maxW&&ln){out.push(ln);ln=w;}else ln=t2;}out.push(ln);return out;};
-  const tLines=wrapN(wf.cfg.title,'italic '+fsTitle+'px '+FONT_GIOCO,pw-28),tLh=Math.round(fsTitle*1.2),tEx=(tLines.length-1)*tLh;
-  const bookQuote=(SEL_INFO[wf.cfg.id]&&SEL_INFO[wf.cfg.id][1])||vcfg.quote; /* citazione del libro */
-  const qN=wrapN('\u201C'+bookQuote+'\u201D','italic '+fsQuote+'px '+FONT_GIOCO,pw-28).length,qLh=Math.round(fsQuote*1.3);
-  const Rt=game.tournament,statN=1+(wf.combo>1?1:0)+(game.mode===3&&Rt?1:0);
-  const contentEnd=84+fsTitle*.6+tEx+fsStat+4+(fsStat+5)*statN+fsQuote+8+(qN-1)*qLh+12;
-  const ph=Math.max(H*.58,contentEnd+(game.mode===3&&Rt?58:0));
-  ctx.globalAlpha=introT*.55;ctx.fillStyle='#000';
-  ctx.fillRect(px2,ptop,pw,ph);
-  ctx.globalAlpha=introT*.7;ctx.strokeStyle=wf.cfg.brow||COL.oro;ctx.lineWidth=2;
-  ctx.strokeRect(px2,ptop,pw,ph);ctx.globalAlpha=1;
-
-  // NOME grande con glow
-  const nameGlow=.6+.4*Math.sin(t*.06);
-  ctx.save();ctx.globalAlpha=introT;
-  ctx.font='400 38px '+FONT_GIOCO;ctx.textAlign='center';
-  ctx.shadowBlur=18*nameGlow;ctx.shadowColor=wf.cfg.brow||COL.oro;
-  ctx.fillStyle=wf.cfg.ui||wf.cfg.brow||COL.oro;
-  ctx.fillText(wf.cfg.name,px2+pw/2,ptop+52);
-  ctx.shadowBlur=0;ctx.restore();
-
-  // TITOLO
-  ctx.globalAlpha=introT*.8;ctx.font='italic '+fsTitle+'px '+FONT_GIOCO;ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
-  /* il titolo va a capo se è più largo del riquadro */
-  tLines.forEach((ln,i)=>ctx.fillText(ln,px2+pw/2,ptop+70+fsTitle*.3+i*tLh));ctx.globalAlpha=1;
-
-  // SEPARATORE
-  if(introT>.5){ctx.globalAlpha=(introT-.5)/.5;ctx.fillStyle=wf.cfg.brow||COL.oro;
-    ctx.fillRect(px2+16,ptop+78+fsTitle*.6+tEx,pw-32,2);ctx.globalAlpha=1;}
-
-  // STATISTICHE match
-  const R=game.tournament;
-  const sy=ptop+84+fsTitle*.6+tEx+fsStat+4,sl=fsStat+5;let sn=0;
-  ctx.save();ctx.globalAlpha=introT*.75;ctx.font=fsStat+'px '+FONT_GIOCO;ctx.textAlign='left';ctx.fillStyle='#D0C8A0';
-  if(wf.hp===wf.maxHp){ctx.fillStyle=COL.oro;ctx.fillText('\u2605 VITTORIA PERFETTA \u2605',px2+18,sy);}
-  else ctx.fillText('HP rimanenti: '+Math.round(wf.hp)+'/'+wf.maxHp,px2+18,sy);
-  sn=1;if(wf.combo>1){ctx.fillText('Combo: '+wf.combo+' colpi',px2+18,sy+sl*sn);sn++;}
-  if(game.mode===3&&R){ctx.fillText('Torneo: '+R.wins+'/'+(R.idx+1)+' vittorie',px2+18,sy+sl*sn);sn++;}
-  ctx.restore();
-
-  // CITAZIONE PERSONALIZZATA (fade-in dopo 1s)
-  if(textT>0){
-    ctx.save();ctx.globalAlpha=textT*.9;
-    ctx.font='italic '+fsQuote+'px '+FONT_GIOCO;ctx.textAlign='center';ctx.fillStyle='#F5F0E1';
-    wrapText('\u201C'+bookQuote+'\u201D',px2+pw/2,sy+sl*sn+fsQuote+8,pw-28,Math.round(fsQuote*1.3));
-    ctx.restore();}
-
-  // TORNEO: prossimo sfidante
-  if(game.mode===3&&R&&textT>.5){
-    ctx.globalAlpha=(textT-.5)/.5*.85;ctx.fillStyle='rgba(0,0,0,.5)';
-    ctx.fillRect(px2,ptop+ph-54,pw,54);ctx.globalAlpha=1;
-    if(R.idx<R.order.length-1){
-      outlineText('INCONTRO '+(R.idx+1)+'/'+R.order.length+' SUPERATO',px2+pw/2,ptop+ph-32,fsStat,COL.oro);
-      text('Prossimo: '+ROSTER[R.order[R.idx+1]].name,px2+pw/2,ptop+ph-12,fsStat,'#F5F0E1');
-    }else outlineText('\u2605 CAMPIONE DEL TORNEO! '+R.wins+'/'+R.order.length+' \u2605',px2+pw/2,ptop+ph-20,14,COL.oro);}
-
-  // PROMPT
-  const pTxt=IS_MOBILE?(game.mode===3&&R&&R.idx<R.order.length-1?'Tocca per il prossimo incontro':'Tocca per una nuova sfida'):(game.mode===3&&R&&R.idx<R.order.length-1?'[INVIO] prossimo incontro   [ESC] abbandona':'[INVIO] nuova sfida   [ESC] titolo');
-  ctx.globalAlpha=promptA;text(pTxt,W/2,H-10,fsPrompt,'#B7A98C');ctx.globalAlpha=1;
-
-  // lampo all'ingresso nella schermata: passa da flash() (limite di frequenza e opzione "Riduci lampi")
-  if(game._vfWinner!==wf){game._vfWinner=wf;flash(2);}
+  ctx.fillStyle=bg2;ctx.fillRect(W*.26-50,H*.08,140,50);ctx.globalAlpha=1;
+  /* lampo all'ingresso (solo vittoria): passa da flash(), con limite e opzione "Riduci lampi" */
+  if(!lost&&game._vfWinner!==wf){game._vfWinner=wf;flash(2);}
 }
 function wrapText(t,x,y,maxW,lh){
   const words=t.split(' ');let line='',yy=y;
@@ -3835,6 +3780,71 @@ document.addEventListener('visibilitychange',()=>{
   if(!document.hidden){_lastTs=0;_acc=0;}
   else if(game.state==='fight'&&!game.paused)setPause(true); /* app in secondo piano durante un incontro: pausa automatica */
 });
+/* ===== SCHERMATA DI FINE INCONTRO ===== */
+let _vicShownAt=0,_vicTimer=null;
+/* azione del pulsante principale nel contesto attuale */
+function vicPrimary(){const t=game.tournament;
+  if(game.mode===3&&t)return (!game.playerLost&&t.idx<t.order.length-1)?'continue':'newtour';
+  return 'rematch';}
+function vicAction(a){
+  if(game.state!=='victory')return;
+  if(a==='back'){try{sfx.sel();}catch(e){}vicButtons(false);return;} /* ANNULLA: torna ai pulsanti normali */
+  try{sfx.ok();}catch(e){}vcfxFrame=0;
+  const t=game.tournament;
+  if(a==='rematch'){game.startMatch();}
+  else if(a==='continue'&&t){t.idx++;game.sel[1]=t.order[t.idx];game.startMatch();}
+  else if(a==='newtour'){game.startTournament();}
+  else if(a==='change'){game.tournament=null;game.state='select';game.pickTurn=0;}
+  else if(a==='abandon'){vicButtons(true);return;}
+  else {game.tournament=null;game.state='title';}
+}
+window.vicReady=()=>game.state==='victory'&&performance.now()-_vicShownAt>=1000;
+function vicButtons(confirmAbandon){
+  const box=document.getElementById('vic-btns');if(!box)return;box.innerHTML='';box.classList.toggle('confirm',!!confirmAbandon);
+  const add=(label,cls,act)=>{const b=document.createElement('button');b.className=cls;b.textContent=label;
+    const go=e=>{if(e){e.preventDefault();e.stopPropagation();}if(!box.classList.contains('show'))return;vicAction(act);};
+    b.addEventListener('touchend',go,{passive:false});b.addEventListener('click',go);
+    b.addEventListener('touchstart',e=>{e.stopPropagation();b.classList.add('pressed');},{passive:true});
+    b.addEventListener('touchcancel',()=>b.classList.remove('pressed'));box.appendChild(b);};
+  if(confirmAbandon){
+    const m=document.createElement('div');m.className='vic-msg';m.textContent='Abbandonare il torneo? I progressi andranno persi.';box.appendChild(m);
+    add('ANNULLA','btn-secondario','back');add('SÌ, ABBANDONA','btn-secondario','menu');
+    return;}
+  const t=game.tournament,lost=game.playerLost;
+  if(game.mode===3&&t){
+    if(!lost&&t.idx<t.order.length-1){add('CONTINUA','btn-primario','continue');add('ABBANDONA','btn-secondario','abandon');}
+    else{add('NUOVO TORNEO','btn-primario','newtour');add('MENU','btn-secondario','menu');}}
+  else{add(lost?'RIPROVA':'RIVINCITA','btn-primario','rematch');add('CAMBIA PERSONAGGIO','btn-secondario','change');add('MENU','btn-secondario','menu');}
+  box.dataset.n=box.querySelectorAll('button').length;
+}
+function showVictoryPanel(){
+  const wf=game.matchWinner,lost=game.playerLost;if(!wf)return;
+  const P=document.getElementById('vic-panel');if(!P)return;
+  P.classList.toggle('lost',!!lost);
+  const perfect=!lost&&wf.hp===wf.maxHp;
+  document.getElementById('vic-title').textContent=lost?'SCONFITTA':perfect?'VITTORIA PERFETTA':'VITTORIA';
+  const nm=document.getElementById('vic-name');nm.textContent=wf.cfg.name;nm.style.color=wf.cfg.ui||wf.cfg.brow||COL.oro;
+  const info=SEL_INFO[wf.cfg.id]||[];
+  document.getElementById('vic-sub').textContent=info[0]||wf.cfg.title||'';
+  document.getElementById('vic-quote').textContent='\u201C'+(info[1]||wf.cfg.quote||'')+'\u201D';
+  const st=game.stats||{maxHit:0,parry:0};
+  document.getElementById('vs-hp-l').textContent=lost?'Vita rimasta a '+wf.cfg.name:'Vita rimasta';
+  document.getElementById('vs-hp').textContent=Math.round(wf.hp/wf.maxHp*100)+'%';
+  document.getElementById('vs-hit').textContent=st.maxHit||'\u2013';
+  document.getElementById('vs-parry').textContent=st.parry;
+  /* torneo: stato e prossimo avversario con miniatura */
+  const T=document.getElementById('vic-tour'),t=game.tournament;
+  if(game.mode===3&&t){T.hidden=false;const cv2=T.querySelector('canvas'),sp=T.querySelector('span');
+    if(!lost&&t.idx<t.order.length-1){const nx=ROSTER[t.order[t.idx+1]];
+      sp.innerHTML='Incontro '+(t.idx+1)+'/'+t.order.length+' superato \u2013 Prossimo: <b></b>';sp.querySelector('b').textContent=nx.name;
+      cv2.hidden=false;const c2=cv2.getContext('2d');c2.clearRect(0,0,64,64);c2.imageSmoothingEnabled=false;const th=HUD_THUMB[nx.id];if(th)c2.drawImage(th,0,0,64,64);}
+    else{cv2.hidden=true;sp.textContent=lost?'Torneo concluso: '+t.wins+'/'+t.order.length+' vittorie':'\u2605 Campione del torneo! '+t.wins+'/'+t.order.length;}}
+  else T.hidden=true;
+  /* pulsanti dopo 1 secondo, per non toccarli per sbaglio */
+  vicButtons(false);const box=document.getElementById('vic-btns');box.classList.remove('show');_vicShownAt=performance.now();
+  clearTimeout(_vicTimer);_vicTimer=setTimeout(()=>{if(game.state==='victory')box.classList.add('show');},1000);
+  P.scrollTop=0;const vb=document.getElementById('vic-body');if(vb)vb.scrollTop=0;
+}
 /* CONTROLLI TOUCH: se un personaggio passa sotto il joystick o i pulsanti (e non li stai toccando) diventano trasparenti */
 function syncControls(){
   const mc=document.getElementById('m-controls');if(!mc||mc.style.display!=='block'||game.state!=='fight'||!game.p[0])return;
@@ -4056,12 +4066,7 @@ function loop(ts){
       return;
     }
 
-    /* --- VICTORY: tocca per continuare --- */
-    if(game.state==='victory'){
-      e.preventDefault();
-      keys['Enter']=true; setTimeout(function(){ keys['Enter']=false; },120);
-      return;
-    }
+    /* VICTORY: si continua solo con i pulsanti del pannello */
 
   }, {passive:false});
 
@@ -4082,7 +4087,9 @@ function loop(ts){
     if(s==='fight') setTimeout(sizeActionIcons,30);
     sh('m-pause',     s==='fight'  ? 'flex' : 'none');
     if(s!=='fight'&&game.paused) setPause(false);
-    sh('m-back',      s==='victory' ? 'flex' : 'none');
+    sh('m-back',      'none'); /* nella schermata finale ci sono i pulsanti del pannello */
+    sh('vic-pop',     s==='victory' ? 'block' : 'none');
+    if(s==='victory') showVictoryPanel();
     sh('m-music',     s==='fight' ? 'none' : 'flex');
     /* Sincronizza label difficoltà nella home */
     var dv = document.getElementById('hb-diff-val');
@@ -4308,7 +4315,7 @@ function loop(ts){
   },80);
 
   updateOverlay();
-  document.addEventListener('touchmove', function(e){ if(e.target.closest&&e.target.closest('#ss-thumbs,#ss-panel,.hs-right,.set-box,.pp-box'))return; e.preventDefault(); },{passive:false});
+  document.addEventListener('touchmove', function(e){ if(e.target.closest&&e.target.closest('#ss-thumbs,#ss-panel,.hs-right,.set-box,.pp-box,#vic-body'))return; e.preventDefault(); },{passive:false});
 
 })();
 
