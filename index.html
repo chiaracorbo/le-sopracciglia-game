@@ -210,6 +210,24 @@
     width: 100%; min-height: 48px; padding: 0 14px; border-radius: 10px; background: rgba(255,255,255,.06);
     border: 1.5px solid rgba(255,255,255,.18); color: var(--testo); font-size: 16px !important; text-align: left; }
   #set-pop #hb-diff-val, #set-pop #hb-fx-val, #set-pop #hb-vib-val { color: var(--oro); font-weight: 800; white-space: nowrap; }
+  /* righe delle impostazioni (home e pausa) */
+  .opt { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 0 14px;
+    border-radius: 10px; background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.18); color: var(--testo);
+    font-family: var(--font-testo); font-size: 16px; text-align: left; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .opt .opt-val { color: var(--oro); font-weight: 800; white-space: nowrap; }
+  .opt.pressed { background: rgba(100,70,10,.85); }
+  /* pannello di pausa: pagine principale / impostazioni / conferma */
+  #pause-pop .pp-box { max-height: 94%; overflow-y: auto; }
+  /* telefono in orizzontale: impostazioni della home su due colonne, così stanno nello schermo */
+  @media (max-height: 430px) and (orientation: landscape) {
+    #set-pop .set-box { width: min(92vw, 640px); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    #set-pop .set-h, #set-pop #set-close { grid-column: 1 / -1; }
+    #set-pop .set-box .opt, #set-pop #hb-diff { min-height: 48px; font-size: 15px !important; }
+  }
+  #pause-pop .pp-page { display: flex; flex-direction: column; gap: 10px; }
+  #pause-pop .pp-page[hidden] { display: none; }
+  #pause-pop .pp-msg { color: var(--testo); font-family: var(--font-testo); font-size: 15px; text-align: center; line-height: 1.35; margin: 2px 0 4px; }
+  @media (max-height: 380px) { #pause-pop .pp-box { padding: 10px 14px; gap: 6px; } #pause-pop .pp-page { gap: 7px; } #pause-pop .pp-h { margin-bottom: 0; } }
   #set-close { margin-top: 4px;
     font-weight: 900; font-size: 15px; letter-spacing: .06em; cursor: pointer; touch-action: manipulation; }
   /* proposta di allenamento alla prima apertura */
@@ -389,8 +407,10 @@
   <div id="set-pop"><div class="set-box">
     <div class="set-h">IMPOSTAZIONI</div>
     <button id="hb-diff"><span>Difficoltà CPU</span><span id="hb-diff-val">Normale</span></button>
-    <button id="hb-fx"><span>Riduci lampi e tremolio</span><span id="hb-fx-val">NO</span></button>
-    <button id="hb-vib"><span>Vibrazione</span><span id="hb-vib-val">SÌ</span></button>
+    <button class="opt" data-opt="music"><span>Musica</span><span class="opt-val">SÌ</span></button>
+    <button class="opt" data-opt="sfx"><span>Effetti sonori</span><span class="opt-val">SÌ</span></button>
+    <button id="hb-fx" class="opt" data-opt="fx"><span>Riduci lampi e tremolio</span><span id="hb-fx-val" class="opt-val">NO</span></button>
+    <button id="hb-vib" class="opt" data-opt="vib"><span>Vibrazione</span><span id="hb-vib-val" class="opt-val">SÌ</span></button>
     <button id="set-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -412,9 +432,27 @@
 <button id="m-back" class="btn-icona btn-indietro"><span class="ar"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="2" width="2" height="1"/><rect class="px-o" x="5" y="3" width="1" height="1"/><rect class="px-g" x="6" y="3" width="1" height="1"/><rect class="px-o" x="7" y="3" width="1" height="1"/><rect class="px-o" x="4" y="4" width="1" height="1"/><rect class="px-g" x="5" y="4" width="2" height="1"/><rect class="px-o" x="7" y="4" width="1" height="1"/><rect class="px-o" x="3" y="5" width="1" height="1"/><rect class="px-g" x="4" y="5" width="3" height="1"/><rect class="px-o" x="7" y="5" width="6" height="1"/><rect class="px-o" x="2" y="6" width="1" height="1"/><rect class="px-g" x="3" y="6" width="9" height="1"/><rect class="px-G" x="12" y="6" width="1" height="1"/><rect class="px-o" x="13" y="6" width="1" height="1"/><rect class="px-o" x="1" y="7" width="1" height="1"/><rect class="px-g" x="2" y="7" width="11" height="1"/><rect class="px-G" x="13" y="7" width="1" height="1"/><rect class="px-o" x="14" y="7" width="1" height="1"/><rect class="px-o" x="1" y="8" width="1" height="1"/><rect class="px-G" x="2" y="8" width="12" height="1"/><rect class="px-o" x="14" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="1" height="1"/><rect class="px-G" x="3" y="9" width="4" height="1"/><rect class="px-o" x="7" y="9" width="7" height="1"/><rect class="px-o" x="3" y="10" width="1" height="1"/><rect class="px-G" x="4" y="10" width="3" height="1"/><rect class="px-o" x="7" y="10" width="1" height="1"/><rect class="px-o" x="4" y="11" width="1" height="1"/><rect class="px-G" x="5" y="11" width="2" height="1"/><rect class="px-o" x="7" y="11" width="1" height="1"/><rect class="px-o" x="5" y="12" width="1" height="1"/><rect class="px-G" x="6" y="12" width="1" height="1"/><rect class="px-o" x="7" y="12" width="1" height="1"/><rect class="px-o" x="6" y="13" width="2" height="1"/></svg></span>INDIETRO</button>
 <button id="m-pause" aria-label="Pausa"><span class="pz"><svg class="pxi" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="3" y="2" width="4" height="1"/><rect class="px-o" x="9" y="2" width="4" height="1"/><rect class="px-o" x="3" y="3" width="1" height="1"/><rect class="px-w" x="4" y="3" width="2" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-o" x="9" y="3" width="1" height="1"/><rect class="px-w" x="10" y="3" width="2" height="1"/><rect class="px-o" x="12" y="3" width="1" height="1"/><rect class="px-o" x="3" y="4" width="1" height="1"/><rect class="px-w" x="4" y="4" width="2" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-o" x="9" y="4" width="1" height="1"/><rect class="px-w" x="10" y="4" width="2" height="1"/><rect class="px-o" x="12" y="4" width="1" height="1"/><rect class="px-o" x="3" y="5" width="1" height="1"/><rect class="px-w" x="4" y="5" width="2" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-o" x="9" y="5" width="1" height="1"/><rect class="px-w" x="10" y="5" width="2" height="1"/><rect class="px-o" x="12" y="5" width="1" height="1"/><rect class="px-o" x="3" y="6" width="1" height="1"/><rect class="px-w" x="4" y="6" width="2" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-w" x="10" y="6" width="2" height="1"/><rect class="px-o" x="12" y="6" width="1" height="1"/><rect class="px-o" x="3" y="7" width="1" height="1"/><rect class="px-w" x="4" y="7" width="2" height="1"/><rect class="px-o" x="6" y="7" width="1" height="1"/><rect class="px-o" x="9" y="7" width="1" height="1"/><rect class="px-w" x="10" y="7" width="2" height="1"/><rect class="px-o" x="12" y="7" width="1" height="1"/><rect class="px-o" x="3" y="8" width="1" height="1"/><rect class="px-w" x="4" y="8" width="2" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-o" x="9" y="8" width="1" height="1"/><rect class="px-w" x="10" y="8" width="2" height="1"/><rect class="px-o" x="12" y="8" width="1" height="1"/><rect class="px-o" x="3" y="9" width="1" height="1"/><rect class="px-w" x="4" y="9" width="2" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-w" x="10" y="9" width="2" height="1"/><rect class="px-o" x="12" y="9" width="1" height="1"/><rect class="px-o" x="3" y="10" width="1" height="1"/><rect class="px-w" x="4" y="10" width="2" height="1"/><rect class="px-o" x="6" y="10" width="1" height="1"/><rect class="px-o" x="9" y="10" width="1" height="1"/><rect class="px-w" x="10" y="10" width="2" height="1"/><rect class="px-o" x="12" y="10" width="1" height="1"/><rect class="px-o" x="3" y="11" width="1" height="1"/><rect class="px-w" x="4" y="11" width="2" height="1"/><rect class="px-o" x="6" y="11" width="1" height="1"/><rect class="px-o" x="9" y="11" width="1" height="1"/><rect class="px-w" x="10" y="11" width="2" height="1"/><rect class="px-o" x="12" y="11" width="1" height="1"/><rect class="px-o" x="3" y="12" width="1" height="1"/><rect class="px-w" x="4" y="12" width="2" height="1"/><rect class="px-o" x="6" y="12" width="1" height="1"/><rect class="px-o" x="9" y="12" width="1" height="1"/><rect class="px-w" x="10" y="12" width="2" height="1"/><rect class="px-o" x="12" y="12" width="1" height="1"/><rect class="px-o" x="3" y="13" width="4" height="1"/><rect class="px-o" x="9" y="13" width="4" height="1"/></svg></span></button>
 <div id="pause-pop"><div class="pp-box">
-  <div class="pp-h">PAUSA</div>
-  <button id="pp-resume" class="btn-primario">▶ RIPRENDI</button>
-  <button id="pp-menu" class="btn-secondario">TORNA AL MENU</button>
+  <div class="pp-page" id="pp-main">
+    <div class="pp-h">PAUSA</div>
+    <button id="pp-resume" class="btn-primario">RIPRENDI</button>
+    <button id="pp-restart" class="btn-secondario">RICOMINCIA</button>
+    <button id="pp-settings" class="btn-secondario">IMPOSTAZIONI</button>
+    <button id="pp-menu" class="btn-secondario">ESCI</button>
+  </div>
+  <div class="pp-page" id="pp-set" hidden>
+    <div class="pp-h">IMPOSTAZIONI</div>
+    <button class="opt" data-opt="music"><span>Musica</span><span class="opt-val">SÌ</span></button>
+    <button class="opt" data-opt="sfx"><span>Effetti sonori</span><span class="opt-val">SÌ</span></button>
+    <button class="opt" data-opt="fx"><span>Riduci lampi e tremolio</span><span class="opt-val">NO</span></button>
+    <button class="opt" data-opt="vib"><span>Vibrazione</span><span class="opt-val">SÌ</span></button>
+    <button id="pp-set-back" class="btn-primario">FATTO</button>
+  </div>
+  <div class="pp-page" id="pp-confirm" hidden>
+    <div class="pp-h">ESCI</div>
+    <div class="pp-msg" id="pp-confirm-msg">Uscire dall’incontro?</div>
+    <button id="pp-exit-yes" class="btn-primario">SÌ, ESCI</button>
+    <button id="pp-exit-no" class="btn-secondario">ANNULLA</button>
+  </div>
 </div></div>
 <div id="tr-box"><div id="tr-title"></div><div id="tr-text"></div><div id="tr-dots"></div><button id="tr-skip">Salta ›</button></div>
 <button id="m-music" class="btn-icona" aria-label="Musica"><span class="mi-on"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="6" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="4" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="4" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="1" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-f" x="7" y="6" width="1" height="1"/><rect class="px-o" x="8" y="6" width="1" height="1"/><rect class="px-o" x="6" y="7" width="1" height="1"/><rect class="px-f" x="7" y="7" width="1" height="1"/><rect class="px-o" x="8" y="7" width="1" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-f" x="7" y="8" width="1" height="1"/><rect class="px-o" x="8" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="5" height="1"/><rect class="px-f" x="7" y="9" width="1" height="1"/><rect class="px-o" x="8" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="6" height="1"/><rect class="px-o" x="8" y="10" width="1" height="1"/><rect class="px-o" x="0" y="11" width="1" height="1"/><rect class="px-f" x="1" y="11" width="6" height="1"/><rect class="px-s" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-o" x="0" y="12" width="1" height="1"/><rect class="px-f" x="1" y="12" width="6" height="1"/><rect class="px-s" x="7" y="12" width="1" height="1"/><rect class="px-o" x="8" y="12" width="1" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-s" x="2" y="13" width="6" height="1"/><rect class="px-o" x="8" y="13" width="1" height="1"/><rect class="px-o" x="2" y="14" width="6" height="1"/></svg></span><span class="mi-off"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-r" x="0" y="1" width="2" height="1"/><rect class="px-o" x="6" y="1" width="6" height="1"/><rect class="px-r" x="0" y="2" width="3" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="4" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-r" x="1" y="3" width="3" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="4" height="1"/><rect class="px-r" x="2" y="4" width="3" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="1" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-r" x="3" y="5" width="3" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-r" x="4" y="6" width="3" height="1"/><rect class="px-f" x="7" y="6" width="1" height="1"/><rect class="px-o" x="8" y="6" width="1" height="1"/><rect class="px-r" x="6" y="7" width="3" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-r" x="7" y="8" width="3" height="1"/><rect class="px-o" x="2" y="9" width="5" height="1"/><rect class="px-f" x="7" y="9" width="1" height="1"/><rect class="px-r" x="8" y="9" width="3" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="6" height="1"/><rect class="px-o" x="8" y="10" width="1" height="1"/><rect class="px-r" x="10" y="10" width="3" height="1"/><rect class="px-o" x="0" y="11" width="1" height="1"/><rect class="px-f" x="1" y="11" width="6" height="1"/><rect class="px-s" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-r" x="11" y="11" width="3" height="1"/><rect class="px-o" x="0" y="12" width="1" height="1"/><rect class="px-f" x="1" y="12" width="6" height="1"/><rect class="px-s" x="7" y="12" width="1" height="1"/><rect class="px-o" x="8" y="12" width="1" height="1"/><rect class="px-r" x="12" y="12" width="3" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-s" x="2" y="13" width="6" height="1"/><rect class="px-o" x="8" y="13" width="1" height="1"/><rect class="px-r" x="13" y="13" width="3" height="1"/><rect class="px-o" x="2" y="14" width="6" height="1"/><rect class="px-r" x="14" y="14" width="2" height="1"/></svg></span></button>
@@ -470,7 +508,10 @@ addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeo
 
 /* ---------- AUDIO ---------- */
 let AC=null;
+/* effetti sonori sì/no (salvato nel browser) */
+let SFX_ON=true;try{SFX_ON=localStorage.getItem('sfx')!=='0';}catch(e){}
 function beep(f,d,type='square',v=.06,slide=0){
+  if(!SFX_ON)return;
   try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)();
     const o=AC.createOscillator(),g=AC.createGain();
     o.type=type;o.frequency.value=f;
@@ -479,7 +520,7 @@ function beep(f,d,type='square',v=.06,slide=0){
     o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);
   }catch(e){}
 }
-function noise(d,v=.08){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+function noise(d,v=.08){if(!SFX_ON)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
   const n=AC.createBufferSource(),buf=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate);
   const data=buf.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);
   n.buffer=buf;const g=AC.createGain();g.gain.value=v;n.connect(g);g.connect(AC.destination);n.start();}catch(e){}}
@@ -2892,10 +2933,15 @@ function kp(code){return !!keys[code]&&!kPrev[code];}
 
 /* PAUSA: il combattimento si ferma finché non si riprende */
 function setPause(v){
-  game.paused=!!v&&game.state==='fight';
+  const was=game.paused;game.paused=!!v&&game.state==='fight';
   const p=document.getElementById('pause-pop');if(p)p.style.display=game.paused?'flex':'none';
-  if(game.paused){for(const k in keys)keys[k]=false;try{window._releaseTouchKeys&&window._releaseTouchKeys();}catch(e){}try{sfx.sel();}catch(e){}}
+  if(game.paused)pausePage('pp-main');
+  /* apertura e chiusura: nessun tasto deve restare premuto */
+  for(const k in keys)keys[k]=false;try{window._releaseTouchKeys&&window._releaseTouchKeys();}catch(e){}
+  if(game.paused&&!was){try{sfx.sel();}catch(e){}}
 }
+/* pagine del pannello di pausa */
+function pausePage(id){['pp-main','pp-set','pp-confirm'].forEach(x=>{const e=document.getElementById(x);if(e)e.hidden=(x!==id);});}
 function update(){
   if(game.state==='fight'&&game.paused){ /* in pausa: tutto fermo; ESC o P riprendono */
     if(kp('Escape')||kp('KeyP'))setPause(false);
@@ -3223,6 +3269,7 @@ function draw(){
     else if(game.state==='select')drawSelect();
     else if(game.state==='victory')drawVictory();
   });
+  if(game.state==='fight'&&game.paused){ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,cv.width,cv.height);}
   if(whiteFlash>0&&!REDUCE_FX){ctx.globalAlpha=.3;ctx.fillStyle='#FFF';ctx.fillRect(0,0,cv.width,cv.height);ctx.globalAlpha=1;}
 }
 
@@ -3751,7 +3798,10 @@ const STEP_MS=1000/60, MAX_STEPS=5;
 let _acc=0;
 const DEBUG_UPS=/[?&]debug\b/.test(location.search);
 let _upsCount=0,_upsSec=0,_ups=0;
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){_lastTs=0;_acc=0;}});
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden){_lastTs=0;_acc=0;}
+  else if(game.state==='fight'&&!game.paused)setPause(true); /* app in secondo piano durante un incontro: pausa automatica */
+});
 /* CONTROLLI TOUCH: se un personaggio passa sotto il joystick o i pulsanti (e non li stai toccando) diventano trasparenti */
 function syncControls(){
   const mc=document.getElementById('m-controls');if(!mc||mc.style.display!=='block'||game.state!=='fight'||!game.p[0])return;
@@ -3768,7 +3818,7 @@ function syncControls(){
     Math.abs(o.x-me.x)-me.half-o.half<=30;
   g.classList.toggle('ready',ok);}
 /* icona della musica: nota o nota barrata (si aggiorna anche con il tasto M) */
-let _musIco=null;function syncMusicIcon(){if(_musIco===musicMuted)return;_musIco=musicMuted;const e=document.getElementById('m-music');if(e)e.classList.toggle('muted',!!musicMuted);}
+let _musIco=null;function syncMusicIcon(){if(_musIco===musicMuted)return;_musIco=musicMuted;if(window.refreshOpts)refreshOpts();const e=document.getElementById('m-music');if(e)e.classList.toggle('muted',!!musicMuted);}
 /* icone dei pulsanti d'azione: circa il 45% del pulsante, in multipli di 16 px per restare nitide */
 function sizeActionIcons(){document.querySelectorAll('.ab').forEach(b=>{const w=b.getBoundingClientRect().width;if(!w)return;
   const sz=Math.max(16,Math.round(w*.45/16)*16),g=b.querySelector('.ic .pxi');if(g){g.style.width=g.style.height=sz+'px';}});}
@@ -3884,7 +3934,7 @@ function loop(ts){
   window._touchState = function(){ return { btns: Object.keys(btnTouch).length > 0, stick: stickId !== null }; };
 
   function onTouchStart(e){
-    if(game.state !== 'fight') return;
+    if(game.state !== 'fight' || game.paused) return; /* con la pausa aperta i comandi non rispondono */
     e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
@@ -3896,7 +3946,7 @@ function loop(ts){
     }
   }
   function onTouchMove(e){
-    if(game.state !== 'fight') return;
+    if(game.state !== 'fight' || game.paused) return;
     e.preventDefault();
     for(var i=0;i<e.changedTouches.length;i++){
       var t = e.changedTouches[i];
@@ -4119,11 +4169,42 @@ function loop(ts){
   /* PAUSA: icona in alto al centro; pop-up con RIPRENDI e TORNA AL MENU */
   _btn('m-pause', function(){ if(game.state==='fight') setPause(!game.paused); });
   _btn('pp-resume', function(){ setPause(false); });
-  _btn('pp-menu', function(){
+  _btn('pp-restart', function(){ /* stesso incontro, stessi personaggi */
+    try{sfx.ok();}catch(_){} setPause(false); game.startMatch(); updateOverlay();
+  });
+  _btn('pp-settings', function(){ try{sfx.sel();}catch(_){} refreshOpts(); pausePage('pp-set'); });
+  _btn('pp-set-back', function(){ try{sfx.sel();}catch(_){} pausePage('pp-main'); });
+  _btn('pp-menu', function(){ /* ESCI: chiede conferma */
+    try{sfx.sel();}catch(_){}
+    var m=document.getElementById('pp-confirm-msg');
+    if(m) m.textContent = game.mode===3&&game.tournament ? 'Uscire dall\u2019incontro? Il torneo andr\u00E0 perso.' : 'Uscire dall\u2019incontro?';
+    pausePage('pp-confirm');
+  });
+  _btn('pp-exit-no', function(){ try{sfx.sel();}catch(_){} pausePage('pp-main'); });
+  _btn('pp-exit-yes', function(){
     try{sfx.sel();}catch(_){}
     setPause(false); game.state='title'; game.tournament=null;
     updateOverlay();
   });
+  /* IMPOSTAZIONI condivise (home e pausa): musica, effetti sonori, lampi, vibrazione */
+  var OPTS={
+    music:{get:function(){return !musicMuted;},set:function(){musicMuted=!musicMuted;var el=document.getElementById('m-music');if(el)el.classList.toggle('muted',musicMuted);
+      if(!musicMuted){audioUnlocked=true;ensureMusic();}else if(curTrack&&!curTrack.paused)curTrack.pause();}},
+    sfx:{get:function(){return SFX_ON;},set:function(){SFX_ON=!SFX_ON;try{localStorage.setItem('sfx',SFX_ON?'1':'0');}catch(e){}}},
+    fx:{get:function(){return REDUCE_FX;},set:function(){REDUCE_FX=!REDUCE_FX;if(REDUCE_FX)whiteFlash=0;try{localStorage.setItem('reduceFx',REDUCE_FX?'1':'0');}catch(e){}}},
+    vib:{get:function(){return VIBRA;},set:function(){VIBRA=!VIBRA;try{localStorage.setItem('vibra',VIBRA?'1':'0');}catch(e){}if(VIBRA)vib(30);}}
+  };
+  function refreshOpts(){document.querySelectorAll('.opt[data-opt]').forEach(function(b){var o=OPTS[b.getAttribute('data-opt')];var v=b.querySelector('.opt-val');if(o&&v)v.textContent=o.get()?'S\u00CC':'NO';});}
+  window.refreshOpts=refreshOpts;
+  document.querySelectorAll('.opt[data-opt]').forEach(function(b){
+    var fn=function(){var o=OPTS[b.getAttribute('data-opt')];if(!o)return;o.set();try{sfx.sel();}catch(_){}refreshOpts();};
+    b.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();b.classList.add('pressed');},{passive:false});
+    b.addEventListener('touchend',function(e){e.preventDefault();e.stopPropagation();b.classList.remove('pressed');var t=e.changedTouches[0],r=b.getBoundingClientRect();
+      if(t.clientX<r.left||t.clientX>r.right||t.clientY<r.top||t.clientY>r.bottom)return;fn();},{passive:false});
+    b.addEventListener('touchcancel',function(){b.classList.remove('pressed');});
+    b.addEventListener('click',fn);
+  });
+  refreshOpts();
 
   /* m-back: da select → titolo; da victory → titolo */
   _btn('m-back', function(){
@@ -4178,16 +4259,7 @@ function loop(ts){
   showFx();
   function showVib(){var v=document.getElementById('hb-vib-val');if(v)v.textContent=VIBRA?'S\u00CC':'NO';}
   showVib();
-  _btn('hb-vib', function(){
-    VIBRA=!VIBRA;
-    try{localStorage.setItem('vibra',VIBRA?'1':'0');}catch(e){}
-    try{sfx.sel();}catch(_){} showVib(); vib(30);
-  });
-  _btn('hb-fx', function(){
-    REDUCE_FX=!REDUCE_FX;if(REDUCE_FX)whiteFlash=0;
-    try{localStorage.setItem('reduceFx',REDUCE_FX?'1':'0');}catch(e){}
-    try{sfx.sel();}catch(_){} showFx();
-  });
+
   _btn('hb-diff', function(){
     var ks=['facile','normale','difficile'];
     game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];
@@ -4200,7 +4272,7 @@ function loop(ts){
   },80);
 
   updateOverlay();
-  document.addEventListener('touchmove', function(e){ if(e.target.closest&&e.target.closest('#ss-thumbs,#ss-panel,.hs-right'))return; e.preventDefault(); },{passive:false});
+  document.addEventListener('touchmove', function(e){ if(e.target.closest&&e.target.closest('#ss-thumbs,#ss-panel,.hs-right,.set-box,.pp-box'))return; e.preventDefault(); },{passive:false});
 
 })();
 
