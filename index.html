@@ -164,6 +164,9 @@
   #ce-panel.show { display: flex; }
   body.ce-drag #ce-panel { opacity: .2; pointer-events: none; }
   .srow .ce-open { flex: none; min-height: 40px; padding: 0 14px; font-size: 14px; }
+  /* testo grande: nelle statistiche l'etichetta va sopra la barra, così la barra resta lunga */
+  .big-text #ss-stats .ss-stat { flex-direction:column; align-items:stretch; gap:3px; } .big-text #ss-stats .ss-stat span { width:auto; min-width:0; } .big-text #ss-stats .ss-bar { flex:none; }
+  @media (max-height: 420px) { .big-text #ss-stats { row-gap:2px; margin-top:3px; } .big-text #ss-stats .ss-stat { gap:1px; } .big-text #ss-stats .ss-bar { height:5px; } }
   /* ===== HOME SCREEN (poster a sinistra, titolo e pulsanti a destra) ===== */
   #home-screen {
     display: none; position: fixed; inset: 0; z-index: 500; overflow: hidden;
@@ -412,7 +415,6 @@
     background:linear-gradient(rgba(12,10,30,0), #0c0a1e); opacity:0; transition:opacity .2s; }
   .pp-box.more #pp-set .pp-row::before { opacity:1; }
   .pp-box:has(#pp-set:not([hidden]))::after { display:none; }
-  @media (max-height: 380px) { #pp-set .pp-row { bottom:-10px; margin:0 -14px -10px; padding:6px 14px 10px; } }
   @media (max-width: 380px) { .vol .vb i { width:9px; } .sw { width:76px; } .sw.on .k { left:35px; } }
   /* ===== SELEZIONE PERSONAGGIO ===== */
   /* ===== PERCORSO DEL TORNEO (dopo la scelta e dopo ogni vittoria, prima del VS) ===== */
@@ -507,9 +509,9 @@
   #ss-head small { display:block; font:700 max(12px,min(1.5vw,3.2vh)) var(--font-testo); color:rgba(255,255,255,.7); letter-spacing:.02em; margin-top:3px; text-shadow:none; }
   /* --hh = fondo dell'intestazione, --pw = larghezza della colonna destra, --sb = margine sotto (barra home dell'iPhone),
      --tsz = lato del ritratto in miniatura, --th = altezza della fascia delle miniature */
-  :root { --hh: calc(max(14px,env(safe-area-inset-top)) + min(2.6vw,5.4vh) * 1.1 + max(12px,min(1.5vw,3.2vh)) * 1.25 + 4px);
+  :root { --hh: calc(max(14px,env(safe-area-inset-top)) + (min(2.6vw,5.4vh) * 1.1 + max(12px,min(1.5vw,3.2vh)) * 1.25) * var(--scala-testo, 1) + 4px);
     --pw: min(38vw, 420px); --sb: max(4px, calc(env(safe-area-inset-bottom) * .5));
-    --tsz: clamp(36px, min(15vh, calc((100vw - 40px) / 12 - 24px)), 110px); --th: calc(var(--tsz) + 20px + var(--sb));
+    --tsz: clamp(36px, min(15vh, calc((100vw - 40px) / 12 - 24px)), 110px); --th: calc(var(--tsz) + 6px + 14px * var(--scala-testo, 1) + var(--sb));
     --ss-acc: var(--oro); --ss-acc-rgb: 255,193,7; }
   #select-screen.opp { --ss-acc: var(--rosso); --ss-acc-rgb: 255,65,54; }
   #select-screen.opp #ss-head { color:var(--rosso); text-shadow:2px 2px 0 #5a0d08; }
@@ -589,12 +591,12 @@
   }
   /* una fila da 12 ma colonne strette: i nomi lunghi vanno su due righe (LUCA DI / MAURO), così non si toccano */
   @media (min-width: 720px) and (max-width: 939px) {
-    :root { --th: calc(var(--tsz) + 34px + var(--sb)); }
+    :root { --th: calc(var(--tsz) + 10px + 24px * var(--scala-testo, 1) + var(--sb)); }
     .ss-nm { white-space:normal; text-align:center; max-width:100%; font-size:11px; line-height:12px; overflow-wrap:normal; }
   }
   /* larghezza media (iPhone piccoli in orizzontale): due file da 6 */
   @media (max-width: 719px) {
-    :root { --tsz: clamp(30px, 10vh, 60px); --th: calc(2 * var(--tsz) + 40px + var(--sb)); }
+    :root { --tsz: clamp(30px, 10vh, 60px); --th: calc(2 * var(--tsz) + 12px + 28px * var(--scala-testo, 1) + var(--sb)); }
     #ss-thumbs { grid-template-columns:repeat(6, minmax(0, 104px)); column-gap:6px; }
   }
   /* telefono in orizzontale (schermo basso): il nome va sotto il pulsante INDIETRO, così la posa usa tutta l'altezza */
@@ -603,7 +605,7 @@
     #ss-id { position:absolute; left:max(10px,env(safe-area-inset-left)); top:calc(max(62px, env(safe-area-inset-top) + 52px) - max(26px, 9vh));
       z-index:2; max-width:30%; text-align:left; padding:0; overflow-wrap:break-word; }
     #ss-name { display:block; } #ss-title { display:block; margin:2px 0 0; text-shadow:1px 1px 0 #000; }
-    #ss-side { top:max(60px, calc(env(safe-area-inset-top) + 52px)); gap:6px; }
+    #ss-side { top:max(60px, calc(env(safe-area-inset-top) + 52px), calc(var(--hh) + 2px)); gap:6px; }
     #ss-panel { padding:3px; } .ss-tab { min-height:36px; }
     #ss-pages { padding:3px 6px 0; }
     #ss-pg-st #ss-style { padding:1px 8px 0; line-height:15px; }
@@ -619,12 +621,12 @@
     #ss-pg-st #ss-style { line-height:13px; } #ss-stats .ss-stat { gap:2px; }
   }
   @media (max-height: 420px) and (max-width: 719px) {
-    :root { --tsz: clamp(30px, calc(25vh - 50px), 44px); --th: calc(2 * var(--tsz) + 34px + var(--sb)); }
+    :root { --tsz: clamp(30px, calc(25vh - 50px), 44px); --th: calc(2 * var(--tsz) + 8px + 26px * var(--scala-testo, 1) + var(--sb)); }
     #ss-thumbs { row-gap:2px; } .ss-th { gap:1px; } .ss-nm { line-height:13px; }
   }
   /* schermi molto stretti: le miniature scorrono di lato, con freccia e sfumatura dove ce ne sono altre */
   @media (max-width: 559px) {
-    :root { --th: calc(var(--tsz) + 20px + var(--sb)); }
+    :root { --th: calc(var(--tsz) + 6px + 14px * var(--scala-testo, 1) + var(--sb)); }
     #ss-thumbs { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:80px; justify-content:start; }
     #ss-head small { display:none; }
     #ss-tw::before, #ss-tw::after { position:absolute; z-index:1; top:0; bottom:0; width:34px; display:flex; align-items:center; justify-content:center;
@@ -803,6 +805,29 @@
 </div>
 <script>
 "use strict";
+/* TESTO GRANDE: ogni font-size (e interlinea in px) del foglio di stile diventa calc(valore * var(--scala-testo)).
+   I valori in em/% non si toccano: crescono già insieme al testo che li contiene. */
+let TXT_SCALE=1;try{TXT_SCALE=localStorage.getItem('bigText')==='1'?1.25:1;}catch(e){}
+document.documentElement.style.setProperty('--scala-testo',TXT_SCALE);document.documentElement.classList.toggle('big-text',TXT_SCALE>1);
+(function(){
+  const skip=/(^|[^r])em\b|%|inherit|initial|normal|unset|--scala-testo/;
+  function fix(st,prop){const v=st.getPropertyValue(prop);if(!v||skip.test(v))return;
+    if(prop==='line-height'&&!/px/.test(v))return; /* interlinea senza unità: cresce già da sola */
+    st.setProperty(prop,'calc('+v+' * var(--scala-testo, 1))',st.getPropertyPriority(prop));}
+  /* forma abbreviata con var() (es. font:400 16px/1.1 var(--font-gioco)): il browser non separa la dimensione, la si cerca nel testo */
+  function toks(v){const t=[];let d=0,c='';for(const ch of v){if(ch==='(')d++;if(ch===')')d--;if(ch===' '&&d===0){if(c)t.push(c);c='';}else c+=ch;}if(c)t.push(c);return t;}
+  const sc=x=>skip.test(x)?x:'calc('+x+' * var(--scala-testo, 1))';
+  function fixShort(st){const v=st.getPropertyValue('font');if(!v||!/var\(/.test(v)||/--scala-testo/.test(v))return;
+    const t=toks(v.trim());
+    for(let i=0;i<t.length;i++){let k=t[i],lh='';const sl=k.match(/^(.*\))\/(.+)$/)||k.match(/^([\d.]+[a-z%]+)\/(.+)$/);if(sl){k=sl[1];lh=sl[2];}
+      if(/^([\d.]+(px|vw|vh|vmin|vmax|rem)|(clamp|min|max|calc)\()/.test(k)){
+        t[i]=sc(k)+(lh?'/'+(/px/.test(lh)?sc(lh):lh):'');st.setProperty('font',t.join(' '),st.getPropertyPriority('font'));return;}}}
+  function walk(rules){for(const r of rules){if(r.style){fixShort(r.style);fix(r.style,'font-size');fix(r.style,'line-height');}if(r.cssRules)walk(r.cssRules);}}
+  for(const sh of document.styleSheets){try{walk(sh.cssRules);}catch(e){}}
+})();
+function setBigText(on){TXT_SCALE=on?1.25:1;document.documentElement.style.setProperty('--scala-testo',TXT_SCALE);document.documentElement.classList.toggle('big-text',on);
+  try{localStorage.setItem('bigText',on?'1':'0');}catch(e){}
+  try{dispatchEvent(new Event('resize'));}catch(e){}}
 let W=854;const H=480,GROUND=440;
 const IS_MOBILE=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
@@ -3302,8 +3327,9 @@ function explode(p,tgt){
 }
 
 /* ---------- DRAW ---------- */
-function text(t,x,y,sz,col,align='center'){ctx.fillStyle=col;ctx.font='400 '+sz+'px '+FONT_GIOCO;ctx.textAlign=align;ctx.fillText(t,x,y);}
-function outlineText(t,x,y,sz,col,align='center'){ctx.font='400 '+sz+'px '+FONT_GIOCO;ctx.textAlign=align;
+/* noScale: true = resta alla dimensione normale anche con il testo grande (solo dove non c'è spazio) */
+function text(t,x,y,sz,col,align='center',noScale){if(!noScale)sz*=TXT_SCALE;ctx.fillStyle=col;ctx.font='400 '+sz+'px '+FONT_GIOCO;ctx.textAlign=align;ctx.fillText(t,x,y);}
+function outlineText(t,x,y,sz,col,align='center',noScale){if(!noScale)sz*=TXT_SCALE;ctx.font='400 '+sz+'px '+FONT_GIOCO;ctx.textAlign=align;
   /* contorno da 1 px: quello da 2 px chiudeva l'apertura della C del carattere pixel */
   ctx.fillStyle='#000';for(const[ox,oy]of[[-1,0],[1,0],[0,-1],[0,1]])ctx.fillText(t,x+ox,y+oy);
   ctx.fillStyle=col;ctx.fillText(t,x,y);}
@@ -3489,7 +3515,7 @@ function drawHUD0(){
     hudBolt(flip?bx+bw-bolt+u(2):bx,y-u(5),bolt,ready);
     // nome e round vinti
     const nameY=y+spH+u(15),fs=u(13);
-    outlineText(f.cfg.name,flip?bx+bw:bx,nameY,fs,uc,al);
+    outlineText(f.cfg.name,flip?bx+bw:bx,nameY,fs,uc,al,true); /* il nome resta normale: nella barra non c'è spazio */
     ctx.font='400 '+fs+'px '+FONT_GIOCO;const nw=ctx.measureText(f.cfg.name).width;
     for(let i=0;i<2;i++){const ds=u(12),px=flip?bx+bw-nw-u(8)-ds-i*u(16):bx+nw+u(8)+i*u(16),cx=px+ds/2,cy=nameY-u(5),won=game.wins[side]>i;
       ctx.beginPath();ctx.moveTo(cx,cy-ds/2);ctx.lineTo(cx+ds/2,cy);ctx.lineTo(cx,cy+ds/2);ctx.lineTo(cx-ds/2,cy);ctx.closePath();
@@ -4550,6 +4576,7 @@ function loop(ts){
   var DIFF_KEYS=['facile','normale','difficile'],DIFF_LBL={facile:'FACILE',normale:'NORMALE',difficile:'DIFFICILE'};
   var SWITCHES={
     fx:{label:'Riduci lampi e tremolio',get:function(){return REDUCE_FX;},set:function(v){REDUCE_FX=v;if(v)whiteFlash=0;try{localStorage.setItem('reduceFx',v?'1':'0');}catch(e){}}},
+    big:{label:'Testo grande',get:function(){return TXT_SCALE>1;},set:function(v){setBigText(v);setTimeout(function(){if(window.refreshOpts)refreshOpts();},50);}},
     vib:{label:'Vibrazione',get:function(){return VIBRA;},set:function(v){VIBRA=v;try{localStorage.setItem('vibra',v?'1':'0');}catch(e){}if(v)vib(30);}}
   };
   var VOLUMES={
@@ -4590,7 +4617,7 @@ function loop(ts){
     if(IS_MOBILE){var rc=document.createElement('div');rc.className='srow';
       rc.innerHTML='<span class="sl">Disposizione comandi</span><button type="button" class="btn-secondario ce-open">MODIFICA</button>';
       tap(rc.querySelector('button'),function(){try{sfx.sel();}catch(_){}if(window.openCtlEdit)openCtlEdit();});guard(rc);box.appendChild(rc);}
-    ['fx','vib'].forEach(function(k){var o=SWITCHES[k],r=document.createElement('div');r.className='srow';
+    ['big','fx','vib'].forEach(function(k){var o=SWITCHES[k],r=document.createElement('div');r.className='srow';
       r.innerHTML='<span class="sl">'+o.label+'</span><button type="button" class="sw" role="switch" aria-label="'+o.label+'"><span class="k"></span><span class="t"></span></button>';
       var b=r.querySelector('.sw');b.dataset.sw=k;
       tap(b,function(){o.set(!o.get());try{sfx.sel();}catch(_){}refreshOpts();});
