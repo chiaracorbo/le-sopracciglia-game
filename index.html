@@ -341,6 +341,49 @@
     font-family: var(--font-testo); font-size: min(1.6vw, 3.6vh);
     touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer; }
 
+  /* ===== RIGHE DELLE IMPOSTAZIONI (home e pausa) ===== */
+  .set-rows { display:flex; flex-direction:column; gap:8px; width:100%; }
+  .srow { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:48px; padding:6px 12px; box-sizing:border-box;
+    border-radius:10px; background:rgba(255,255,255,.06); border:1.5px solid rgba(255,255,255,.14); }
+  .srow .sl { font:700 15px/1.2 var(--font-testo); color:var(--testo); text-align:left; }
+  .srow.col { flex-direction:column; align-items:stretch; gap:6px; padding:8px 10px; }
+  /* difficoltà: tre posizioni affiancate, quella attiva piena */
+  .seg { display:flex; border:2px solid var(--oro); border-radius:8px; overflow:hidden; }
+  .seg button { flex:1; min-height:44px; padding:0 4px; border:0; border-left:2px solid var(--oro); background:transparent; color:var(--oro);
+    font:400 14px/1 var(--font-gioco); letter-spacing:.04em; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  .seg button:first-child { border-left:0; }
+  .seg button.on { background:var(--oro); color:#1a1205; }
+  /* interruttore SÌ/NO in stile pixel: rettangolo con cursore che scorre */
+  .sw { position:relative; flex:none; width:84px; height:36px; padding:0; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+    border:2px solid rgba(255,255,255,.45); border-radius:3px; background:#141026; box-shadow:inset 0 -3px 0 rgba(0,0,0,.45);
+    font:400 14px/1 var(--font-gioco); color:var(--testo-tenue); transition:background .15s, border-color .15s; }
+  .sw .k { position:absolute; top:3px; left:3px; width:34px; height:26px; box-sizing:border-box; border-radius:2px; background:#8c8aa0;
+    box-shadow:inset -3px -3px 0 rgba(0,0,0,.3), inset 3px 3px 0 rgba(255,255,255,.35); transition:left .15s; }
+  .sw .t { position:absolute; top:0; bottom:0; display:flex; align-items:center; right:10px; }
+  .sw.on { background:var(--oro); border-color:var(--oro); color:#1a1205; }
+  .sw.on .k { left:43px; background:#1a1205; box-shadow:inset -3px -3px 0 rgba(0,0,0,.4), inset 3px 3px 0 rgba(255,255,255,.18); }
+  .sw.on .t { right:auto; left:12px; }
+  /* cursore del volume: 10 blocchi pixel, passi del 10% */
+  .vol { display:flex; align-items:center; gap:8px; flex:none; touch-action:none; cursor:pointer; -webkit-tap-highlight-color:transparent; outline:none; }
+  .vol .vb { display:flex; gap:2px; padding:4px; height:28px; box-sizing:content-box; border:2px solid rgba(255,255,255,.45); border-radius:3px; background:#141026; }
+  .vol .vb i { width:12px; height:100%; background:rgba(255,255,255,.12); }
+  .vol .vb i.f { background:var(--oro); box-shadow:inset 0 -3px 0 rgba(138,90,0,.6); }
+  .vol .vv { width:3.4em; text-align:right; font:400 14px/1 var(--font-gioco); color:var(--oro); }
+  .vol.zero .vv { color:var(--testo-tenue); }
+  .vol:focus-visible .vb { border-color:var(--oro); }
+  /* pannelli che scorrono: sfumatura in basso se c'è altro */
+  #set-pop .set-box, #pause-pop .pp-box { position:relative; }
+  .set-box::after, .pp-box::after { content:''; position:sticky; bottom:-14px; display:block; flex:none; height:30px; margin:-30px -16px -14px;
+    background:linear-gradient(rgba(10,8,28,0), rgba(10,8,28,.98)); pointer-events:none; opacity:0; transition:opacity .2s; }
+  .set-box.more::after, .pp-box.more::after { opacity:1; }
+  /* pausa: INDIETRO e RIPRENDI restano sempre visibili in fondo, le righe scorrono sopra */
+  #pp-set .pp-row { position:sticky; bottom:-16px; z-index:2; margin:0 -18px -16px; padding:8px 18px 16px; background:#0c0a1e; border-radius:0 0 14px 14px; }
+  #pp-set .pp-row::before { content:''; position:absolute; left:0; right:0; top:-26px; height:26px; pointer-events:none;
+    background:linear-gradient(rgba(12,10,30,0), #0c0a1e); opacity:0; transition:opacity .2s; }
+  .pp-box.more #pp-set .pp-row::before { opacity:1; }
+  .pp-box:has(#pp-set:not([hidden]))::after { display:none; }
+  @media (max-height: 380px) { #pp-set .pp-row { bottom:-10px; margin:0 -14px -10px; padding:6px 14px 10px; } }
+  @media (max-width: 380px) { .vol .vb i { width:9px; } .sw { width:76px; } .sw.on .k { left:35px; } }
   /* ===== SELEZIONE PERSONAGGIO ===== */
   /* ===== PERCORSO DEL TORNEO (dopo la scelta e dopo ogni vittoria, prima del VS) ===== */
   #path-screen { display:none; position:fixed; inset:0; z-index:515; overflow:hidden; color:var(--testo); font-family:var(--font-testo);
@@ -614,14 +657,7 @@
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
   <div id="set-pop"><div class="set-box">
     <div class="set-h">IMPOSTAZIONI</div>
-    <button id="hb-diff"><span>Difficoltà CPU</span><span id="hb-diff-val">Normale</span></button>
-    <div class="opt-icons">
-    <button class="opt opt-ico" data-opt="music" aria-label="Musica"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="6" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="4" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="4" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="1" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-f" x="7" y="6" width="1" height="1"/><rect class="px-o" x="8" y="6" width="1" height="1"/><rect class="px-o" x="6" y="7" width="1" height="1"/><rect class="px-f" x="7" y="7" width="1" height="1"/><rect class="px-o" x="8" y="7" width="1" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-f" x="7" y="8" width="1" height="1"/><rect class="px-o" x="8" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="5" height="1"/><rect class="px-f" x="7" y="9" width="1" height="1"/><rect class="px-o" x="8" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="6" height="1"/><rect class="px-o" x="8" y="10" width="1" height="1"/><rect class="px-o" x="0" y="11" width="1" height="1"/><rect class="px-f" x="1" y="11" width="6" height="1"/><rect class="px-s" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-o" x="0" y="12" width="1" height="1"/><rect class="px-f" x="1" y="12" width="6" height="1"/><rect class="px-s" x="7" y="12" width="1" height="1"/><rect class="px-o" x="8" y="12" width="1" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-s" x="2" y="13" width="6" height="1"/><rect class="px-o" x="8" y="13" width="1" height="1"/><rect class="px-o" x="2" y="14" width="6" height="1"/></svg></span><span class="ol">Musica</span></button>
-    <button class="opt opt-ico" data-opt="sfx" aria-label="Effetti sonori"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="2" height="1"/><rect class="px-o" x="5" y="2" width="1" height="1"/><rect class="px-f" x="6" y="2" width="1" height="1"/><rect class="px-o" x="7" y="2" width="1" height="1"/><rect class="px-o" x="4" y="3" width="1" height="1"/><rect class="px-f" x="5" y="3" width="2" height="1"/><rect class="px-o" x="7" y="3" width="1" height="1"/><rect class="px-f" x="11" y="3" width="1" height="1"/><rect class="px-o" x="0" y="4" width="5" height="1"/><rect class="px-f" x="5" y="4" width="1" height="1"/><rect class="px-s" x="6" y="4" width="1" height="1"/><rect class="px-o" x="7" y="4" width="1" height="1"/><rect class="px-f" x="12" y="4" width="1" height="1"/><rect class="px-o" x="0" y="5" width="1" height="1"/><rect class="px-f" x="1" y="5" width="3" height="1"/><rect class="px-o" x="4" y="5" width="1" height="1"/><rect class="px-f" x="5" y="5" width="1" height="1"/><rect class="px-s" x="6" y="5" width="1" height="1"/><rect class="px-o" x="7" y="5" width="1" height="1"/><rect class="px-f" x="10" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="1" height="1"/><rect class="px-o" x="0" y="6" width="1" height="1"/><rect class="px-f" x="1" y="6" width="3" height="1"/><rect class="px-o" x="4" y="6" width="1" height="1"/><rect class="px-f" x="5" y="6" width="1" height="1"/><rect class="px-s" x="6" y="6" width="1" height="1"/><rect class="px-o" x="7" y="6" width="1" height="1"/><rect class="px-f" x="11" y="6" width="1" height="1"/><rect class="px-f" x="13" y="6" width="1" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-f" x="1" y="7" width="3" height="1"/><rect class="px-o" x="4" y="7" width="1" height="1"/><rect class="px-f" x="5" y="7" width="1" height="1"/><rect class="px-s" x="6" y="7" width="1" height="1"/><rect class="px-o" x="7" y="7" width="1" height="1"/><rect class="px-f" x="11" y="7" width="1" height="1"/><rect class="px-f" x="13" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-f" x="1" y="8" width="3" height="1"/><rect class="px-o" x="4" y="8" width="1" height="1"/><rect class="px-f" x="5" y="8" width="1" height="1"/><rect class="px-s" x="6" y="8" width="1" height="1"/><rect class="px-o" x="7" y="8" width="1" height="1"/><rect class="px-f" x="10" y="8" width="1" height="1"/><rect class="px-f" x="13" y="8" width="1" height="1"/><rect class="px-o" x="0" y="9" width="5" height="1"/><rect class="px-f" x="5" y="9" width="1" height="1"/><rect class="px-s" x="6" y="9" width="1" height="1"/><rect class="px-o" x="7" y="9" width="1" height="1"/><rect class="px-f" x="12" y="9" width="1" height="1"/><rect class="px-o" x="4" y="10" width="1" height="1"/><rect class="px-f" x="5" y="10" width="2" height="1"/><rect class="px-o" x="7" y="10" width="1" height="1"/><rect class="px-f" x="11" y="10" width="1" height="1"/><rect class="px-o" x="5" y="11" width="1" height="1"/><rect class="px-f" x="6" y="11" width="1" height="1"/><rect class="px-o" x="7" y="11" width="1" height="1"/><rect class="px-o" x="6" y="12" width="2" height="1"/></svg></span><span class="ol">Effetti</span></button>
-    <button class="opt opt-ico" data-opt="fx" aria-label="Lampi e tremolio"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="7" y="1" width="2" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="2" y="3" width="1" height="1"/><rect class="px-g" x="7" y="3" width="2" height="1"/><rect class="px-o" x="13" y="3" width="1" height="1"/><rect class="px-g" x="3" y="4" width="1" height="1"/><rect class="px-g" x="7" y="4" width="2" height="1"/><rect class="px-g" x="12" y="4" width="1" height="1"/><rect class="px-g" x="4" y="5" width="1" height="1"/><rect class="px-g" x="6" y="5" width="1" height="1"/><rect class="px-w" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="1" height="1"/><rect class="px-g" x="11" y="5" width="1" height="1"/><rect class="px-g" x="5" y="6" width="1" height="1"/><rect class="px-w" x="6" y="6" width="4" height="1"/><rect class="px-g" x="10" y="6" width="1" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-w" x="5" y="7" width="6" height="1"/><rect class="px-g" x="11" y="7" width="4" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-g" x="5" y="8" width="1" height="1"/><rect class="px-w" x="6" y="8" width="4" height="1"/><rect class="px-g" x="10" y="8" width="1" height="1"/><rect class="px-g" x="4" y="9" width="1" height="1"/><rect class="px-g" x="6" y="9" width="1" height="1"/><rect class="px-w" x="7" y="9" width="2" height="1"/><rect class="px-g" x="9" y="9" width="1" height="1"/><rect class="px-g" x="11" y="9" width="1" height="1"/><rect class="px-g" x="3" y="10" width="1" height="1"/><rect class="px-g" x="7" y="10" width="2" height="1"/><rect class="px-g" x="12" y="10" width="1" height="1"/><rect class="px-o" x="2" y="11" width="1" height="1"/><rect class="px-g" x="7" y="11" width="2" height="1"/><rect class="px-o" x="13" y="11" width="1" height="1"/><rect class="px-g" x="7" y="12" width="2" height="1"/><rect class="px-o" x="7" y="13" width="2" height="1"/></svg></span><span class="ol">Lampi</span></button>
-    <button class="opt opt-ico" data-opt="vib" aria-label="Vibrazione"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="4" y="1" width="8" height="1"/><rect class="px-o" x="4" y="2" width="1" height="1"/><rect class="px-f" x="5" y="2" width="6" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-f" x="2" y="3" width="1" height="1"/><rect class="px-o" x="4" y="3" width="1" height="1"/><rect class="px-f" x="5" y="3" width="1" height="1"/><rect class="px-a" x="6" y="3" width="4" height="1"/><rect class="px-f" x="10" y="3" width="1" height="1"/><rect class="px-o" x="11" y="3" width="1" height="1"/><rect class="px-f" x="13" y="3" width="1" height="1"/><rect class="px-f" x="1" y="4" width="1" height="1"/><rect class="px-o" x="4" y="4" width="1" height="1"/><rect class="px-f" x="5" y="4" width="1" height="1"/><rect class="px-a" x="6" y="4" width="4" height="1"/><rect class="px-f" x="10" y="4" width="1" height="1"/><rect class="px-o" x="11" y="4" width="1" height="1"/><rect class="px-f" x="14" y="4" width="1" height="1"/><rect class="px-f" x="2" y="5" width="1" height="1"/><rect class="px-o" x="4" y="5" width="1" height="1"/><rect class="px-f" x="5" y="5" width="1" height="1"/><rect class="px-a" x="6" y="5" width="4" height="1"/><rect class="px-f" x="10" y="5" width="1" height="1"/><rect class="px-o" x="11" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="1" height="1"/><rect class="px-f" x="1" y="6" width="1" height="1"/><rect class="px-o" x="4" y="6" width="1" height="1"/><rect class="px-f" x="5" y="6" width="1" height="1"/><rect class="px-a" x="6" y="6" width="4" height="1"/><rect class="px-f" x="10" y="6" width="1" height="1"/><rect class="px-o" x="11" y="6" width="1" height="1"/><rect class="px-f" x="14" y="6" width="1" height="1"/><rect class="px-f" x="2" y="7" width="1" height="1"/><rect class="px-o" x="4" y="7" width="1" height="1"/><rect class="px-f" x="5" y="7" width="1" height="1"/><rect class="px-a" x="6" y="7" width="4" height="1"/><rect class="px-f" x="10" y="7" width="1" height="1"/><rect class="px-o" x="11" y="7" width="1" height="1"/><rect class="px-f" x="13" y="7" width="1" height="1"/><rect class="px-f" x="1" y="8" width="1" height="1"/><rect class="px-o" x="4" y="8" width="1" height="1"/><rect class="px-f" x="5" y="8" width="1" height="1"/><rect class="px-a" x="6" y="8" width="4" height="1"/><rect class="px-f" x="10" y="8" width="1" height="1"/><rect class="px-o" x="11" y="8" width="1" height="1"/><rect class="px-f" x="14" y="8" width="1" height="1"/><rect class="px-f" x="2" y="9" width="1" height="1"/><rect class="px-o" x="4" y="9" width="1" height="1"/><rect class="px-f" x="5" y="9" width="1" height="1"/><rect class="px-a" x="6" y="9" width="4" height="1"/><rect class="px-f" x="10" y="9" width="1" height="1"/><rect class="px-o" x="11" y="9" width="1" height="1"/><rect class="px-f" x="13" y="9" width="1" height="1"/><rect class="px-o" x="4" y="10" width="1" height="1"/><rect class="px-f" x="5" y="10" width="6" height="1"/><rect class="px-o" x="11" y="10" width="1" height="1"/><rect class="px-o" x="4" y="11" width="1" height="1"/><rect class="px-f" x="5" y="11" width="2" height="1"/><rect class="px-o" x="7" y="11" width="2" height="1"/><rect class="px-f" x="9" y="11" width="2" height="1"/><rect class="px-o" x="11" y="11" width="1" height="1"/><rect class="px-o" x="4" y="12" width="1" height="1"/><rect class="px-f" x="5" y="12" width="6" height="1"/><rect class="px-o" x="11" y="12" width="1" height="1"/><rect class="px-o" x="4" y="13" width="8" height="1"/></svg></span><span class="ol">Vibrazione</span></button>
-  </div>
-    <div class="opt-hint">Tocca un'icona per accenderla o spegnerla: la barra rossa vuol dire spenta.</div>
+    <div class="set-rows" data-diff="1"></div>
     <button id="set-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -654,13 +690,7 @@
   </div>
   <div class="pp-page" id="pp-set" hidden>
     <div class="pp-h">IMPOSTAZIONI</div>
-    <div class="opt-icons">
-    <button class="opt opt-ico" data-opt="music" aria-label="Musica"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="6" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="4" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="1" height="1"/><rect class="px-o" x="8" y="3" width="4" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="1" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-f" x="7" y="6" width="1" height="1"/><rect class="px-o" x="8" y="6" width="1" height="1"/><rect class="px-o" x="6" y="7" width="1" height="1"/><rect class="px-f" x="7" y="7" width="1" height="1"/><rect class="px-o" x="8" y="7" width="1" height="1"/><rect class="px-o" x="6" y="8" width="1" height="1"/><rect class="px-f" x="7" y="8" width="1" height="1"/><rect class="px-o" x="8" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="5" height="1"/><rect class="px-f" x="7" y="9" width="1" height="1"/><rect class="px-o" x="8" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="6" height="1"/><rect class="px-o" x="8" y="10" width="1" height="1"/><rect class="px-o" x="0" y="11" width="1" height="1"/><rect class="px-f" x="1" y="11" width="6" height="1"/><rect class="px-s" x="7" y="11" width="1" height="1"/><rect class="px-o" x="8" y="11" width="1" height="1"/><rect class="px-o" x="0" y="12" width="1" height="1"/><rect class="px-f" x="1" y="12" width="6" height="1"/><rect class="px-s" x="7" y="12" width="1" height="1"/><rect class="px-o" x="8" y="12" width="1" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-s" x="2" y="13" width="6" height="1"/><rect class="px-o" x="8" y="13" width="1" height="1"/><rect class="px-o" x="2" y="14" width="6" height="1"/></svg></span><span class="ol">Musica</span></button>
-    <button class="opt opt-ico" data-opt="sfx" aria-label="Effetti sonori"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="2" height="1"/><rect class="px-o" x="5" y="2" width="1" height="1"/><rect class="px-f" x="6" y="2" width="1" height="1"/><rect class="px-o" x="7" y="2" width="1" height="1"/><rect class="px-o" x="4" y="3" width="1" height="1"/><rect class="px-f" x="5" y="3" width="2" height="1"/><rect class="px-o" x="7" y="3" width="1" height="1"/><rect class="px-f" x="11" y="3" width="1" height="1"/><rect class="px-o" x="0" y="4" width="5" height="1"/><rect class="px-f" x="5" y="4" width="1" height="1"/><rect class="px-s" x="6" y="4" width="1" height="1"/><rect class="px-o" x="7" y="4" width="1" height="1"/><rect class="px-f" x="12" y="4" width="1" height="1"/><rect class="px-o" x="0" y="5" width="1" height="1"/><rect class="px-f" x="1" y="5" width="3" height="1"/><rect class="px-o" x="4" y="5" width="1" height="1"/><rect class="px-f" x="5" y="5" width="1" height="1"/><rect class="px-s" x="6" y="5" width="1" height="1"/><rect class="px-o" x="7" y="5" width="1" height="1"/><rect class="px-f" x="10" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="1" height="1"/><rect class="px-o" x="0" y="6" width="1" height="1"/><rect class="px-f" x="1" y="6" width="3" height="1"/><rect class="px-o" x="4" y="6" width="1" height="1"/><rect class="px-f" x="5" y="6" width="1" height="1"/><rect class="px-s" x="6" y="6" width="1" height="1"/><rect class="px-o" x="7" y="6" width="1" height="1"/><rect class="px-f" x="11" y="6" width="1" height="1"/><rect class="px-f" x="13" y="6" width="1" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-f" x="1" y="7" width="3" height="1"/><rect class="px-o" x="4" y="7" width="1" height="1"/><rect class="px-f" x="5" y="7" width="1" height="1"/><rect class="px-s" x="6" y="7" width="1" height="1"/><rect class="px-o" x="7" y="7" width="1" height="1"/><rect class="px-f" x="11" y="7" width="1" height="1"/><rect class="px-f" x="13" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-f" x="1" y="8" width="3" height="1"/><rect class="px-o" x="4" y="8" width="1" height="1"/><rect class="px-f" x="5" y="8" width="1" height="1"/><rect class="px-s" x="6" y="8" width="1" height="1"/><rect class="px-o" x="7" y="8" width="1" height="1"/><rect class="px-f" x="10" y="8" width="1" height="1"/><rect class="px-f" x="13" y="8" width="1" height="1"/><rect class="px-o" x="0" y="9" width="5" height="1"/><rect class="px-f" x="5" y="9" width="1" height="1"/><rect class="px-s" x="6" y="9" width="1" height="1"/><rect class="px-o" x="7" y="9" width="1" height="1"/><rect class="px-f" x="12" y="9" width="1" height="1"/><rect class="px-o" x="4" y="10" width="1" height="1"/><rect class="px-f" x="5" y="10" width="2" height="1"/><rect class="px-o" x="7" y="10" width="1" height="1"/><rect class="px-f" x="11" y="10" width="1" height="1"/><rect class="px-o" x="5" y="11" width="1" height="1"/><rect class="px-f" x="6" y="11" width="1" height="1"/><rect class="px-o" x="7" y="11" width="1" height="1"/><rect class="px-o" x="6" y="12" width="2" height="1"/></svg></span><span class="ol">Effetti</span></button>
-    <button class="opt opt-ico" data-opt="fx" aria-label="Lampi e tremolio"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="7" y="1" width="2" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="2" y="3" width="1" height="1"/><rect class="px-g" x="7" y="3" width="2" height="1"/><rect class="px-o" x="13" y="3" width="1" height="1"/><rect class="px-g" x="3" y="4" width="1" height="1"/><rect class="px-g" x="7" y="4" width="2" height="1"/><rect class="px-g" x="12" y="4" width="1" height="1"/><rect class="px-g" x="4" y="5" width="1" height="1"/><rect class="px-g" x="6" y="5" width="1" height="1"/><rect class="px-w" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="1" height="1"/><rect class="px-g" x="11" y="5" width="1" height="1"/><rect class="px-g" x="5" y="6" width="1" height="1"/><rect class="px-w" x="6" y="6" width="4" height="1"/><rect class="px-g" x="10" y="6" width="1" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-w" x="5" y="7" width="6" height="1"/><rect class="px-g" x="11" y="7" width="4" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-g" x="5" y="8" width="1" height="1"/><rect class="px-w" x="6" y="8" width="4" height="1"/><rect class="px-g" x="10" y="8" width="1" height="1"/><rect class="px-g" x="4" y="9" width="1" height="1"/><rect class="px-g" x="6" y="9" width="1" height="1"/><rect class="px-w" x="7" y="9" width="2" height="1"/><rect class="px-g" x="9" y="9" width="1" height="1"/><rect class="px-g" x="11" y="9" width="1" height="1"/><rect class="px-g" x="3" y="10" width="1" height="1"/><rect class="px-g" x="7" y="10" width="2" height="1"/><rect class="px-g" x="12" y="10" width="1" height="1"/><rect class="px-o" x="2" y="11" width="1" height="1"/><rect class="px-g" x="7" y="11" width="2" height="1"/><rect class="px-o" x="13" y="11" width="1" height="1"/><rect class="px-g" x="7" y="12" width="2" height="1"/><rect class="px-o" x="7" y="13" width="2" height="1"/></svg></span><span class="ol">Lampi</span></button>
-    <button class="opt opt-ico" data-opt="vib" aria-label="Vibrazione"><span class="oi"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="4" y="1" width="8" height="1"/><rect class="px-o" x="4" y="2" width="1" height="1"/><rect class="px-f" x="5" y="2" width="6" height="1"/><rect class="px-o" x="11" y="2" width="1" height="1"/><rect class="px-f" x="2" y="3" width="1" height="1"/><rect class="px-o" x="4" y="3" width="1" height="1"/><rect class="px-f" x="5" y="3" width="1" height="1"/><rect class="px-a" x="6" y="3" width="4" height="1"/><rect class="px-f" x="10" y="3" width="1" height="1"/><rect class="px-o" x="11" y="3" width="1" height="1"/><rect class="px-f" x="13" y="3" width="1" height="1"/><rect class="px-f" x="1" y="4" width="1" height="1"/><rect class="px-o" x="4" y="4" width="1" height="1"/><rect class="px-f" x="5" y="4" width="1" height="1"/><rect class="px-a" x="6" y="4" width="4" height="1"/><rect class="px-f" x="10" y="4" width="1" height="1"/><rect class="px-o" x="11" y="4" width="1" height="1"/><rect class="px-f" x="14" y="4" width="1" height="1"/><rect class="px-f" x="2" y="5" width="1" height="1"/><rect class="px-o" x="4" y="5" width="1" height="1"/><rect class="px-f" x="5" y="5" width="1" height="1"/><rect class="px-a" x="6" y="5" width="4" height="1"/><rect class="px-f" x="10" y="5" width="1" height="1"/><rect class="px-o" x="11" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="1" height="1"/><rect class="px-f" x="1" y="6" width="1" height="1"/><rect class="px-o" x="4" y="6" width="1" height="1"/><rect class="px-f" x="5" y="6" width="1" height="1"/><rect class="px-a" x="6" y="6" width="4" height="1"/><rect class="px-f" x="10" y="6" width="1" height="1"/><rect class="px-o" x="11" y="6" width="1" height="1"/><rect class="px-f" x="14" y="6" width="1" height="1"/><rect class="px-f" x="2" y="7" width="1" height="1"/><rect class="px-o" x="4" y="7" width="1" height="1"/><rect class="px-f" x="5" y="7" width="1" height="1"/><rect class="px-a" x="6" y="7" width="4" height="1"/><rect class="px-f" x="10" y="7" width="1" height="1"/><rect class="px-o" x="11" y="7" width="1" height="1"/><rect class="px-f" x="13" y="7" width="1" height="1"/><rect class="px-f" x="1" y="8" width="1" height="1"/><rect class="px-o" x="4" y="8" width="1" height="1"/><rect class="px-f" x="5" y="8" width="1" height="1"/><rect class="px-a" x="6" y="8" width="4" height="1"/><rect class="px-f" x="10" y="8" width="1" height="1"/><rect class="px-o" x="11" y="8" width="1" height="1"/><rect class="px-f" x="14" y="8" width="1" height="1"/><rect class="px-f" x="2" y="9" width="1" height="1"/><rect class="px-o" x="4" y="9" width="1" height="1"/><rect class="px-f" x="5" y="9" width="1" height="1"/><rect class="px-a" x="6" y="9" width="4" height="1"/><rect class="px-f" x="10" y="9" width="1" height="1"/><rect class="px-o" x="11" y="9" width="1" height="1"/><rect class="px-f" x="13" y="9" width="1" height="1"/><rect class="px-o" x="4" y="10" width="1" height="1"/><rect class="px-f" x="5" y="10" width="6" height="1"/><rect class="px-o" x="11" y="10" width="1" height="1"/><rect class="px-o" x="4" y="11" width="1" height="1"/><rect class="px-f" x="5" y="11" width="2" height="1"/><rect class="px-o" x="7" y="11" width="2" height="1"/><rect class="px-f" x="9" y="11" width="2" height="1"/><rect class="px-o" x="11" y="11" width="1" height="1"/><rect class="px-o" x="4" y="12" width="1" height="1"/><rect class="px-f" x="5" y="12" width="6" height="1"/><rect class="px-o" x="11" y="12" width="1" height="1"/><rect class="px-o" x="4" y="13" width="8" height="1"/></svg></span><span class="ol">Vibrazione</span></button>
-  </div>
-    <div class="opt-hint">La barra rossa vuol dire spenta.</div>
+    <div class="set-rows"></div>
     <div class="pp-row"><button id="pp-set-back" class="btn-secondario">INDIETRO</button><button id="pp-set-resume" class="btn-primario">RIPRENDI</button></div>
   </div>
   <div class="pp-page" id="pp-confirm" hidden>
@@ -754,10 +784,16 @@ if(screen.orientation&&screen.orientation.addEventListener)screen.orientation.ad
 
 /* ---------- AUDIO ---------- */
 let AC=null;
-/* effetti sonori sì/no (salvato nel browser) */
-let SFX_ON=true;try{SFX_ON=localStorage.getItem('sfx')!=='0';}catch(e){}
+/* volumi 0–100 (salvati nel browser). 100% = il volume di prima.
+   Effetti: chi aveva spento gli effetti (vecchio 'sfx' = '0') li ritrova a 0. */
+function _ls(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function _lsSet(k,v){try{localStorage.setItem(k,String(v));}catch(e){}}
+function _vol(k,def){const v=parseInt(_ls(k),10);return isNaN(v)?def:Math.max(0,Math.min(100,Math.round(v/10)*10));}
+let SFX_VOL=_vol('sfxVol',_ls('sfx')==='0'?0:100);
+let SFX_ON=SFX_VOL>0;
+let MUSIC_VOL=_vol('musicVol',100),MUSIC_PREV=_vol('musicPrev',100)||100;
 function beep(f,d,type='square',v=.06,slide=0){
-  if(!SFX_ON)return;
+  if(SFX_VOL<=0)return;v*=SFX_VOL/100;
   try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)();
     const o=AC.createOscillator(),g=AC.createGain();
     o.type=type;o.frequency.value=f;
@@ -766,7 +802,7 @@ function beep(f,d,type='square',v=.06,slide=0){
     o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);
   }catch(e){}
 }
-function noise(d,v=.08){if(!SFX_ON)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+function noise(d,v=.08){if(SFX_VOL<=0)return;v*=SFX_VOL/100;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
   const n=AC.createBufferSource(),buf=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate);
   const data=buf.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);
   n.buffer=buf;const g=AC.createGain();g.gain.value=v;n.connect(g);g.connect(AC.destination);n.start();}catch(e){}}
@@ -798,16 +834,37 @@ const tracks={};
 function _initTracks(src){
   for(const k in src){
     if(!tracks[k]){
-      const a=new Audio(src[k]);a.loop=true;a.volume=0.45;a.preload=k==='menu'?'auto':'none';tracks[k]=a;
+      const a=new Audio(src[k]);a.loop=true;a.volume=0.45*MUSIC_VOL/100;a.preload=k==='menu'?'auto':'none';tracks[k]=a;
     }
   }
 }
 _initTracks(MUSIC_SRC);
 window._loadMusic=function(src){_initTracks(src);};
-let curTrack=null,audioUnlocked=false,musicMuted=false,wantTrack='menu';
+let curTrack=null,audioUnlocked=false,musicMuted=MUSIC_VOL===0,wantTrack='menu';
+/* VOLUME DELLA MUSICA. Su iPhone il volume delle tracce non si può cambiare dal codice:
+   lì la musica passa da un "mixer" Web Audio (un solo guadagno per tutte le tracce). */
+const MUSIC_BASE=0.45;let _musGain=null,_musRouted=new Set(),_volFixed=null;
+function _volIsFixed(){if(_volFixed===null){try{const a=new Audio();a.volume=.5;_volFixed=Math.abs(a.volume-.5)>.01;}catch(e){_volFixed=false;}}return _volFixed;}
+function routeMusic(){if(!_volIsFixed())return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(!_musGain){_musGain=AC.createGain();_musGain.connect(AC.destination);}
+    for(const k in tracks){if(_musRouted.has(k))continue;AC.createMediaElementSource(tracks[k]).connect(_musGain);_musRouted.add(k);}
+  }catch(e){}}
+function applyMusicVol(){const g=MUSIC_BASE*MUSIC_VOL/100;
+  for(const k in tracks)tracks[k].volume=_musRouted.has(k)?1:g;
+  if(_musGain)_musGain.gain.value=g;}
+/* cambia il volume della musica (0 = spenta); il ♪ e il tasto M passano da 0 al valore precedente */
+function setMusicVol(v){v=Math.max(0,Math.min(100,Math.round(v/10)*10));MUSIC_VOL=v;if(v>0){MUSIC_PREV=v;_lsSet('musicPrev',v);}_lsSet('musicVol',v);
+  musicMuted=v===0;applyMusicVol();
+  if(!musicMuted){audioUnlocked=true;ensureMusic();}else if(curTrack&&!curTrack.paused)curTrack.pause();
+  if(window.syncMusicIcon)syncMusicIcon();if(window.refreshOpts)refreshOpts();}
+function toggleMusic(){setMusicVol(MUSIC_VOL>0?0:(MUSIC_PREV||100));}
+function setSfxVol(v){SFX_VOL=Math.max(0,Math.min(100,Math.round(v/10)*10));SFX_ON=SFX_VOL>0;_lsSet('sfxVol',SFX_VOL);_lsSet('sfx',SFX_ON?'1':'0');
+  if(window.refreshOpts)refreshOpts();}
 addEventListener('keydown',()=>{audioUnlocked=true;},{once:true});
 function ensureMusic(){
   if(!audioUnlocked)return;
+  if(_volIsFixed()){routeMusic();applyMusicVol();try{if(AC&&AC.state==='suspended')AC.resume();}catch(e){}}
   if(musicMuted){if(curTrack&&!curTrack.paused)curTrack.pause();return;}
   const t=tracks[wantTrack];
   if(!t){if(wantTrack==='hush'&&curTrack&&!curTrack.paused)curTrack.pause();return;}
@@ -2381,6 +2438,7 @@ function exoBreak(f){
       col:['#FFFFFF','#E8EEF2','#C8D0D8'][i%3],sz:rnd(5,9),fade:true});});}
 }
 function playClassical(){
+  if(MUSIC_VOL<=0)return 0;const mv=MUSIC_VOL/100;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){return;}
   /* Mozart, Eine kleine Nachtmusik (inizio) */
   const N={D4:293.7,Fs4:370,G4:392,A4:440,B4:493.9,C5:523.3,D5:587.3,G3:196,D3:146.8};
@@ -2388,10 +2446,10 @@ function playClassical(){
     ['C5',.4],['A4',.2],['C5',.4],['A4',.2],['C5',.2],['A4',.2],['Fs4',.2],['A4',.2],['D4',.8]];
   let t=AC.currentTime+.05;
   for(const [n,d] of mel){const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=N[n];
-    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.09,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d*.95);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.09*mv,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d*.95);
     o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);t+=d;}
   let tb=AC.currentTime+.05;for(const [n,d] of [['G3',1.6],['G3',1.0],['D3',1.6],['D3',1.0]]){const o=AC.createOscillator(),g=AC.createGain();
-    o.type='sine';o.frequency.value=N[n];g.gain.setValueAtTime(.06,tb);g.gain.exponentialRampToValueAtTime(.0001,tb+d);
+    o.type='sine';o.frequency.value=N[n];g.gain.setValueAtTime(.06*mv,tb);g.gain.exponentialRampToValueAtTime(.0001,tb+d);
     o.connect(g);g.connect(AC.destination);o.start(tb);o.stop(tb+d);tb+=d;}
   return t-AC.currentTime;
 }
@@ -3077,7 +3135,7 @@ function update(){
   if(game.musicHold>0){game.musicHold--;if(game.state!=='victory')game.musicHold=0;}
   wantTrack=game.musicHold>0?'hush':(game.state==='fight'||game.state==='vs')?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
   ensureMusic();
-  if(kp('KeyM')){musicMuted=!musicMuted;if(!musicMuted&&curTrack)curTrack.play().catch(()=>{});}
+  if(kp('KeyM'))toggleMusic();
   frameTimers=frameTimers.filter(t=>{if(--t.fr<=0){t.fn();return false}return true});
   if(whiteFlash>0)whiteFlash--;
   if(specialBanner&&--specialBanner.t<=0)specialBanner=null;
@@ -3088,7 +3146,7 @@ function update(){
     if(kp('Digit2')||kp('Numpad2')){game.mode=2;game.tournament=null;game.state='select';game.pickTurn=0;sfx.ok();}
     if(kp('Digit3')||kp('Numpad3')){game.mode=3;game.tournament=null;game.state='select';game.pickTurn=0;sfx.ok();}
     if(kp('KeyD')){const ks=['facile','normale','difficile'];
-      game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];sfx.sel();}
+      game.difficulty=ks[(ks.indexOf(game.difficulty)+1)%3];sfx.sel();if(window.refreshOpts)refreshOpts();}
   }
   else if(game.state==='select'){
     const turn=game.pickTurn;
@@ -3995,7 +4053,7 @@ function syncControls(){
     Math.abs(o.x-me.x)-me.half-o.half<=30;
   g.classList.toggle('ready',ok);}
 /* icona della musica: nota o nota barrata (si aggiorna anche con il tasto M) */
-let _musIco=null;function syncMusicIcon(){if(_musIco===musicMuted)return;_musIco=musicMuted;if(window.refreshOpts)refreshOpts();const e=document.getElementById('m-music');if(e)e.classList.toggle('muted',!!musicMuted);}
+let _musIco=null;window.syncMusicIcon=syncMusicIcon;function syncMusicIcon(){if(_musIco===musicMuted)return;_musIco=musicMuted;if(window.refreshOpts)refreshOpts();const e=document.getElementById('m-music');if(e)e.classList.toggle('muted',!!musicMuted);}
 /* icone dei pulsanti d'azione: circa il 45% del pulsante, in multipli di 16 px per restare nitide */
 function sizeActionIcons(){document.querySelectorAll('.ab').forEach(b=>{const w=b.getBoundingClientRect().width;if(!w)return;
   const sz=Math.max(16,Math.round(w*.5/16)*16),g=b.querySelector('.ic .pxi');if(g){g.style.width=g.style.height=sz+'px';}});}
@@ -4405,26 +4463,58 @@ function loop(ts){
     setPause(false); game.state='title'; game.tournament=null;
     updateOverlay();
   });
-  /* IMPOSTAZIONI condivise (home e pausa): musica, effetti sonori, lampi, vibrazione */
-  var OPTS={
-    music:{get:function(){return !musicMuted;},set:function(){musicMuted=!musicMuted;var el=document.getElementById('m-music');if(el)el.classList.toggle('muted',musicMuted);
-      if(!musicMuted){audioUnlocked=true;ensureMusic();}else if(curTrack&&!curTrack.paused)curTrack.pause();}},
-    sfx:{get:function(){return SFX_ON;},set:function(){SFX_ON=!SFX_ON;try{localStorage.setItem('sfx',SFX_ON?'1':'0');}catch(e){}}},
-    fx:{get:function(){return REDUCE_FX;},set:function(){REDUCE_FX=!REDUCE_FX;if(REDUCE_FX)whiteFlash=0;try{localStorage.setItem('reduceFx',REDUCE_FX?'1':'0');}catch(e){}}},
-    vib:{get:function(){return VIBRA;},set:function(){VIBRA=!VIBRA;try{localStorage.setItem('vibra',VIBRA?'1':'0');}catch(e){}if(VIBRA)vib(30);}}
+  /* IMPOSTAZIONI condivise (home e pausa): difficoltà (solo home), musica ed effetti 0–100%, lampi, vibrazione */
+  var DIFF_KEYS=['facile','normale','difficile'],DIFF_LBL={facile:'FACILE',normale:'NORMALE',difficile:'DIFFICILE'};
+  var SWITCHES={
+    fx:{label:'Riduci lampi e tremolio',get:function(){return REDUCE_FX;},set:function(v){REDUCE_FX=v;if(v)whiteFlash=0;try{localStorage.setItem('reduceFx',v?'1':'0');}catch(e){}}},
+    vib:{label:'Vibrazione',get:function(){return VIBRA;},set:function(v){VIBRA=v;try{localStorage.setItem('vibra',v?'1':'0');}catch(e){}if(v)vib(30);}}
   };
-  function refreshOpts(){document.querySelectorAll('.opt[data-opt]').forEach(function(b){var k=b.getAttribute('data-opt'),o=OPTS[k];if(!o)return;
-    var v=b.querySelector('.opt-val');if(v)v.textContent=o.get()?'S\u00CC':'NO';
-    if(b.classList.contains('opt-ico')){var on=k==='fx'?!o.get():o.get();b.classList.toggle('off',!on);b.setAttribute('aria-pressed',on?'true':'false');}});}
+  var VOLUMES={
+    music:{label:'Musica',get:function(){return MUSIC_VOL;},set:function(v){setMusicVol(v);}},
+    sfx:{label:'Effetti sonori',get:function(){return SFX_VOL;},set:function(v){setSfxVol(v);}}
+  };
+  /* i tocchi sulle righe non devono arrivare ai comandi delle schermate sotto */
+  function guard(el){el.addEventListener('touchstart',function(e){e.stopPropagation();},{passive:true});}
+  function buildRows(box){
+    var withDiff=box.getAttribute('data-diff')==='1';box.innerHTML='';
+    if(withDiff){var r=document.createElement('div');r.className='srow col';
+      r.innerHTML='<span class="sl">Difficoltà CPU</span><div class="seg" role="radiogroup" aria-label="Difficoltà CPU"></div>';
+      var seg=r.querySelector('.seg');
+      DIFF_KEYS.forEach(function(k){var b=document.createElement('button');b.type='button';b.textContent=DIFF_LBL[k];b.setAttribute('role','radio');b.dataset.diff=k;
+        b.addEventListener('click',function(){game.difficulty=k;try{sfx.sel();}catch(_){}refreshOpts();updateOverlay();});seg.appendChild(b);});
+      guard(r);box.appendChild(r);}
+    ['music','sfx'].forEach(function(k){var o=VOLUMES[k],r=document.createElement('div');r.className='srow';
+      r.innerHTML='<span class="sl">'+o.label+'</span><div class="vol" role="slider" tabindex="0" aria-label="'+o.label+'" aria-valuemin="0" aria-valuemax="100"><div class="vb">'+
+        '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vv"></span></div>';
+      var v=r.querySelector('.vol'),bar=r.querySelector('.vb'),drag=false;
+      var at=function(x){var q=bar.getBoundingClientRect();var n=Math.round(Math.max(0,Math.min(1,(x-q.left)/q.width))*10)*10;
+        if(n!==o.get()){o.set(n);if(k==='sfx')try{sfx.sel();}catch(_){}}refreshOpts();};
+      v.addEventListener('pointerdown',function(e){drag=true;try{v.setPointerCapture(e.pointerId);}catch(_){}at(e.clientX);e.preventDefault();});
+      v.addEventListener('pointermove',function(e){if(drag)at(e.clientX);});
+      v.addEventListener('pointerup',function(){drag=false;});v.addEventListener('pointercancel',function(){drag=false;});
+      v.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'||e.key==='ArrowUp'?10:e.key==='ArrowLeft'||e.key==='ArrowDown'?-10:0;
+        if(d){e.preventDefault();e.stopPropagation();o.set(o.get()+d);refreshOpts();}});
+      v.dataset.vol=k;guard(r);box.appendChild(r);});
+    ['fx','vib'].forEach(function(k){var o=SWITCHES[k],r=document.createElement('div');r.className='srow';
+      r.innerHTML='<span class="sl">'+o.label+'</span><button type="button" class="sw" role="switch" aria-label="'+o.label+'"><span class="k"></span><span class="t"></span></button>';
+      var b=r.querySelector('.sw');b.dataset.sw=k;
+      b.addEventListener('click',function(){o.set(!o.get());try{sfx.sel();}catch(_){}refreshOpts();});
+      guard(r);box.appendChild(r);});
+  }
+  function refreshOpts(){
+    document.querySelectorAll('.seg button').forEach(function(b){var on=b.dataset.diff===game.difficulty;b.classList.toggle('on',on);b.setAttribute('aria-checked',on?'true':'false');});
+    document.querySelectorAll('.vol[data-vol]').forEach(function(v){var n=VOLUMES[v.dataset.vol].get();
+      v.querySelectorAll('.vb i').forEach(function(i,ix){i.classList.toggle('f',ix<n/10);});
+      v.querySelector('.vv').textContent=n+'%';v.classList.toggle('zero',n===0);v.setAttribute('aria-valuenow',n);v.setAttribute('aria-valuetext',n===0?'spento':n+'%');});
+    document.querySelectorAll('.sw[data-sw]').forEach(function(b){var on=!!SWITCHES[b.dataset.sw].get();b.classList.toggle('on',on);
+      b.setAttribute('aria-checked',on?'true':'false');b.querySelector('.t').textContent=on?'SÌ':'NO';});
+    setTimeout(setFades,20);}
   window.refreshOpts=refreshOpts;
-  document.querySelectorAll('.opt[data-opt]').forEach(function(b){
-    var fn=function(){var o=OPTS[b.getAttribute('data-opt')];if(!o)return;o.set();try{sfx.sel();}catch(_){}refreshOpts();};
-    b.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();b.classList.add('pressed');},{passive:false});
-    b.addEventListener('touchend',function(e){e.preventDefault();e.stopPropagation();b.classList.remove('pressed');var t=e.changedTouches[0],r=b.getBoundingClientRect();
-      if(t.clientX<r.left||t.clientX>r.right||t.clientY<r.top||t.clientY>r.bottom)return;fn();},{passive:false});
-    b.addEventListener('touchcancel',function(){b.classList.remove('pressed');});
-    b.addEventListener('click',fn);
-  });
+  /* sfumatura in basso quando il pannello ha altro da scorrere */
+  function setFades(){document.querySelectorAll('#set-pop .set-box, #pause-pop .pp-box').forEach(function(b){b.classList.toggle('more',b.scrollHeight-b.scrollTop-b.clientHeight>4);});}
+  document.querySelectorAll('#set-pop .set-box, #pause-pop .pp-box').forEach(function(b){b.addEventListener('scroll',setFades,{passive:true});});
+  addEventListener('resize',function(){setTimeout(setFades,60);});
+  document.querySelectorAll('.set-rows').forEach(buildRows);
   refreshOpts();
 
   /* m-back: da select → titolo; da victory → titolo */
@@ -4439,13 +4529,7 @@ function loop(ts){
   });
 
   /* m-music: toggle mute */
-  _btn('m-music', function(){
-    musicMuted = !musicMuted;
-    var el = document.getElementById('m-music');
-    if(el) el.classList.toggle('muted', musicMuted);
-    if(!musicMuted){ audioUnlocked=true; ensureMusic(); }
-    else if(curTrack && !curTrack.paused) curTrack.pause();
-  });
+  _btn('m-music', function(){ toggleMusic(); });
 
   /* home screen buttons */
   _btn('hb-1', function(){
@@ -4458,7 +4542,7 @@ function loop(ts){
     try{sfx.ok();}catch(_){} updateOverlay();
   }
   _btn('hb-4', startTrainingSelect);
-  function showSettings(v){ var p=document.getElementById('set-pop'); if(p) p.style.display=v?'flex':'none'; }
+  function showSettings(v){ var p=document.getElementById('set-pop'); if(p) p.style.display=v?'flex':'none'; if(v){ refreshOpts(); var bx=p.querySelector('.set-box'); if(bx) bx.scrollTop=0; } }
   _btn('hb-set', function(){ try{sfx.sel();}catch(_){} showSettings(true); });
   _btn('set-close', function(){ try{sfx.sel();}catch(_){} showSettings(false); });
   (function(){ var p=document.getElementById('set-pop'); if(!p)return;
