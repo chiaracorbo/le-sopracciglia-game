@@ -734,8 +734,9 @@ const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=false;
 /* Background cache: ridisegna solo quando camX cambia */
 /* ZOOM: su mobile l'arena è inquadrata più da vicino (taglia il cielo vuoto in alto) */
-let ZOOM=1;
+let ZOOM=1,_fitW=0,_fitH=0;
 function fit(){
+  _fitW=innerWidth;_fitH=innerHeight;
   const mobile=('ontouchstart' in window||navigator.maxTouchPoints>0);
   ZOOM=mobile?1.5:1;
   /* il canvas prende le proporzioni esatte della finestra; W è la larghezza "logica" dell'arena */
@@ -748,6 +749,8 @@ function fit(){
 /* esegue fn usando tutta la larghezza del canvas senza zoom (HUD, schermate fuori dal combattimento) */
 function fullView(fn){const w=W;W=cv.width;ctx.save();ctx.setTransform(1,0,0,1,0,0);try{fn();}finally{ctx.restore();W=w;}}
 addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));fit();
+if(window.visualViewport)visualViewport.addEventListener('resize',fit);
+if(screen.orientation&&screen.orientation.addEventListener)screen.orientation.addEventListener('change',()=>setTimeout(fit,200));
 
 /* ---------- AUDIO ---------- */
 let AC=null;
@@ -4004,6 +4007,8 @@ function syncSpecialBtn(){
   if(st===_abSState)return;_abSState=st;_abS=_abS||document.getElementById('ab-s');if(!_abS)return;
   _abS.classList.toggle('ready',st==='ready');_abS.classList.toggle('dim',st==='dim');}
 function loop(ts){
+  /* a tutto schermo: se le misure della finestra sono cambiate (rotazione, barre del browser) ricalcola il campo */
+  if(innerWidth!==_fitW||innerHeight!==_fitH)fit();
   const dt=_lastTs?Math.min(ts-_lastTs,100):STEP_MS; // cap 100ms
   _lastTs=ts;
 
