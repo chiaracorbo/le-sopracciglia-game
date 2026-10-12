@@ -230,6 +230,9 @@
   .opt.pressed { background: rgba(100,70,10,.85); }
   /* pannello di pausa: pagine principale / impostazioni / conferma */
   #pause-pop .pp-box { max-height: 94%; overflow-y: auto; }
+  /* la pausa occupa solo la parte di schermo visibile (senza le barre del browser) */
+  @supports (height: 100dvh) { #pause-pop { bottom: auto; height: 100dvh; } }
+  #pause-pop .pp-row3 button { font-size: 14px; padding: 0 6px; }
   /* telefono in orizzontale: impostazioni della home su due colonne, così stanno nello schermo */
   @media (max-height: 430px) and (orientation: landscape) {
     #set-pop .set-box { width: min(92vw, 460px); gap: 8px; padding: 10px 14px; }
@@ -263,7 +266,7 @@
   #m-pause.pressed .pz, #m-pause:active .pz { background: rgba(100,70,10,.85); }
   /* pop-up della pausa */
   #pause-pop { display: none; position: fixed; inset: 0; z-index: 700; background: rgba(0,0,0,.66); align-items: center; justify-content: center; }
-  #pause-pop .pp-box { width: min(80vw, 340px); background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 16px; padding: 16px 18px;
+  #pause-pop .pp-box { width: min(88vw, 520px); background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 16px; padding: 16px 18px;
     display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 30px rgba(255,193,7,.25); font-family: var(--font-testo); }
   #pause-pop .pp-h { font-family: var(--font-gioco); color: var(--oro); font-weight: 900; font-size: 18px; letter-spacing: .1em; text-align: center; margin-bottom: 2px; }
   #pause-pop button { min-height: 48px; font-weight: 900; font-size: 16px; letter-spacing: .05em; cursor: pointer;
@@ -449,9 +452,7 @@
   <div class="pp-page" id="pp-main">
     <div class="pp-h">PAUSA</div>
     <button id="pp-resume" class="btn-primario">RIPRENDI</button>
-    <button id="pp-restart" class="btn-secondario">RICOMINCIA</button>
-    <button id="pp-settings" class="btn-secondario">IMPOSTAZIONI</button>
-    <button id="pp-menu" class="btn-secondario">ESCI</button>
+    <div class="pp-row pp-row3"><button id="pp-restart" class="btn-secondario">RICOMINCIA</button><button id="pp-settings" class="btn-secondario">IMPOSTAZIONI</button><button id="pp-menu" class="btn-secondario">ESCI</button></div>
   </div>
   <div class="pp-page" id="pp-set" hidden>
     <div class="pp-h">IMPOSTAZIONI</div>
@@ -467,8 +468,7 @@
   <div class="pp-page" id="pp-confirm" hidden>
     <div class="pp-h">ESCI</div>
     <div class="pp-msg" id="pp-confirm-msg">Uscire dall’incontro?</div>
-    <button id="pp-exit-yes" class="btn-primario">SÌ, ESCI</button>
-    <button id="pp-exit-no" class="btn-secondario">ANNULLA</button>
+    <div class="pp-row"><button id="pp-exit-no" class="btn-secondario">ANNULLA</button><button id="pp-exit-yes" class="btn-primario">SÌ, ESCI</button></div>
   </div>
 </div></div>
 <div id="tr-box"><div id="tr-title"></div><div id="tr-text"></div><div id="tr-dots"></div><button id="tr-skip">Salta ›</button></div>
