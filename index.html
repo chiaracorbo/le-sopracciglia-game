@@ -80,9 +80,11 @@
   #m-dpad {
     position: absolute; width: min(29vh, 124px); height: min(29vh, 124px); border-radius: 50%;
     left: max(18px, calc(env(safe-area-inset-left) + 10px)); bottom: max(14px, env(safe-area-inset-bottom));
-    background: radial-gradient(circle, rgba(255,255,255,.05) 0%, rgba(255,255,255,.12) 70%, rgba(255,255,255,.18) 100%);
-    border: 2px solid rgba(160,230,255,.35); box-shadow: 0 0 18px rgba(80,200,255,.15) inset;
+    background: rgba(255,255,255,.03); /* a riposo: quasi trasparente, solo contorno */
+    border: 2px solid rgba(160,230,255,.45); transition: opacity .15s;
   }
+  #m-dpad.on { background: radial-gradient(circle, rgba(255,255,255,.05) 0%, rgba(255,255,255,.12) 70%, rgba(255,255,255,.18) 100%);
+    box-shadow: 0 0 18px rgba(80,200,255,.15) inset; }
   #m-knob {
     position: absolute; left: 50%; top: 50%; width: 42%; height: 42%; margin: -21% 0 0 -21%; border-radius: 50%;
     background: radial-gradient(circle at 40% 35%, rgba(255,255,255,.95), rgba(210,225,235,.75) 60%, rgba(150,170,185,.7));
@@ -96,6 +98,7 @@
   #dp-u { left: 39%; top: 2%; } #dp-d { left: 39%; bottom: 2%; } #dp-l { left: 2%; top: 39%; } #dp-r { right: 2%; top: 39%; }
   /* pulsanti d'azione a ventaglio intorno allo SPECIAL */
   #m-btns {
+    transition: opacity .15s; /* si fa trasparente quando un personaggio ci passa sotto */
     position: absolute; width: max(142px, min(42vh, 200px)); height: max(142px, min(42vh, 200px));
     right: max(14px, calc(env(safe-area-inset-right) + 8px)); bottom: max(10px, env(safe-area-inset-bottom));
   }
@@ -103,22 +106,29 @@
     position: absolute; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
     font-family: var(--font-gioco); font-weight: 700; font-size: max(10px, min(2vh, 8px)); letter-spacing: .03em;
     color: rgba(255,255,255,.8); -webkit-user-select: none; touch-action: none;
-    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.16), rgba(20,30,45,.45));
-    border: 2px solid rgba(255,255,255,.4); box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    background: rgba(10,8,28,.14); /* a riposo: solo contorno e icona */
+    border: 2px solid rgba(255,255,255,.5);
     transition: transform .05s, background .06s;
   }
   .ab .ic { line-height: 0; margin-bottom: 2px; } /* icona circa 45% del pulsante, misura multipla di 16 (vedi sizeActionIcons) */
   .ab .ic .pxi { width: 32px; height: 32px; }
-  .ab.on { transform: scale(.92); background: radial-gradient(circle, rgba(255,255,255,.45), rgba(60,90,120,.55)); }
+  .ab.on { transform: scale(.92); background: radial-gradient(circle, rgba(255,255,255,.45), rgba(60,90,120,.55)); box-shadow: 0 2px 10px rgba(0,0,0,.35); }
   #ab-s { width: 45%; height: 45%; right: 0; bottom: 0;
-    background: radial-gradient(circle at 50% 40%, rgba(80,220,255,.55), rgba(0,90,150,.55)); border-color: rgba(125,249,255,.85);
-    box-shadow: 0 0 12px rgba(80,220,255,.4); font-size: max(10px, min(2.1vh, 9px)); }
+    background: rgba(0,90,150,.16); border-color: rgba(125,249,255,.85);
+    font-size: max(10px, min(2.1vh, 9px)); }
   #ab-s.on { background: radial-gradient(circle, var(--azzurro), rgba(0,120,190,.75)); }
   /* misure in % del contenitore (min 142 px): PUGNO e CALCIO ≥ 58 px, PARATA = SPECIALE ≥ 64 px;
      tra PUGNO (sotto) e PARATA (sopra) resta lo spazio per la presa */
   #ab-p { width: 40.8%; height: 40.8%; right: 54.2%; bottom: 0; }     /* a sinistra dello special */
   #ab-k { width: 40.8%; height: 40.8%; right: 2.1%;  bottom: 53.5%; } /* sopra lo special */
   #ab-b { width: 45%;   height: 45%;   right: 52.1%; bottom: 53.5%; } /* sopra il pugno */
+  /* segno della PRESA, nello spazio tra PUGNO (sotto) e PARATA (sopra): si illumina quando la presa è possibile */
+  #ab-grab { position: absolute; left: calc(25.4% - 12px); top: calc(52.9% - 12px); width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; opacity: .4; pointer-events: none; transition: opacity .12s; }
+  #ab-grab .pxi { width: 16px; height: 16px; }
+  #ab-grab.ready { opacity: 1; filter: drop-shadow(0 0 4px var(--oro)); }
+  #ab-grab.ready .px-f { fill: var(--oro); } #ab-grab.ready .px-s { fill: var(--oro-scuro); }
+  #ab-grab.tr-hl { opacity: 1; }
   /* SPECIALE: opaco finché non è pronta, poi pulsa */
   #ab-s.dim { opacity: .45; }
   #ab-s.ready { animation: abPulse .9s ease-in-out infinite; }
@@ -420,6 +430,7 @@
   </div>
   <!-- Action buttons: griglia 2×2 + SPECIAL full-width -->
   <div id="m-btns">
+    <div id="ab-grab" aria-hidden="true"><svg class="pxi" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="4" y="1" width="2" height="1"/><rect class="px-o" x="7" y="1" width="2" height="1"/><rect class="px-o" x="10" y="1" width="2" height="1"/><rect class="px-o" x="3" y="2" width="1" height="1"/><rect class="px-f" x="4" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-f" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-f" x="10" y="2" width="2" height="1"/><rect class="px-o" x="12" y="2" width="1" height="1"/><rect class="px-o" x="3" y="3" width="1" height="1"/><rect class="px-f" x="4" y="3" width="2" height="1"/><rect class="px-o" x="6" y="3" width="1" height="1"/><rect class="px-f" x="7" y="3" width="2" height="1"/><rect class="px-o" x="9" y="3" width="1" height="1"/><rect class="px-f" x="10" y="3" width="2" height="1"/><rect class="px-o" x="12" y="3" width="1" height="1"/><rect class="px-o" x="14" y="3" width="2" height="1"/><rect class="px-o" x="3" y="4" width="1" height="1"/><rect class="px-f" x="4" y="4" width="2" height="1"/><rect class="px-o" x="6" y="4" width="1" height="1"/><rect class="px-f" x="7" y="4" width="2" height="1"/><rect class="px-o" x="9" y="4" width="1" height="1"/><rect class="px-f" x="10" y="4" width="2" height="1"/><rect class="px-o" x="12" y="4" width="2" height="1"/><rect class="px-f" x="14" y="4" width="1" height="1"/><rect class="px-o" x="15" y="4" width="1" height="1"/><rect class="px-o" x="3" y="5" width="1" height="1"/><rect class="px-f" x="4" y="5" width="2" height="1"/><rect class="px-o" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="2" height="1"/><rect class="px-o" x="9" y="5" width="1" height="1"/><rect class="px-f" x="10" y="5" width="2" height="1"/><rect class="px-o" x="12" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="2" height="1"/><rect class="px-o" x="15" y="5" width="1" height="1"/><rect class="px-o" x="3" y="6" width="1" height="1"/><rect class="px-f" x="4" y="6" width="11" height="1"/><rect class="px-o" x="15" y="6" width="1" height="1"/><rect class="px-o" x="3" y="7" width="1" height="1"/><rect class="px-f" x="4" y="7" width="9" height="1"/><rect class="px-s" x="13" y="7" width="1" height="1"/><rect class="px-o" x="14" y="7" width="1" height="1"/><rect class="px-o" x="3" y="8" width="1" height="1"/><rect class="px-f" x="4" y="8" width="9" height="1"/><rect class="px-s" x="13" y="8" width="1" height="1"/><rect class="px-o" x="14" y="8" width="1" height="1"/><rect class="px-o" x="4" y="9" width="1" height="1"/><rect class="px-f" x="5" y="9" width="6" height="1"/><rect class="px-s" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="1" height="1"/><rect class="px-o" x="4" y="10" width="1" height="1"/><rect class="px-f" x="5" y="10" width="6" height="1"/><rect class="px-s" x="11" y="10" width="1" height="1"/><rect class="px-o" x="12" y="10" width="1" height="1"/><rect class="px-o" x="5" y="11" width="1" height="1"/><rect class="px-f" x="6" y="11" width="4" height="1"/><rect class="px-s" x="10" y="11" width="1" height="1"/><rect class="px-o" x="11" y="11" width="1" height="1"/><rect class="px-o" x="5" y="12" width="1" height="1"/><rect class="px-s" x="6" y="12" width="5" height="1"/><rect class="px-o" x="11" y="12" width="1" height="1"/><rect class="px-o" x="5" y="13" width="7" height="1"/></svg></div>
     <div class="ab" id="ab-p"><span class="ic"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="3" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="2" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="2" y="3" width="1" height="1"/><rect class="px-f" x="3" y="3" width="2" height="1"/><rect class="px-o" x="5" y="3" width="1" height="1"/><rect class="px-f" x="6" y="3" width="2" height="1"/><rect class="px-o" x="8" y="3" width="1" height="1"/><rect class="px-f" x="9" y="3" width="2" height="1"/><rect class="px-o" x="11" y="3" width="1" height="1"/><rect class="px-f" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="2" y="4" width="1" height="1"/><rect class="px-f" x="3" y="4" width="2" height="1"/><rect class="px-o" x="5" y="4" width="1" height="1"/><rect class="px-f" x="6" y="4" width="2" height="1"/><rect class="px-o" x="8" y="4" width="1" height="1"/><rect class="px-f" x="9" y="4" width="2" height="1"/><rect class="px-o" x="11" y="4" width="1" height="1"/><rect class="px-f" x="12" y="4" width="2" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-s" x="3" y="5" width="1" height="1"/><rect class="px-f" x="4" y="5" width="1" height="1"/><rect class="px-o" x="5" y="5" width="1" height="1"/><rect class="px-s" x="6" y="5" width="1" height="1"/><rect class="px-f" x="7" y="5" width="1" height="1"/><rect class="px-o" x="8" y="5" width="1" height="1"/><rect class="px-s" x="9" y="5" width="1" height="1"/><rect class="px-f" x="10" y="5" width="1" height="1"/><rect class="px-o" x="11" y="5" width="1" height="1"/><rect class="px-s" x="12" y="5" width="1" height="1"/><rect class="px-f" x="13" y="5" width="1" height="1"/><rect class="px-o" x="14" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="15" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-f" x="1" y="7" width="12" height="1"/><rect class="px-s" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="2" height="1"/><rect class="px-s" x="2" y="8" width="12" height="1"/><rect class="px-f" x="14" y="8" width="1" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="1" height="1"/><rect class="px-f" x="2" y="9" width="12" height="1"/><rect class="px-s" x="14" y="9" width="1" height="1"/><rect class="px-o" x="15" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="12" height="1"/><rect class="px-s" x="14" y="10" width="1" height="1"/><rect class="px-o" x="15" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-s" x="2" y="11" width="1" height="1"/><rect class="px-f" x="3" y="11" width="11" height="1"/><rect class="px-s" x="14" y="11" width="1" height="1"/><rect class="px-o" x="15" y="11" width="1" height="1"/><rect class="px-o" x="2" y="12" width="1" height="1"/><rect class="px-s" x="3" y="12" width="12" height="1"/><rect class="px-o" x="15" y="12" width="1" height="1"/><rect class="px-o" x="3" y="13" width="12" height="1"/></svg></span>PUGNO</div>
     <div class="ab" id="ab-k"><span class="ic"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="3" y="1" width="8" height="1"/><rect class="px-o" x="3" y="2" width="1" height="1"/><rect class="px-g" x="4" y="2" width="6" height="1"/><rect class="px-o" x="10" y="2" width="1" height="1"/><rect class="px-o" x="3" y="3" width="8" height="1"/><rect class="px-o" x="4" y="4" width="1" height="1"/><rect class="px-f" x="5" y="4" width="4" height="1"/><rect class="px-s" x="9" y="4" width="1" height="1"/><rect class="px-o" x="10" y="4" width="1" height="1"/><rect class="px-o" x="4" y="5" width="1" height="1"/><rect class="px-f" x="5" y="5" width="4" height="1"/><rect class="px-s" x="9" y="5" width="1" height="1"/><rect class="px-o" x="10" y="5" width="1" height="1"/><rect class="px-o" x="4" y="6" width="1" height="1"/><rect class="px-f" x="5" y="6" width="4" height="1"/><rect class="px-s" x="9" y="6" width="1" height="1"/><rect class="px-o" x="10" y="6" width="1" height="1"/><rect class="px-o" x="4" y="7" width="1" height="1"/><rect class="px-f" x="5" y="7" width="4" height="1"/><rect class="px-s" x="9" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="3" height="1"/><rect class="px-o" x="4" y="8" width="1" height="1"/><rect class="px-f" x="5" y="8" width="8" height="1"/><rect class="px-o" x="13" y="8" width="1" height="1"/><rect class="px-o" x="3" y="9" width="1" height="1"/><rect class="px-f" x="4" y="9" width="9" height="1"/><rect class="px-s" x="13" y="9" width="1" height="1"/><rect class="px-o" x="14" y="9" width="1" height="1"/><rect class="px-o" x="3" y="10" width="1" height="1"/><rect class="px-f" x="4" y="10" width="9" height="1"/><rect class="px-s" x="13" y="10" width="2" height="1"/><rect class="px-o" x="15" y="10" width="1" height="1"/><rect class="px-o" x="3" y="11" width="1" height="1"/><rect class="px-f" x="4" y="11" width="9" height="1"/><rect class="px-s" x="13" y="11" width="2" height="1"/><rect class="px-o" x="15" y="11" width="1" height="1"/><rect class="px-o" x="3" y="12" width="12" height="1"/><rect class="px-o" x="3" y="13" width="1" height="1"/><rect class="px-G" x="4" y="13" width="3" height="1"/><rect class="px-o" x="7" y="13" width="1" height="1"/><rect class="px-o" x="10" y="13" width="1" height="1"/><rect class="px-G" x="11" y="13" width="3" height="1"/><rect class="px-o" x="14" y="13" width="1" height="1"/><rect class="px-o" x="3" y="14" width="5" height="1"/><rect class="px-o" x="10" y="14" width="5" height="1"/></svg></span>CALCIO</div>
     <div class="ab" id="ab-b"><span class="ic"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="2" y="1" width="12" height="1"/><rect class="px-o" x="1" y="2" width="1" height="1"/><rect class="px-f" x="2" y="2" width="5" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-f" x="9" y="2" width="4" height="1"/><rect class="px-s" x="13" y="2" width="1" height="1"/><rect class="px-o" x="14" y="2" width="1" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-f" x="2" y="3" width="5" height="1"/><rect class="px-g" x="7" y="3" width="2" height="1"/><rect class="px-f" x="9" y="3" width="4" height="1"/><rect class="px-s" x="13" y="3" width="1" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-f" x="2" y="4" width="5" height="1"/><rect class="px-g" x="7" y="4" width="2" height="1"/><rect class="px-f" x="9" y="4" width="4" height="1"/><rect class="px-s" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="1" y="5" width="1" height="1"/><rect class="px-g" x="2" y="5" width="12" height="1"/><rect class="px-o" x="14" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="1" height="1"/><rect class="px-f" x="2" y="6" width="5" height="1"/><rect class="px-g" x="7" y="6" width="2" height="1"/><rect class="px-f" x="9" y="6" width="4" height="1"/><rect class="px-s" x="13" y="6" width="1" height="1"/><rect class="px-o" x="14" y="6" width="1" height="1"/><rect class="px-o" x="1" y="7" width="1" height="1"/><rect class="px-f" x="2" y="7" width="5" height="1"/><rect class="px-g" x="7" y="7" width="2" height="1"/><rect class="px-f" x="9" y="7" width="4" height="1"/><rect class="px-s" x="13" y="7" width="1" height="1"/><rect class="px-o" x="14" y="7" width="1" height="1"/><rect class="px-o" x="2" y="8" width="1" height="1"/><rect class="px-f" x="3" y="8" width="4" height="1"/><rect class="px-g" x="7" y="8" width="2" height="1"/><rect class="px-f" x="9" y="8" width="3" height="1"/><rect class="px-s" x="12" y="8" width="1" height="1"/><rect class="px-o" x="13" y="8" width="1" height="1"/><rect class="px-o" x="2" y="9" width="1" height="1"/><rect class="px-f" x="3" y="9" width="4" height="1"/><rect class="px-g" x="7" y="9" width="2" height="1"/><rect class="px-f" x="9" y="9" width="3" height="1"/><rect class="px-s" x="12" y="9" width="1" height="1"/><rect class="px-o" x="13" y="9" width="1" height="1"/><rect class="px-o" x="3" y="10" width="1" height="1"/><rect class="px-f" x="4" y="10" width="3" height="1"/><rect class="px-g" x="7" y="10" width="2" height="1"/><rect class="px-f" x="9" y="10" width="2" height="1"/><rect class="px-s" x="11" y="10" width="1" height="1"/><rect class="px-o" x="12" y="10" width="1" height="1"/><rect class="px-o" x="4" y="11" width="1" height="1"/><rect class="px-f" x="5" y="11" width="2" height="1"/><rect class="px-g" x="7" y="11" width="2" height="1"/><rect class="px-f" x="9" y="11" width="1" height="1"/><rect class="px-s" x="10" y="11" width="1" height="1"/><rect class="px-o" x="11" y="11" width="1" height="1"/><rect class="px-o" x="5" y="12" width="1" height="1"/><rect class="px-f" x="6" y="12" width="2" height="1"/><rect class="px-g" x="8" y="12" width="1" height="1"/><rect class="px-s" x="9" y="12" width="1" height="1"/><rect class="px-o" x="10" y="12" width="1" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-s" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="7" y="14" width="2" height="1"/></svg></span>PARATA</div>
@@ -3080,7 +3091,7 @@ const TRAIN=[
   {t:'Difendersi',steps:[
     {id:'block',ok:['block','parry'],txt:'L\u2019avversario attacca: tieni premuto PARATA',hl:['ab-b'],key:'C',ai:'attack'},
     {id:'parry',txt:'Tocca PARATA all\u2019ultimo istante, appena prima del colpo: \u00E8 il PARRY',hl:['ab-b'],key:'C',ai:'attack'},
-    {id:'grab',txt:'Vicino all\u2019avversario premi PUGNO + PARATA insieme: \u00E8 la PRESA',hl:['ab-p','ab-b'],key:'Z + C'}]},
+    {id:'grab',txt:'Vicino all\u2019avversario premi PUGNO + PARATA insieme: \u00E8 la PRESA',hl:['ab-p','ab-b','ab-grab'],key:'Z + C'}]},
   {t:'Speciale',steps:[
     {id:'special',txt:'Colpisci per riempire la barra gialla, poi premi SPECIALE',hl:['ab-s'],key:'SPAZIO'}]},
 ];
@@ -3122,7 +3133,7 @@ function syncTraining(){
   const key=on?(T.free?(T.doneT>0?'done':'free'):T.i+':'+T.count):'off';
   if(key===_trKey)return;_trKey=key;
   const box=document.getElementById('tr-box');if(!box)return;
-  ['m-dpad','ab-p','ab-k','ab-b','ab-s'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('tr-hl',!!(st&&st.hl.includes(id)));});
+  ['m-dpad','ab-p','ab-k','ab-b','ab-s','ab-grab'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('tr-hl',!!(st&&st.hl.includes(id)));});
   box.style.display=on?'block':'none';if(!on)return;
   const ti=document.getElementById('tr-title'),tx=document.getElementById('tr-text'),dt=document.getElementById('tr-dots'),sk=document.getElementById('tr-skip');
   if(T.free){
@@ -3741,6 +3752,21 @@ let _acc=0;
 const DEBUG_UPS=/[?&]debug\b/.test(location.search);
 let _upsCount=0,_upsSec=0,_ups=0;
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){_lastTs=0;_acc=0;}});
+/* CONTROLLI TOUCH: se un personaggio passa sotto il joystick o i pulsanti (e non li stai toccando) diventano trasparenti */
+function syncControls(){
+  const mc=document.getElementById('m-controls');if(!mc||mc.style.display!=='block'||game.state!=='fight'||!game.p[0])return;
+  const r=cv.getBoundingClientRect(),sx=r.width/cv.width,sy=r.height/H,t=window._touchState?window._touchState():{btns:false,stick:false};
+  /* arena → canvas (come in draw(): scala ZOOM ancorata al pavimento) → schermo */
+  const rects=game.p.map(f=>{const hb=f.hurtbox(),x0=hb.x-12,x1=hb.x+hb.w+12,y0=f.y-f.cfg.h*1.15,y1=f.y+4;
+    return {l:r.left+x0*ZOOM*sx,r:r.left+x1*ZOOM*sx,t:r.top+(y0*ZOOM+H-H*ZOOM)*sy,b:r.top+(y1*ZOOM+H-H*ZOOM)*sy};});
+  for(const [id,touched] of [['m-btns',t.btns],['m-dpad',t.stick]]){const e=document.getElementById(id);if(!e)continue;const c=e.getBoundingClientRect();
+    const hit=rects.some(q=>q.l<c.right&&q.r>c.left&&q.t<c.bottom&&q.b>c.top);const op=hit&&!touched?'0.3':'1';if(e.style.opacity!==op)e.style.opacity=op;}
+  /* presa possibile? stesse condizioni di tryGrab e della presa a segno */
+  const me=game.p[0],o=game.p[1],g=document.getElementById('ab-grab');if(!g)return;
+  const ok=me.onGround()&&me.jumpSquat===0&&me.state!=='attack'&&me.hitstun<=0&&me.blockstun<=0&&me.selfStun<=0&&
+    o.state!=='ko'&&o.onGround()&&o.hitstun<=0&&o.blockstun<=0&&o.invuln<=0&&!(o._stunEndFr!==undefined&&frame-o._stunEndFr<=5)&&
+    Math.abs(o.x-me.x)-me.half-o.half<=30;
+  g.classList.toggle('ready',ok);}
 /* icona della musica: nota o nota barrata (si aggiorna anche con il tasto M) */
 let _musIco=null;function syncMusicIcon(){if(_musIco===musicMuted)return;_musIco=musicMuted;const e=document.getElementById('m-music');if(e)e.classList.toggle('muted',!!musicMuted);}
 /* icone dei pulsanti d'azione: circa il 45% del pulsante, in multipli di 16 px per restare nitide */
@@ -3782,7 +3808,7 @@ function loop(ts){
     ctx.fillStyle='#FF4136';ctx.font='12px '+FONT_GIOCO;ctx.textAlign='center';
     ctx.fillText('ERR draw: '+e.message,W/2,H/2+40);
   }
-  syncSpecialBtn();syncTraining();syncMusicIcon();
+  syncSpecialBtn();syncTraining();syncMusicIcon();syncControls();
   requestAnimationFrame(loop);
 }
 /* prima di disegnare aspetta il carattere pixel (al massimo 1,5 s), così il primo fotogramma non usa quello di riserva */
@@ -3847,13 +3873,15 @@ function loop(ts){
     setKey('ArrowUp',    v && dy < 0, 'dp-u');
     setKey('ArrowDown',  v && dy > 0, 'dp-d');
   }
-  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); stickId = null;
+  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); stickId = null; document.getElementById('m-dpad').classList.remove('on');
     var kn = document.getElementById('m-knob'); if(kn) kn.style.transform = ''; }
   function releaseAll(){
     releaseStick();
     btnTouch = {}; refreshBtns();
   }
   window._releaseTouchKeys = releaseAll;
+  /* quali controlli sta toccando il giocatore (per la trasparenza dei pulsanti) */
+  window._touchState = function(){ return { btns: Object.keys(btnTouch).length > 0, stick: stickId !== null }; };
 
   function onTouchStart(e){
     if(game.state !== 'fight') return;
@@ -3863,7 +3891,7 @@ function loop(ts){
       var id = btnAtPoint(t.clientX, t.clientY);
       if(id){ btnTouch[t.identifier] = id; refreshBtns(); }
       else if(stickId === null && inStick(t.clientX, t.clientY)){
-        stickId = t.identifier; updateStick(t.clientX, t.clientY);
+        stickId = t.identifier; updateStick(t.clientX, t.clientY); document.getElementById('m-dpad').classList.add('on');
       }
     }
   }
