@@ -137,6 +137,33 @@
   #ab-s.ready { animation: abPulse .9s ease-in-out infinite; }
   @keyframes abPulse { 0%,100% { box-shadow: 0 0 10px rgba(125,249,255,.5); } 50% { box-shadow: 0 0 26px 7px rgba(125,249,255,.95); } }
 
+  /* ===== DISPOSIZIONE COMANDI (dimensione, trasparenza, posizione salvate nel browser) ===== */
+  #m-controls { --ctl-s: 1; }
+  #m-controls #m-dpad { width: max(96px, calc(min(29vh, 124px) * var(--ctl-s))); height: max(96px, calc(min(29vh, 124px) * var(--ctl-s))); }
+  #m-controls #m-btns { width: max(142px, calc(min(42vh, 200px) * var(--ctl-s))); height: max(142px, calc(min(42vh, 200px) * var(--ctl-s))); }
+  #m-controls.editing { display: block !important; z-index: 810; }
+  #m-controls.editing #m-dpad, #m-controls.editing #m-btns { cursor: grab; touch-action: none; outline: 2px dashed rgba(255,193,7,.85); outline-offset: 6px; }
+  #m-controls.editing #m-dpad { outline-offset: 4px; }
+  #m-controls.editing .dragging { cursor: grabbing; outline-color: var(--oro); outline-style: solid; }
+  #ctl-edit { display: none; position: fixed; inset: 0; z-index: 800; overflow: hidden; background: #07061a center bottom / cover no-repeat; }
+  #ctl-edit::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.25); }
+  #ctl-edit .ce-pose { position: absolute; bottom: 4%; height: 62%; aspect-ratio: 1/1; image-rendering: pixelated; pointer-events: none; }
+  #ce-p1 { left: 30%; transform: translateX(-50%); } #ce-p2 { left: 70%; transform: translateX(-50%) scaleX(-1); }
+  #ce-panel { display: none; position: fixed; z-index: 820; transition: opacity .15s; left: 50%; transform: translateX(-50%); top: max(8px, env(safe-area-inset-top));
+    width: min(360px, calc(100vw - 2 * max(16px, env(safe-area-inset-left)))); box-sizing: border-box; padding: 8px 10px;
+    flex-direction: column; gap: 4px; background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.5); font-family: var(--font-testo); }
+  #ce-panel .ce-h { font: 400 14px/1.2 var(--font-gioco); color: var(--oro); text-align: center; letter-spacing: .06em; }
+  #ce-panel .ce-hint { font-size: 12px; color: var(--testo-tenue); text-align: center; line-height: 1.25; }
+  #ce-panel .ce-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; }
+  #ce-panel .ce-row .sl { font: 700 14px/1.2 var(--font-testo); color: var(--testo); }
+  #ce-panel .vol .vb i { width: 16px; }
+  #ce-btns { display: flex; gap: 8px; margin-top: 2px; }
+  #ce-btns button { flex: 1; min-height: 44px; padding: 0 6px; font-size: 14px; letter-spacing: .04em; }
+  @media (max-height: 380px) { #ce-panel { padding: 6px 10px; gap: 2px; } #ce-panel .ce-row { min-height: 38px; } #ce-btns button { min-height: 42px; } }
+  #ce-panel.show { display: flex; }
+  body.ce-drag #ce-panel { opacity: .2; pointer-events: none; }
+  .srow .ce-open { flex: none; min-height: 40px; padding: 0 14px; font-size: 14px; }
   /* ===== HOME SCREEN (poster a sinistra, titolo e pulsanti a destra) ===== */
   #home-screen {
     display: none; position: fixed; inset: 0; z-index: 500; overflow: hidden;
@@ -757,6 +784,19 @@
   </div>
 </div>
 
+<div id="ctl-edit" aria-label="Disposizione comandi">
+  <img class="ce-pose" id="ce-p1" alt=""><img class="ce-pose" id="ce-p2" alt="">
+</div>
+<div id="ce-panel">
+    <div class="ce-h">DISPOSIZIONE COMANDI</div>
+    <div class="ce-hint">Trascina il joystick e i pulsanti dove ti è più comodo.</div>
+    <div class="ce-row"><span class="sl">Dimensione</span><div class="vol" id="ce-size" role="slider" tabindex="0" aria-label="Dimensione"><div class="vb"></div><span class="vv"></span></div></div>
+    <div class="ce-row"><span class="sl">Trasparenza</span><div class="vol" id="ce-alpha" role="slider" tabindex="0" aria-label="Trasparenza"><div class="vb"></div><span class="vv"></span></div></div>
+    <div class="ce-row"><span class="sl">Joystick mobile</span><button type="button" class="sw" id="ce-float" role="switch" aria-label="Joystick mobile"><span class="k"></span><span class="t"></span></button></div>
+    <div id="ce-btns"><button id="ce-cancel" class="btn-secondario">ANNULLA</button><button id="ce-reset" class="btn-secondario">RIPRISTINA</button><button id="ce-save" class="btn-primario">SALVA</button></div>
+  </div>
+
+<div id="safe-probe" style="position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)"></div>
 <div id="wrap">
   <canvas id="cv" width="854" height="480"></canvas>
   <div id="scan"></div>
@@ -4045,6 +4085,32 @@ function showVictoryPanel(){
   clearTimeout(_vicTimer);_vicTimer=setTimeout(()=>{if(game.state==='victory')box.classList.add('show');},1000);
   P.scrollTop=0;const vb=document.getElementById('vic-body');if(vb)vb.scrollTop=0;
 }
+/* ===== DISPOSIZIONE COMANDI =====
+   CTL: s = dimensione (0.8–1.3), a = trasparenza (0.3–1), fl = joystick mobile,
+   d / b = centro di joystick / pulsanti in frazioni dello schermo (null = posizione di sempre).
+   Le zone di tocco leggono la posizione reale degli elementi, quindi seguono da sole. */
+const CTL_DEF={s:1,a:1,fl:false,d:null,b:null};
+function loadCtl(){try{const o=JSON.parse(localStorage.getItem('ctl')||'null');if(o&&typeof o==='object')return {...CTL_DEF,...o};}catch(e){}return {...CTL_DEF};}
+let CTL=loadCtl(),CTL_EDIT=null;
+function saveCtl(){try{localStorage.setItem('ctl',JSON.stringify(CTL));}catch(e){}}
+function ctlNow(){return CTL_EDIT||CTL;}
+/* margini sicuri (notch, barra home) + un po' di aria dai bordi */
+function safeBox(){const p=document.getElementById('safe-probe'),c=p?getComputedStyle(p):null,n=v=>parseFloat(v)||0;
+  return {l:Math.max(8,c?n(c.paddingLeft)+4:8),r:Math.max(8,c?n(c.paddingRight)+4:8),t:Math.max(8,c?n(c.paddingTop)+4:8),b:Math.max(6,c?n(c.paddingBottom):6)};}
+/* mette l'elemento con il centro nel punto (x,y) in pixel, restando dentro lo schermo */
+function ctlPlaceAt(el,x,y){const r=el.getBoundingClientRect(),sb=safeBox();
+  const l=Math.max(sb.l,Math.min(innerWidth-sb.r-r.width,x-r.width/2)),t=Math.max(sb.t,Math.min(innerHeight-sb.b-r.height,y-r.height/2));
+  el.style.left=Math.round(l)+'px';el.style.top=Math.round(t)+'px';el.style.right='auto';el.style.bottom='auto';}
+function ctlPlace(el,pos){if(!el)return;
+  if(!pos){el.style.left=el.style.top=el.style.right=el.style.bottom='';return;}
+  ctlPlaceAt(el,pos.x*innerWidth,pos.y*innerHeight);}
+function applyCtl(c){c=c||ctlNow();const mc=document.getElementById('m-controls');if(!mc)return;
+  mc.style.setProperty('--ctl-s',c.s);
+  const d=document.getElementById('m-dpad'),b=document.getElementById('m-btns');
+  ctlPlace(d,c.d);ctlPlace(b,c.b);
+  if(d)d.style.opacity=String(c.a);if(b)b.style.opacity=String(c.a);
+  sizeActionIcons();}
+addEventListener('resize',()=>setTimeout(()=>{const mc=document.getElementById('m-controls');if(mc&&(mc.style.display==='block'||mc.classList.contains('editing')))applyCtl();},80));
 /* CONTROLLI TOUCH: se un personaggio passa sotto il joystick o i pulsanti (e non li stai toccando) diventano trasparenti */
 function syncControls(){
   const mc=document.getElementById('m-controls');if(!mc||mc.style.display!=='block'||game.state!=='fight'||!game.p[0])return;
@@ -4053,7 +4119,7 @@ function syncControls(){
   const rects=game.p.map(f=>{const hb=f.hurtbox(),x0=hb.x-12,x1=hb.x+hb.w+12,y0=f.y-f.cfg.h*1.15,y1=f.y+4;
     return {l:r.left+x0*ZOOM*sx,r:r.left+x1*ZOOM*sx,t:r.top+(y0*ZOOM+H-H*ZOOM)*sy,b:r.top+(y1*ZOOM+H-H*ZOOM)*sy};});
   for(const [id,touched] of [['m-btns',t.btns],['m-dpad',t.stick]]){const e=document.getElementById(id);if(!e)continue;const c=e.getBoundingClientRect();
-    const hit=rects.some(q=>q.l<c.right&&q.r>c.left&&q.t<c.bottom&&q.b>c.top);const op=hit&&!touched?'0.3':'1';if(e.style.opacity!==op)e.style.opacity=op;}
+    const hit=rects.some(q=>q.l<c.right&&q.r>c.left&&q.t<c.bottom&&q.b>c.top),a=CTL.a;const op=String(hit&&!touched?Math.max(.1,Math.round(a*30)/100):a);if(e.style.opacity!==op)e.style.opacity=op;}
   /* presa possibile? stesse condizioni di tryGrab e della presa a segno */
   const me=game.p[0],o=game.p[1],g=document.getElementById('ab-grab');if(!g)return;
   const ok=me.onGround()&&me.jumpSquat===0&&me.state!=='attack'&&me.hitstun<=0&&me.blockstun<=0&&me.selfStun<=0&&
@@ -4172,7 +4238,8 @@ function loop(ts){
     setKey('ArrowUp',    v && dy < 0, 'dp-u');
     setKey('ArrowDown',  v && dy > 0, 'dp-d');
   }
-  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); stickId = null; document.getElementById('m-dpad').classList.remove('on');
+  function releaseStick(){ for(var k in DIRS) setKey(k, false, DIRS[k]); var wasFloat = stickId !== null && CTL.fl; stickId = null; document.getElementById('m-dpad').classList.remove('on');
+    if(wasFloat) ctlPlace(document.getElementById('m-dpad'), CTL.d); /* torna al suo posto di riposo */
     var kn = document.getElementById('m-knob'); if(kn) kn.style.transform = ''; }
   function releaseAll(){
     releaseStick();
@@ -4189,7 +4256,9 @@ function loop(ts){
       var t = e.changedTouches[i];
       var id = btnAtPoint(t.clientX, t.clientY);
       if(id){ btnTouch[t.identifier] = id; refreshBtns(); }
-      else if(stickId === null && inStick(t.clientX, t.clientY)){
+      else if(stickId === null && (CTL.fl ? t.clientX < innerWidth/2 : inStick(t.clientX, t.clientY))){
+        /* joystick mobile: compare dove si appoggia il pollice (metà sinistra) */
+        if(CTL.fl) ctlPlaceAt(document.getElementById('m-dpad'), t.clientX, t.clientY);
         stickId = t.identifier; updateStick(t.clientX, t.clientY); document.getElementById('m-dpad').classList.add('on');
       }
     }
@@ -4290,7 +4359,7 @@ function loop(ts){
     sh('select-screen', s==='select' ? 'block' : 'none');
     if(s==='select'&&window.renderSelect){SS.last='';renderSelect();}
     sh('m-controls',  s==='fight'&&IS_MOB ? 'block' : 'none');
-    if(s==='fight') setTimeout(sizeActionIcons,30);
+    if(s==='fight') setTimeout(function(){ applyCtl(CTL); },30);
     sh('m-pause',     s==='fight'  ? 'flex' : 'none');
     if(s!=='fight'&&game.paused) setPause(false);
     sh('m-back',      'none'); /* nella schermata finale ci sono i pulsanti del pannello */
@@ -4518,6 +4587,9 @@ function loop(ts){
       v.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'||e.key==='ArrowUp'?10:e.key==='ArrowLeft'||e.key==='ArrowDown'?-10:0;
         if(d){e.preventDefault();e.stopPropagation();o.set(o.get()+d);refreshOpts();}});
       v.dataset.vol=k;guard(r);box.appendChild(r);});
+    if(IS_MOBILE){var rc=document.createElement('div');rc.className='srow';
+      rc.innerHTML='<span class="sl">Disposizione comandi</span><button type="button" class="btn-secondario ce-open">MODIFICA</button>';
+      tap(rc.querySelector('button'),function(){try{sfx.sel();}catch(_){}if(window.openCtlEdit)openCtlEdit();});guard(rc);box.appendChild(rc);}
     ['fx','vib'].forEach(function(k){var o=SWITCHES[k],r=document.createElement('div');r.className='srow';
       r.innerHTML='<span class="sl">'+o.label+'</span><button type="button" class="sw" role="switch" aria-label="'+o.label+'"><span class="k"></span><span class="t"></span></button>';
       var b=r.querySelector('.sw');b.dataset.sw=k;
@@ -4539,6 +4611,53 @@ function loop(ts){
   addEventListener('resize',function(){setTimeout(setFades,60);});
   document.querySelectorAll('.set-rows').forEach(buildRows);
   refreshOpts();
+  /* ---- DISPOSIZIONE COMANDI: schermata di modifica ---- */
+  function ceBlocks(id,min,max,step,get,set,fmt){var v=document.getElementById(id);if(!v)return;var bar=v.querySelector('.vb'),n=Math.round((max-min)/step)+1,drag=false;
+    bar.innerHTML=new Array(n+1).join('<i></i>');
+    v._show=function(){var val=get(),ix=Math.round((val-min)/step);v.querySelectorAll('.vb i').forEach(function(i,k){i.classList.toggle('f',k<=ix);});
+      v.querySelector('.vv').textContent=fmt(val);v.setAttribute('aria-valuenow',val);};
+    var at=function(x){var q=bar.getBoundingClientRect(),ix=Math.max(0,Math.min(n-1,Math.floor((x-q.left)/q.width*n)));var nv=min+ix*step;if(nv!==get()){set(nv);try{sfx.sel();}catch(_){}}v._show();};
+    v.addEventListener('pointerdown',function(e){drag=true;try{v.setPointerCapture(e.pointerId);}catch(_){}at(e.clientX);e.preventDefault();});
+    v.addEventListener('pointermove',function(e){if(drag)at(e.clientX);});
+    v.addEventListener('pointerup',function(){drag=false;});v.addEventListener('pointercancel',function(){drag=false;});
+    v.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'||e.key==='ArrowUp'?step:e.key==='ArrowLeft'||e.key==='ArrowDown'?-step:0;
+      if(d){e.preventDefault();e.stopPropagation();set(Math.max(min,Math.min(max,get()+d)));v._show();}});
+    guard(v);}
+  ceBlocks('ce-size',80,130,10,function(){return Math.round(CTL_EDIT?CTL_EDIT.s*100:100);},function(v){CTL_EDIT.s=v/100;applyCtl(CTL_EDIT);},function(v){return v+'%';});
+  ceBlocks('ce-alpha',30,100,10,function(){return Math.round(CTL_EDIT?CTL_EDIT.a*100:100);},function(v){CTL_EDIT.a=v/100;applyCtl(CTL_EDIT);},function(v){return v+'%';});
+  function ceRefresh(){['ce-size','ce-alpha'].forEach(function(id){var v=document.getElementById(id);if(v&&v._show)v._show();});
+    var f=document.getElementById('ce-float');if(f&&CTL_EDIT){f.classList.toggle('on',!!CTL_EDIT.fl);f.setAttribute('aria-checked',CTL_EDIT.fl?'true':'false');f.querySelector('.t').textContent=CTL_EDIT.fl?'SÌ':'NO';}}
+  (function(){var f=document.getElementById('ce-float');if(f)tap(f,function(){if(!CTL_EDIT)return;CTL_EDIT.fl=!CTL_EDIT.fl;try{sfx.sel();}catch(_){}ceRefresh();});})();
+  /* trascinamento di joystick e gruppo dei pulsanti (come blocco unico) */
+  [['m-dpad','d'],['m-btns','b']].forEach(function(pr){var el=document.getElementById(pr[0]),ox=0,oy=0,on=false;if(!el)return;
+    el.addEventListener('pointerdown',function(e){var mc=document.getElementById('m-controls');if(!mc.classList.contains('editing')||!CTL_EDIT)return;
+      e.preventDefault();e.stopPropagation();on=true;el.classList.add('dragging');document.body.classList.add('ce-drag');try{el.setPointerCapture(e.pointerId);}catch(_){}
+      var r=el.getBoundingClientRect();ox=e.clientX-(r.left+r.width/2);oy=e.clientY-(r.top+r.height/2);});
+    el.addEventListener('pointermove',function(e){if(!on)return;ctlPlaceAt(el,e.clientX-ox,e.clientY-oy);});
+    var end=function(){if(!on)return;on=false;el.classList.remove('dragging');document.body.classList.remove('ce-drag');var r=el.getBoundingClientRect();
+      if(CTL_EDIT)CTL_EDIT[pr[1]]={x:+((r.left+r.width/2)/innerWidth).toFixed(4),y:+((r.top+r.height/2)/innerHeight).toFixed(4)};};
+    el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);});
+  function openCtlEdit(){
+    CTL_EDIT=JSON.parse(JSON.stringify(CTL));
+    var ov=document.getElementById('ctl-edit'),mc=document.getElementById('m-controls');if(!ov||!mc)return;
+    /* sfondo: l'arena dell'incontro (se siamo in pausa) o uno degli sfondi già scaricati */
+    var bi=typeof game.bg==='number'?game.bg:Math.max(0,BACKGROUNDS.findIndex(function(_,i){return BG_STATE[i]==='ok';}));
+    ov.style.backgroundImage='url(backgrounds/bg'+String(bi+1).padStart(2,'0')+'.png)';
+    var p1=document.getElementById('ce-p1'),p2=document.getElementById('ce-p2');
+    if(p1)p1.src=SEL_POSE[ROSTER[game.sel[0]].id]||'';if(p2)p2.src=SEL_POSE[ROSTER[game.sel[1]].id]||'';
+    ov.style.display='block';document.getElementById('ce-panel').classList.add('show');mc.classList.add('editing');if(window._releaseTouchKeys)_releaseTouchKeys();
+    requestAnimationFrame(function(){applyCtl(CTL_EDIT);ceRefresh();});ceRefresh();}
+  function closeCtlEdit(save){
+    if(save&&CTL_EDIT){CTL=CTL_EDIT;saveCtl();}
+    CTL_EDIT=null;var ov=document.getElementById('ctl-edit'),mc=document.getElementById('m-controls');
+    if(ov)ov.style.display='none';document.getElementById('ce-panel').classList.remove('show');document.body.classList.remove('ce-drag');if(mc){mc.classList.remove('editing');mc.querySelectorAll('.dragging').forEach(function(x){x.classList.remove('dragging');});}
+    applyCtl(CTL);refreshOpts();}
+  window.openCtlEdit=openCtlEdit;
+  (function(){var c=document.getElementById('ce-cancel'),r=document.getElementById('ce-reset'),sv=document.getElementById('ce-save');
+    if(c)tap(c,function(){try{sfx.sel();}catch(_){}closeCtlEdit(false);});
+    if(sv)tap(sv,function(){try{sfx.ok();}catch(_){}closeCtlEdit(true);});
+    /* RIPRISTINA: torna ai valori di sempre (si conferma con SALVA) */
+    if(r)tap(r,function(){if(!CTL_EDIT)return;try{sfx.sel();}catch(_){}CTL_EDIT=JSON.parse(JSON.stringify(CTL_DEF));applyCtl(CTL_EDIT);ceRefresh();});})();
 
   /* m-back: da select → titolo; da victory → titolo */
   _btn('m-back', function(){
