@@ -31,7 +31,7 @@
   :root { --sal: env(safe-area-inset-left, 0px); --sar: env(safe-area-inset-right, 0px); }
   html, body { font-variant-ligatures: none;
     margin: 0; padding: 0; height: 100%; overflow: hidden;
-    background: #0a0806; font-family: var(--font-gioco);
+    background: #07061a; font-family: var(--font-gioco);
     touch-action: none; -webkit-user-select: none; user-select: none;
     display: flex; align-items: center; justify-content: center;
   }
@@ -41,7 +41,7 @@
     background: #000; display: block;
   }
   /* la pagina è fissata allo schermo: Safari su iPhone non può spostarla (altrimenti grafica e tocchi non coincidono più) */
-  html { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: none; }
+  html { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: none; background: #07061a; }
   body { position: fixed; inset: 0; overscroll-behavior: none; }
   /* Su mobile: canvas fullscreen senza bordi */
   @media (max-width: 1024px) and (pointer: coarse) {
@@ -180,26 +180,18 @@
   #sp-bar i.f { background: var(--oro); box-shadow: inset 0 -4px 0 #b8860b; }
   #sp-l { font-family: var(--font-gioco); font-size: 12px; color: var(--testo-tenue); letter-spacing: .14em; }
   /* ===== HOME: personaggi, difficoltà, versione e crediti ===== */
-  .hs-extra { display: flex; gap: 8px; width: min(100%, 380px); }
-  .hs-extra > button { flex: 1 1 0; min-height: 44px; padding: 0 10px; font-size: max(13px, min(1.7vw, 3.8vh)); letter-spacing: .04em; }
-  .hs-cpu { display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 12px; cursor: pointer; touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent; background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.22); color: var(--testo);
-    font-family: var(--font-testo); font-weight: 700; }
-  .hs-cpu b { color: var(--oro); font-family: var(--font-gioco); font-weight: 400; letter-spacing: .04em; }
-  .hs-cpu .ar { color: var(--oro); font-family: var(--font-gioco); }
-  .hs-cpu.pressed { background: rgba(100,70,10,.85); }
-  .hs-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 10px; row-gap: 2px; width: min(100%, 380px);
-    font-family: var(--font-testo); font-size: 12px; color: var(--testo-tenue); text-align: center; }
+  .hs-extra { display: flex; gap: 8px; width: min(100%, clamp(380px, 34vw, 600px)); }
+  .hs-extra > button { flex: 1 1 0; min-height: clamp(44px, 9vh, 68px); padding: 0 10px; font-size: max(13px, min(1.7vw, 3.8vh)); letter-spacing: .04em; }
+  .hs-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 10px; row-gap: 2px; width: min(100%, clamp(380px, 34vw, 600px));
+    font-family: var(--font-testo); font-size: clamp(12px, 1vw, 16px); color: var(--testo-tenue); text-align: center; }
   .hs-foot button { min-height: 32px; padding: 0 10px; background: none; border: 0; color: var(--oro); font: 700 12px var(--font-testo);
     text-decoration: underline; text-underline-offset: 3px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   /* pannelli della home (difficoltà, crediti): come quello delle impostazioni */
-  #diff-pop, #cred-pop { display: none; position: absolute; inset: 0; z-index: 25; background: rgba(0,0,0,.72); align-items: center; justify-content: center; }
-  #diff-pop .set-box, #cred-pop .set-box { position: relative; width: min(88vw, 420px); max-height: 92%; overflow-y: auto; overflow-x: hidden; touch-action: pan-y;
+  #cred-pop { display: none; position: absolute; inset: 0; z-index: 25; background: rgba(0,0,0,.72); align-items: center; justify-content: center; }
+  #cred-pop .set-box { position: relative; width: min(88vw, 420px); max-height: 92%; overflow-y: auto; overflow-x: hidden; touch-action: pan-y;
     background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;
     box-shadow: 0 0 30px rgba(255,193,7,.25); font-family: var(--font-testo); box-sizing: border-box; }
-  #diff-pop .set-h, #cred-pop .set-h { font-family: var(--font-gioco); color: var(--oro); font-size: 16px; letter-spacing: .08em; text-align: center; }
-  #diff-pop .srow .sl { display: none; } /* il titolo del pannello basta */
-  #diff-desc { font-size: 14px; line-height: 1.35; color: var(--testo); text-align: center; min-height: 2.7em; }
+  #cred-pop .set-h { font-family: var(--font-gioco); color: var(--oro); font-size: 16px; letter-spacing: .08em; text-align: center; }
   .cred p { margin: 0; font-size: 14px; line-height: 1.4; color: var(--testo); }
   .cred p b { color: var(--oro); font-weight: 700; }
   .cred .lic { font-size: 12px; color: var(--testo-tenue); }
@@ -219,7 +211,7 @@
     -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, #000 62%, transparent 100%);
   }
   .hs-poster img {
-    position: absolute; left: max(0px, env(safe-area-inset-left)); top: 0;
+    position: absolute; left: 0; top: 0;
     height: 128%; width: auto;   /* la parte bassa (titolo stampato sul poster) resta fuori */
     image-rendering: auto;
   }
@@ -243,9 +235,9 @@
     margin: -1vh 0 0; color: var(--testo); font-family: var(--font-testo); font-weight: 700;
     font-size: min(2vw, 4.4vh); text-shadow: 0 2px 6px rgba(0,0,0,.8); text-align: center;
   }
-  .hs-menu { display: flex; flex-direction: column; gap: min(3vh, 14px); width: min(100%, 380px); }
+  .hs-menu { display: flex; flex-direction: column; gap: min(3vh, 14px); width: min(100%, clamp(380px, 34vw, 600px)); }
   /* ALLENAMENTO: pulsante secondario più basso */
-  .hs-btn.hs-btn-sm { min-height: 44px; font-size: min(2vw, 4.4vh); border-width: 2px; }
+  .hs-btn.hs-btn-sm { min-height: clamp(44px, 9vh, 68px); font-size: min(2vw, 4.4vh, 26px); border-width: 2px; }
   /* telefoni in orizzontale: home più compatta perché ci stiano tre pulsanti e le opzioni */
   @media (max-height: 430px) {
     .hs-right { gap: 8px !important; padding-top: max(30px, calc(env(safe-area-inset-top) + 24px)) !important; }
@@ -267,7 +259,6 @@
     .hs-opts { margin-top: 0; column-gap: 14px; }
   }
   /* home alta quanto la parte visibile dello schermo (esclude le barre del browser) */
-  @supports (height: 100dvh) { #home-screen { bottom: auto; height: 100dvh; } }
   /* icona impostazioni in alto a sinistra */
   #hb-set { position: absolute; z-index: 15; left: max(10px, env(safe-area-inset-left, 10px)); top: max(10px, env(safe-area-inset-top, 10px));
     color: var(--oro); font-size: 24px; line-height: 1; padding: 0; }
@@ -301,7 +292,6 @@
   .opt.pressed { background: rgba(100,70,10,.85); }
   /* ===== SCHERMATA DI FINE INCONTRO (vittoria / sconfitta): pannello HTML a destra ===== */
   #vic-pop { display: none; position: fixed; inset: 0; z-index: 180; pointer-events: none; }
-  @supports (height: 100dvh) { #vic-pop { bottom: auto; height: 100dvh; } }
   #vic-panel { position: absolute; left: 47%; right: max(70px, calc(env(safe-area-inset-right) + 64px)); top: max(10px, env(safe-area-inset-top));
     max-height: calc(100% - 20px); overflow: hidden; pointer-events: auto; box-sizing: border-box;
     background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 14px; padding: 10px 14px;
@@ -338,7 +328,6 @@
   /* pannello di pausa: pagine principale / impostazioni / conferma */
   #pause-pop .pp-box { max-height: 94%; overflow-y: auto; }
   /* la pausa occupa solo la parte di schermo visibile (senza le barre del browser) */
-  @supports (height: 100dvh) { #pause-pop { bottom: auto; height: 100dvh; } }
   #pause-pop .pp-row3 button { font-size: 14px; padding: 0 6px; }
   /* telefono in orizzontale: impostazioni della home su due colonne, così stanno nello schermo */
   @media (max-height: 430px) and (orientation: landscape) {
@@ -397,9 +386,9 @@
   #ss-style { font-family: var(--font-gioco); display: inline-block; margin-top: 5px; padding: 2px 9px; border-radius: 10px; font-weight: 800;
     font-size: max(12px, min(1.3vw, 3vh)); letter-spacing: .06em; color: var(--fondo-pannello); background: var(--oro); }
   .hs-btn {
-    min-height: max(52px, 15vh); width: 100%;
+    min-height: clamp(52px, 13vh, 96px); width: 100%; white-space: nowrap;
     font-family: var(--font-gioco); font-weight: 700;
-    font-size: min(2.6vw, 5.6vh); letter-spacing: .04em;
+    font-size: min(2.4vw, 5.4vh, 34px); letter-spacing: .04em;
   }
   #hb-diff {
     background: none; border: none; color: rgba(255,255,255,.6); min-height: 40px;
@@ -462,9 +451,8 @@
     flex-direction:column; align-items:center; box-sizing:border-box;
     padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
     background: radial-gradient(ellipse at 50% 45%, #2a2160 0%, #14103a 40%, var(--fondo-notte) 78%, #030210 100%); }
-  @supports (height: 100dvh) { #path-screen { bottom:auto; height:100dvh; } }
   /* il lato delle caselle: una riga da 11 se c'è spazio, altrimenti due righe (6 + 5) */
-  #path-screen { --pt: clamp(34px, min(calc((100vw - 120px) / 11 - 8px), calc(100dvh - 190px)), 84px); }
+  #path-screen { --pt: clamp(34px, min(calc((100vw - 120px) / 11 - 8px), calc(100vh - 190px)), 84px); }
   #pt-top { position:relative; width:100%; min-height:48px; display:flex; align-items:center; justify-content:center; flex:none; }
   #pt-me { position:absolute; left:0; top:0; display:flex; align-items:center; gap:8px; max-width:30%; }
   #pt-me canvas { width:44px; height:44px; flex:none; image-rendering:pixelated; border:2px solid var(--oro); border-radius:8px; background:rgba(20,18,50,.85); }
@@ -500,7 +488,7 @@
   #pt-btns .pt-msg { flex:1 1 100%; text-align:center; font-size:clamp(12px, min(1.4vw,3.2vh), 16px); color:var(--testo); }
   /* schermi stretti: due righe di caselle */
   @media (max-width: 759px) {
-    #path-screen { --pt: clamp(34px, min(calc((100vw - 90px) / 6 - 10px), calc((100dvh - 210px) / 2)), 76px); }
+    #path-screen { --pt: clamp(34px, min(calc((100vw - 90px) / 6 - 10px), calc((100vh - 210px) / 2)), 76px); }
     #pt-grid { max-width:calc(6 * var(--pt) + 5 * 14px + 4px); gap:16px 14px; margin:0 auto; }
     .pt-c:not(:last-child)::before { right:-14px; width:14px; }
     .pt-c:nth-child(6)::before { display:none; }
@@ -513,7 +501,6 @@
   /* ===== SCHERMATA VS (tra la scelta e il combattimento) ===== */
   #vs-screen { display:none; position:fixed; inset:0; z-index:520; overflow:hidden; color:var(--testo);
     background: radial-gradient(ellipse at 50% 40%, #1a1430 0%, var(--fondo-notte) 60%, #020206 100%); }
-  @supports (height: 100dvh) { #vs-screen { bottom:auto; height:100dvh; } }
   #vs-top { position:absolute; top:max(12px,env(safe-area-inset-top)); left:0; right:0; text-align:center;
     font-family:var(--font-gioco); color:var(--oro); font-size:clamp(14px,4.4vh,20px); letter-spacing:.1em; }
   .vs-side { position:absolute; bottom:max(10px,env(safe-area-inset-bottom)); width:44%; display:flex; flex-direction:column; align-items:center; }
@@ -731,9 +718,8 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
       <button class="hs-btn hs-btn-sm btn-secondario" id="hb-4">ALLENAMENTO</button>
     </div>
-    <div class="hs-extra"><button class="btn-secondario" id="hb-chars">PERSONAGGI</button>
-      <button class="hs-cpu" id="hb-cpu" aria-label="Difficoltà della CPU"><span>CPU:</span><b id="hb-diff-val">Normale</b><span class="ar">›</span></button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.92</span><button id="hb-cred">Crediti</button></div>
+    <div class="hs-extra"><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.93</span><button id="hb-cred">Crediti</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -742,15 +728,9 @@
     <div class="set-rows" data-diff="1"></div>
     <button id="set-close" class="btn-primario">CHIUDI</button>
   </div></div>
-  <div id="diff-pop"><div class="set-box">
-    <div class="set-h">DIFFICOLTÀ CPU</div>
-    <div class="set-rows" data-only="diff"></div>
-    <div id="diff-desc"></div>
-    <button id="diff-close" class="btn-primario">CHIUDI</button>
-  </div></div>
   <div id="cred-pop"><div class="set-box cred">
     <div class="set-h">CREDITI</div>
-    <p><b>Le Sopracciglia della Guerra: Arena Combat</b> · v1.92</p>
+    <p><b>Le Sopracciglia della Guerra: Arena Combat</b> · v1.93</p>
     <p>Dal libro <b>Le Sopracciglia della Guerra</b>, il racconto corale dell’ufficio di Siena.</p>
     <p><b>Gioco:</b> Chiara Corbo e il gruppo dell’ufficio di Siena.</p>
     <p><b>Musiche:</b> menu, combattimento, vittoria e sconfitta. Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio).</p>
@@ -4488,7 +4468,7 @@ function loop(ts){
     function sh(id,v){ var el=document.getElementById(id); if(el) el.style.display=v; }
     /* Home screen fullscreen: copre il canvas quando siamo nel titolo */
     sh('home-screen', s==='title'  ? 'grid' : 'none');
-    if(s!=='title'){ sh('diff-pop','none'); sh('cred-pop','none'); }
+    if(s!=='title'){ sh('cred-pop','none'); }
     var offered=false;try{offered=localStorage.getItem('trainOffered')==='1';}catch(e){offered=true;}
     sh('tr-offer', s==='title'&&!offered ? 'flex' : 'none');
     if(s!=='title') sh('set-pop','none');
@@ -4710,14 +4690,13 @@ function loop(ts){
     el.addEventListener('touchcancel',function(){el.classList.remove('pressed');});
     el.addEventListener('click',function(){if(Date.now()-t0<700)return;fn();});}
   function buildRows(box){
-    var only=box.getAttribute('data-only'),withDiff=box.getAttribute('data-diff')==='1'||only==='diff';box.innerHTML='';
+    var withDiff=box.getAttribute('data-diff')==='1';box.innerHTML='';
     if(withDiff){var r=document.createElement('div');r.className='srow col';
       r.innerHTML='<span class="sl">Difficoltà CPU</span><div class="seg" role="radiogroup" aria-label="Difficoltà CPU"></div>';
       var seg=r.querySelector('.seg');
       DIFF_KEYS.forEach(function(k){var b=document.createElement('button');b.type='button';b.textContent=DIFF_LBL[k];b.setAttribute('role','radio');b.dataset.diff=k;
         tap(b,function(){game.difficulty=k;try{sfx.sel();}catch(_){}refreshOpts();updateOverlay();});seg.appendChild(b);});
       guard(r);box.appendChild(r);}
-    if(only==='diff') return;
     ['music','sfx'].forEach(function(k){var o=VOLUMES[k],r=document.createElement('div');r.className='srow';
       r.innerHTML='<span class="sl">'+o.label+'</span><div class="vol" role="slider" tabindex="0" aria-label="'+o.label+'" aria-valuemin="0" aria-valuemax="100"><div class="vb">'+
         '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vv"></span></div>';
@@ -4741,8 +4720,6 @@ function loop(ts){
   }
   function refreshOpts(){
     document.querySelectorAll('.seg button').forEach(function(b){var on=b.dataset.diff===game.difficulty;b.classList.toggle('on',on);b.setAttribute('aria-checked',on?'true':'false');});
-    var dd=document.getElementById('diff-desc');if(dd)dd.textContent={facile:'La CPU reagisce più lentamente e sbaglia più spesso.',normale:'Un avversario equilibrato.',difficile:'La CPU reagisce in fretta, para e punisce gli errori.'}[game.difficulty]||'';
-    var dv=document.getElementById('hb-diff-val');if(dv)dv.textContent={facile:'Facile',normale:'Normale',difficile:'Difficile'}[game.difficulty]||'Normale';
     document.querySelectorAll('.vol[data-vol]').forEach(function(v){var n=VOLUMES[v.dataset.vol].get();
       v.querySelectorAll('.vb i').forEach(function(i,ix){i.classList.toggle('f',ix<n/10);});
       v.querySelector('.vv').textContent=n+'%';v.classList.toggle('zero',n===0);v.setAttribute('aria-valuenow',n);v.setAttribute('aria-valuetext',n===0?'spento':n+'%');});
@@ -4831,14 +4808,12 @@ function loop(ts){
   function showSettings(v){ var p=document.getElementById('set-pop'); if(p) p.style.display=v?'flex':'none'; if(v){ refreshOpts(); var bx=p.querySelector('.set-box'); if(bx) bx.scrollTop=0; } }
   _btn('hb-set', function(){ showSettings(true); }, 'sel');
   _btn('set-close', function(){ showSettings(false); }, 'back');
-  /* HOME: riga "CPU: …" → selettore della difficoltà; PERSONAGGI → schede in sola lettura; Crediti */
+  /* HOME: PERSONAGGI → schede in sola lettura; Crediti */
   function showPop(id,v){ var p=document.getElementById(id); if(!p) return; p.style.display=v?'flex':'none';
     if(v){ refreshOpts(); var bx=p.querySelector('.set-box'); if(bx) bx.scrollTop=0; } }
-  _btn('hb-cpu', function(){ showPop('diff-pop',true); }, 'sel');
-  _btn('diff-close', function(){ showPop('diff-pop',false); updateOverlay(); }, 'back');
   _btn('hb-cred', function(){ showPop('cred-pop',true); }, 'sel');
   _btn('cred-close', function(){ showPop('cred-pop',false); }, 'back');
-  ['diff-pop','cred-pop'].forEach(function(id){ var p=document.getElementById(id); if(!p) return;
+  ['cred-pop'].forEach(function(id){ var p=document.getElementById(id); if(!p) return;
     var out=function(e){ if(e.target!==p) return; if(e.cancelable) e.preventDefault(); showPop(id,false); updateOverlay(); try{sfx.back();}catch(_){} };
     p.addEventListener('click',out); p.addEventListener('touchend',out,{passive:false}); });
   _btn('hb-chars', function(){
