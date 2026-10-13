@@ -6,10 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sopracciglia">
-<meta name="theme-color" content="#0a0806">
+<meta name="theme-color" content="#07061a">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>Le Sopracciglia della Guerra: Arena Combat</title>
 <style>
   /* Carattere "Pixelify Sans" di Stefie Justprince (https://github.com/eifetx/Pixelify-Sans),
@@ -167,6 +168,43 @@
   /* testo grande: nelle statistiche l'etichetta va sopra la barra, così la barra resta lunga */
   .big-text #ss-stats .ss-stat { flex-direction:column; align-items:stretch; gap:3px; } .big-text #ss-stats .ss-stat span { width:auto; min-width:0; } .big-text #ss-stats .ss-bar { flex:none; }
   @media (max-height: 420px) { .big-text #ss-stats { row-gap:2px; margin-top:3px; } .big-text #ss-stats .ss-stat { gap:1px; } .big-text #ss-stats .ss-bar { height:5px; } }
+  /* ===== SCHERMATA D'AVVIO: titolo e barra a blocchi mentre si caricano le risorse ===== */
+  #splash { position: fixed; inset: 0; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+    background: radial-gradient(ellipse at 50% 45%, #1d1650 0%, #0d0b2a 45%, #07061a 80%); transition: opacity .35s; }
+  #splash.out { opacity: 0; pointer-events: none; }
+  #splash .sp-t { font-family: var(--font-gioco); font-weight: 400; color: var(--oro); text-align: center; line-height: 1.1;
+    font-size: clamp(22px, min(5.4vw, 9vh), 54px); letter-spacing: .05em; text-shadow: 2px 2px 0 #6b4800; padding: 0 16px; }
+  #splash .sp-s { display: block; margin-top: 8px; font-size: .42em; color: var(--testo-tenue); text-shadow: none; letter-spacing: .12em; }
+  #sp-bar { display: flex; gap: 4px; padding: 5px; border: 2px solid var(--oro); border-radius: 3px; background: #0b0920; }
+  #sp-bar i { width: clamp(12px, 2.2vw, 20px); height: clamp(14px, 3.4vh, 22px); background: rgba(255,193,7,.12); }
+  #sp-bar i.f { background: var(--oro); box-shadow: inset 0 -4px 0 #b8860b; }
+  #sp-l { font-family: var(--font-gioco); font-size: 12px; color: var(--testo-tenue); letter-spacing: .14em; }
+  /* ===== HOME: personaggi, difficoltà, versione e crediti ===== */
+  .hs-extra { display: flex; gap: 8px; width: min(100%, 380px); }
+  .hs-extra > button { flex: 1 1 0; min-height: 44px; padding: 0 10px; font-size: max(13px, min(1.7vw, 3.8vh)); letter-spacing: .04em; }
+  .hs-cpu { display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 12px; cursor: pointer; touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent; background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.22); color: var(--testo);
+    font-family: var(--font-testo); font-weight: 700; }
+  .hs-cpu b { color: var(--oro); font-family: var(--font-gioco); font-weight: 400; letter-spacing: .04em; }
+  .hs-cpu .ar { color: var(--oro); font-family: var(--font-gioco); }
+  .hs-cpu.pressed { background: rgba(100,70,10,.85); }
+  .hs-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 10px; row-gap: 2px; width: min(100%, 380px);
+    font-family: var(--font-testo); font-size: 12px; color: var(--testo-tenue); text-align: center; }
+  .hs-foot button { min-height: 32px; padding: 0 10px; background: none; border: 0; color: var(--oro); font: 700 12px var(--font-testo);
+    text-decoration: underline; text-underline-offset: 3px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  /* pannelli della home (difficoltà, crediti): come quello delle impostazioni */
+  #diff-pop, #cred-pop { display: none; position: absolute; inset: 0; z-index: 25; background: rgba(0,0,0,.72); align-items: center; justify-content: center; }
+  #diff-pop .set-box, #cred-pop .set-box { position: relative; width: min(88vw, 420px); max-height: 92%; overflow-y: auto; overflow-x: hidden; touch-action: pan-y;
+    background: var(--fondo-pannello); border: 2px solid var(--oro); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;
+    box-shadow: 0 0 30px rgba(255,193,7,.25); font-family: var(--font-testo); box-sizing: border-box; }
+  #diff-pop .set-h, #cred-pop .set-h { font-family: var(--font-gioco); color: var(--oro); font-size: 16px; letter-spacing: .08em; text-align: center; }
+  #diff-pop .srow .sl { display: none; } /* il titolo del pannello basta */
+  #diff-desc { font-size: 14px; line-height: 1.35; color: var(--testo); text-align: center; min-height: 2.7em; }
+  .cred p { margin: 0; font-size: 14px; line-height: 1.4; color: var(--testo); }
+  .cred p b { color: var(--oro); font-weight: 700; }
+  .cred .lic { font-size: 12px; color: var(--testo-tenue); }
+  /* PERSONAGGI: selezione in sola lettura (niente CONFERMA / CASUALE) */
+  #select-screen.browse #ss-actions { display: none; }
   /* ===== HOME SCREEN (poster a sinistra, titolo e pulsanti a destra) ===== */
   #home-screen {
     display: none; position: fixed; inset: 0; z-index: 500; overflow: hidden;
@@ -669,6 +707,8 @@
 </style>
 </head>
 <body>
+<div id="splash" role="status" aria-label="Caricamento"><div class="sp-t">LE SOPRACCIGLIA<br>DELLA GUERRA<span class="sp-s">ARENA COMBAT</span></div>
+  <div id="sp-bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div id="sp-l">CARICAMENTO</div></div>
 
 <div id="rotate-hint">
   <div class="ri"><svg class="pxi" viewBox="0 0 16 16" width="96" height="96" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-g" x="6" y="1" width="6" height="1"/><rect class="px-g" x="5" y="2" width="1" height="1"/><rect class="px-g" x="12" y="2" width="1" height="1"/><rect class="px-g" x="4" y="3" width="1" height="1"/><rect class="px-g" x="13" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="7" height="1"/><rect class="px-g" x="13" y="4" width="1" height="1"/><rect class="px-o" x="1" y="5" width="1" height="1"/><rect class="px-f" x="2" y="5" width="5" height="1"/><rect class="px-o" x="7" y="5" width="1" height="1"/><rect class="px-g" x="11" y="5" width="5" height="1"/><rect class="px-o" x="1" y="6" width="1" height="1"/><rect class="px-f" x="2" y="6" width="1" height="1"/><rect class="px-a" x="3" y="6" width="3" height="1"/><rect class="px-f" x="6" y="6" width="1" height="1"/><rect class="px-o" x="7" y="6" width="1" height="1"/><rect class="px-g" x="12" y="6" width="3" height="1"/><rect class="px-o" x="1" y="7" width="1" height="1"/><rect class="px-f" x="2" y="7" width="1" height="1"/><rect class="px-a" x="3" y="7" width="3" height="1"/><rect class="px-f" x="6" y="7" width="1" height="1"/><rect class="px-o" x="7" y="7" width="1" height="1"/><rect class="px-g" x="13" y="7" width="1" height="1"/><rect class="px-o" x="1" y="8" width="1" height="1"/><rect class="px-f" x="2" y="8" width="1" height="1"/><rect class="px-a" x="3" y="8" width="3" height="1"/><rect class="px-f" x="6" y="8" width="1" height="1"/><rect class="px-o" x="7" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="1" height="1"/><rect class="px-f" x="2" y="9" width="1" height="1"/><rect class="px-a" x="3" y="9" width="3" height="1"/><rect class="px-f" x="6" y="9" width="1" height="1"/><rect class="px-o" x="7" y="9" width="1" height="1"/><rect class="px-o" x="1" y="10" width="1" height="1"/><rect class="px-f" x="2" y="10" width="1" height="1"/><rect class="px-a" x="3" y="10" width="3" height="1"/><rect class="px-f" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-f" x="2" y="11" width="1" height="1"/><rect class="px-a" x="3" y="11" width="3" height="1"/><rect class="px-f" x="6" y="11" width="1" height="1"/><rect class="px-o" x="7" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-f" x="2" y="12" width="5" height="1"/><rect class="px-o" x="7" y="12" width="1" height="1"/><rect class="px-o" x="1" y="13" width="1" height="1"/><rect class="px-f" x="2" y="13" width="2" height="1"/><rect class="px-o" x="4" y="13" width="1" height="1"/><rect class="px-f" x="5" y="13" width="2" height="1"/><rect class="px-o" x="7" y="13" width="1" height="1"/><rect class="px-o" x="1" y="14" width="1" height="1"/><rect class="px-f" x="2" y="14" width="5" height="1"/><rect class="px-o" x="7" y="14" width="1" height="1"/><rect class="px-o" x="1" y="15" width="7" height="1"/></svg></div>
@@ -691,6 +731,9 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
       <button class="hs-btn hs-btn-sm btn-secondario" id="hb-4">ALLENAMENTO</button>
     </div>
+    <div class="hs-extra"><button class="btn-secondario" id="hb-chars">PERSONAGGI</button>
+      <button class="hs-cpu" id="hb-cpu" aria-label="Difficoltà della CPU"><span>CPU:</span><b id="hb-diff-val">Normale</b><span class="ar">›</span></button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.92</span><button id="hb-cred">Crediti</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -698,6 +741,21 @@
     <div class="set-h">IMPOSTAZIONI</div>
     <div class="set-rows" data-diff="1"></div>
     <button id="set-close" class="btn-primario">CHIUDI</button>
+  </div></div>
+  <div id="diff-pop"><div class="set-box">
+    <div class="set-h">DIFFICOLTÀ CPU</div>
+    <div class="set-rows" data-only="diff"></div>
+    <div id="diff-desc"></div>
+    <button id="diff-close" class="btn-primario">CHIUDI</button>
+  </div></div>
+  <div id="cred-pop"><div class="set-box cred">
+    <div class="set-h">CREDITI</div>
+    <p><b>Le Sopracciglia della Guerra: Arena Combat</b> · v1.92</p>
+    <p>Dal libro <b>Le Sopracciglia della Guerra</b>, il racconto corale dell’ufficio di Siena.</p>
+    <p><b>Gioco:</b> Chiara Corbo e il gruppo dell’ufficio di Siena.</p>
+    <p><b>Musiche:</b> menu, combattimento, vittoria e sconfitta. Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio).</p>
+    <p class="lic"><b>Carattere:</b> Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org).</p>
+    <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
 
@@ -3190,6 +3248,7 @@ setTimeout(()=>{_trReady=true;},600); /* all'avvio la prima schermata compare se
 Object.defineProperty(game,'state',{configurable:true,get(){return _gState;},set(v){cambiaSchermata(v);}});
 function trActive(){return !!TR;}
 function cambiaSchermata(v){
+  if(v==='title')game.browse=false; /* tornando alla home si esce dalla sola lettura (PERSONAGGI) */
   if(!_trReady||document.hidden){_gState=v;return;}
   if(TR&&!TR.switched){TR.to=v;return;}          /* già in copertura: vale l'ultima destinazione */
   if(!TR&&v===_gState)return;
@@ -3277,13 +3336,14 @@ function update(){
     if(kp(map.right)){s=(s+1)%12;sfx.sel();}
     if(kp(map.up)||kp(map.down)){s=(s+6)%12;sfx.sel();}
     game.sel[turn]=s;
-    if(kp(map.punch)||kp('Enter')){sfx.ok();
+    if(game.browse&&(kp(map.punch)||kp('Enter')||kp('KeyR')))sfx.buzz(); /* PERSONAGGI: sola lettura */
+    if(!game.browse&&(kp(map.punch)||kp('Enter'))){sfx.ok();
       if(turn===0){
         if(game.mode===3)game.startTournament();
         else if(game.mode===4)game.startTraining();
         else{game.pickTurn=1;if(game.sel[1]===game.sel[0])game.sel[1]=(game.sel[0]+1)%12;}}
       else game.startMatch();}
-    if(kp('KeyR')){game.sel[turn]=(Math.random()*12)|0;sfx.ok();
+    if(!game.browse&&kp('KeyR')){game.sel[turn]=(Math.random()*12)|0;sfx.ok();
       if(turn===0){if(game.mode===3)game.startTournament();else if(game.mode===4)game.startTraining();else game.pickTurn=1;}
       else game.startMatch();}
     if(kp('Escape')){if(game.pickTurn===1)game.pickTurn=0;else game.state='title';}
@@ -4428,6 +4488,7 @@ function loop(ts){
     function sh(id,v){ var el=document.getElementById(id); if(el) el.style.display=v; }
     /* Home screen fullscreen: copre il canvas quando siamo nel titolo */
     sh('home-screen', s==='title'  ? 'grid' : 'none');
+    if(s!=='title'){ sh('diff-pop','none'); sh('cred-pop','none'); }
     var offered=false;try{offered=localStorage.getItem('trainOffered')==='1';}catch(e){offered=true;}
     sh('tr-offer', s==='title'&&!offered ? 'flex' : 'none');
     if(s!=='title') sh('set-pop','none');
@@ -4506,14 +4567,15 @@ function loop(ts){
       if(imgOk(im))x.drawImage(im,0,0,128,128);cv.classList.add('static');}
   }
   function renderSelect(){
-    var i=game.sel[game.pickTurn],c=ROSTER[i],I=SEL_INFO[c.id],key=game.pickTurn+':'+i+':'+game.mode;
+    var i=game.sel[game.pickTurn],c=ROSTER[i],I=SEL_INFO[c.id],key=game.pickTurn+':'+i+':'+game.mode+(game.browse?':b':'');
     loadChar(c.id);
     if(SS.last===key)return;var changed=SS.last.split(':')[1]!==String(i);SS.last=key;
     var opp=game.pickTurn===1;
     document.getElementById('select-screen').classList.toggle('opp',opp);
     var head=document.getElementById('ss-head');
-    head.firstChild.nodeValue=opp?'SCEGLI L’AVVERSARIO':'SCEGLI IL TUO COMBATTENTE';
-    head.lastChild.textContent=game.mode===4?'Allenamento: scegli con chi imparare':game.mode===3?'Torneo: sfiderai tutti gli altri, uno dopo l’altro':opp?'Oppure lascia scegliere alla CPU con CASUALE':'Battaglia singola';
+    document.getElementById('select-screen').classList.toggle('browse',!!game.browse);
+    head.firstChild.nodeValue=game.browse?'PERSONAGGI':opp?'SCEGLI L’AVVERSARIO':'SCEGLI IL TUO COMBATTENTE';
+    head.lastChild.textContent=game.browse?'Tocca un ritratto per leggere la sua scheda':game.mode===4?'Allenamento: scegli con chi imparare':game.mode===3?'Torneo: sfiderai tutti gli altri, uno dopo l’altro':opp?'Oppure lascia scegliere alla CPU con CASUALE':'Battaglia singola';
     document.getElementById('ss-random').style.display=opp?'':'none';
     SS.th.forEach(function(b,k){b.classList.toggle('on',k===i);b.classList.toggle('p1',opp&&k===game.sel[0]);});
     /* centra la miniatura scelta spostando SOLO la fila (scrollIntoView sposterebbe anche la pagina su iPhone) */
@@ -4567,6 +4629,7 @@ function loop(ts){
   })();
 
   function confirmPick(){
+    if(game.browse) return;
     try{sfx.ok();}catch(_){}
     if(game.pickTurn===0){
       if(game.mode===3) game.startTournament();
@@ -4647,13 +4710,14 @@ function loop(ts){
     el.addEventListener('touchcancel',function(){el.classList.remove('pressed');});
     el.addEventListener('click',function(){if(Date.now()-t0<700)return;fn();});}
   function buildRows(box){
-    var withDiff=box.getAttribute('data-diff')==='1';box.innerHTML='';
+    var only=box.getAttribute('data-only'),withDiff=box.getAttribute('data-diff')==='1'||only==='diff';box.innerHTML='';
     if(withDiff){var r=document.createElement('div');r.className='srow col';
       r.innerHTML='<span class="sl">Difficoltà CPU</span><div class="seg" role="radiogroup" aria-label="Difficoltà CPU"></div>';
       var seg=r.querySelector('.seg');
       DIFF_KEYS.forEach(function(k){var b=document.createElement('button');b.type='button';b.textContent=DIFF_LBL[k];b.setAttribute('role','radio');b.dataset.diff=k;
         tap(b,function(){game.difficulty=k;try{sfx.sel();}catch(_){}refreshOpts();updateOverlay();});seg.appendChild(b);});
       guard(r);box.appendChild(r);}
+    if(only==='diff') return;
     ['music','sfx'].forEach(function(k){var o=VOLUMES[k],r=document.createElement('div');r.className='srow';
       r.innerHTML='<span class="sl">'+o.label+'</span><div class="vol" role="slider" tabindex="0" aria-label="'+o.label+'" aria-valuemin="0" aria-valuemax="100"><div class="vb">'+
         '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="vv"></span></div>';
@@ -4677,6 +4741,8 @@ function loop(ts){
   }
   function refreshOpts(){
     document.querySelectorAll('.seg button').forEach(function(b){var on=b.dataset.diff===game.difficulty;b.classList.toggle('on',on);b.setAttribute('aria-checked',on?'true':'false');});
+    var dd=document.getElementById('diff-desc');if(dd)dd.textContent={facile:'La CPU reagisce più lentamente e sbaglia più spesso.',normale:'Un avversario equilibrato.',difficile:'La CPU reagisce in fretta, para e punisce gli errori.'}[game.difficulty]||'';
+    var dv=document.getElementById('hb-diff-val');if(dv)dv.textContent={facile:'Facile',normale:'Normale',difficile:'Difficile'}[game.difficulty]||'Normale';
     document.querySelectorAll('.vol[data-vol]').forEach(function(v){var n=VOLUMES[v.dataset.vol].get();
       v.querySelectorAll('.vb i').forEach(function(i,ix){i.classList.toggle('f',ix<n/10);});
       v.querySelector('.vv').textContent=n+'%';v.classList.toggle('zero',n===0);v.setAttribute('aria-valuenow',n);v.setAttribute('aria-valuetext',n===0?'spento':n+'%');});
@@ -4685,8 +4751,8 @@ function loop(ts){
     setTimeout(setFades,20);}
   window.refreshOpts=refreshOpts;
   /* sfumatura in basso quando il pannello ha altro da scorrere */
-  function setFades(){document.querySelectorAll('#set-pop .set-box, #pause-pop .pp-box').forEach(function(b){b.classList.toggle('more',b.scrollHeight-b.scrollTop-b.clientHeight>4);});}
-  document.querySelectorAll('#set-pop .set-box, #pause-pop .pp-box').forEach(function(b){b.addEventListener('scroll',setFades,{passive:true});});
+  function setFades(){document.querySelectorAll('.set-box, #pause-pop .pp-box').forEach(function(b){b.classList.toggle('more',b.scrollHeight-b.scrollTop-b.clientHeight>4);});}
+  document.querySelectorAll('.set-box, #pause-pop .pp-box').forEach(function(b){b.addEventListener('scroll',setFades,{passive:true});});
   addEventListener('resize',function(){setTimeout(setFades,60);});
   document.querySelectorAll('.set-rows').forEach(buildRows);
   refreshOpts();
@@ -4765,6 +4831,20 @@ function loop(ts){
   function showSettings(v){ var p=document.getElementById('set-pop'); if(p) p.style.display=v?'flex':'none'; if(v){ refreshOpts(); var bx=p.querySelector('.set-box'); if(bx) bx.scrollTop=0; } }
   _btn('hb-set', function(){ showSettings(true); }, 'sel');
   _btn('set-close', function(){ showSettings(false); }, 'back');
+  /* HOME: riga "CPU: …" → selettore della difficoltà; PERSONAGGI → schede in sola lettura; Crediti */
+  function showPop(id,v){ var p=document.getElementById(id); if(!p) return; p.style.display=v?'flex':'none';
+    if(v){ refreshOpts(); var bx=p.querySelector('.set-box'); if(bx) bx.scrollTop=0; } }
+  _btn('hb-cpu', function(){ showPop('diff-pop',true); }, 'sel');
+  _btn('diff-close', function(){ showPop('diff-pop',false); updateOverlay(); }, 'back');
+  _btn('hb-cred', function(){ showPop('cred-pop',true); }, 'sel');
+  _btn('cred-close', function(){ showPop('cred-pop',false); }, 'back');
+  ['diff-pop','cred-pop'].forEach(function(id){ var p=document.getElementById(id); if(!p) return;
+    var out=function(e){ if(e.target!==p) return; if(e.cancelable) e.preventDefault(); showPop(id,false); updateOverlay(); try{sfx.back();}catch(_){} };
+    p.addEventListener('click',out); p.addEventListener('touchend',out,{passive:false}); });
+  _btn('hb-chars', function(){
+    game.browse=true; game.mode=1; game.tournament=null; game.pickTurn=0; game.state='select';
+    updateOverlay();
+  }, 'ok');
   (function(){ var p=document.getElementById('set-pop'); if(!p)return;
     /* tocco fuori dal riquadro: chiude */
     p.addEventListener('click', function(e){ if(e.target===p){ showSettings(false); try{sfx.back();}catch(_){} } });
@@ -4802,6 +4882,20 @@ function loop(ts){
 
 })();
 
+/* ===== SCHERMATA D'AVVIO =====
+   La barra segue tre lavori veri (carattere pixel, miniature dei 12 personaggi, pagina completa) ma resta almeno 1 secondo;
+   al massimo 3,5 secondi, poi sfuma nella home. */
+(function(){const sp=document.getElementById('splash');if(!sp)return;const blocks=sp.querySelectorAll('#sp-bar i'),t0=performance.now();
+  let fontOk=false,pageOk=document.readyState==='complete';
+  try{document.fonts.ready.then(()=>{fontOk=true;});}catch(e){fontOk=true;}
+  addEventListener('load',()=>{pageOk=true;});
+  function tick(){const t=performance.now()-t0,thumbs=Object.keys(HUD_THUMB).length/ROSTER.length;
+    const work=((fontOk?1:0)+Math.min(1,thumbs)+(pageOk?1:0))/3,done=work>=1;
+    const prog=Math.min(t/1000,work,1),n=Math.round(prog*blocks.length);
+    blocks.forEach((b,i)=>b.classList.toggle('f',i<n));
+    if((done&&t>=1000)||t>=3500){blocks.forEach(b=>b.classList.add('f'));sp.classList.add('out');setTimeout(()=>sp.remove(),400);return;}
+    setTimeout(tick,50);}
+  tick();})();
 /* ===== PWA: registra Service Worker ===== */
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){

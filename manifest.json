@@ -5,13 +5,37 @@
   "start_url": "./",
   "display": "fullscreen",
   "orientation": "landscape",
-  "background_color": "#0a0806",
-  "theme_color": "#0a0806",
+  "background_color": "#07061a",
+  "theme_color": "#07061a",
   "lang": "it",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "screenshots": [],
-  "categories": ["games"]
+  "categories": [
+    "games"
+  ]
 }
