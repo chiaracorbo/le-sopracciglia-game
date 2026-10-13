@@ -801,6 +801,7 @@
   </div>
 
 <div id="safe-probe" style="position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)"></div>
+<canvas id="tr-wipe" aria-hidden="true" style="display:none;position:fixed;inset:0;width:100%;height:100%;z-index:99990;pointer-events:none"></canvas>
 <div id="wrap">
   <canvas id="cv" width="854" height="480"></canvas>
   <div id="scan"></div>
@@ -881,6 +882,8 @@ function noise(d,v=.08){if(SFX_VOL<=0)return;v*=SFX_VOL/100;try{AC=AC||new (wind
   const n=AC.createBufferSource(),buf=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate);
   const data=buf.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);
   n.buffer=buf;const g=AC.createGain();g.gain.value=v;n.connect(g);g.connect(AC.destination);n.start();}catch(e){}}
+/* mentre un pulsante _btn esegue il suo compito i suoni d'interfaccia li sceglie _btn (uno solo, sempre lo stesso per tipo) */
+let _uiQuiet=false;
 const sfx={
   hit:()=>{beep(180,.08,'square',.07,-60);noise(.05,.04)},
   kick:()=>{beep(120,.12,'square',.08,-50);noise(.07,.05)},
@@ -889,8 +892,9 @@ const sfx={
   special:()=>{beep(80,.3,'sawtooth',.08,200);beep(640,.15,'square',.04,-300)},
   chainsaw:()=>{for(let i=0;i<6;i++)setTimeout(()=>beep(70+Math.random()*50,.08,'sawtooth',.07),i*36)},
   ko:()=>{beep(300,.4,'sawtooth',.09,-220);setTimeout(()=>{beep(90,.6,'square',.08,-40);noise(.3,.09)},150)},
-  sel:()=>beep(520,.05,'square',.05),
-  ok:()=>beep(660,.1,'square',.06,120),
+  sel:()=>{if(!_uiQuiet)beep(520,.05,'square',.05);},
+  ok:()=>{if(!_uiQuiet)beep(660,.1,'square',.06,120);},
+  back:()=>{if(!_uiQuiet)beep(300,.07,'square',.05,-90);}, /* indietro e chiudi */
   boom:()=>{beep(55,.4,'sawtooth',.1,-25);noise(.25,.1)},
   zap:()=>beep(900,.22,'sawtooth',.06,-720),
   wave:()=>beep(220,.25,'sine',.07,160),
@@ -3175,6 +3179,47 @@ const game={
       else{this.round++;this.startRound();}});},
 };
 
+/* ---------- CAMBIO SCHERMATA: una sola funzione per tutti i passaggi ----------
+   Ogni volta che game.state cambia (home, selezione, percorso, VS, combattimento, fine incontro, allenamento)
+   passa da cambiaSchermata(): la tendina a pixel copre lo schermo (125 ms), il cambio avviene a schermo coperto,
+   poi la tendina si scopre (125 ms). Con "Riduci lampi e tremolio" è una semplice dissolvenza.
+   Durante la transizione tocchi e tasti non arrivano alla schermata che sta sparendo. */
+const TR_HALF=125,TR_CELL=16;
+let _gState=game.state,TR=null,_trReady=false;
+setTimeout(()=>{_trReady=true;},600); /* all'avvio la prima schermata compare senza tendina */
+Object.defineProperty(game,'state',{configurable:true,get(){return _gState;},set(v){cambiaSchermata(v);}});
+function trActive(){return !!TR;}
+function cambiaSchermata(v){
+  if(!_trReady||document.hidden){_gState=v;return;}
+  if(TR&&!TR.switched){TR.to=v;return;}          /* già in copertura: vale l'ultima destinazione */
+  if(!TR&&v===_gState)return;
+  const cols=Math.ceil(innerWidth/TR_CELL),rows=Math.ceil(innerHeight/TR_CELL),r=new Float32Array(cols*rows);
+  /* ordine casuale con una leggera diagonale, così i quadrati "scorrono" sullo schermo */
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)r[y*cols+x]=Math.min(.999,Math.random()*.65+((x/cols)+(y/rows))*.175);
+  TR={to:v,t0:performance.now(),switched:false,cols,rows,r};
+  const c=document.getElementById('tr-wipe');if(c){c.style.display='block';}
+  requestAnimationFrame(trFrame);
+}
+function trFrame(now){
+  if(!TR)return;const c=document.getElementById('tr-wipe');const t=now-TR.t0;
+  if(!TR.switched&&t>=TR_HALF){ /* schermo coperto: ora si cambia davvero */
+    _gState=TR.to;TR.switched=true;
+    for(const k in keys)keys[k]=false;
+    try{window._screenSwitched&&window._screenSwitched();}catch(e){}}
+  if(c){const dpr=Math.min(2,window.devicePixelRatio||1),W2=Math.round(innerWidth*dpr),H2=Math.round(innerHeight*dpr);
+    if(c.width!==W2||c.height!==H2){c.width=W2;c.height=H2;}
+    const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,innerWidth,innerHeight);x.fillStyle='#07061a';
+    const p=Math.max(0,Math.min(1,TR.switched?(t-TR_HALF)/TR_HALF:t/TR_HALF));
+    if(REDUCE_FX){x.globalAlpha=TR.switched?1-p:p;x.fillRect(0,0,innerWidth,innerHeight);x.globalAlpha=1;}
+    else{const {cols,rows,r}=TR;
+      for(let y=0;y<rows;y++)for(let xx=0;xx<cols;xx++){const v=r[y*cols+xx];if(TR.switched?v>=p:v<p)x.fillRect(xx*TR_CELL,y*TR_CELL,TR_CELL,TR_CELL);}}}
+  if(t>=TR_HALF*2){TR=null;if(c){c.getContext('2d').clearRect(0,0,c.width,c.height);c.style.display='none';}return;}
+  requestAnimationFrame(trFrame);
+}
+/* durante la transizione nessun tocco, clic o tasto arriva al gioco */
+['touchstart','touchmove','touchend','pointerdown','pointerup','mousedown','mouseup','click','keydown'].forEach(ev=>
+  addEventListener(ev,e=>{if(!TR)return;e.stopPropagation();if(e.cancelable&&ev!=='keydown'||ev==='keydown')e.preventDefault();},{capture:true,passive:false}));
+
 /* ---------- UPDATE ---------- */
 let kPrev={};
 function kp(code){return !!keys[code]&&!kPrev[code];}
@@ -3203,6 +3248,7 @@ function trailTick(f){
     f.hpTrail=Math.max(f.hp,f.hpTrail-f.trailSpd);if(f.hpTrail===f.hp)f.trailSpd=0;}
 }
 function update(){
+  if(TR&&!TR.switched)return; /* schermata che sta sparendo: ferma */
   if(game.state==='fight'&&game.paused){ /* in pausa: tutto fermo; ESC o P riprendono */
     if(kp('Escape')||kp('KeyP'))setPause(false);
     kPrev={...keys};return;}
@@ -4032,7 +4078,7 @@ function renderPath(confirm){
     b.addEventListener('touchcancel',()=>b.classList.remove('pressed'));box.appendChild(b);};
   if(done)add('MENU','btn-primario','menu');
   else if(_ptConfirm){const m=document.createElement('div');m.className='pt-msg';m.textContent='Abbandonare il torneo? I progressi andranno persi.';box.appendChild(m);
-    add('ANNULLA','btn-secondario','back');add('S\u00CC, ABBANDONA','btn-secondario','menu');}
+    add('ANNULLA','btn-secondario','back');add('S\u00CC, ABBANDONA','btn-secondario','quit');}
   else{add('ABBANDONA','btn-secondario','abandon');add('COMBATTI','btn-primario','fight');}
   /* miniature non ancora pronte: riprova tra poco */
   if(missing)setTimeout(()=>{if(game.state==='path')renderPath(_ptConfirm);},400);
@@ -4040,8 +4086,9 @@ function renderPath(confirm){
 function pathAction(a){
   if(game.state!=='path')return;
   if(a==='abandon'){try{sfx.sel();}catch(e){}renderPath(true);return;}
-  if(a==='back'){try{sfx.sel();}catch(e){}renderPath(false);return;}
-  try{sfx.ok();}catch(e){}
+  if(a==='back'){try{sfx.back();}catch(e){}renderPath(false);return;}
+  /* MENU = indietro; COMBATTI e SÌ, ABBANDONA = conferma */
+  try{(a==='menu'?sfx.back:sfx.ok)();}catch(e){}
   _ptConfirm=false;
   if(a==='fight')game.startMatch();
   else{game.tournament=null;game.state='title';}
@@ -4054,8 +4101,9 @@ function vicPrimary(){const t=game.tournament;
   return 'rematch';}
 function vicAction(a){
   if(game.state!=='victory')return;
-  if(a==='back'){try{sfx.sel();}catch(e){}vicButtons(false);return;} /* ANNULLA: torna ai pulsanti normali */
-  try{sfx.ok();}catch(e){}vcfxFrame=0;
+  if(a==='back'){try{sfx.back();}catch(e){}vicButtons(false);return;} /* ANNULLA: torna ai pulsanti normali */
+  /* suoni uniformi: MENU = indietro, ABBANDONA apre la conferma, il resto conferma */
+  try{(a==='menu'?sfx.back:a==='abandon'?sfx.sel:sfx.ok)();}catch(e){}vcfxFrame=0;
   const t=game.tournament;
   if(a==='rematch'){game.startMatch();}
   else if(a==='continue'&&t){t.idx++;game.sel[1]=t.order[t.idx];game.showPath();}
@@ -4075,7 +4123,7 @@ function vicButtons(confirmAbandon){
     b.addEventListener('touchcancel',()=>b.classList.remove('pressed'));box.appendChild(b);};
   if(confirmAbandon){
     const m=document.createElement('div');m.className='vic-msg';m.textContent='Abbandonare il torneo? I progressi andranno persi.';box.appendChild(m);
-    add('ANNULLA','btn-secondario','back');add('SÌ, ABBANDONA','btn-secondario','menu');
+    add('ANNULLA','btn-secondario','back');add('SÌ, ABBANDONA','btn-secondario','quit');
     return;}
   const t=game.tournament,lost=game.playerLost;
   if(game.mode===3&&t){
@@ -4529,9 +4577,13 @@ function loop(ts){
   }
 
   /* ---- listener bottoni overlay ---- */
-  function _btn(id, fn){
+  /* suoni d'interfaccia uniformi: 'sel' spostarsi/aprire, 'ok' confermare, 'back' indietro/chiudi.
+     Se l'azione restituisce false (non possibile ora) suona sfx.buzz. */
+  function _btn(id, fn0, kind){
     var el = document.getElementById(id);
     if(!el) return;
+    var fn = function(){ if(trActive()) return; var r; _uiQuiet=true; try{ r=fn0(); }finally{ _uiQuiet=false; }
+      try{ if(r===false) sfx.buzz(); else if(kind && sfx[kind]) sfx[kind](); }catch(_){} };
     el.addEventListener('touchstart', function(e){
       e.preventDefault(); e.stopPropagation();
       el.classList.add('pressed');
@@ -4550,30 +4602,28 @@ function loop(ts){
   }
 
   /* PAUSA: icona in alto al centro; pop-up con RIPRENDI e TORNA AL MENU */
-  _btn('m-pause', function(){ if(game.state==='fight') setPause(!game.paused); });
-  _btn('pp-resume', function(){ setPause(false); });
+  _btn('m-pause', function(){ if(game.state!=='fight') return false; setPause(!game.paused); }, 'sel');
+  _btn('pp-resume', function(){ setPause(false); }, 'ok');
   /* VS: toccare salta la schermata, ma solo quando i personaggi sono pronti */
   (function(){var v=document.getElementById('vs-screen');if(!v)return;
     var skip=function(e){if(game.state!=='vs')return;if(e&&e.cancelable)e.preventDefault();if(vsReady()&&(game.vsT||0)>=20)game.beginFight();};
     v.addEventListener('touchstart',skip,{passive:false});v.addEventListener('click',skip);})();
   _btn('pp-restart', function(){ /* stesso incontro, stessi personaggi */
-    try{sfx.ok();}catch(_){} setPause(false); game.startMatch(); updateOverlay();
-  });
-  _btn('pp-settings', function(){ try{sfx.sel();}catch(_){} refreshOpts(); pausePage('pp-set'); });
-  _btn('pp-set-back', function(){ try{sfx.sel();}catch(_){} pausePage('pp-main'); });
-  _btn('pp-set-resume', function(){ setPause(false); });
+    setPause(false); game.startMatch(); updateOverlay();
+  }, 'ok');
+  _btn('pp-settings', function(){ refreshOpts(); pausePage('pp-set'); }, 'sel');
+  _btn('pp-set-back', function(){ pausePage('pp-main'); }, 'back');
+  _btn('pp-set-resume', function(){ setPause(false); }, 'ok');
   _btn('pp-menu', function(){ /* ESCI: chiede conferma */
-    try{sfx.sel();}catch(_){}
     var m=document.getElementById('pp-confirm-msg');
     if(m) m.textContent = game.mode===3&&game.tournament ? 'Uscire dall\u2019incontro? Il torneo andr\u00E0 perso.' : 'Uscire dall\u2019incontro?';
     pausePage('pp-confirm');
-  });
-  _btn('pp-exit-no', function(){ try{sfx.sel();}catch(_){} pausePage('pp-main'); });
+  }, 'sel');
+  _btn('pp-exit-no', function(){ pausePage('pp-main'); }, 'back');
   _btn('pp-exit-yes', function(){
-    try{sfx.sel();}catch(_){}
     setPause(false); game.state='title'; game.tournament=null;
     updateOverlay();
-  });
+  }, 'ok');
   /* IMPOSTAZIONI condivise (home e pausa): difficoltà (solo home), musica ed effetti 0–100%, lampi, vibrazione */
   var DIFF_KEYS=['facile','normale','difficile'],DIFF_LBL={facile:'FACILE',normale:'NORMALE',difficile:'DIFFICILE'};
   var SWITCHES={
@@ -4683,54 +4733,53 @@ function loop(ts){
     applyCtl(CTL);refreshOpts();}
   window.openCtlEdit=openCtlEdit;
   (function(){var c=document.getElementById('ce-cancel'),r=document.getElementById('ce-reset'),sv=document.getElementById('ce-save');
-    if(c)tap(c,function(){try{sfx.sel();}catch(_){}closeCtlEdit(false);});
+    if(c)tap(c,function(){try{sfx.back();}catch(_){}closeCtlEdit(false);});
     if(sv)tap(sv,function(){try{sfx.ok();}catch(_){}closeCtlEdit(true);});
     /* RIPRISTINA: torna ai valori di sempre (si conferma con SALVA) */
     if(r)tap(r,function(){if(!CTL_EDIT)return;try{sfx.sel();}catch(_){}CTL_EDIT=JSON.parse(JSON.stringify(CTL_DEF));applyCtl(CTL_EDIT);ceRefresh();});})();
 
   /* m-back: da select → titolo; da victory → titolo */
   _btn('m-back', function(){
-    try{sfx.sel();}catch(_){}
     if(game.state==='select'){
       if(game.pickTurn===1) game.pickTurn=0; else game.state='title';
     } else {
       game.state='title'; game.tournament=null;
     }
     updateOverlay();
-  });
+  }, 'back');
 
   /* m-music: toggle mute */
-  _btn('m-music', function(){ toggleMusic(); });
+  _btn('m-music', function(){ toggleMusic(); }, 'sel');
 
   /* home screen buttons */
   _btn('hb-1', function(){
     game.mode=1; game.tournament=null; game.state='select'; game.pickTurn=0;
-    try{sfx.ok();}catch(_){} updateOverlay();
-  });
+    updateOverlay();
+  }, 'ok');
   function startTrainingSelect(){
     try{localStorage.setItem('trainOffered','1');}catch(e){}
     game.mode=4; game.tournament=null; game.state='select'; game.pickTurn=0;
-    try{sfx.ok();}catch(_){} updateOverlay();
+    updateOverlay();
   }
-  _btn('hb-4', startTrainingSelect);
+  _btn('hb-4', startTrainingSelect, 'ok');
   function showSettings(v){ var p=document.getElementById('set-pop'); if(p) p.style.display=v?'flex':'none'; if(v){ refreshOpts(); var bx=p.querySelector('.set-box'); if(bx) bx.scrollTop=0; } }
-  _btn('hb-set', function(){ try{sfx.sel();}catch(_){} showSettings(true); });
-  _btn('set-close', function(){ try{sfx.sel();}catch(_){} showSettings(false); });
+  _btn('hb-set', function(){ showSettings(true); }, 'sel');
+  _btn('set-close', function(){ showSettings(false); }, 'back');
   (function(){ var p=document.getElementById('set-pop'); if(!p)return;
     /* tocco fuori dal riquadro: chiude */
-    p.addEventListener('click', function(e){ if(e.target===p) showSettings(false); });
-    p.addEventListener('touchend', function(e){ if(e.target===p){ e.preventDefault(); showSettings(false); } }, {passive:false}); })();
-  _btn('tro-yes', startTrainingSelect);
-  _btn('tro-no', function(){ try{localStorage.setItem('trainOffered','1');}catch(e){} try{sfx.sel();}catch(_){} updateOverlay(); });
-  _btn('tr-skip', function(){ if(game.mode===4&&game.train&&!game.train.free){ try{sfx.sel();}catch(_){} trainNext(); } });
+    p.addEventListener('click', function(e){ if(e.target===p){ showSettings(false); try{sfx.back();}catch(_){} } });
+    p.addEventListener('touchend', function(e){ if(e.target===p){ e.preventDefault(); showSettings(false); try{sfx.back();}catch(_){} } }, {passive:false}); })();
+  _btn('tro-yes', startTrainingSelect, 'ok');
+  _btn('tro-no', function(){ try{localStorage.setItem('trainOffered','1');}catch(e){} updateOverlay(); }, 'back');
+  _btn('tr-skip', function(){ if(!(game.mode===4&&game.train&&!game.train.free)) return false; trainNext(); }, 'sel');
   _btn('hb-3', function(){
     game.mode=3; game.tournament=null; game.state='select'; game.pickTurn=0;
-    try{sfx.ok();}catch(_){} updateOverlay();
-  });
-  _btn('ss-confirm', function(){ if(game.state==='select'){ confirmPick(); SS.last=''; if(game.state==='select')renderSelect(); } });
-  _btn('ss-random', function(){ if(game.state!=='select')return; game.sel[1]=(Math.random()*ROSTER.length)|0; confirmPick(); SS.last=''; if(game.state==='select')renderSelect(); });
-  _btn('ss-back', function(){ if(game.state!=='select')return; try{sfx.sel();}catch(_){}
-    if(game.pickTurn===1) game.pickTurn=0; else game.state='title'; SS.last=''; updateOverlay(); if(game.state==='select')renderSelect(); });
+    updateOverlay();
+  }, 'ok');
+  _btn('ss-confirm', function(){ if(game.state!=='select') return false; confirmPick(); SS.last=''; if(game.state==='select')renderSelect(); }, 'ok');
+  _btn('ss-random', function(){ if(game.state!=='select')return false; game.sel[1]=(Math.random()*ROSTER.length)|0; confirmPick(); SS.last=''; if(game.state==='select')renderSelect(); }, 'ok');
+  _btn('ss-back', function(){ if(game.state!=='select')return false;
+    if(game.pickTurn===1) game.pickTurn=0; else game.state='title'; SS.last=''; updateOverlay(); if(game.state==='select')renderSelect(); }, 'back');
   function showFx(){var v=document.getElementById('hb-fx-val');if(v)v.textContent=REDUCE_FX?'S\u00CC':'NO';}
   showFx();
   function showVib(){var v=document.getElementById('hb-vib-val');if(v)v.textContent=VIBRA?'S\u00CC':'NO';}
@@ -4743,6 +4792,7 @@ function loop(ts){
   });
 
   /* Polling stato → aggiorna overlay fight controls automaticamente */
+  window._screenSwitched=function(){ _prev=game.state; releaseAll(); updateOverlay(); };
   setInterval(function(){
     if(game && game.state!==_prev){ _prev=game.state; releaseAll(); updateOverlay(); }
   },80);
