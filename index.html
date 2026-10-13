@@ -53,12 +53,14 @@
 
   /* ===== ROTATE HINT ===== */
   #rotate-hint {
-    display: none; position: fixed; inset: 0; z-index: 9999;
-    background: #0a0806; flex-direction: column;
-    align-items: center; justify-content: center;
-    color: #F5F0E1; font-size: clamp(14px, 4vw, 20px); text-align: center;
+    display: none; position: fixed; inset: 0; z-index: 200000; /* sopra a tutto, anche alla schermata d'avvio */
+    background: radial-gradient(ellipse at 50% 40%, #1d1650 0%, #0d0b2a 50%, #07061a 85%); flex-direction: column;
+    align-items: center; justify-content: center; touch-action: none;
+    color: var(--testo); font-family: var(--font-testo); font-size: clamp(14px, 4vw, 20px); text-align: center; line-height: 1.4;
     padding: 24px; gap: 16px;
   }
+  #rotate-hint strong { display: inline-block; margin-bottom: 4px; font-family: var(--font-gioco); font-weight: 400; color: var(--oro);
+    font-size: clamp(18px, 6vw, 28px); letter-spacing: .05em; text-shadow: 2px 2px 0 #6b4800; }
   #rotate-hint .ri { line-height: 0; }
   #rotate-hint .ri svg { width: 96px; height: 96px; }
   /* ===== ICONE PIXEL 16×16 (SVG di quadrati, nitide a ogni dimensione) ===== */
@@ -68,6 +70,8 @@
   .px-r { fill: var(--rosso); } .px-w { fill: #F5F0E1; }
   #m-music .mi-off, #m-music.muted .mi-on { display: none; } #m-music.muted .mi-off { display: block; }
   @media (orientation: portrait) { body:not(.in-title) #rotate-hint { display: flex !important; } }
+  /* telefoni e tablet: si gioca solo in orizzontale, anche la home */
+  @media (orientation: portrait) and (pointer: coarse) { #rotate-hint { display: flex !important; } }
 
   /* ===== FLOATING TOP BAR (Indietro / ♪ / Menu) ===== */
   #m-back, #m-music {
@@ -732,7 +736,7 @@
       <button class="hs-btn hs-btn-sm btn-secondario" id="hb-4">ALLENAMENTO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.106</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.107</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -749,7 +753,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.106.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.107.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -5015,6 +5019,15 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();_installEvt=e;cons
 addEventListener('appinstalled',()=>{_installEvt=null;const b=document.getElementById('hb-install');if(b)b.hidden=true;});
 /* all'avvio: il pulsante compare subito nella home se lo schermo intero è disponibile */
 {const b=document.getElementById('m-full');if(b&&game.state==='title'&&fsAvailable())b.style.display='flex';syncFsBtn();}
+/* ===== SOLO ORIZZONTALE =====
+   In verticale l'avviso "Ruota il telefono" copre il gioco: i tocchi sull'avviso non arrivano al gioco
+   e un incontro in corso va in pausa da solo. */
+(function(){const h=document.getElementById('rotate-hint');if(!h)return;
+  ['touchstart','touchmove','touchend','click'].forEach(ev=>h.addEventListener(ev,e=>{e.stopPropagation();if(e.cancelable)e.preventDefault();},{passive:false}));
+  const mq=matchMedia('(orientation: portrait)');
+  const chk=()=>{if(mq.matches&&getComputedStyle(h).display!=='none'&&game.state==='fight'&&!game.paused){try{setPause(true);}catch(e){}}};
+  try{mq.addEventListener('change',()=>setTimeout(chk,50));}catch(e){try{mq.addListener(()=>setTimeout(chk,50));}catch(_){}}
+  addEventListener('resize',()=>setTimeout(chk,80));})();
 /* ===== PWA: registra Service Worker ===== */
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
