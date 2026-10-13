@@ -374,6 +374,8 @@
     font-family: var(--font-testo); font-size: min(1.6vw, 3.6vh);
     touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer; }
 
+  /* pop-up che scorrono: solo in verticale (niente scorrimento di lato) */
+  #set-pop .set-box, #pause-pop .pp-box, #vic-body, #ss-pages, .hs-right, #ce-panel { overflow-x: hidden !important; touch-action: pan-y; overscroll-behavior-x: none; }
   /* ===== RIGHE DELLE IMPOSTAZIONI (home e pausa) ===== */
   .set-rows { display:flex; flex-direction:column; gap:8px; width:100%; }
   .srow { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:48px; padding:6px 12px; box-sizing:border-box;
@@ -406,7 +408,7 @@
   .vol:focus-visible .vb { border-color:var(--oro); }
   /* pannelli che scorrono: sfumatura in basso se c'è altro */
   #set-pop .set-box, #pause-pop .pp-box { position:relative; }
-  .set-box::after, .pp-box::after { content:''; position:sticky; bottom:-14px; display:block; flex:none; height:30px; margin:-30px -16px -14px;
+  .set-box::after, .pp-box::after { content:''; position:sticky; bottom:-14px; display:block; flex:none; height:30px; margin:-30px 0 -14px;
     background:linear-gradient(rgba(10,8,28,0), rgba(10,8,28,.98)); pointer-events:none; opacity:0; transition:opacity .2s; }
   .set-box.more::after, .pp-box.more::after { opacity:1; }
   /* pausa: INDIETRO e RIPRENDI restano sempre visibili in fondo, le righe scorrono sopra */
