@@ -744,21 +744,53 @@
   #st-confirm .set-h { color:var(--oro); font-size:18px; letter-spacing:.08em; }
   #st-confirm p { margin:0; font:700 15px/1.4 var(--font-testo); color:var(--testo); }
   #st-confirm button { min-height:48px; font-size:16px; letter-spacing:.05em; }
-  /* scene della storia: tocco ovunque per andare avanti */
-  #st-play { justify-content:flex-end; padding-bottom:max(14px,env(safe-area-inset-bottom)); cursor:pointer; }
-  #sp-card { position:absolute; left:50%; top:42%; transform:translate(-50%,-50%); display:none; flex-direction:column; align-items:center; gap:6px; text-align:center; width:90%; }
-  #sp-card.on { display:flex; animation:spCard .5s ease-out; }
-  #sp-card small { color:var(--testo-tenue); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.2em; }
-  #sp-card b { color:var(--oro); font-weight:400; font-size:min(4.4vw,9vh,46px); text-shadow:2px 2px 0 var(--oro-scuro); }
-  @keyframes spCard { from{opacity:0;transform:translate(-50%,-40%)} to{opacity:1;transform:translate(-50%,-50%)} }
-  #sp-box { position:relative; width:min(100%,900px); min-height:min(30vh,150px); box-sizing:border-box; padding:12px 18px 22px; display:none;
-    background:rgba(10,8,28,.92); border:3px solid var(--oro); border-radius:12px; box-shadow:0 0 0 3px #1a1205, 0 0 24px rgba(255,193,7,.25); }
-  #sp-box.on { display:block; }
-  #sp-who { color:var(--oro); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.06em; margin-bottom:4px; }
+  /* ===== SCENE DELLA STORIA: tocco ovunque per andare avanti ===== */
+  #story-screen[data-v="play"] #st-back { display:none; }
+  #st-play { padding:0; justify-content:flex-end; cursor:pointer; background:#000; overflow:hidden; }
+  #sp-cv { position:absolute; inset:0; width:100%; height:100%; background:#05040f; image-rendering:pixelated; }
+  /* riquadro di dialogo in basso: ritratto, nome in oro, testo lettera per lettera */
+  #sp-box { position:absolute; z-index:3; left:50%; transform:translateX(-50%); bottom:max(10px,env(safe-area-inset-bottom)); width:min(calc(100% - 24px),920px);
+    min-height:min(28vh,140px); box-sizing:border-box; padding:10px 16px 18px; display:none; gap:12px; align-items:flex-start;
+    background:rgba(10,8,28,.93); border:3px solid var(--oro); border-radius:12px; box-shadow:0 0 0 3px #1a1205, 0 0 24px rgba(255,193,7,.25); }
+  #sp-box.on { display:flex; }
+  #sp-face { flex:none; width:min(15vh,72px); height:min(15vh,72px); image-rendering:pixelated; border:2px solid var(--oro); border-radius:8px; background:rgba(20,18,50,.9); }
+  #sp-box.noface #sp-face { display:none; }
+  .sp-body { flex:1; min-width:0; }
+  #sp-who { color:var(--oro); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.06em; margin-bottom:3px; }
   #sp-who:empty { display:none; }
-  #sp-text { font:700 min(2.3vw,5vh,24px)/1.4 var(--font-testo); color:var(--testo); }
-  #sp-next { position:absolute; right:14px; bottom:4px; color:var(--oro); font-size:16px; animation:spBlink 1s steps(2) infinite; }
+  #sp-text { font:700 min(2.2vw,4.8vh,23px)/1.4 var(--font-testo); color:var(--testo); white-space:pre-line; }
+  #sp-box.dida #sp-text { font-style:italic; font-weight:400; color:#E6DFFF; text-align:center; }
+  #sp-next { position:absolute; right:12px; bottom:3px; color:var(--oro); font-size:15px; animation:spBlink 1s steps(2) infinite; visibility:hidden; }
+  #sp-box.done #sp-next { visibility:visible; }
   @keyframes spBlink { 50%{opacity:0} }
+  /* narratore: testo centrato che compare a righe */
+  #sp-narr { position:absolute; z-index:2; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:min(2.4vh,14px);
+    padding:60px max(40px,8vw); background:radial-gradient(ellipse at 50% 50%, #141032 0%, #06050f 75%); text-align:center; }
+  #sp-narr.on { display:flex; }
+  #sp-narr p { margin:0; max-width:900px; font:700 min(2.5vw,5.2vh,26px)/1.45 var(--font-testo); color:var(--testo); opacity:0; transform:translateY(6px); transition:opacity .6s, transform .6s; }
+  #sp-narr p.on { opacity:1; transform:none; }
+  /* cartello: schermo nero con titolo grande in dissolvenza */
+  #sp-card { position:absolute; z-index:6; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:20px 8vw;
+    background:#000; text-align:center; opacity:0; pointer-events:none; }
+  #sp-card small { color:var(--testo-tenue); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.2em; }
+  #sp-card small:empty { display:none; }
+  #sp-card b { color:var(--oro); font-weight:400; font-size:min(4.6vw,9.5vh,48px); line-height:1.2; text-shadow:2px 2px 0 var(--oro-scuro); }
+  #sp-black, #sp-flash { position:absolute; z-index:5; inset:0; opacity:0; pointer-events:none; }
+  #sp-black { background:#000; }
+  /* comandi in alto a destra (lasciano posto al pulsante della musica) */
+  #sp-tools { position:absolute; z-index:7; top:max(10px,env(safe-area-inset-top)); right:calc(max(10px,env(safe-area-inset-right)) + 58px); display:flex; gap:8px; }
+  #sp-tools button { min-height:44px; min-width:64px; padding:0 12px; font-size:15px; letter-spacing:.05em; background:rgba(12,10,26,.72); }
+  #sp-auto.on { background:var(--oro); color:#1a1205; }
+  .sp-pop { display:none; position:absolute; z-index:9; inset:0; background:rgba(0,0,0,.72); align-items:center; justify-content:center; cursor:default; }
+  .sp-pop.on { display:flex; }
+  .sp-pop .set-box { width:min(88vw,420px); background:var(--fondo-pannello); border:2px solid var(--oro); border-radius:16px; padding:16px 18px;
+    display:flex; flex-direction:column; gap:10px; box-shadow:0 0 30px rgba(255,193,7,.25); text-align:center; }
+  .sp-pop .set-h { color:var(--oro); font-size:18px; letter-spacing:.08em; }
+  .sp-pop p { margin:0; font:700 15px/1.4 var(--font-testo); color:var(--testo); }
+  .sp-pop p.sp-note { font-weight:400; font-size:13px; color:var(--testo-tenue); }
+  .sp-pop button { min-height:48px; font-size:16px; letter-spacing:.05em; }
+  .sp-row { display:flex; align-items:center; justify-content:space-between; gap:10px; font:700 14px var(--font-testo); color:var(--testo); }
+  .sp-row button { min-width:130px; }
   /* icona "Salvataggio..." in basso a destra per un secondo */
   #st-saving { position:fixed; z-index:99980; right:max(12px,env(safe-area-inset-right)); bottom:max(10px,env(safe-area-inset-bottom)); display:flex; align-items:center; gap:6px;
     padding:4px 10px 4px 6px; border-radius:8px; background:rgba(10,8,28,.85); border:1px solid rgba(255,193,7,.6);
@@ -815,7 +847,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.127</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.128</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -838,7 +870,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.127.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.128.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -906,8 +938,25 @@
     <div id="st-list"></div>
   </div>
   <div id="st-play" class="st-view">
+    <canvas id="sp-cv"></canvas>
+    <div id="sp-narr"></div>
+    <div id="sp-box"><canvas id="sp-face" width="64" height="64"></canvas><div class="sp-body"><div id="sp-who"></div><div id="sp-text"></div></div><span id="sp-next">&#9660;</span></div>
+    <div id="sp-black"></div><div id="sp-flash"></div>
     <div id="sp-card"><small></small><b></b></div>
-    <div id="sp-box"><div id="sp-who"></div><div id="sp-text"></div><span id="sp-next">&#9660;</span></div>
+    <div id="sp-tools"><button id="sp-auto" class="btn-secondario">AUTO</button><button id="sp-skip" class="btn-secondario">SALTA</button><button id="sp-menu" class="btn-secondario">MENU</button></div>
+    <div id="sp-pause" class="sp-pop"><div class="set-box">
+      <div class="set-h">PAUSA</div>
+      <button id="sp-resume" class="btn-primario">RIPRENDI</button>
+      <div class="sp-row"><span>Velocità del testo</span><button id="sp-speed" class="btn-secondario">NORMALE</button></div>
+      <button id="sp-quit" class="btn-secondario">TORNA AL MENU</button>
+      <p class="sp-note">Il gioco ha già salvato i tuoi progressi.</p>
+    </div></div>
+    <div id="sp-skipc" class="sp-pop"><div class="set-box">
+      <div class="set-h">SALTA</div>
+      <p>Vuoi saltare la scena? Si passa alla prossima lotta o al prossimo capitolo.</p>
+      <button id="sp-skip-yes" class="btn-primario">SÌ, SALTA</button>
+      <button id="sp-skip-no" class="btn-secondario">ANNULLA</button>
+    </div></div>
   </div>
   <div id="st-confirm"><div class="set-box">
     <div class="set-h">NUOVA PARTITA</div>
@@ -3049,21 +3098,41 @@ function registerStoryChar(id){const S=STORY_SPRITES[id],c=STORY_ROSTER[id];if(!
    ##   Ogni capitolo e ogni passo hanno un "id" FISSO e unico: i salvataggi usano        ##
    ##   questi id, quindi NON vanno mai cambiati dopo la pubblicazione.                   ##
    ##                                                                                      ##
-   ##   Passi disponibili per ora:                                                        ##
-   ##     {id, tipo:'testo', chi:'NOME (facoltativo)', testo:'...'}                       ##
+   ##   Tipi di passo: cartello, narratore, scena, effetto, animazione                    ##
+   ##   (la spiegazione completa è sopra a "MOTORE DELLE SCENE", cerca "SCENE: motore")    ##
    ##                                                                                      ##
    ##########################################################################################
    ########################################################################################## */
 const STORIA={
   capitoli:[
     {id:'prova01',numero:1,titolo:'Capitolo di prova 1',passi:[
-      {id:'prova01_testo01',tipo:'testo',chi:'NARRATORE',testo:'Questo è il primo capitolo di prova. Tocca lo schermo per andare avanti.'},
+      {id:'prova01_cartello01',tipo:'cartello',sopra:'ATTO I',titolo:'La sala del trono'},
+      {id:'prova01_scena01',tipo:'scena',sfondo:'Sala del trono',attori:[],azioni:[
+        {entra:'chiara',da:'sinistra',a:'centro-sinistra',insieme:true},
+        {entra:'sito',da:'destra',a:'centro-destra'},
+        {chi:'chiara',testo:'Sito! Finalmente ti ho trovato. Che ci fai nella sala del trono?'},
+        {chi:'sito',testo:'Chiara... non dovresti essere qui. Non adesso.'},
+        {didascalia:'(Sito stringe il manico dell\u2019ascia.)'},
+        {chi:'chiara',testo:'Mi stai minacciando?',pose:{chiara:'sorpresa'}},
+        {chi:'sito',testo:'Non è una minaccia. È un avvertimento.',pose:{sito:'attacco'}},
+        {effetto:'lampo',colore:'#FFD700'},{effetto:'trema',forza:7,durata:.6},{suono:'boom'},
+        {chi:'chiara',testo:'Cos\u2019è stato?!',pose:{chiara:'parata'}},
+        {chi:'sito',testo:'Il re sta arrivando. Vattene, presto!',pose:{sito:'attesa'}},
+        {esce:'chiara',verso:'sinistra'},
+        {effetto:'nero',durata:1.4},
+      ]},
+      {id:'prova01_cartello02',tipo:'cartello',titolo:'Fine della scena di prova'},
     ]},
     {id:'prova02',numero:2,titolo:'Capitolo di prova 2',passi:[
-      {id:'prova02_testo01',tipo:'testo',chi:'NARRATORE',testo:'Secondo capitolo di prova. Il gioco ha salvato all\u2019inizio del capitolo.'},
+      {id:'prova02_narr01',tipo:'narratore',righe:['Secondo capitolo di prova.','Il gioco ha salvato all\u2019inizio del capitolo.','Il narratore parla senza personaggi, una riga alla volta.']},
     ]},
     {id:'prova03',numero:3,titolo:'Capitolo di prova 3',passi:[
-      {id:'prova03_testo01',tipo:'testo',chi:'NARRATORE',testo:'Terzo e ultimo capitolo di prova. Dopo questo si torna al menu della storia.'},
+      {id:'prova03_anim01',tipo:'animazione',sfondo:'Villaggio delle due lune',anim:'pioggia',durata:4},
+      {id:'prova03_scena01',tipo:'scena',sfondo:'piazza_che_non_esiste',azioni:[
+        {entra:'comparsa_misteriosa',da:'destra',a:'destra',nome:'VOCE MISTERIOSA'},
+        {chi:'comparsa_misteriosa',nome:'VOCE MISTERIOSA',testo:'Questa comparsa non ha ancora uno sprite e lo sfondo manca: il gioco usa i ripieghi senza bloccarsi.'},
+      ]},
+      {id:'prova03_narr01',tipo:'narratore',righe:['Terzo e ultimo capitolo di prova.','Dopo questo si torna al menu della storia.']},
     ]},
   ],
 };
@@ -3105,7 +3174,7 @@ function capRaggiunto(id,p){if(capIdx(id)===0)return true; /* il primo capitolo 
   p=p||leggiProgressi();if(!p)return false;return p.raggiunti.includes(id)||capIdx(id)<=capIdx(p.cap);}
 
 /* stato della storia in corso */
-const ST={run:null,card:0,warned:false};
+const ST={run:null,auto:false,track:null};
 function storiaVista(v){const sc=document.getElementById('story-screen');if(sc)sc.dataset.v=v;}
 /* chiamata da updateOverlay quando si entra nella schermata STORIA */
 function storiaMostra(){if(ST.run){storiaVista('play');return;}storiaVista(document.getElementById('story-screen').dataset.v==='caps'?'caps':'menu');aggiornaMenuStoria();}
@@ -3121,30 +3190,243 @@ function elencoCapitoli(){const list=document.getElementById('st-list'),p=leggiP
     b.addEventListener('click',()=>{if(game.state!=='story')return;if(!ok){try{sfx.buzz();}catch(_){}return;}try{sfx.ok();}catch(_){}storiaInizia(c.id,null);});
     list.appendChild(b);});
   list.scrollTop=0;const cur=list.querySelector('.cur');if(cur)list.scrollTop=Math.max(0,cur.offsetTop-list.clientHeight/2);}
+/* ==================== SCENE: motore dei passi ====================
+   Tipi di passo (vedi STORIA):
+   - cartello:   {tipo:'cartello', titolo:'...', sopra:'...'(facoltativo), durata:secondi}
+   - narratore:  {tipo:'narratore', righe:['...','...']}
+   - scena:      {tipo:'scena', sfondo:'nome', attori:[...], azioni:[...]}
+   - effetto:    {tipo:'effetto', ...un'azione effetto...}
+   - animazione: {tipo:'animazione', sfondo:'nome', anim:'pioggia', durata:secondi}
+   Azioni dentro una scena (una per oggetto, eseguite in ordine):
+   - {chi:'chiara', testo:'...', pose:{chiara:'sorpresa'}, guarda:{sito:'sinistra'}}   battuta (tocco per andare avanti)
+   - {didascalia:'(Il re schiaffeggia Chiara.)'}
+   - {entra:'sito', da:'destra', a:'destra', verso:'sinistra', insieme:true}   entra camminando (insieme = non aspetta l'arrivo)
+   - {esce:'sito', verso:'destra'}   {muovi:'sito', a:'centro'}   {posa:{sito:'arrabbiato'}}   {guarda:{sito:'destra'}}
+   - {effetto:'lampo', colore:'#FFD700', durata:.4}  {effetto:'trema', forza:8, durata:.6}  {effetto:'nero', durata:1.2}
+   - {attesa:1.5}   {musica:'menu'|'fight'|'win'|'lose'|'silenzio'}   {suono:'boom'}   {cartello:'...'}
+   Posizioni: 'sinistra', 'centro-sinistra', 'centro', 'centro-destra', 'destra', oppure un numero da 0 (bordo sinistro) a 1 (bordo destro).
+   RIPIEGHI: posa mancante → attesa; sprite mancante → solo riquadro con il nome; sfondo mancante → fondo sfumato scuro (sempre con avviso in console). */
+const SCENA_H=480,SCENA_SUOLO=316,SCENA_ZOOM=1.3;   /* SCENA_ZOOM: gli attori sono un po' più grandi che in combattimento */   /* altezza logica della scena e linea dei piedi degli attori */
+const POS_X={'sinistra':.2,'centro-sinistra':.35,'centro':.5,'centro-destra':.65,'destra':.8};
+/* pose di scena che corrispondono ad animazioni che i personaggi hanno già */
+const POSA_ALIAS={attesa:'idle',cammina:'walk',vittoria:'win',colpito:'hurt',ko:'ko',parata:'block',salto:'jump',attacco:'punch',calcio:'kick',speciale:'special',accovacciato:'crouch'};
+const _avvisati=new Set();
+function avviso(msg){if(_avvisati.has(msg))return;_avvisati.add(msg);console.warn('[STORIA] '+msg);}
+/* ANIMAZIONI dei passi "animazione" (si aggiungono qui, capitolo per capitolo): draw(ctx, t secondi, larghezza, altezza, dati) */
+const ANIMAZIONI={
+  pioggia:{draw(c,t,w,h,d){d.g=d.g||Array.from({length:140},()=>({x:Math.random(),y:Math.random(),v:.8+Math.random()*.6}));
+    c.strokeStyle='rgba(170,190,255,.55)';c.lineWidth=1.5;c.beginPath();
+    for(const g of d.g){const y=((g.y+t*g.v*1.6)%1)*h,x=((g.x-t*.15)%1+1)%1*w;c.moveTo(x,y);c.lineTo(x-4,y+14);}c.stroke();
+    if(Math.sin(t*3.1)>.985){c.fillStyle='rgba(220,230,255,.35)';c.fillRect(0,0,w,h);}}},   /* qualche lampo */
+  esplosione:{draw(c,t,w,h,d){const k=Math.min(1,t/1.2),r=40+k*h*.6,x=w*.5,y=h*.55;
+    c.globalAlpha=Math.max(0,1-t/2.5);const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'#FFFFFF');g.addColorStop(.25,'#FFE08A');g.addColorStop(.6,'#FF6A00');g.addColorStop(1,'rgba(120,20,0,0)');
+    c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.globalAlpha=1;}},
+};
+/* sfondi delle scene: prima quelli dei combattimenti (per nome), poi i file in backgrounds/storia/<nome>.png */
+const SCENA_BG={};
+function sfondoScena(nome){if(!nome)return null;if(SCENA_BG[nome])return SCENA_BG[nome];
+  const bi=BACKGROUNDS.indexOf(nome);let src;
+  if(bi>=0){loadBg(bi);return SCENA_BG[nome]={im:BG_IMG[bi],suolo:.917};}
+  src='backgrounds/storia/'+nome+'.png';const im=new Image();const o=SCENA_BG[nome]={im,suolo:.85};
+  im.onerror=()=>{o.bad=true;avviso('Sfondo mancante: "'+nome+'" ('+src+'): uso un fondo sfumato scuro');};im.src=src;return o;}
+/* sprite di un personaggio (anche quelli della storia); null = manca */
+function spriteAttore(id){let S=SPRITE_CHARS[id];
+  if(!S&&STORY_SPRITES[id]){registerStoryChar(id);S=SPRITE_CHARS[id];}
+  if(!S){avviso('Sprite mancante: "'+id+'": mostro solo il riquadro di dialogo con il nome');return null;}
+  loadChar(id);return S;}
+function nomeDi(id){const a=SC&&SC.attori[id];if(a&&a.nome)return a.nome;
+  const c=ROSTER.find(r=>r.id===id)||STORY_ROSTER[id];return c?c.name:String(id).toUpperCase();}
+/* animazione da usare per una posa (con ripiego sull'attesa) */
+function animPosa(S,id,posa){if(!S)return null;const A=S.anims;posa=posa||'attesa';
+  if(S.scenePoses&&S.scenePoses[posa]){const sp=S.scenePoses[posa];if(!S.img[sp.file]){const im=new Image();im.onerror=()=>avviso('Posa mancante: "'+posa+'" di '+id+' ('+S.dir+sp.file+'.png): uso l\u2019attesa');S.img[sp.file]=im;im.src=S.dir+sp.file+'.png';}
+    if(imgOk(S.img[sp.file]))return sp;}
+  const k=POSA_ALIAS[posa]||posa;if(A[k]&&(k==='idle'||imgOk(S.img[A[k].file])))return A[k];
+  if(!(S.scenePoses&&S.scenePoses[posa]))avviso('Posa mancante: "'+posa+'" di '+id+': uso l\u2019attesa');
+  return A.idle;}
+/* ritratti piccoli per il riquadro di dialogo (gli stessi della selezione) */
+const RITRATTI={};
+function ritratto(id,cb){if(RITRATTI[id]){cb(RITRATTI[id]);return;}if(typeof HUD_THUMB!=='undefined'&&HUD_THUMB[id]){cb(RITRATTI[id]=HUD_THUMB[id]);return;}
+  const S=SPRITE_CHARS[id]||STORY_SPRITES[id];if(!SEL_POSE[id]&&S&&S.pose)SEL_POSE[id]=S.dir+S.pose+'.png';
+  if(!SEL_POSE[id]||!window.makeThumb){cb(null);return;}window.makeThumb(id,t=>{RITRATTI[id]=t;cb(t);});}
+
+/* stato della scena in corso */
+let SC=null;
+const SPEED={lento:22,normale:40,veloce:85};let SPEED_K='normale';
+try{const v=STORE.get('sopracciglia_testo_storia');if(SPEED[v])SPEED_K=v;}catch(e){}
+function nuovaScena(){return {attori:{},bg:null,anim:null,animD:{},animT:0,azioni:[],ai:-1,wait:null,typing:null,shake:0,shakeF:0,fx:[],card:null,narr:null,nero:false};}
+const $=id=>document.getElementById(id);
+
 /* avvia la storia dal capitolo capId (dal passo passoId, o dall'inizio) */
 function storiaInizia(capId,passoId){const c=capById(capId);if(!c){console.warn('Capitolo inesistente: '+capId);return;}
   let i=passoId?c.passi.findIndex(p=>p.id===passoId):0;if(i<0)i=0;
-  ST.run={cap:c.id,i};storiaVista('play');
-  if(i===0){salvaStoria(c.id,c.passi[0]&&c.passi[0].id);mostraCartello(c);}else{nascondiCartello();mostraPasso();}}
-function mostraCartello(c){const card=document.getElementById('sp-card');card.querySelector('small').textContent='CAPITOLO '+(c.numero??capIdx(c.id)+1);
-  card.querySelector('b').textContent=c.titolo;card.classList.remove('on');void card.offsetWidth;card.classList.add('on');
-  document.getElementById('sp-box').classList.remove('on');ST.card=performance.now();}
-function nascondiCartello(){document.getElementById('sp-card').classList.remove('on');ST.card=0;}
-function mostraPasso(){const r=ST.run,c=capById(r.cap),p=c&&c.passi[r.i];if(!p){storiaFineCapitolo();return;}
-  const box=document.getElementById('sp-box');
-  if(p.tipo==='testo'){document.getElementById('sp-who').textContent=p.chi||'';document.getElementById('sp-text').textContent=p.testo||'';box.classList.add('on');}
-  else{console.warn('Tipo di passo non ancora gestito: "'+p.tipo+'" ('+p.id+'): lo salto');r.i++;mostraPasso();}}
-/* tocco o INVIO: avanti */
-function storiaAvanti(){if(!ST.run)return;
-  if(ST.card){if(performance.now()-ST.card<400)return;nascondiCartello();mostraPasso();return;}
-  try{sfx.sel();}catch(_){}ST.run.i++;mostraPasso();}
+  ST.run={cap:c.id,i,paused:false};ST.track=null;storiaVista('play');preparaCapitolo(c);
+  $('sp-auto').classList.toggle('on',!!ST.auto);
+  if(i===0){salvaStoria(c.id,c.passi[0]&&c.passi[0].id);
+    /* cartello del capitolo automatico, se il capitolo non ne ha già uno all'inizio */
+    if(!c.passi[0]||c.passi[0].tipo!=='cartello'){SC=nuovaScena();SC.nero=true;mostraCartelloFx('CAPITOLO '+(c.numero??capIdx(c.id)+1),c.titolo,2.6,()=>avviaPasso());avviaLoop();return;}}
+  avviaPasso();avviaLoop();}
+/* scarica in anticipo sprite e sfondi del capitolo */
+function preparaCapitolo(c){for(const p of c.passi){if(p.sfondo)sfondoScena(p.sfondo);
+  for(const a of (p.attori||[]))spriteAttore(a.id);for(const a of (p.azioni||[])){if(a.entra)spriteAttore(a.entra);if(a.chi){const S=SPRITE_CHARS[a.chi]||STORY_SPRITES[a.chi];if(S)loadChar(a.chi);}}}}
+function passoCorrente(){const c=ST.run&&capById(ST.run.cap);return c&&c.passi[ST.run.i];}
+/* esegue il passo corrente */
+function avviaPasso(){const p=passoCorrente();if(!p){storiaFineCapitolo();return;}
+  const vecchia=SC;SC=nuovaScena();if(vecchia){SC.shake=0;}
+  nascondiBox();$('sp-narr').classList.remove('on');
+  switch(p.tipo){
+    case 'cartello':SC.nero=true;mostraCartelloFx(p.sopra||'',p.titolo||p.testo||'',p.durata||2.8,()=>passoSuccessivo());break;
+    case 'narratore':{SC.nero=true;const el=$('sp-narr');el.innerHTML='';(p.righe||String(p.testo||'').split('\n')).forEach(r=>{const q=document.createElement('p');q.textContent=r;el.appendChild(q);});
+      el.classList.add('on');SC.narr={n:el.children.length,shown:0,t:0};SC.wait={type:'narr'};break;}
+    case 'scena':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;if(!p.sfondo)avviso('Scena "'+p.id+'" senza sfondo: uso il fondo sfumato');
+      for(const a of (p.attori||[]))creaAttore(a);SC.azioni=p.azioni||[];prossimaAzione();break;
+    case 'effetto':SC.bg=vecchia&&vecchia.bg;SC.attori=vecchia?vecchia.attori:{};SC.azioni=[p];prossimaAzione();break;
+    case 'animazione':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;SC.anim=ANIMAZIONI[p.anim]||null;
+      if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": mostro solo lo sfondo');SC.wait={type:'time',left:p.durata||3,then:passoSuccessivo};break;
+    default:avviso('Tipo di passo non ancora gestito: "'+p.tipo+'" ('+p.id+'): lo salto');passoSuccessivo();}}
+function passoSuccessivo(){if(!ST.run)return;ST.run.i++;avviaPasso();}
 function storiaFineCapitolo(){const ci=capIdx(ST.run.cap),next=STORIA.capitoli[ci+1];
   if(next){storiaInizia(next.id,null);return;}
   /* fine della storia (per ora si torna al menu; qui arriveranno l'epilogo e lo sblocco di Ajay) */
-  ST.run=null;storiaVista('menu');aggiornaMenuStoria();}
-function storiaEsci(){ST.run=null;nascondiCartello();storiaVista('menu');aggiornaMenuStoria();}
+  storiaEsci();}
+function storiaEsci(){ST.run=null;SC=null;ST.track=null;chiudiPop();nascondiBox();$('sp-narr').classList.remove('on');$('sp-card').style.opacity=0;
+  $('sp-black').style.opacity=0;$('sp-flash').style.opacity=0;storiaVista('menu');aggiornaMenuStoria();}
+
+/* ---- attori ---- */
+function posX(p,w){if(typeof p==='number')return p<=1?p*w:p;return (POS_X[p]??.5)*w;}
+function creaAttore(a){const S=spriteAttore(a.id);const W=larghezzaScena();
+  const o={id:a.id,S,nome:a.nome,x:posX(a.x??'centro',W),face:a.verso==='sinistra'?-1:1,posa:a.posa||'attesa',t:0,target:null,vel:a.vel||140,esce:false};
+  SC.attori[a.id]=o;return o;}
+function larghezzaScena(){const cv=$('sp-cv');return cv.width&&cv.height?cv.width/cv.height*SCENA_H:854;}
+
+/* ---- azioni della scena ---- */
+function prossimaAzione(){if(!SC)return;SC.wait=null;SC.ai++;const a=SC.azioni[SC.ai];if(!a){if(SC.fineScena)return;nascondiBox();passoSuccessivo();return;}
+  esegui(a);}
+function applicaPose(a){if(a.pose)for(const k in a.pose){const o=SC.attori[k];if(o){o.posa=a.pose[k];o.t=0;}else avviso('Posa per un attore non in scena: '+k);}
+  if(a.guarda)for(const k in a.guarda){const o=SC.attori[k];if(o)o.face=a.guarda[k]==='sinistra'?-1:1;}}
+function esegui(a){const W=larghezzaScena();
+  if(a.posa&&!a.testo&&!a.chi){applicaPose({pose:a.posa});return prossimaAzione();}
+  applicaPose(a);
+  if(a.testo!==undefined&&!a.didascalia){mostraBattuta(a.chi,a.testo,a.nome);return;}
+  if(a.didascalia){mostraBattuta(null,a.didascalia,null,true);return;}
+  if(a.entra){const id=a.entra,da=a.da==='sinistra'?-1:1;const o=SC.attori[id]||creaAttore({id,x:0,nome:a.nome});
+    o.x=da<0?-70:W+70;o.face=a.verso?(a.verso==='sinistra'?-1:1):(da<0?1:-1);o.target=posX(a.a??(da<0?'sinistra':'destra'),W);o.posa=a.posa||o.posa;o.vel=a.vel||o.vel;
+    if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[id]};return;}
+  if(a.esce){const o=SC.attori[a.esce];if(!o){avviso('Esce un attore non in scena: '+a.esce);return prossimaAzione();}
+    const d=a.verso==='sinistra'?-1:a.verso==='destra'?1:(o.x<W/2?-1:1);o.target=d<0?-90:W+90;o.face=d;o.esce=true;
+    if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[a.esce]};return;}
+  if(a.muovi){const o=SC.attori[a.muovi];if(!o){avviso('Si muove un attore non in scena: '+a.muovi);return prossimaAzione();}
+    o.target=posX(a.a,W);if(a.vel)o.vel=a.vel;if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[a.muovi]};return;}
+  if(a.guarda||a.pose)return prossimaAzione();
+  if(a.effetto||a.tipo==='effetto'){effetto(a);return;}
+  if(a.attesa!==undefined){SC.wait={type:'time',left:+a.attesa||0,then:prossimaAzione};return;}
+  if(a.musica!==undefined){ST.track=a.musica==='silenzio'?'hush':a.musica;return prossimaAzione();}
+  if(a.suono){try{(sfx[a.suono]||(()=>avviso('Suono mancante: "'+a.suono+'"')))();}catch(e){}return prossimaAzione();}
+  if(a.cartello){mostraCartelloFx(a.sopra||'',a.cartello,a.durata||2.6,()=>prossimaAzione());return;}
+  avviso('Azione sconosciuta: '+JSON.stringify(a));prossimaAzione();}
+function effetto(a){const e=a.effetto,d=a.durata;
+  if(e==='lampo'){SC.fx.push({k:'flash',col:a.colore||'#FFFFFF',t:0,d:d||.45});return prossimaAzione();}
+  if(e==='trema'){SC.shake=a.forza||8;SC.shakeT=d||.6;SC.shakeT0=SC.shakeT;return prossimaAzione();}
+  if(e==='nero'||e==='dissolvenza'){SC.fx.push({k:'nero',t:0,d:d||1.2});SC.wait={type:'fx'};return;}
+  if(e==='musica'){ST.track=a.musica==='silenzio'?'hush':a.musica;return prossimaAzione();}
+  avviso('Effetto sconosciuto: "'+e+'"');prossimaAzione();}
+
+/* ---- riquadro di dialogo ---- */
+function mostraBattuta(chi,testo,nome,dida){const box=$('sp-box');box.classList.add('on');box.classList.toggle('dida',!!dida);box.classList.remove('done');
+  $('sp-who').textContent=dida?'':(nome||(chi?nomeDi(chi):''));
+  SC.typing={full:String(testo),n:0,chi,done:false,autoT:0};
+  const face=$('sp-face'),fx=face.getContext('2d');fx.clearRect(0,0,64,64);box.classList.add('noface');
+  if(chi&&!dida)ritratto(chi,t=>{if(!t){avviso('Ritratto mancante: "'+chi+'"');return;}if(!SC||!SC.typing||SC.typing.chi!==chi)return;fx.imageSmoothingEnabled=false;fx.clearRect(0,0,64,64);fx.drawImage(t,0,0,64,64);box.classList.remove('noface');});
+  $('sp-text').textContent='';SC.wait={type:'tap'};}
+function nascondiBox(){$('sp-box').classList.remove('on');}
+function completaTesto(){const ty=SC.typing;if(!ty)return;ty.n=ty.full.length;ty.done=true;$('sp-text').textContent=ty.full;$('sp-box').classList.add('done');}
+
+/* ---- cartello in dissolvenza ---- */
+function mostraCartelloFx(sopra,titolo,durata,then){const c=$('sp-card');c.querySelector('small').textContent=sopra||'';c.querySelector('b').textContent=titolo;
+  nascondiBox();SC.card={t:0,d:Math.max(1.6,durata),then};SC.wait={type:'card'};}
+
+/* ---- tocco / INVIO: avanti ---- */
+function storiaAvanti(){if(!ST.run||!SC||ST.run.paused)return;const w=SC.wait;if(!w)return;
+  if(w.type==='card'){if(SC.card.t>.5&&SC.card.t<SC.card.d-.6)SC.card.t=SC.card.d-.6;return;}
+  if(w.type==='narr'){if(SC.narr.shown<SC.narr.n){[...$('sp-narr').children].forEach(p=>p.classList.add('on'));SC.narr.shown=SC.narr.n;return;}try{sfx.sel();}catch(_){}passoSuccessivo();return;}
+  if(w.type==='tap'){if(!SC.typing.done){completaTesto();return;}try{sfx.sel();}catch(_){}prossimaAzione();return;}}
+
+/* ---- ciclo di disegno e tempi (gira solo mentre si gioca la storia) ---- */
+let _spLoop=false,_spLast=0;
+function avviaLoop(){if(_spLoop)return;_spLoop=true;_spLast=performance.now();requestAnimationFrame(loopScena);}
+function loopScena(now){if(!ST.run||game.state!=='story'){_spLoop=false;return;}
+  const dt=Math.min(.1,(now-_spLast)/1000);_spLast=now;
+  if(!ST.run.paused&&SC)aggiornaScena(dt);
+  disegnaScena();requestAnimationFrame(loopScena);}
+function aggiornaScena(dt){const W=larghezzaScena();
+  /* attori che camminano */
+  for(const k in SC.attori){const o=SC.attori[k];o.t+=dt;
+    if(o.target!==null&&o.target!==undefined){const d=o.target-o.x,st=o.vel*dt;
+      if(Math.abs(d)<=st){o.x=o.target;o.target=null;if(o.esce)delete SC.attori[k];}else{o.x+=Math.sign(d)*st;if(!o.esce||true)o.face=Math.sign(d);}}}
+  const w=SC.wait;
+  if(w&&w.type==='walk'&&w.ids.every(id=>!SC.attori[id]||SC.attori[id].target==null)){
+    /* chi è arrivato guarda verso il centro della scena */
+    prossimaAzione();}
+  if(w&&w.type==='time'){w.left-=dt;if(w.left<=0){const f=w.then;SC.wait=null;f();}}
+  if(SC.anim)SC.animT+=dt;
+  /* testo lettera per lettera */
+  const ty=SC.typing;if(ty&&!ty.done){ty.n=Math.min(ty.full.length,ty.n+SPEED[SPEED_K]*dt);$('sp-text').textContent=ty.full.slice(0,Math.floor(ty.n));
+    if(ty.n>=ty.full.length){ty.done=true;$('sp-box').classList.add('done');}}
+  /* AUTO: la battuta va avanti da sola dopo qualche secondo */
+  if(ST.auto&&w&&w.type==='tap'&&ty&&ty.done){ty.autoT+=dt;if(ty.autoT>1.6+ty.full.length*.03)prossimaAzione();}
+  if(ST.auto&&w&&w.type==='narr'&&SC.narr.shown>=SC.narr.n){SC.narr.autoT=(SC.narr.autoT||0)+dt;if(SC.narr.autoT>3)passoSuccessivo();}
+  /* narratore: una riga alla volta */
+  if(SC.narr&&SC.narr.shown<SC.narr.n){SC.narr.t+=dt;if(SC.narr.t>=.9||SC.narr.shown===0){SC.narr.t=0;const p=$('sp-narr').children[SC.narr.shown];if(p)p.classList.add('on');SC.narr.shown++;}}
+  /* cartello: entra, resta, esce */
+  if(SC.card){const c=SC.card;c.t+=dt;const a=c.t<.6?c.t/.6:c.t>c.d-.6?Math.max(0,(c.d-c.t)/.6):1;$('sp-card').style.opacity=a;
+    if(c.t>=c.d){$('sp-card').style.opacity=0;const f=c.then;SC.card=null;SC.wait=null;f();}}
+  /* effetti */
+  let flash=0,flashCol='#FFF',nero=0,fxWait=false;
+  SC.fx=SC.fx.filter(f=>{f.t+=dt;const k=f.t/f.d;
+    if(f.k==='flash'){flash=Math.max(flash,(1-k)*.9);flashCol=f.col;}
+    if(f.k==='nero'){fxWait=true;nero=Math.max(nero,k<.35?k/.35:k>.65?(1-k)/.35:1);}
+    return f.t<f.d;});
+  $('sp-flash').style.opacity=flash;if(flash)$('sp-flash').style.background=flashCol;$('sp-black').style.opacity=nero;
+  if(w&&w.type==='fx'&&!fxWait)prossimaAzione();
+  if(SC.shakeT>0){SC.shakeT-=dt;if(SC.shakeT<=0)SC.shake=0;}}
+function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,cw=Math.round(cv.clientWidth*r),ch=Math.round(cv.clientHeight*r);
+  if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch;}
+  const c=cv.getContext('2d'),k=ch/SCENA_H,W=cw/k;c.setTransform(1,0,0,1,0,0);c.imageSmoothingEnabled=false;
+  c.fillStyle='#05040f';c.fillRect(0,0,cw,ch);if(!SC)return;
+  if(SC.nero&&!SC.bg){return;}
+  c.setTransform(k,0,0,k,0,0);
+  if(SC.shake>0){const f=SC.shake*Math.min(1,SC.shakeT/(SC.shakeT0||1)+.2);c.translate((Math.random()-.5)*2*f,(Math.random()-.5)*2*f);}
+  /* sfondo: copre la larghezza, con il pavimento all'altezza dei piedi degli attori */
+  const bg=SC.bg;
+  if(bg&&imgOk(bg.im)){const im=bg.im,pieno=!!SC.anim;   /* animazione: sfondo a tutto schermo; scena: pavimento all'altezza dei piedi */
+    const sc=pieno?Math.max(W/im.naturalWidth,SCENA_H/im.naturalHeight):Math.max(W/im.naturalWidth,SCENA_SUOLO/(bg.suolo*im.naturalHeight)),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
+    const y0=pieno?SCENA_H-h:Math.min(0,SCENA_SUOLO-bg.suolo*h);c.drawImage(im,(W-w)/2,y0,w,h);
+    if(y0+h<SCENA_H){c.fillStyle='#0b0814';c.fillRect(0,y0+h,W,SCENA_H-y0-h);}}
+  else{const g=c.createLinearGradient(0,0,0,SCENA_H);g.addColorStop(0,'#1d1650');g.addColorStop(.62,'#0d0b2a');g.addColorStop(1,'#050410');c.fillStyle=g;c.fillRect(-20,-20,W+40,SCENA_H+40);
+    c.fillStyle='rgba(255,255,255,.05)';c.fillRect(0,SCENA_SUOLO,W,2);}
+  if(SC.anim){c.save();try{SC.anim.draw(c,SC.animT,W,SCENA_H,SC.animD);}catch(e){avviso('Errore nell\u2019animazione: '+e.message);}c.restore();}
+  /* attori (da sinistra a destra) */
+  Object.values(SC.attori).sort((a,b)=>a.x-b.x).forEach(o=>{const S=o.S;if(!S)return;
+    const walking=o.target!=null,a=walking&&S.anims.walk&&imgOk(S.img[S.anims.walk.file])?S.anims.walk:animPosa(S,o.id,o.posa);if(!a)return;
+    const im=S.img[a.file];if(!imgOk(im))return;
+    const loop=a===S.anims.idle||a===S.anims.walk||a.loop;let fi=Math.floor(o.t*(a.fps||10));
+    if(loop){if(a.pingpong){const p=2*a.n-2;fi%=p;if(fi>=a.n)fi=p-fi;}else fi%=a.n;}else fi=Math.min(a.n-1,fi);
+    const sc=(a.sc||S.scale)*SCENA_ZOOM,fl=S.float?S.float+Math.sin(o.t*3.6)*3:0;
+    c.save();c.translate(Math.round(o.x),Math.round(SCENA_SUOLO-fl));if(o.face<0)c.scale(-1,1);
+    c.globalAlpha=.35;c.fillStyle='#000';c.beginPath();c.ellipse(0,fl,(S.body.x1-S.body.x0)*S.scale*SCENA_ZOOM*.4,5,0,0,7);c.fill();c.globalAlpha=1;
+    c.drawImage(im,fi*S.fw,0,S.fw,S.fh,-S.ax*sc,-S.ay*sc,S.fw*sc,S.fh*sc);c.restore();});}
+
+/* ---- comandi: AUTO, SALTA, MENU (pausa) ---- */
+function chiudiPop(){document.querySelectorAll('.sp-pop').forEach(p=>p.classList.remove('on'));if(ST.run)ST.run.paused=false;}
+function apriPop(id){chiudiPop();$(id).classList.add('on');if(ST.run)ST.run.paused=true;}
+/* salta fino alla prossima lotta del capitolo o, se non ce ne sono, al capitolo successivo */
+function storiaSalta(){chiudiPop();const c=capById(ST.run.cap);let j=c.passi.findIndex((p,k)=>k>ST.run.i&&p.tipo==='lotta');
+  $('sp-card').style.opacity=0;$('sp-black').style.opacity=0;$('sp-flash').style.opacity=0;
+  if(j>=0){ST.run.i=j;avviaPasso();}else{ST.run.i=c.passi.length;storiaFineCapitolo();}}
+function testoVelocita(){$('sp-speed').textContent=SPEED_K.toUpperCase();}
 function storiaTasti(){const v=document.getElementById('story-screen').dataset.v;
-  if(v==='play'){if(kp('Enter')||kp('Space')||kp('KeyZ'))storiaAvanti();else if(kp('Escape'))storiaEsci();}
+  if(v==='play'){const pausa=document.querySelector('.sp-pop.on');
+    if(pausa){if(kp('Escape')){chiudiPop();try{sfx.back();}catch(_){}}return;}
+    if(kp('Enter')||kp('Space')||kp('KeyZ'))storiaAvanti();else if(kp('Escape')){apriPop('sp-pause');testoVelocita();try{sfx.sel();}catch(_){}}}
   else if(kp('Escape')){if(document.getElementById('st-confirm').style.display==='flex')document.getElementById('st-confirm').style.display='none';
     else if(v==='caps')storiaVista('menu');else game.state='title';try{sfx.back();}catch(_){}}}
 window.storiaMostra=storiaMostra;window.storiaTasti=storiaTasti;
@@ -4529,7 +4811,7 @@ function update(){
     kPrev={...keys};return;}
   frame++;
   if(game.musicHold>0){game.musicHold--;if(game.state!=='victory')game.musicHold=0;}
-  wantTrack=game.musicHold>0?'hush':(game.state==='fight'||game.state==='vs')?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):'menu';
+  wantTrack=game.musicHold>0?'hush':(game.state==='fight'||game.state==='vs')?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):(game.state==='story'&&ST.run&&ST.track)?ST.track:'menu';
   ensureMusic();
   if(kp('KeyM'))toggleMusic();
   frameTimers=frameTimers.filter(t=>{if(--t.fr<=0){t.fn();return false}return true});
@@ -5816,6 +6098,7 @@ function loop(ts){
   /* ---- Schermata di selezione ---- */
   var SS={th:[],last:''};
   /* miniature: ritaglia automaticamente testa e spalle dalla posa frontale */
+  window.makeThumb=function(id,cb){makeThumb(id,cb);};
   function makeThumb(id,cb){
     var im=new Image();im.onload=function(){
       var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');x.drawImage(im,0,0);
@@ -6145,8 +6428,18 @@ function loop(ts){
   (function(){var p=document.getElementById('st-confirm');var out=function(e){if(e.target!==p)return;if(e.cancelable)e.preventDefault();p.style.display='none';try{sfx.back();}catch(_){}};
     p.addEventListener('click',out);p.addEventListener('touchend',out,{passive:false});})();
   _btn('st-chapters', function(){ elencoCapitoli(); storiaVista('caps'); }, 'sel');
-  /* scene: tocco ovunque per andare avanti */
-  (function(){var pl=document.getElementById('st-play');if(!pl)return;var go=function(e){if(game.state!=='story'||trActive())return;if(e.cancelable)e.preventDefault();storiaAvanti();};
+  /* comandi della scena */
+  _btn('sp-auto', function(){ ST.auto=!ST.auto; document.getElementById('sp-auto').classList.toggle('on',ST.auto); }, 'sel');
+  _btn('sp-skip', function(){ if(!ST.run) return false; apriPop('sp-skipc'); }, 'sel');
+  _btn('sp-skip-yes', function(){ storiaSalta(); }, 'ok');
+  _btn('sp-skip-no', function(){ chiudiPop(); }, 'back');
+  _btn('sp-menu', function(){ if(!ST.run) return false; apriPop('sp-pause'); testoVelocita(); }, 'sel');
+  _btn('sp-resume', function(){ chiudiPop(); }, 'ok');
+  _btn('sp-speed', function(){ var ks=['lento','normale','veloce']; SPEED_K=ks[(ks.indexOf(SPEED_K)+1)%3]; STORE.set('sopracciglia_testo_storia',SPEED_K); testoVelocita(); }, 'sel');
+  _btn('sp-quit', function(){ storiaEsci(); }, 'back');
+  /* scene: tocco ovunque per andare avanti (non sui pulsanti e sulle finestre) */
+  (function(){var pl=document.getElementById('st-play');if(!pl)return;var go=function(e){if(game.state!=='story'||trActive())return;
+      if(e.target.closest&&e.target.closest('#sp-tools,.sp-pop'))return;if(e.cancelable)e.preventDefault();storiaAvanti();};
     var lastT=0;pl.addEventListener('touchend',function(e){lastT=Date.now();go(e);},{passive:false});
     pl.addEventListener('click',function(e){if(Date.now()-lastT<700)return;go(e);});})();  /* dito o mouse, mai due volte */
 
