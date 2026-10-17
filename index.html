@@ -613,11 +613,16 @@
   /* in basso: tutte le miniature, ognuna col nome */
   #ss-tw { position:absolute; z-index:3; left:0; right:0; bottom:0; height:var(--th);
     background:linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,0)); }
-  #ss-thumbs { height:100%; box-sizing:border-box; display:grid; grid-template-columns:repeat(13, minmax(0, calc(var(--tsz) + 30px))); grid-template-rows:auto;
-    justify-content:center; align-content:start; column-gap:4px; row-gap:4px;
+  #ss-thumbs { height:100%; box-sizing:border-box; display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:calc(var(--tsz) + 30px); grid-template-rows:auto;
+    justify-content:safe center; align-content:start; column-gap:4px; row-gap:4px;
     padding:4px max(12px,env(safe-area-inset-right)) var(--sb) max(12px,env(safe-area-inset-left));
     overflow-x:auto; overflow-y:hidden; touch-action:pan-x; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
   #ss-thumbs::-webkit-scrollbar { display:none; }
+  #ss-tw::before, #ss-tw::after { position:absolute; z-index:1; top:0; bottom:0; width:34px; display:flex; align-items:center; justify-content:center;
+    font:400 22px var(--font-gioco); color:var(--ss-acc); text-shadow:1px 1px 0 #000; pointer-events:none; opacity:0; transition:opacity .2s; }
+  #ss-tw::before { content:'\25C0'; left:0; background:linear-gradient(90deg, rgba(3,2,16,.95), rgba(3,2,16,0)); }
+  #ss-tw::after { content:'\25B6'; right:0; background:linear-gradient(270deg, rgba(3,2,16,.95), rgba(3,2,16,0)); }
+  #ss-tw.l::before, #ss-tw.r::after { opacity:1; }
   .ss-th { min-width:0; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
   .ss-img { position:relative; flex:none; width:var(--tsz); height:var(--tsz); box-sizing:border-box; border:2px solid rgba(255,255,255,.28); border-radius:8px;
     background:rgba(20,18,50,.85); overflow:hidden; transition:transform .14s, border-color .14s, box-shadow .14s; }
@@ -640,7 +645,9 @@
     border:3px solid #FFD700; border-radius:14px; background:#1a1205; box-shadow:0 0 30px rgba(255,215,0,.45); text-align:center; }
   #ajay-unlock .au-glow { position:absolute; left:50%; top:16px; width:150px; height:150px; transform:translateX(-50%); border-radius:50%;
     background:radial-gradient(circle, rgba(255,215,0,.55) 0%, rgba(255,215,0,0) 70%); pointer-events:none; }
-  #ajay-unlock img { position:relative; width:128px; height:128px; image-rendering:pixelated; }
+  #ajay-unlock .au-img { position:relative; width:128px; height:128px; display:flex; align-items:center; justify-content:center; font:400 64px var(--font-gioco); color:rgba(255,255,255,.3); }
+  #ajay-unlock .au-img img { width:128px; height:128px; image-rendering:pixelated; object-fit:contain; }
+  #ajay-unlock .au-n { font:400 22px var(--font-gioco); color:#FFD700; letter-spacing:.04em; }
   #ajay-unlock .au-t { font:400 14px var(--font-gioco); color:#FFD700; letter-spacing:1px; }
   #ajay-unlock .au-m { font:400 18px/1.3 var(--font-gioco); color:#F5F0E1; }
   #ajay-unlock button { margin-top:6px; min-width:120px; min-height:44px; font:400 18px var(--font-gioco); color:#1a1205; background:#FFD700; border:0; border-radius:10px; cursor:pointer; }
@@ -660,7 +667,7 @@
   /* larghezza media (iPhone piccoli in orizzontale): due file da 6 */
   @media (max-width: 719px) {
     :root { --tsz: clamp(30px, 10vh, 60px); --th: calc(2 * var(--tsz) + 12px + 28px * var(--scala-testo, 1) + var(--sb)); }
-    #ss-thumbs { grid-template-columns:repeat(7, minmax(0, 104px)); column-gap:6px; }
+    #ss-thumbs { grid-auto-flow:row; grid-auto-columns:auto; grid-template-columns:repeat(var(--nc2,7), minmax(0, 104px)); column-gap:6px; }
   }
   /* telefono in orizzontale (schermo basso): il nome va sotto il pulsante INDIETRO, così la posa usa tutta l'altezza */
   @media (max-height: 420px) {
@@ -717,10 +724,24 @@
   #story-screen[data-v="play"] #st-back { opacity:.75; }
   .st-view { display:none; position:absolute; inset:0; flex-direction:column; align-items:center; justify-content:center; gap:min(3vh,14px);
     padding:max(16px,env(safe-area-inset-top)) max(70px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(70px,env(safe-area-inset-left)); }
-  #story-screen[data-v="menu"] #st-menu, #story-screen[data-v="caps"] #st-caps, #story-screen[data-v="play"] #st-play { display:flex; }
+  #story-screen[data-v="menu"] #st-menu, #story-screen[data-v="caps"] #st-caps, #story-screen[data-v="arch"] #st-arch, #story-screen[data-v="play"] #st-play { display:flex; }
+  /* ARCHIVIO */
+  #st-arch { justify-content:flex-start; padding-top:max(18px,calc(env(safe-area-inset-top) + 12px)); }
+  #st-arch .st-head small { display:block; margin-top:2px; font:700 13px var(--font-testo); color:var(--testo-tenue); letter-spacing:0; }
+  #ar-list { flex:1; min-height:0; width:min(100%,760px); overflow-y:auto; overflow-x:hidden; touch-action:pan-y; -webkit-overflow-scrolling:touch;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; padding:4px 4px 12px; align-content:start; }
+  .ar-card { display:flex; gap:12px; align-items:flex-start; padding:10px 12px; border:2px solid var(--oro); border-radius:12px; background:rgba(12,10,26,.78); }
+  .ar-card canvas { flex:none; width:64px; height:64px; image-rendering:pixelated; border:2px solid var(--oro); border-radius:8px; background:rgba(20,18,50,.9); }
+  .ar-card b { display:block; font:400 18px var(--font-gioco); color:var(--oro); letter-spacing:.04em; }
+  .ar-card small { display:block; margin:2px 0 4px; font:700 12px var(--font-testo); color:var(--testo-tenue); }
+  .ar-card i { display:block; font:400 14px/1.4 var(--font-testo); color:var(--testo); }
+  .ar-card.locked { border-color:rgba(255,255,255,.18); }
+  .ar-card.locked canvas { border-color:rgba(255,255,255,.18); }
+  .ar-card.locked b { color:rgba(255,255,255,.4); }
   .st-title { color:var(--oro); font-size:min(7vw,13vh); line-height:1; letter-spacing:.06em; text-shadow:2px 2px 0 var(--oro-scuro), 0 0 28px rgba(255,193,7,.35); }
   .st-sub { margin-top:-1vh; font:700 min(2vw,4.2vh) var(--font-testo); color:var(--testo-tenue); text-align:center; }
-  .st-btns { display:flex; flex-direction:column; gap:min(2.6vh,12px); width:min(100%,460px); }
+  .st-btns { display:grid; grid-template-columns:1fr 1fr; gap:min(2.6vh,12px); width:min(100%,520px); }
+  .st-btns #st-continue, .st-btns #st-new { grid-column:1 / -1; }
   .st-btns button { min-height:clamp(48px,12vh,80px); font-size:min(2.4vw,5vh,30px); letter-spacing:.04em; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
   .st-btns button small { font:700 min(1.5vw,3.2vh,15px) var(--font-testo); letter-spacing:0; opacity:.8; }
   .st-btns button small:empty { display:none; }
@@ -855,7 +876,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.129</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.130</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -878,7 +899,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.129.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.130.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -938,12 +959,17 @@
       <button id="st-continue" class="btn-primario">CONTINUA<small id="st-cont-info"></small></button>
       <button id="st-new" class="btn-secondario">NUOVA PARTITA</button>
       <button id="st-chapters" class="btn-secondario">SELEZIONA CAPITOLO</button>
+      <button id="st-archive" class="btn-secondario">ARCHIVIO</button>
     </div>
     <div id="st-nosave" hidden>In questa modalità del browser i progressi non vengono salvati</div>
   </div>
   <div id="st-caps" class="st-view">
     <div class="st-head">SELEZIONA CAPITOLO</div>
     <div id="st-list"></div>
+  </div>
+  <div id="st-arch" class="st-view">
+    <div class="st-head">ARCHIVIO DEI PERSONAGGI<small id="ar-count"></small></div>
+    <div id="ar-list"></div>
   </div>
   <div id="st-play" class="st-view">
     <canvas id="sp-cv"></canvas>
@@ -3124,6 +3150,22 @@ function registerStoryChar(id){const S=STORY_SPRITES[id],c=STORY_ROSTER[id];if(!
    ##########################################################################################
    ########################################################################################## */
 const STORIA={
+  /* SBLOCCHI IN LOTTA LIBERA: il personaggio si sblocca quando il giocatore COMPLETA quel capitolo (fine:true = dopo l'epilogo).
+     Se lo sprite del personaggio non è ancora nel gioco, lo sblocco viene salvato ma il personaggio non compare. */
+  sblocchi:[
+    {id:'riccardo',capitolo:'cap05'},
+    {id:'viola',capitolo:'cap11'},{id:'massimo',capitolo:'cap11'},{id:'antonio',capitolo:'cap11'},
+    {id:'dimauromostro',capitolo:'cap16'},
+    {id:'imperatore',capitolo:'cap19'},
+    {id:'ajay',fine:true},
+    {id:'prova_sblocco',capitolo:'prova02',nome:'PERSONAGGIO DI PROVA'},   /* PROVA: senza sprite, quindi non compare nella selezione */
+  ],
+  /* ARCHIVIO DEI PERSONAGGI: si aggiungono qui, capitolo per capitolo. Un personaggio entra nell'archivio quando compare
+     in una scena o in una lotta. ritratto = id dello sprite da cui prendere il ritratto (se manca, solo la sagoma). */
+  archivio:[
+    {id:'chiara',nome:'CHIARA',frase:'Frase di prova: qui andrà una frase del libro su Chiara.',ritratto:'chiara'},
+    {id:'sito',nome:'SITO',frase:'Frase di prova: qui andrà una frase del libro su Sito.',ritratto:'sito'},
+  ],
   capitoli:[
     {id:'prova01',numero:1,titolo:'Capitolo di prova 1',passi:[
       {id:'prova01_cartello01',tipo:'cartello',sopra:'ATTO I',titolo:'La sala del trono'},
@@ -3218,7 +3260,7 @@ function capRaggiunto(id,p){if(capIdx(id)===0)return true; /* il primo capitolo 
 const ST={run:null,auto:false,track:null};
 function storiaVista(v){const sc=document.getElementById('story-screen');if(sc)sc.dataset.v=v;}
 /* chiamata da updateOverlay quando si entra nella schermata STORIA */
-function storiaMostra(){if(ST.run){storiaVista('play');return;}storiaVista(document.getElementById('story-screen').dataset.v==='caps'?'caps':'menu');aggiornaMenuStoria();}
+function storiaMostra(){if(ST.run){storiaVista('play');return;}const v=document.getElementById('story-screen').dataset.v;storiaVista(v==='caps'||v==='arch'?v:'menu');aggiornaMenuStoria();}
 function aggiornaMenuStoria(){const p=leggiProgressi(),b=document.getElementById('st-continue'),inf=document.getElementById('st-cont-info');
   b.classList.toggle('off',!p);
   if(p){const c=capById(p.cap);inf.textContent='Capitolo '+(c.numero??capIdx(c.id)+1)+' \u00b7 '+c.titolo;}else inf.textContent='';
@@ -3326,16 +3368,20 @@ function avviaPasso(){const p=passoCorrente();if(!p){storiaFineCapitolo();return
       if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": mostro solo lo sfondo');SC.wait={type:'time',left:p.durata||3,then:passoSuccessivo};break;
     default:avviso('Tipo di passo non ancora gestito: "'+p.tipo+'" ('+p.id+'): lo salto');passoSuccessivo();}}
 function passoSuccessivo(){if(!ST.run)return;ST.run.i++;avviaPasso();}
-function storiaFineCapitolo(){const ci=capIdx(ST.run.cap),next=STORIA.capitoli[ci+1];
-  if(next){storiaInizia(next.id,null);return;}
-  /* fine della storia (per ora si torna al menu; qui arriveranno l'epilogo e lo sblocco di Ajay) */
-  storiaEsci();}
+function storiaFineCapitolo(){const ci=capIdx(ST.run.cap),cap=ST.run.cap,next=STORIA.capitoli[ci+1];
+  /* capitolo completato: sblocchi di questo capitolo (e, alla fine della storia, quelli "fine") */
+  const ids=STORIA.sblocchi.filter(e=>e.capitolo===cap||(!next&&e.fine)).map(e=>e.id);
+  const vai=()=>{if(!ST.run)return;if(next){storiaInizia(next.id,null);return;}
+    /* fine della storia: si torna al menu (qui arriverà l'epilogo) */
+    storiaEsci();};
+  if(ids.some(id=>!sbloccato(id))){nascondiBox();SC=nuovaScena();SC.nero=true;ST.run.paused=true;sbloccaEMostra(ids,()=>{if(ST.run)ST.run.paused=false;vai();});return;}
+  vai();}
 function storiaEsci(){ST.run=null;SC=null;ST.track=null;chiudiPop();nascondiBox();$('sp-narr').classList.remove('on');$('sp-card').style.opacity=0;
   $('sp-black').style.opacity=0;$('sp-flash').style.opacity=0;storiaVista('menu');aggiornaMenuStoria();}
 
 /* ---- attori ---- */
 function posX(p,w){if(typeof p==='number')return p<=1?p*w:p;return (POS_X[p]??.5)*w;}
-function creaAttore(a){const S=spriteAttore(a.id);const W=larghezzaScena();
+function creaAttore(a){registraArchivio(a.id);const S=spriteAttore(a.id);const W=larghezzaScena();
   const o={id:a.id,S,nome:a.nome,x:posX(a.x??'centro',W),face:a.verso==='sinistra'?-1:1,posa:a.posa||'attesa',t:0,target:null,vel:a.vel||140,esce:false};
   SC.attori[a.id]=o;return o;}
 function larghezzaScena(){const cv=$('sp-cv');return cv.width&&cv.height?cv.width/cv.height*SCENA_H:854;}
@@ -3348,7 +3394,7 @@ function applicaPose(a){if(a.pose)for(const k in a.pose){const o=SC.attori[k];if
 function esegui(a){const W=larghezzaScena();
   if(a.posa&&!a.testo&&!a.chi){applicaPose({pose:a.posa});return prossimaAzione();}
   applicaPose(a);
-  if(a.testo!==undefined&&!a.didascalia){mostraBattuta(a.chi,a.testo,a.nome);return;}
+  if(a.testo!==undefined&&!a.didascalia){if(a.chi)registraArchivio(a.chi);mostraBattuta(a.chi,a.testo,a.nome);return;}
   if(a.didascalia){mostraBattuta(null,a.didascalia,null,true);return;}
   if(a.entra){const id=a.entra,da=a.da==='sinistra'?-1:1;const o=SC.attori[id]||creaAttore({id,x:0,nome:a.nome});
     o.x=da<0?-70:W+70;o.face=a.verso?(a.verso==='sinistra'?-1:1):(da<0?1:-1);o.target=posX(a.a??(da<0?'sinistra':'destra'),W);o.posa=a.posa||o.posa;o.vel=a.vel||o.vel;
@@ -3511,6 +3557,7 @@ function scegliSquadra(p,ids,sub,then){const pr=leggiProgressi(),last=pr&&pr.squ
 function iniziaLotta(p,gid){const gc=cfgDi(gid)||cfgDi('iacopo'),ec=(p.avversari||[p.avversario]).filter(Boolean).map(cfgDi).filter(Boolean);
   if(!ec.length){avviso('Lotta senza avversario: '+p.id+': la salto');passoSuccessivo();return;}
   SF={p,modo:p.modo||'normale',g:gc,gid:gc.id,nemici:ec,ondata:0,fase:0,t:0,flash:null};
+  [gc,...ec].forEach(c=>registraArchivio(c.id));
   [gc,...ec].forEach(c=>ritratto(c.id,t=>{if(t&&!HUD_THUMB[c.id])HUD_THUMB[c.id]=t;}));
   for(const f of (p.fasi||[]))if(f.sprite)cfgDi(f.sprite);
   game.mode=5;game.tournament=null;game.reset();game.playerLost=false;game.stats={maxHit:0,parry:0};
@@ -3589,7 +3636,7 @@ function storiaTasti(){const v=document.getElementById('story-screen').dataset.v
     if(pausa){if(kp('Escape')&&pausa.id!=='sp-squad'&&pausa.id!=='sp-lose'){chiudiPop();try{sfx.back();}catch(_){}}return;}  /* scelta e sconfitta: serve un pulsante */
     if(kp('Enter')||kp('Space')||kp('KeyZ'))storiaAvanti();else if(kp('Escape')){apriPop('sp-pause');testoVelocita();try{sfx.sel();}catch(_){}}}
   else if(kp('Escape')){if(document.getElementById('st-confirm').style.display==='flex')document.getElementById('st-confirm').style.display='none';
-    else if(v==='caps')storiaVista('menu');else game.state='title';try{sfx.back();}catch(_){}}}
+    else if(v==='caps'||v==='arch')storiaVista('menu');else game.state='title';try{sfx.back();}catch(_){}}}
 window.storiaMostra=storiaMostra;window.storiaTasti=storiaTasti;
 /* ==================== SALVATAGGI (localStorage, sempre dentro try/catch) ====================
    Se il browser blocca il salvataggio (navigazione privata), tutto funziona lo stesso, solo senza salvare. */
@@ -3612,24 +3659,60 @@ function leggiSblocchi(){if(_sblocchi)return _sblocchi;let d=null;
   return _sblocchi;}
 function scriviSblocchi(){STORE.set(KEY_SBLOCCHI,JSON.stringify(_sblocchi||leggiSblocchi()));}
 function sbloccaPersonaggio(id){const s=leggiSblocchi();if(!s.personaggi.includes(id)){s.personaggi.push(id);scriviSblocchi();}}
-/* ===== AJAY: BLOCCATO finché non si completa la modalità storia =====
-   - ajaySbloccato(): true se il giocatore ha già finito la storia (salvato nel telefono)
-   - sbloccaAjay(): DA CHIAMARE ALLA FINE DELLA STORIA, dopo l'epilogo. Salva lo sblocco, aggiunge Ajay alla lotta libera
-     e mostra il messaggio "Ajay è ora disponibile nella Lotta libera" con il suo ritratto. */
-const AJAY_KEY='ajaySbloccato';   /* chiave vecchia: letta una volta e spostata in "sopracciglia_sblocchi_v1" */
-function ajaySbloccato(){return leggiSblocchi().personaggi.includes('ajay');}
-function aggiungiAjay(){if(ROSTER.some(c=>c.id==='ajay'))return;const c=registerStoryChar('ajay');if(c)ROSTER.push(c);}
-function sbloccaAjay(){sbloccaPersonaggio('ajay');
-  aggiungiAjay();if(window._ajayThumb)window._ajayThumb();mostraSbloccoAjay();}
+/* ===== SBLOCCHI IN LOTTA LIBERA =====
+   I 12 personaggi della selezione sono sempre disponibili. Quelli dell'elenco STORIA.sblocchi si aggiungono quando
+   vengono sbloccati (e solo se hanno gli sprite). Le versioni che servono SOLO alla storia non compaiono mai. */
+const SOLO_STORIA=['ribelle','lacopo1','lacopo2','dimauroexo','batteogrande'];
+function sbloccabili(){return STORIA.sblocchi.filter(e=>!SOLO_STORIA.includes(e.id));}
+function haSprite(id){return !!(STORY_SPRITES[id]&&STORY_ROSTER[id]);}
+function sbloccato(id){return leggiSblocchi().personaggi.includes(id);}
+function ajaySbloccato(){return sbloccato('ajay');}
+/* aggiunge alla lotta libera i personaggi sbloccati (con la speciale a barra piena, come gli altri 12) */
+function aggiungiSbloccati(){let n=0;for(const e of sbloccabili()){if(!sbloccato(e.id)||!haSprite(e.id)||ROSTER.some(c=>c.id===e.id))continue;
+  const base=registerStoryChar(e.id);if(!base)continue;
+  const c={...base,special:{...base.special,cost:100}};if(SEL_INFO[e.id]){c.title=SEL_INFO[e.id][0];c.quote=SEL_INFO[e.id][1];}
+  const S=STORY_SPRITES[e.id];if(!SEL_POSE[e.id]&&S&&S.pose)SEL_POSE[e.id]=S.dir+S.pose+'.png';
+  ROSTER.push(c);n++;}
+  if(n&&window._rifaiMiniature)window._rifaiMiniature();return n;}
+/* sblocca e mostra il riquadro "è ora disponibile nella Lotta libera" (solo per quelli nuovi) */
+function sbloccaEMostra(ids,then){const nuovi=ids.filter(id=>!sbloccato(id));nuovi.forEach(sbloccaPersonaggio);aggiungiSbloccati();
+  mostraSblocchi(nuovi,then);}
+function sbloccaAjay(){sbloccaEMostra(['ajay']);}   /* lo chiama la storia dopo l'epilogo */
 window.sbloccaAjay=sbloccaAjay;
-if(ajaySbloccato())aggiungiAjay();
 SEL_POSE.ajay='sprites/storia/ajay/pose.png';
 SEL_INFO.ajay=['Il Divino','La luce non ha fretta.',[["Raggio d\u2019Oro","attacco 1","allunga il palmo e un raggio di luce dorata colpisce l\u2019avversario da lontano."],["Squarcio Dorato","attacco 2","entra in uno squarcio di luce, riappare alle spalle dell\u2019avversario e colpisce col palmo."],["Cerchio Divino","speciale","gli occhi si illuminano d\u2019oro e un cerchio di luce si chiude sull\u2019avversario, che resta stordito."]]];
-/* messaggio di sblocco: ritratto, scritta e pulsante OK */
-function mostraSbloccoAjay(){if(document.getElementById('ajay-unlock'))return;const d=document.createElement('div');d.id='ajay-unlock';
-  d.innerHTML='<div class="au-box"><div class="au-glow"></div><img src="sprites/storia/ajay/pose.png" alt="Ajay"><div class="au-t">NUOVO PERSONAGGIO</div><div class="au-m">Ajay \u00e8 ora disponibile nella Lotta libera</div><button type="button">OK</button></div>';
+SEL_INFO.riccardo=['Il Fratello','Il deserto non perdona. Io nemmeno.',[["Colpo di Revolver","attacco 1","mira con un revolver e spara."],["Doppio Sparo","attacco 2","spara con entrambi i revolver: il rinculo lo spinge indietro."],["Pioggia di Piombo","speciale","lunga raffica alternando le mani; a ogni colpo volano schegge di legno."]]];
+SEL_INFO.viola=['La Lama di Seta','La seta taglia pi\u00f9 del ferro.',[["Doppio Fendente","attacco 1","due colpi di sciabola uno dopo l\u2019altro."],["Lame da Lancio","attacco 2","lancia due piccole lame argentate che ruotano in volo."],["Colpo di Grazia","speciale","estrae la pistola pesante e spara un colpo potentissimo."]]];
+SEL_INFO.massimo=['La Mazza Ferrata','Il pericolo sono io.',[["Colpo Laterale","attacco 1","fa girare la mazza ferrata di lato."],["Colpo dall\u2019Alto","attacco 2","abbatte la mazza da sopra la testa."],["Torcia Laser","speciale","una fiamma laser arancione brucia l\u2019avversario."]]];
+SEL_INFO.antonio=['L\u2019Arciere','...',[["Freccia Energetica","attacco 1","scocca una freccia di luce che vola fino all\u2019avversario."],["Tripla Freccia","attacco 2","tre frecce in rapida successione."],["Tagliatore Laser","speciale","un raggio sottile e luminoso taglia l\u2019aria."]]];
+SEL_INFO.dimauromostro=['Il Mostro','Nessuno mi fermer\u00e0 pi\u00f9.',[["Pugno Devastante","attacco 1","un pugno enorme con onda d\u2019urto e polvere."],["Calcio Pesante","attacco 2","un pestone che fa tremare il terreno."],["Terremoto","speciale","schianta i pugni a terra: il terreno si spacca e volano sassi."]]];
+SEL_INFO.imperatore=['L\u2019Imperatore','L\u2019Impero non si piega.',[["Fendente Imperiale","attacco 1","fendente orizzontale con riflessi sulla lama."],["Colpo dall\u2019Alto","attacco 2","colpo verticale a due mani."],["Sfera Imperiale","speciale","una sfera di energia rossa nasce nel palmo e colpisce l\u2019avversario."]]];
+aggiungiSbloccati();
+/* riquadro di sblocco: ritratto, nome e "è ora disponibile nella Lotta libera" (uno dopo l'altro se sono più d'uno) */
+function mostraSblocchi(ids,then){if(!ids.length){if(then)then();return;}const id=ids[0],e=STORIA.sblocchi.find(x=>x.id===id)||{};
+  const nome=e.nome||(STORY_ROSTER[id]&&STORY_ROSTER[id].name)||String(id).toUpperCase();
+  const d=document.createElement('div');d.id='ajay-unlock';
+  d.innerHTML='<div class="au-box"><div class="au-glow"></div><div class="au-img"></div><div class="au-t">NUOVO PERSONAGGIO</div><div class="au-n"></div><div class="au-m">\u00e8 ora disponibile nella Lotta libera</div><button type="button">OK</button></div>';
+  d.querySelector('.au-n').textContent=nome;
+  const S=STORY_SPRITES[id],src=SEL_POSE[id]||(S&&S.pose?S.dir+S.pose+'.png':null),box=d.querySelector('.au-img');
+  if(src){const im=new Image();im.alt=nome;im.onerror=()=>{avviso('Ritratto mancante: "'+id+'"');im.remove();box.textContent='?';};im.src=src;box.appendChild(im);}
+  else{avviso('Ritratto mancante: "'+id+'"');box.textContent='?';}
   document.body.appendChild(d);try{sfx.special();}catch(e){}
-  d.querySelector('button').addEventListener('click',()=>{try{sfx.ok();}catch(e){}d.remove();});}
+  const ok=ev=>{if(ev){ev.preventDefault();ev.stopPropagation();}try{sfx.ok();}catch(e){}d.remove();mostraSblocchi(ids.slice(1),then);};
+  const b=d.querySelector('button');b.addEventListener('click',ok);b.addEventListener('touchend',ok,{passive:false});}
+/* ===== ARCHIVIO DEI PERSONAGGI ===== */
+function registraArchivio(id,capId){if(!STORIA.archivio.some(a=>a.id===id))return;const s=leggiSblocchi();
+  if(s.archivio.some(a=>(a.id||a)===id))return;s.archivio.push({id,cap:capId||(ST.run&&ST.run.cap)||null});scriviSblocchi();}
+function elencoArchivio(){const list=$('ar-list'),s=leggiSblocchi();list.innerHTML='';let n=0;
+  STORIA.archivio.forEach(a=>{const vist=s.archivio.find(x=>(x.id||x)===a.id),card=document.createElement('div');card.className='ar-card'+(vist?'':' locked');
+    const cv=document.createElement('canvas');cv.width=cv.height=64;card.appendChild(cv);const tx=document.createElement('div');card.appendChild(tx);
+    if(vist){n++;const capId=a.capitolo||vist.cap,c=capId&&capById(capId);
+      tx.innerHTML='<b></b><small></small><i></i>';tx.querySelector('b').textContent=a.nome||nomeDi(a.id);
+      tx.querySelector('small').textContent=c?'Capitolo '+(c.numero??capIdx(c.id)+1)+' \u00b7 '+c.titolo:'';tx.querySelector('i').textContent=a.frase?'\u201c'+a.frase+'\u201d':'';
+      ritratto(a.ritratto||a.id,t=>{if(!t)return;const x=cv.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(t,0,0,64,64);});}
+    else{tx.innerHTML='<b>???</b><small>Non ancora incontrato</small>';const x=cv.getContext('2d');x.fillStyle='rgba(255,255,255,.12)';x.font='bold 34px sans-serif';x.textAlign='center';x.fillText('?',32,44);}
+    list.appendChild(card);});
+  $('ar-count').textContent=n+' di '+STORIA.archivio.length+' personaggi incontrati';list.scrollTop=0;}
 function loadChar(id){const S=SPRITE_CHARS[id];if(!S||S.loading)return;S.loading=true;
   const files=[...new Set(Object.values(S.anims).map(a=>a.file).concat(S.portrait?[S.portrait.file]:[]))];
   let left=files.length;
@@ -6267,14 +6350,14 @@ function loop(ts){
   window.makeThumb=function(id,cb){makeThumb(id,cb);};
   function makeThumb(id,cb){
     var im=new Image();im.onload=function(){
-      var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');x.drawImage(im,0,0);
+      var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(im,0,0,128,128);   /* anche le pose da 256 px */
       var d=x.getImageData(0,0,128,128).data,x0=128,y0=128,x1=-1,y1=-1;
       for(var y=0;y<128;y++)for(var xx=0;xx<128;xx++)if(d[(y*128+xx)*4+3]>40){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y;}
       var side=Math.round((y1-y0)*.46),top=Math.max(0,y0-2),sx=0,n=0;
       for(var y=top;y<top+side*.55;y++)for(var xx=x0;xx<=x1;xx++)if(d[(y*128+xx)*4+3]>40){sx+=xx;n++;}
       var cx=n?sx/n:(x0+x1)/2,left=Math.round(Math.max(0,Math.min(128-side,cx-side/2)));
       var t=document.createElement('canvas');t.width=t.height=64;var tx=t.getContext('2d');tx.imageSmoothingEnabled=false;
-      tx.drawImage(im,left,top,side,side,0,0,64,64);cb(t);};
+      tx.drawImage(c,left,top,side,side,0,0,64,64);cb(t);};
     im.src=SEL_POSE[id];
   }
   (function(){var row=document.getElementById('ss-thumbs');if(!row)return;
@@ -6284,19 +6367,22 @@ function loop(ts){
       makeThumb(c.id,function(t){box.appendChild(t);HUD_THUMB[c.id]=t;});
       b.addEventListener('click',function(){if(game.state!=='select')return;game.sel[game.pickTurn]=i;try{sfx.sel();}catch(_){}renderSelect();});
       row.appendChild(b);SS.th.push(b);}
-    ROSTER.forEach(addThumb);
-    /* Ajay ancora bloccato: casella oscurata con lucchetto (non si può scegliere) */
-    var lockB=null;
-    if(!ROSTER.some(function(c){return c.id==='ajay';})){lockB=document.createElement('div');lockB.className='ss-th locked';lockB.title='Bloccato';
+    /* personaggi ancora da sbloccare (solo quelli che hanno gli sprite): casella scura con lucchetto e "???" */
+    function addLocked(id){var lockB=document.createElement('div');lockB.className='ss-th locked';lockB.title='Bloccato';
       var lbox=document.createElement('div');lbox.className='ss-img';lockB.appendChild(lbox);
       var lnm=document.createElement('div');lnm.className='ss-nm';lnm.textContent='???';lockB.appendChild(lnm);
-      makeThumb('ajay',function(t){lbox.appendChild(t);});
+      var S=STORY_SPRITES[id];if(!SEL_POSE[id]&&S&&S.pose)SEL_POSE[id]=S.dir+S.pose+'.png';
+      if(SEL_POSE[id])makeThumb(id,function(t){lbox.appendChild(t);});
       lockB.addEventListener('click',function(){if(game.state!=='select')return;try{sfx.back();}catch(_){}
         lnm.textContent='BLOCCATO';lockB.classList.remove('shake');void lockB.offsetWidth;lockB.classList.add('shake');
         setTimeout(function(){lnm.textContent='???';},1600);});
       row.appendChild(lockB);}
-    /* sbloccato durante il gioco: la casella col lucchetto diventa quella di Ajay */
-    window._ajayThumb=function(){if(!lockB)return;var i=ROSTER.findIndex(function(c){return c.id==='ajay';});if(i<0)return;lockB.remove();lockB=null;addThumb(ROSTER[i],i);};
+    function costruisci(){row.innerHTML='';SS.th=[];ROSTER.forEach(addThumb);
+      sbloccabili().forEach(function(e){if(haSprite(e.id)&&!ROSTER.some(function(c){return c.id===e.id;}))addLocked(e.id);});
+      row.style.setProperty('--nc',row.children.length);row.style.setProperty('--nc2',Math.ceil(row.children.length/2));SS.last='';}
+    costruisci();
+    /* sbloccato durante il gioco: si rifà la fila (la casella col lucchetto diventa quella del personaggio) */
+    window._rifaiMiniature=costruisci;
     /* schermi stretti: freccia e sfumatura sul lato dove ci sono altri personaggi */
     var tw=document.getElementById('ss-tw');
     SS.edges=function(){var m=row.scrollWidth-row.clientWidth;tw.classList.toggle('l',m>2&&row.scrollLeft>2);tw.classList.toggle('r',m>2&&row.scrollLeft<m-2);};
@@ -6323,7 +6409,7 @@ function loop(ts){
         if(aa&&imgOk(S.img[aa.file])){SS.atk=k;SS.atkT=now;SS.atkLen=aa.n*1000/(aa.fps||14);}}
       if(SS.atk&&now-SS.atkT<SS.atkLen){a=A[SS.atk];fi=Math.min(a.n-1,Math.floor((now-SS.atkT)*(a.fps||14)/1000));}
       else{SS.atk=null;fi=Math.floor((now-SS.t0)*(a.fps||8)/1000)%a.n;}
-      x.drawImage(S.img[a.file],fi*S.fw,0,S.fw,S.fh,64-S.ax,124-S.ay,S.fw,S.fh);
+      var kk=128/S.fw;x.drawImage(S.img[a.file],fi*S.fw,0,S.fw,S.fh,64-S.ax*kk,124-S.ay*kk,S.fw*kk,S.fh*kk);   /* sprite da 256 px: ridotti */
       cv.classList.remove('static');
     }else{var im=POSE_IMG[id];if(!im){im=POSE_IMG[id]=new Image();im.src=SEL_POSE[id];}
       if(imgOk(im))x.drawImage(im,0,0,128,128);cv.classList.add('static');}
@@ -6586,7 +6672,7 @@ function loop(ts){
   (function(){var b=document.getElementById('st-back'),s=document.getElementById('ss-back');if(b&&s)b.innerHTML=s.innerHTML;})();
   _btn('hb-story', function(){ STORE.prova(); document.getElementById('story-screen').dataset.v='menu'; game.state='story'; updateOverlay(); }, 'ok');
   _btn('st-back', function(){ if(game.state!=='story') return false; var v=document.getElementById('story-screen').dataset.v;
-    if(v==='play') storiaEsci(); else if(v==='caps'){ storiaVista('menu'); aggiornaMenuStoria(); } else { game.state='title'; updateOverlay(); } }, 'back');
+    if(v==='play') storiaEsci(); else if(v==='caps'||v==='arch'){ storiaVista('menu'); aggiornaMenuStoria(); } else { game.state='title'; updateOverlay(); } }, 'back');
   _btn('st-continue', function(){ var p=leggiProgressi(); if(!p) return false; storiaInizia(p.cap,p.passo); }, 'ok');
   _btn('st-new', function(){ if(leggiProgressi()){ document.getElementById('st-confirm').style.display='flex'; return; }
     storiaInizia(STORIA.capitoli[0].id,null); }, 'ok');
@@ -6596,6 +6682,7 @@ function loop(ts){
   (function(){var p=document.getElementById('st-confirm');var out=function(e){if(e.target!==p)return;if(e.cancelable)e.preventDefault();p.style.display='none';try{sfx.back();}catch(_){}};
     p.addEventListener('click',out);p.addEventListener('touchend',out,{passive:false});})();
   _btn('st-chapters', function(){ elencoCapitoli(); storiaVista('caps'); }, 'sel');
+  _btn('st-archive', function(){ elencoArchivio(); storiaVista('arch'); }, 'sel');
   /* comandi della scena */
   _btn('sp-auto', function(){ ST.auto=!ST.auto; document.getElementById('sp-auto').classList.toggle('on',ST.auto); }, 'sel');
   _btn('sp-skip', function(){ if(!ST.run) return false; apriPop('sp-skipc'); }, 'sel');
