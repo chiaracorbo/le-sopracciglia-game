@@ -709,6 +709,63 @@
     .hs-right { padding-bottom: max(16px, env(safe-area-inset-bottom)) !important; }
   }
 
+  /* ===== MODALITÀ STORIA ===== */
+  .hs-btn.btn-primario { min-height: clamp(52px, 13vh, 96px); border-radius: 12px; }   /* STORIA: alto come gli altri pulsanti della home */
+  #story-screen { display:none; position:fixed; inset:0; z-index:500; overflow:hidden; font-family:var(--font-gioco);
+    background:radial-gradient(ellipse at 50% 30%, #1d1650 0%, #0d0b2a 50%, #07061a 90%); color:var(--testo); }
+  #st-back { position:absolute; z-index:5; top:max(10px,env(safe-area-inset-top)); left:max(10px,env(safe-area-inset-left)); }
+  #story-screen[data-v="play"] #st-back { opacity:.75; }
+  .st-view { display:none; position:absolute; inset:0; flex-direction:column; align-items:center; justify-content:center; gap:min(3vh,14px);
+    padding:max(16px,env(safe-area-inset-top)) max(70px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(70px,env(safe-area-inset-left)); }
+  #story-screen[data-v="menu"] #st-menu, #story-screen[data-v="caps"] #st-caps, #story-screen[data-v="play"] #st-play { display:flex; }
+  .st-title { color:var(--oro); font-size:min(7vw,13vh); line-height:1; letter-spacing:.06em; text-shadow:2px 2px 0 var(--oro-scuro), 0 0 28px rgba(255,193,7,.35); }
+  .st-sub { margin-top:-1vh; font:700 min(2vw,4.2vh) var(--font-testo); color:var(--testo-tenue); text-align:center; }
+  .st-btns { display:flex; flex-direction:column; gap:min(2.6vh,12px); width:min(100%,460px); }
+  .st-btns button { min-height:clamp(48px,12vh,80px); font-size:min(2.4vw,5vh,30px); letter-spacing:.04em; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+  .st-btns button small { font:700 min(1.5vw,3.2vh,15px) var(--font-testo); letter-spacing:0; opacity:.8; }
+  .st-btns button small:empty { display:none; }
+  .st-btns button.off { background:#4a4658; color:#8d8a99; border-color:#4a4658; box-shadow:none; cursor:default; }
+  #st-nosave { max-width:460px; padding:6px 10px; border:1px solid rgba(255,65,54,.6); border-radius:8px; background:rgba(60,10,10,.6);
+    font:700 13px/1.35 var(--font-testo); color:#ffd6d3; text-align:center; }
+  .st-head { color:var(--oro); font-size:min(3vw,6vh,26px); letter-spacing:.06em; text-align:center; flex:none; }
+  #st-caps { justify-content:flex-start; padding-top:max(18px,calc(env(safe-area-inset-top) + 12px)); }
+  #st-list { flex:1; min-height:0; width:min(100%,560px); overflow-y:auto; overflow-x:hidden; touch-action:pan-y; -webkit-overflow-scrolling:touch;
+    display:flex; flex-direction:column; gap:8px; padding:4px 4px 10px; }
+  .st-cap { display:flex; align-items:center; gap:12px; flex:none; min-height:54px; padding:0 14px; text-align:left; font-size:min(2.2vw,4.6vh,22px); }
+  .st-cap .n { flex:none; min-width:2.6em; color:var(--oro-chiaro); }
+  .st-cap .t { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--testo); }
+  .st-cap.cur { box-shadow:0 0 0 2px var(--oro), 0 0 14px rgba(255,193,7,.5); }
+  .st-cap.locked { border-color:rgba(255,255,255,.18); color:rgba(255,255,255,.4); cursor:default; }
+  .st-cap.locked .n, .st-cap.locked .t { color:rgba(255,255,255,.4); }
+  .st-cap .lk { flex:none; width:20px; height:22px; background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 18' shape-rendering='crispEdges'%3E%3Cpath d='M4 8V5a4 4 0 0 1 8 0v3' fill='none' stroke='%23FFC107' stroke-width='2'/%3E%3Crect x='2' y='8' width='12' height='9' fill='%23FFC107'/%3E%3Crect x='7' y='11' width='2' height='3' fill='%23000'/%3E%3C/svg%3E"); opacity:.7; }
+  #st-confirm { display:none; position:absolute; inset:0; z-index:20; background:rgba(0,0,0,.72); align-items:center; justify-content:center; }
+  #st-confirm .set-box { width:min(88vw,440px); background:var(--fondo-pannello); border:2px solid var(--oro); border-radius:16px; padding:16px 18px;
+    display:flex; flex-direction:column; gap:10px; box-shadow:0 0 30px rgba(255,193,7,.25); text-align:center; }
+  #st-confirm .set-h { color:var(--oro); font-size:18px; letter-spacing:.08em; }
+  #st-confirm p { margin:0; font:700 15px/1.4 var(--font-testo); color:var(--testo); }
+  #st-confirm button { min-height:48px; font-size:16px; letter-spacing:.05em; }
+  /* scene della storia: tocco ovunque per andare avanti */
+  #st-play { justify-content:flex-end; padding-bottom:max(14px,env(safe-area-inset-bottom)); cursor:pointer; }
+  #sp-card { position:absolute; left:50%; top:42%; transform:translate(-50%,-50%); display:none; flex-direction:column; align-items:center; gap:6px; text-align:center; width:90%; }
+  #sp-card.on { display:flex; animation:spCard .5s ease-out; }
+  #sp-card small { color:var(--testo-tenue); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.2em; }
+  #sp-card b { color:var(--oro); font-weight:400; font-size:min(4.4vw,9vh,46px); text-shadow:2px 2px 0 var(--oro-scuro); }
+  @keyframes spCard { from{opacity:0;transform:translate(-50%,-40%)} to{opacity:1;transform:translate(-50%,-50%)} }
+  #sp-box { position:relative; width:min(100%,900px); min-height:min(30vh,150px); box-sizing:border-box; padding:12px 18px 22px; display:none;
+    background:rgba(10,8,28,.92); border:3px solid var(--oro); border-radius:12px; box-shadow:0 0 0 3px #1a1205, 0 0 24px rgba(255,193,7,.25); }
+  #sp-box.on { display:block; }
+  #sp-who { color:var(--oro); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.06em; margin-bottom:4px; }
+  #sp-who:empty { display:none; }
+  #sp-text { font:700 min(2.3vw,5vh,24px)/1.4 var(--font-testo); color:var(--testo); }
+  #sp-next { position:absolute; right:14px; bottom:4px; color:var(--oro); font-size:16px; animation:spBlink 1s steps(2) infinite; }
+  @keyframes spBlink { 50%{opacity:0} }
+  /* icona "Salvataggio..." in basso a destra per un secondo */
+  #st-saving { position:fixed; z-index:99980; right:max(12px,env(safe-area-inset-right)); bottom:max(10px,env(safe-area-inset-bottom)); display:flex; align-items:center; gap:6px;
+    padding:4px 10px 4px 6px; border-radius:8px; background:rgba(10,8,28,.85); border:1px solid rgba(255,193,7,.6);
+    font:400 13px var(--font-gioco); color:var(--oro); pointer-events:none; opacity:0; transition:opacity .25s; }
+  #st-saving.on { opacity:1; }
+  #st-saving .pxi { width:16px; height:16px; animation:spBlink .5s steps(2) infinite; }
+
   /* ===== PULSANTI: tre tipi, uguali in tutte le schermate ===== */
   .btn-primario, .btn-secondario, .btn-icona { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none; user-select: none; transition: transform .08s, box-shadow .12s; }
@@ -753,12 +810,12 @@
     <h1 class="hs-title">Le Sopracciglia<br>della Guerra</h1>
     <p class="hs-sub">La lotta per la pace nell'universo</p>
     <div class="hs-menu">
+      <button class="hs-btn btn-primario" id="hb-story">STORIA</button>
       <button class="hs-btn btn-secondario" id="hb-1">BATTAGLIA SINGOLA</button>
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
-      <button class="hs-btn hs-btn-sm btn-secondario" id="hb-4">ALLENAMENTO</button>
     </div>
-    <div class="hs-extra"><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.126</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.127</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -781,7 +838,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.126.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.127.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -831,6 +888,35 @@
   <div id="vs-dots"><i></i><i></i><i></i></div>
   <div id="vs-flash"></div>
 </div>
+<!-- MODALITÀ STORIA: menu (CONTINUA / NUOVA PARTITA / SELEZIONA CAPITOLO), elenco capitoli, scene -->
+<div id="story-screen" data-v="menu">
+  <button id="st-back" class="btn-icona btn-indietro" aria-label="Indietro"></button>
+  <div id="st-menu" class="st-view">
+    <div class="st-title">STORIA</div>
+    <div class="st-sub">Il libro, capitolo per capitolo</div>
+    <div class="st-btns">
+      <button id="st-continue" class="btn-primario">CONTINUA<small id="st-cont-info"></small></button>
+      <button id="st-new" class="btn-secondario">NUOVA PARTITA</button>
+      <button id="st-chapters" class="btn-secondario">SELEZIONA CAPITOLO</button>
+    </div>
+    <div id="st-nosave" hidden>In questa modalità del browser i progressi non vengono salvati</div>
+  </div>
+  <div id="st-caps" class="st-view">
+    <div class="st-head">SELEZIONA CAPITOLO</div>
+    <div id="st-list"></div>
+  </div>
+  <div id="st-play" class="st-view">
+    <div id="sp-card"><small></small><b></b></div>
+    <div id="sp-box"><div id="sp-who"></div><div id="sp-text"></div><span id="sp-next">&#9660;</span></div>
+  </div>
+  <div id="st-confirm"><div class="set-box">
+    <div class="set-h">NUOVA PARTITA</div>
+    <p>Vuoi ricominciare? I progressi della storia verranno sovrascritti. I personaggi sbloccati restano.</p>
+    <button id="st-yes" class="btn-primario">SÌ, RICOMINCIA</button>
+    <button id="st-no" class="btn-secondario">ANNULLA</button>
+  </div></div>
+</div>
+<div id="st-saving" aria-hidden="true"><svg class="pxi" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges"><rect class="px-g" x="2" y="2" width="12" height="12"/><rect class="px-o" x="4" y="2" width="8" height="5"/><rect class="px-w" x="9" y="3" width="2" height="3"/><rect class="px-w" x="4" y="9" width="8" height="5"/></svg>Salvataggio...</div>
 <div id="path-screen" aria-live="polite">
   <div id="pt-top"><div id="pt-me"><canvas width="64" height="64"></canvas><div><small>Il tuo campione</small><b></b></div></div>
     <div id="pt-head">PERCORSO DEL TORNEO</div></div>
@@ -2953,14 +3039,144 @@ function findEyes(S){S.eyeFr={};try{
     S.eyeFr[a.file]=arr;}}catch(e){S.eyeFr={};}}
 function registerStoryChar(id){const S=STORY_SPRITES[id],c=STORY_ROSTER[id];if(!S||!c)return null;
   if(!SPRITE_CHARS[id]){S.img=S.img||{};SPRITE_CHARS[id]=S;}loadChar(id);return c;}
+
+/* ##########################################################################################
+   ##########################################################################################
+   ##                                                                                      ##
+   ##   MODALITÀ STORIA — CONTENUTI                                                        ##
+   ##   Qui ci sono TUTTI i capitoli e i loro passi, in ordine.                            ##
+   ##   Per aggiungere un capitolo basta aggiungere un oggetto all'elenco "capitoli".     ##
+   ##   Ogni capitolo e ogni passo hanno un "id" FISSO e unico: i salvataggi usano        ##
+   ##   questi id, quindi NON vanno mai cambiati dopo la pubblicazione.                   ##
+   ##                                                                                      ##
+   ##   Passi disponibili per ora:                                                        ##
+   ##     {id, tipo:'testo', chi:'NOME (facoltativo)', testo:'...'}                       ##
+   ##                                                                                      ##
+   ##########################################################################################
+   ########################################################################################## */
+const STORIA={
+  capitoli:[
+    {id:'prova01',numero:1,titolo:'Capitolo di prova 1',passi:[
+      {id:'prova01_testo01',tipo:'testo',chi:'NARRATORE',testo:'Questo è il primo capitolo di prova. Tocca lo schermo per andare avanti.'},
+    ]},
+    {id:'prova02',numero:2,titolo:'Capitolo di prova 2',passi:[
+      {id:'prova02_testo01',tipo:'testo',chi:'NARRATORE',testo:'Secondo capitolo di prova. Il gioco ha salvato all\u2019inizio del capitolo.'},
+    ]},
+    {id:'prova03',numero:3,titolo:'Capitolo di prova 3',passi:[
+      {id:'prova03_testo01',tipo:'testo',chi:'NARRATORE',testo:'Terzo e ultimo capitolo di prova. Dopo questo si torna al menu della storia.'},
+    ]},
+  ],
+};
+/* ###################################  FINE CONTENUTI  ################################### */
+
+/* ==================== MOTORE DELLA STORIA ====================
+   Progressi in "sopracciglia_storia_v1": {v, cap, passo, raggiunti:[id capitoli], squadra:{idLotta:idLottatore}}
+   cap/passo = il punto più avanzato raggiunto (da lì riparte CONTINUA). Rigiocare un capitolo vecchio non lo fa tornare indietro. */
+const KEY_STORIA='sopracciglia_storia_v1',STORIA_V=1;
+const capById=id=>STORIA.capitoli.find(c=>c.id===id)||null;
+const capIdx=id=>STORIA.capitoli.findIndex(c=>c.id===id);
+/* posizione nel libro (per capire cosa viene prima): capitolo*1000 + passo */
+function posizione(capId,passoId){const ci=capIdx(capId);if(ci<0)return -1;const pi=Math.max(0,STORIA.capitoli[ci].passi.findIndex(p=>p.id===passoId));return ci*1000+pi;}
+function leggiProgressi(){const raw=STORE.get(KEY_STORIA);if(!raw)return null;
+  let d;try{d=JSON.parse(raw);}catch(e){console.warn('Salvataggio della storia illeggibile: ignorato');return null;}
+  return normalizzaProgressi(d);}
+/* rende sicuro un salvataggio (anche vecchio o di un'altra versione): mai bloccarsi */
+function normalizzaProgressi(d){if(!d||typeof d!=='object')return null;
+  let v=+d.v||1;
+  /* MIGRAZIONI: quando cambierà la struttura, qui si converte il vecchio formato. Esempio: if(v===1){...;v=2;} */
+  let cap=capById(d.cap),passo=d.passo;
+  if(v>STORIA_V){console.warn('Salvataggio di una versione più nuova: riparto dall\u2019inizio del capitolo salvato');passo=null;}
+  const raggiunti=[...new Set((Array.isArray(d.raggiunti)?d.raggiunti:[]).filter(id=>capById(id)))];
+  if(!cap){console.warn('Il capitolo salvato ("'+d.cap+'") non esiste più: riparto dall\u2019ultimo capitolo raggiunto');
+    cap=raggiunti.map(capById).sort((a,b)=>capIdx(b.id)-capIdx(a.id))[0]||null;passo=null;}
+  if(!cap)return null;
+  if(!cap.passi.some(p=>p.id===passo)){if(passo)console.warn('Il passo salvato ("'+passo+'") non esiste più: riparto dall\u2019inizio del capitolo');passo=cap.passi[0]&&cap.passi[0].id;}
+  if(!raggiunti.includes(cap.id))raggiunti.push(cap.id);
+  return {v:STORIA_V,cap:cap.id,passo,raggiunti,squadra:(d.squadra&&typeof d.squadra==='object')?d.squadra:{}};}
+function scriviProgressi(p){const ok=STORE.set(KEY_STORIA,JSON.stringify(p));if(ok)mostraSalvataggio();return ok;}
+let _salvT=0;
+function mostraSalvataggio(){const el=document.getElementById('st-saving');if(!el)return;el.classList.add('on');clearTimeout(_salvT);_salvT=setTimeout(()=>el.classList.remove('on'),1000);}
+/* salvataggio automatico: all'inizio di ogni capitolo e subito prima di ogni lotta */
+function salvaStoria(capId,passoId){let p=leggiProgressi()||{v:STORIA_V,cap:capId,passo:passoId,raggiunti:[],squadra:{}};
+  if(!p.raggiunti.includes(capId))p.raggiunti.push(capId);
+  if(posizione(capId,passoId)>=posizione(p.cap,p.passo)){p.cap=capId;p.passo=passoId;}   /* non torna mai indietro */
+  scriviProgressi(p);}
+function capRaggiunto(id,p){if(capIdx(id)===0)return true; /* il primo capitolo è sempre aperto */
+  p=p||leggiProgressi();if(!p)return false;return p.raggiunti.includes(id)||capIdx(id)<=capIdx(p.cap);}
+
+/* stato della storia in corso */
+const ST={run:null,card:0,warned:false};
+function storiaVista(v){const sc=document.getElementById('story-screen');if(sc)sc.dataset.v=v;}
+/* chiamata da updateOverlay quando si entra nella schermata STORIA */
+function storiaMostra(){if(ST.run){storiaVista('play');return;}storiaVista(document.getElementById('story-screen').dataset.v==='caps'?'caps':'menu');aggiornaMenuStoria();}
+function aggiornaMenuStoria(){const p=leggiProgressi(),b=document.getElementById('st-continue'),inf=document.getElementById('st-cont-info');
+  b.classList.toggle('off',!p);
+  if(p){const c=capById(p.cap);inf.textContent='Capitolo '+(c.numero??capIdx(c.id)+1)+' \u00b7 '+c.titolo;}else inf.textContent='';
+  document.getElementById('st-nosave').hidden=STORE.ok;}
+function elencoCapitoli(){const list=document.getElementById('st-list'),p=leggiProgressi();list.innerHTML='';
+  STORIA.capitoli.forEach((c,i)=>{const ok=capRaggiunto(c.id,p),b=document.createElement('button');
+    b.className='btn-secondario st-cap'+(ok?'':' locked')+(p&&p.cap===c.id?' cur':'');
+    b.innerHTML='<span class="n">'+(c.numero??i+1)+'</span><span class="t"></span>'+(ok?'':'<span class="lk"></span>');
+    b.querySelector('.t').textContent=ok?c.titolo:'???';
+    b.addEventListener('click',()=>{if(game.state!=='story')return;if(!ok){try{sfx.buzz();}catch(_){}return;}try{sfx.ok();}catch(_){}storiaInizia(c.id,null);});
+    list.appendChild(b);});
+  list.scrollTop=0;const cur=list.querySelector('.cur');if(cur)list.scrollTop=Math.max(0,cur.offsetTop-list.clientHeight/2);}
+/* avvia la storia dal capitolo capId (dal passo passoId, o dall'inizio) */
+function storiaInizia(capId,passoId){const c=capById(capId);if(!c){console.warn('Capitolo inesistente: '+capId);return;}
+  let i=passoId?c.passi.findIndex(p=>p.id===passoId):0;if(i<0)i=0;
+  ST.run={cap:c.id,i};storiaVista('play');
+  if(i===0){salvaStoria(c.id,c.passi[0]&&c.passi[0].id);mostraCartello(c);}else{nascondiCartello();mostraPasso();}}
+function mostraCartello(c){const card=document.getElementById('sp-card');card.querySelector('small').textContent='CAPITOLO '+(c.numero??capIdx(c.id)+1);
+  card.querySelector('b').textContent=c.titolo;card.classList.remove('on');void card.offsetWidth;card.classList.add('on');
+  document.getElementById('sp-box').classList.remove('on');ST.card=performance.now();}
+function nascondiCartello(){document.getElementById('sp-card').classList.remove('on');ST.card=0;}
+function mostraPasso(){const r=ST.run,c=capById(r.cap),p=c&&c.passi[r.i];if(!p){storiaFineCapitolo();return;}
+  const box=document.getElementById('sp-box');
+  if(p.tipo==='testo'){document.getElementById('sp-who').textContent=p.chi||'';document.getElementById('sp-text').textContent=p.testo||'';box.classList.add('on');}
+  else{console.warn('Tipo di passo non ancora gestito: "'+p.tipo+'" ('+p.id+'): lo salto');r.i++;mostraPasso();}}
+/* tocco o INVIO: avanti */
+function storiaAvanti(){if(!ST.run)return;
+  if(ST.card){if(performance.now()-ST.card<400)return;nascondiCartello();mostraPasso();return;}
+  try{sfx.sel();}catch(_){}ST.run.i++;mostraPasso();}
+function storiaFineCapitolo(){const ci=capIdx(ST.run.cap),next=STORIA.capitoli[ci+1];
+  if(next){storiaInizia(next.id,null);return;}
+  /* fine della storia (per ora si torna al menu; qui arriveranno l'epilogo e lo sblocco di Ajay) */
+  ST.run=null;storiaVista('menu');aggiornaMenuStoria();}
+function storiaEsci(){ST.run=null;nascondiCartello();storiaVista('menu');aggiornaMenuStoria();}
+function storiaTasti(){const v=document.getElementById('story-screen').dataset.v;
+  if(v==='play'){if(kp('Enter')||kp('Space')||kp('KeyZ'))storiaAvanti();else if(kp('Escape'))storiaEsci();}
+  else if(kp('Escape')){if(document.getElementById('st-confirm').style.display==='flex')document.getElementById('st-confirm').style.display='none';
+    else if(v==='caps')storiaVista('menu');else game.state='title';try{sfx.back();}catch(_){}}}
+window.storiaMostra=storiaMostra;window.storiaTasti=storiaTasti;
+/* ==================== SALVATAGGI (localStorage, sempre dentro try/catch) ====================
+   Se il browser blocca il salvataggio (navigazione privata), tutto funziona lo stesso, solo senza salvare. */
+const STORE={ok:true,
+  get(k){try{return localStorage.getItem(k);}catch(e){this.ko(e);return null;}},
+  set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){this.ko(e);return false;}},
+  del(k){try{localStorage.removeItem(k);}catch(e){this.ko(e);}},
+  /* prova se si può salvare davvero (in alcuni browser privati la scrittura fallisce) */
+  prova(){try{localStorage.setItem('__prova','1');localStorage.removeItem('__prova');this.ok=true;}catch(e){this.ko(e);}return this.ok;},
+  ko(e){if(this.ok)console.warn('Salvataggio non disponibile in questo browser:',e&&e.message);this.ok=false;}};
+/* SBLOCCHI: personaggi sbloccati e archivio. NUOVA PARTITA non li cancella mai. */
+const KEY_SBLOCCHI='sopracciglia_sblocchi_v1',SBLOCCHI_V=1;
+let _sblocchi=null;
+function leggiSblocchi(){if(_sblocchi)return _sblocchi;let d=null;
+  try{d=JSON.parse(STORE.get(KEY_SBLOCCHI)||'null');}catch(e){console.warn('Sblocchi illeggibili, riparto da vuoto');}
+  if(!d||typeof d!=='object')d={};
+  /* versioni future: qui si convertono i salvataggi vecchi (es. if(d.v===1){...;d.v=2;}) */
+  _sblocchi={v:SBLOCCHI_V,personaggi:Array.isArray(d.personaggi)?d.personaggi.filter(x=>typeof x==='string'):[],archivio:Array.isArray(d.archivio)?d.archivio:[]};
+  if(STORE.get('ajaySbloccato')==='1'&&!_sblocchi.personaggi.includes('ajay')){_sblocchi.personaggi.push('ajay');scriviSblocchi();}  /* dalla versione 1.125 */
+  return _sblocchi;}
+function scriviSblocchi(){STORE.set(KEY_SBLOCCHI,JSON.stringify(_sblocchi||leggiSblocchi()));}
+function sbloccaPersonaggio(id){const s=leggiSblocchi();if(!s.personaggi.includes(id)){s.personaggi.push(id);scriviSblocchi();}}
 /* ===== AJAY: BLOCCATO finché non si completa la modalità storia =====
    - ajaySbloccato(): true se il giocatore ha già finito la storia (salvato nel telefono)
    - sbloccaAjay(): DA CHIAMARE ALLA FINE DELLA STORIA, dopo l'epilogo. Salva lo sblocco, aggiunge Ajay alla lotta libera
      e mostra il messaggio "Ajay è ora disponibile nella Lotta libera" con il suo ritratto. */
-const AJAY_KEY='ajaySbloccato';
-function ajaySbloccato(){try{return localStorage.getItem(AJAY_KEY)==='1';}catch(e){return false;}}
+const AJAY_KEY='ajaySbloccato';   /* chiave vecchia: letta una volta e spostata in "sopracciglia_sblocchi_v1" */
+function ajaySbloccato(){return leggiSblocchi().personaggi.includes('ajay');}
 function aggiungiAjay(){if(ROSTER.some(c=>c.id==='ajay'))return;const c=registerStoryChar('ajay');if(c)ROSTER.push(c);}
-function sbloccaAjay(){try{localStorage.setItem(AJAY_KEY,'1');}catch(e){}
+function sbloccaAjay(){sbloccaPersonaggio('ajay');
   aggiungiAjay();if(window._ajayThumb)window._ajayThumb();mostraSbloccoAjay();}
 window.sbloccaAjay=sbloccaAjay;
 if(ajaySbloccato())aggiungiAjay();
@@ -4404,6 +4620,7 @@ function update(){
     updateFx();
     if(kp('Escape')||kp('KeyP'))setPause(true);
   }
+  else if(game.state==='story'){if(window.storiaTasti)storiaTasti();}
   else if(game.state==='vs'){
     /* almeno 1,5 s; si allunga finché gli sprite dei due personaggi sono pronti (massimo 12 s) */
     game.vsT=(game.vsT||0)+1;const ready=vsReady();
@@ -5574,6 +5791,8 @@ function loop(ts){
     if(s!=='title') sh('set-pop','none');
     document.body.classList.toggle('in-title', s==='title');
     sh('select-screen', s==='select' ? 'block' : 'none');
+    sh('story-screen', s==='story' ? 'block' : 'none');
+    if(s==='story'&&window.storiaMostra)storiaMostra();
     if(s==='select'&&window.renderSelect){SS.last='';renderSelect();}
     sh('m-controls',  s==='fight'&&IS_MOB ? 'block' : 'none');
     if(s==='fight') setTimeout(function(){ applyCtl(CTL); },30);
@@ -5911,6 +6130,25 @@ function loop(ts){
   _btn('hb-install', function(){ if(!_installEvt) return false; var e=_installEvt; _installEvt=null; e.prompt();
     e.userChoice.then(function(c){ var b=document.getElementById('hb-install'); if(b) b.hidden=true; }).catch(function(){}); }, 'ok');
   syncMusicIcon(); /* all'apertura l'icona mostra subito la scelta salvata (musica attiva o spenta) */
+
+  /* ---- MODALITÀ STORIA: pulsanti ---- */
+  (function(){var b=document.getElementById('st-back'),s=document.getElementById('ss-back');if(b&&s)b.innerHTML=s.innerHTML;})();
+  _btn('hb-story', function(){ STORE.prova(); document.getElementById('story-screen').dataset.v='menu'; game.state='story'; updateOverlay(); }, 'ok');
+  _btn('st-back', function(){ if(game.state!=='story') return false; var v=document.getElementById('story-screen').dataset.v;
+    if(v==='play') storiaEsci(); else if(v==='caps'){ storiaVista('menu'); aggiornaMenuStoria(); } else { game.state='title'; updateOverlay(); } }, 'back');
+  _btn('st-continue', function(){ var p=leggiProgressi(); if(!p) return false; storiaInizia(p.cap,p.passo); }, 'ok');
+  _btn('st-new', function(){ if(leggiProgressi()){ document.getElementById('st-confirm').style.display='flex'; return; }
+    storiaInizia(STORIA.capitoli[0].id,null); }, 'ok');
+  _btn('st-yes', function(){ document.getElementById('st-confirm').style.display='none'; STORE.del(KEY_STORIA);   /* gli sblocchi restano */
+    storiaInizia(STORIA.capitoli[0].id,null); }, 'ok');
+  _btn('st-no', function(){ document.getElementById('st-confirm').style.display='none'; }, 'back');
+  (function(){var p=document.getElementById('st-confirm');var out=function(e){if(e.target!==p)return;if(e.cancelable)e.preventDefault();p.style.display='none';try{sfx.back();}catch(_){}};
+    p.addEventListener('click',out);p.addEventListener('touchend',out,{passive:false});})();
+  _btn('st-chapters', function(){ elencoCapitoli(); storiaVista('caps'); }, 'sel');
+  /* scene: tocco ovunque per andare avanti */
+  (function(){var pl=document.getElementById('st-play');if(!pl)return;var go=function(e){if(game.state!=='story'||trActive())return;if(e.cancelable)e.preventDefault();storiaAvanti();};
+    var lastT=0;pl.addEventListener('touchend',function(e){lastT=Date.now();go(e);},{passive:false});
+    pl.addEventListener('click',function(e){if(Date.now()-lastT<700)return;go(e);});})();  /* dito o mouse, mai due volte */
 
   /* home screen buttons */
   _btn('hb-1', function(){
