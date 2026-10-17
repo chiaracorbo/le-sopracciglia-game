@@ -789,6 +789,14 @@
   .sp-pop p { margin:0; font:700 15px/1.4 var(--font-testo); color:var(--testo); }
   .sp-pop p.sp-note { font-weight:400; font-size:13px; color:var(--testo-tenue); }
   .sp-pop button { min-height:48px; font-size:16px; letter-spacing:.05em; }
+  .sp-pop .set-h.lose-h { color:var(--rosso); font-size:24px; }
+  .sq-box { width:min(92vw,640px) !important; }
+  #sq-list { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+  .sq-card { position:relative; width:min(26vw,130px); min-height:auto !important; padding:8px 6px !important; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .sq-card canvas { width:min(16vh,80px); height:min(16vh,80px); image-rendering:pixelated; border-radius:8px; background:rgba(20,18,50,.9); }
+  .sq-card span { font-size:14px; letter-spacing:.04em; }
+  .sq-card.last { box-shadow:0 0 0 2px var(--oro), 0 0 14px rgba(255,193,7,.5); }
+  .sq-card.last::after { content:'ULTIMA SCELTA'; position:absolute; top:-9px; left:50%; transform:translateX(-50%); padding:1px 6px; border-radius:6px; background:var(--oro); color:#1a1205; font-size:10px; white-space:nowrap; }
   .sp-row { display:flex; align-items:center; justify-content:space-between; gap:10px; font:700 14px var(--font-testo); color:var(--testo); }
   .sp-row button { min-width:130px; }
   /* icona "Salvataggio..." in basso a destra per un secondo */
@@ -847,7 +855,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.128</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.129</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -870,7 +878,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.128.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.129.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -950,6 +958,17 @@
       <div class="sp-row"><span>Velocità del testo</span><button id="sp-speed" class="btn-secondario">NORMALE</button></div>
       <button id="sp-quit" class="btn-secondario">TORNA AL MENU</button>
       <p class="sp-note">Il gioco ha già salvato i tuoi progressi.</p>
+    </div></div>
+    <div id="sp-squad" class="sp-pop"><div class="set-box sq-box">
+      <div class="set-h">CHI COMBATTE?</div>
+      <p id="sq-sub">Scegli il lottatore per questa lotta</p>
+      <div id="sq-list"></div>
+    </div></div>
+    <div id="sp-lose" class="sp-pop"><div class="set-box">
+      <div class="set-h lose-h">SCONFITTA</div>
+      <p>Puoi riprovare questa lotta da capo: il gioco aveva salvato subito prima.</p>
+      <button id="sp-retry" class="btn-primario">RIPROVA</button>
+      <button id="sp-lose-menu" class="btn-secondario">TORNA AL MENU</button>
     </div></div>
     <div id="sp-skipc" class="sp-pop"><div class="set-box">
       <div class="set-h">SALTA</div>
@@ -2011,6 +2030,7 @@ class Fighter{
       if(!isProj){let back=Math.abs(want-nx);if(blocked)back+=4*Math.min(5,this.blockStreak||0);
         if(back>0)attacker.x=clamp(attacker.x-attacker.facing*back,attacker.half+4,W-attacker.half-4);}}
     if(!blocked)ftext(this.x,this.y-this.cfg.h-8,Math.round(dmg),'#FFF',10);
+    if(this.hp===0&&game.mode===5&&SF&&SF.modo==='copione'&&this===game.p[1])this.hp=1;   /* lotta di copione: l'avversario non cade */
     if(this.hp===0&&this.exo>0){this.exo=0;exoBreak(this);}
     if(this.hp===0){this.state='ko';this.vy=-7;this.hitstun=0;sfx.ko();shake=12;if(isP1(this,attacker))vib(60);
       blood(this.x,this.y-this.cfg.h*0.5,26);game.onKO(this);}
@@ -3124,7 +3144,28 @@ const STORIA={
       {id:'prova01_cartello02',tipo:'cartello',titolo:'Fine della scena di prova'},
     ]},
     {id:'prova02',numero:2,titolo:'Capitolo di prova 2',passi:[
-      {id:'prova02_narr01',tipo:'narratore',righe:['Secondo capitolo di prova.','Il gioco ha salvato all\u2019inizio del capitolo.','Il narratore parla senza personaggi, una riga alla volta.']},
+      {id:'prova02_scena01',tipo:'scena',sfondo:'Sala del trono',azioni:[
+        {entra:'chiara',da:'sinistra',a:'sinistra',insieme:true},{entra:'sito',da:'destra',a:'destra'},
+        {chi:'sito',testo:'Arriva Mango! Chi di noi due lo affronta? Scegli tu.'},
+      ]},
+      {id:'prova02_lotta01',tipo:'lotta',modo:'normale',squadra:['chiara','sito'],avversario:'mango',arena:'Sala del trono'},
+      {id:'prova02_scena02',tipo:'scena',sfondo:'Cripta',azioni:[
+        {entra:'chiara',da:'sinistra',a:'centro-sinistra'},
+        {chi:'chiara',testo:'Ne arrivano due, uno dopo l\u2019altro. E la vita non si ricarica!'},
+      ]},
+      {id:'prova02_lotta02',tipo:'lotta',modo:'ondata',giocatore:'chiara',avversari:['zibe','batteo'],arena:'Cripta'},
+      {id:'prova02_scena03',tipo:'scena',sfondo:'Astronave',azioni:[
+        {entra:'iacopo',da:'sinistra',a:'centro-sinistra'},
+        {chi:'iacopo',testo:'Questa non si può vincere: resisti venti secondi. E attento a quello che cade dall\u2019alto.'},
+      ]},
+      {id:'prova02_lotta03',tipo:'lotta',modo:'copione',durata:20,giocatore:'iacopo',avversario:'pisani',arena:'Astronave',pericolo:'meteore'},
+      {id:'prova02_scena04',tipo:'scena',sfondo:'Salone del Fronte',azioni:[
+        {entra:'sito',da:'destra',a:'centro-destra'},
+        {chi:'sito',testo:'Ultima prova: l\u2019Imperatore, un boss a due fasi. A metà vita potrai cambiare lottatore.'},
+      ]},
+      {id:'prova02_lotta04',tipo:'lotta',modo:'boss',squadra:['chiara','sito'],avversario:'imperatore',arena:'Salone del Fronte',vita:1.4,
+        fasi:[{soglia:.5,testo:'FASE 2',lampo:'#FF2A2A',musica:'win',aura:'red',ricarica:true,cambio:true}]},
+      {id:'prova02_narr01',tipo:'narratore',righe:['Fine delle lotte di prova.']},
     ]},
     {id:'prova03',numero:3,titolo:'Capitolo di prova 3',passi:[
       {id:'prova03_anim01',tipo:'animazione',sfondo:'Villaggio delle due lune',anim:'pioggia',durata:4},
@@ -3280,6 +3321,7 @@ function avviaPasso(){const p=passoCorrente();if(!p){storiaFineCapitolo();return
     case 'scena':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;if(!p.sfondo)avviso('Scena "'+p.id+'" senza sfondo: uso il fondo sfumato');
       for(const a of (p.attori||[]))creaAttore(a);SC.azioni=p.azioni||[];prossimaAzione();break;
     case 'effetto':SC.bg=vecchia&&vecchia.bg;SC.attori=vecchia?vecchia.attori:{};SC.azioni=[p];prossimaAzione();break;
+    case 'lotta':SC.nero=true;avviaLotta(p);break;
     case 'animazione':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;SC.anim=ANIMAZIONI[p.anim]||null;
       if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": mostro solo lo sfondo');SC.wait={type:'time',left:p.durata||3,then:passoSuccessivo};break;
     default:avviso('Tipo di passo non ancora gestito: "'+p.tipo+'" ('+p.id+'): lo salto');passoSuccessivo();}}
@@ -3299,7 +3341,7 @@ function creaAttore(a){const S=spriteAttore(a.id);const W=larghezzaScena();
 function larghezzaScena(){const cv=$('sp-cv');return cv.width&&cv.height?cv.width/cv.height*SCENA_H:854;}
 
 /* ---- azioni della scena ---- */
-function prossimaAzione(){if(!SC)return;SC.wait=null;SC.ai++;const a=SC.azioni[SC.ai];if(!a){if(SC.fineScena)return;nascondiBox();passoSuccessivo();return;}
+function prossimaAzione(){if(!SC)return;SC.wait=null;SC.ai++;const a=SC.azioni[SC.ai];if(!a){nascondiBox();if(SC.dopo){const f=SC.dopo;SC.dopo=null;f();return;}passoSuccessivo();return;}
   esegui(a);}
 function applicaPose(a){if(a.pose)for(const k in a.pose){const o=SC.attori[k];if(o){o.posa=a.pose[k];o.t=0;}else avviso('Posa per un attore non in scena: '+k);}
   if(a.guarda)for(const k in a.guarda){const o=SC.attori[k];if(o)o.face=a.guarda[k]==='sinistra'?-1:1;}}
@@ -3319,7 +3361,7 @@ function esegui(a){const W=larghezzaScena();
   if(a.guarda||a.pose)return prossimaAzione();
   if(a.effetto||a.tipo==='effetto'){effetto(a);return;}
   if(a.attesa!==undefined){SC.wait={type:'time',left:+a.attesa||0,then:prossimaAzione};return;}
-  if(a.musica!==undefined){ST.track=a.musica==='silenzio'?'hush':a.musica;return prossimaAzione();}
+  if(a.musica!==undefined){ST.track=traccia(a.musica);return prossimaAzione();}
   if(a.suono){try{(sfx[a.suono]||(()=>avviso('Suono mancante: "'+a.suono+'"')))();}catch(e){}return prossimaAzione();}
   if(a.cartello){mostraCartelloFx(a.sopra||'',a.cartello,a.durata||2.6,()=>prossimaAzione());return;}
   avviso('Azione sconosciuta: '+JSON.stringify(a));prossimaAzione();}
@@ -3327,7 +3369,7 @@ function effetto(a){const e=a.effetto,d=a.durata;
   if(e==='lampo'){SC.fx.push({k:'flash',col:a.colore||'#FFFFFF',t:0,d:d||.45});return prossimaAzione();}
   if(e==='trema'){SC.shake=a.forza||8;SC.shakeT=d||.6;SC.shakeT0=SC.shakeT;return prossimaAzione();}
   if(e==='nero'||e==='dissolvenza'){SC.fx.push({k:'nero',t:0,d:d||1.2});SC.wait={type:'fx'};return;}
-  if(e==='musica'){ST.track=a.musica==='silenzio'?'hush':a.musica;return prossimaAzione();}
+  if(e==='musica'){ST.track=traccia(a.musica);return prossimaAzione();}
   avviso('Effetto sconosciuto: "'+e+'"');prossimaAzione();}
 
 /* ---- riquadro di dialogo ---- */
@@ -3422,10 +3464,129 @@ function apriPop(id){chiudiPop();$(id).classList.add('on');if(ST.run)ST.run.paus
 function storiaSalta(){chiudiPop();const c=capById(ST.run.cap);let j=c.passi.findIndex((p,k)=>k>ST.run.i&&p.tipo==='lotta');
   $('sp-card').style.opacity=0;$('sp-black').style.opacity=0;$('sp-flash').style.opacity=0;
   if(j>=0){ST.run.i=j;avviaPasso();}else{ST.run.i=c.passi.length;storiaFineCapitolo();}}
+/* ==================== LOTTE DELLA STORIA ====================
+   Passo {tipo:'lotta', id, ...}:
+   - giocatore:'chiara'                 chi controlla il giocatore
+     oppure squadra:['chiara','sito']   il giocatore sceglie chi combatte (la scelta resta nel salvataggio)
+   - avversario:'sito'  oppure  avversari:['zibe','batteo','alice']  (ondate)
+   - arena:'Sala del trono'             uno degli sfondi dei combattimenti
+   - modo: 'normale' | 'ondata' | 'resisti' | 'copione' | 'interrotta' | 'boss'
+   - durata: secondi (resisti e copione)        soglia: 0-1 e chi:'avversario'|'giocatore' (interrotta)
+   - vita: moltiplicatore della vita dell'avversario (per i boss, es. 1.5)
+   - fasi (boss): [{soglia:.5, testo:'FASE 2', lampo:'#FF2A2A', musica:'win', sprite:'altro_id', arena:'Cripta',
+                    ricarica:true, aura:'red', cambio:true, scena:[...azioni di una scena...]}]
+   - difficolta: 'facile' | 'normale' | 'difficile' | 'boss'     musica: traccia della lotta
+   - pericolo: nome di un PERICOLO dell'arena (vedi sotto)
+   Dopo la lotta: vittoria → breve scritta e si continua; sconfitta → RIPROVA / TORNA AL MENU;
+   copione → si continua senza "hai perso"; interrotta → conta come vittoria e si continua. */
+let SF=null;   /* lotta della storia in corso */
+/* PERICOLI DELL'ARENA disegnati nel codice: tick(sf, secondi) viene chiamato ogni fotogramma della lotta */
+const PERICOLI={
+  /* colpi che cadono dall'alto sopra il giocatore, ogni 3 secondi (con un'ombra che avvisa) */
+  meteore:{tick(sf,t){if(game.koPending)return;sf.met=sf.met||0;if(t<sf.met)return;sf.met=t+3;
+    const g=game.p[0],x=clamp(g.x+rnd(-50,50),30,W-30);
+    fxObjs.push({t:0,life:40,draw(o){ctx.globalAlpha=.25+.3*(o.t/o.life);ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(x,GROUND+1,22,5,0,0,7);ctx.fill();ctx.globalAlpha=1;}});
+    setTimeoutFrames(40,()=>{if(!game.p[1])return;projectiles.push({x,y:-20,vx:0,vy:7,grav:.2,w:18,h:18,dmg:6,kb:5,life:160,owner:game.p[1],col:'#FF8C1A',aoe:34,bounceKill:true,sp:false});});}},
+};
+/* tracce: quelle del gioco (menu, fight, win, lose) oppure un file music/<nome>.mp3 aggiunto in futuro */
+function traccia(nome){if(!nome)return null;if(nome==='silenzio')return 'hush';
+  if(!tracks[nome]){const src='music/'+nome+'.mp3';window._loadMusic({[nome]:src});tracks[nome].addEventListener('error',()=>{avviso('Musica mancante: '+src+': resta la musica attuale');delete tracks[nome];if(ST.track===nome)ST.track=null;if(ST.fightTrack===nome)ST.fightTrack=null;});}
+  return nome;}
+function cfgDi(id){if(STORY_ROSTER[id]){registerStoryChar(id);return STORY_ROSTER[id];}
+  const c=ROSTER.find(r=>r.id===id);if(c){loadChar(id);return c;}avviso('Personaggio mancante per la lotta: "'+id+'"');return null;}
+function avviaLotta(p){salvaStoria(ST.run.cap,p.id);   /* salvataggio subito prima della lotta: RIPROVA riparte da qui */
+  const sq=(p.squadra||[]).filter(id=>cfgDi(id));
+  if(sq.length>1){scegliSquadra(p,sq,'Scegli il lottatore per questa lotta',id=>iniziaLotta(p,id));return;}
+  iniziaLotta(p,p.giocatore||sq[0]||'iacopo');}
+/* schermata di scelta (come in Final Fantasy VI) */
+function scegliSquadra(p,ids,sub,then){const pr=leggiProgressi(),last=pr&&pr.squadra&&pr.squadra[p.id];
+  const list=$('sq-list');list.innerHTML='';$('sq-sub').textContent=sub;
+  ids.forEach(id=>{const b=document.createElement('button');b.className='btn-secondario sq-card'+(id===last?' last':'');
+    const cv=document.createElement('canvas');cv.width=cv.height=64;b.appendChild(cv);const nm=document.createElement('span');nm.textContent=nomeDi(id);b.appendChild(nm);
+    ritratto(id,t=>{if(!t)return;const x=cv.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(t,0,0,64,64);});
+    b.addEventListener('click',e=>{e.stopPropagation();try{sfx.ok();}catch(_){}chiudiPop();
+      const q=leggiProgressi();if(q){q.squadra[p.id]=id;scriviProgressi(q);}then(id);});
+    list.appendChild(b);});
+  nascondiBox();apriPop('sp-squad');}
+function iniziaLotta(p,gid){const gc=cfgDi(gid)||cfgDi('iacopo'),ec=(p.avversari||[p.avversario]).filter(Boolean).map(cfgDi).filter(Boolean);
+  if(!ec.length){avviso('Lotta senza avversario: '+p.id+': la salto');passoSuccessivo();return;}
+  SF={p,modo:p.modo||'normale',g:gc,gid:gc.id,nemici:ec,ondata:0,fase:0,t:0,flash:null};
+  [gc,...ec].forEach(c=>ritratto(c.id,t=>{if(t&&!HUD_THUMB[c.id])HUD_THUMB[c.id]=t;}));
+  for(const f of (p.fasi||[]))if(f.sprite)cfgDi(f.sprite);
+  game.mode=5;game.tournament=null;game.reset();game.playerLost=false;game.stats={maxHit:0,parry:0};
+  let bi=BACKGROUNDS.indexOf(p.arena);if(bi<0){if(p.arena)avviso('Arena mancante: "'+p.arena+'": ne uso una a caso');bi=(Math.random()*BACKGROUNDS.length)|0;}
+  game.bg=bi;loadBg(bi);game.round=1;game.wins=[0,0];game.loadWait=0;
+  ST.fightTrack=traccia(p.musica)||null;
+  game.startRound();game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}}
+/* chiamata da game.startRound nelle lotte della storia */
+function lottaPreparaRound(){const p=SF.p,e=game.p[1];
+  const v=p.vita||(SF.modo==='boss'?1.5:1);e.maxHp=e.hp=Math.round(e.maxHp*v);e.hpTrail=e._trailHp=e.hp;
+  game.timer=(SF.modo==='resisti'||SF.modo==='copione')?(p.durata||30):99;
+  game.banner=SF.modo==='ondata'?'ONDATA 1/'+SF.nemici.length:SF.modo==='resisti'?'RESISTI!':SF.modo==='boss'?'BOSS':'LOTTA!';}
+/* ogni fotogramma della lotta */
+function storiaLottaTick(){if(!SF)return;SF.t+=1/60;const p=SF.p,[g,e]=game.p;
+  if(p.pericolo){const P=PERICOLI[p.pericolo];if(P)P.tick(SF,SF.t);else avviso('Pericolo mancante: "'+p.pericolo+'"');}
+  if(SF.flash&&--SF.flash.t<=0)SF.flash=null;
+  if(game.koPending||game.freeze>0)return;
+  /* INTERROTTA: sotto la soglia la lotta si ferma e la storia continua (vale come vittoria) */
+  if(SF.modo==='interrotta'){const f=p.chi==='giocatore'?g:e;if(f.hp/f.maxHp<=(p.soglia??.3)){game.koPending=true;game.freeze=999;flash(2);
+    setTimeoutFrames(45,()=>tornaAllaStoria('vittoria'));}}
+  /* BOSS A FASI */
+  if(SF.modo==='boss'&&p.fasi&&SF.fase<p.fasi.length&&e.hp/e.maxHp<=p.fasi[SF.fase].soglia)nuovaFase(p.fasi[SF.fase]);}
+function nuovaFase(fz){SF.fase++;const d=game.cpuDiff();game.freeze=Math.max(game.freeze,70);
+  game.banner=fz.testo||('FASE '+(SF.fase+1));game.bannerT=70;sfx.special();
+  SF.flash={col:fz.lampo||'#FFFFFF',t:24,max:24};shake=Math.max(shake,8);
+  if(fz.musica)ST.fightTrack=traccia(fz.musica);
+  if(fz.sprite){const c=cfgDi(fz.sprite),e=game.p[1];if(c){const r=e.hp/e.maxHp,nf=new Fighter(c,e.x,e.facing,'cpu');nf.aiDiff=e.aiDiff;
+    nf.maxHp=Math.round(c.hp*d.hp*(SF.p.vita||1.5));nf.hp=Math.round(nf.maxHp*r);nf.hpTrail=nf._trailHp=nf.hp;nf.trailWait=0;nf.trailSpd=0;nf.meter=e.meter;game.p[1]=nf;}}
+  if(fz.aura)game.p[1].aura=fz.aura;
+  if(fz.arena){const bi=BACKGROUNDS.indexOf(fz.arena);if(bi>=0){game.bg=bi;loadBg(bi);}else avviso('Arena mancante: "'+fz.arena+'"');}
+  if(fz.ricarica){const g=game.p[0];g.hp=g.maxHp;g.hpTrail=g._trailHp=g.hp;}
+  const dopo=()=>{if(fz.cambio!==false&&SF.p.squadra&&SF.p.squadra.length>1)cambiaLottatore(()=>{});};
+  if(fz.scena&&fz.scena.length)interludio(fz.scena,fz.arena||SF.p.arena,()=>{dopo();});else dopo();}
+/* scena dentro una lotta (es. tra le fasi del boss): poi si torna a combattere */
+function interludio(azioni,sfondo,then){game.state='story';try{window._screenSwitched&&window._screenSwitched();}catch(e){}storiaVista('play');
+  SC=nuovaScena();SC.bg=sfondo?sfondoScena(sfondo):null;SC.azioni=azioni;SC.dopo=()=>{SC.dopo=null;game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}then();};
+  avviaLoop();prossimaAzione();}
+/* tra una fase e l'altra si può cambiare lottatore (mantiene la stessa percentuale di vita) */
+function cambiaLottatore(then){const p=SF.p;game.state='story';try{window._screenSwitched&&window._screenSwitched();}catch(e){}storiaVista('play');SC=nuovaScena();SC.nero=true;avviaLoop();
+  scegliSquadra(p,p.squadra.filter(id=>cfgDi(id)),'Nuova fase: puoi cambiare lottatore',id=>{const g=game.p[0];
+    if(id!==g.cfg.id){const c=cfgDi(id),r=g.hp/g.maxHp,nf=new Fighter(c,g.x,g.facing,P1MAP);nf.hp=Math.max(1,Math.round(nf.maxHp*r));nf.hpTrail=nf._trailHp=nf.hp;nf.trailWait=0;nf.trailSpd=0;game.p[0]=nf;SF.g=c;SF.gid=id;}
+    game.freeze=Math.max(game.freeze,50);game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}then();});}
+/* KO di uno dei due (al posto di game.onKO) */
+function storiaKO(loser){const [g,e]=game.p;
+  if(loser===g){game.koPending=true;game.banner='K.O.';game.bannerT=80;setTimeoutFrames(90,()=>tornaAllaStoria(SF.modo==='copione'?'copione':'sconfitta'));return;}
+  if(SF.modo==='copione'){e.hp=1;e.state='hitstun';e.hitstun=20;e.vy=0;return;}   /* nelle lotte di copione l'avversario non può cadere */
+  game.koPending=true;game.banner='K.O.';game.bannerT=80;
+  if(SF.modo==='ondata'&&SF.ondata<SF.nemici.length-1){setTimeoutFrames(80,()=>prossimaOndata());return;}
+  /* (due timer separati: un timer creato dentro un altro timer andrebbe perso) */
+  setTimeoutFrames(70,()=>{game.banner='VITTORIA!';game.bannerT=70;sfx.ok();});setTimeoutFrames(145,()=>tornaAllaStoria('vittoria'));}
+function prossimaOndata(){SF.ondata++;const c=SF.nemici[SF.ondata],d=game.cpuDiff(),g=game.p[0];game.reset();
+  const e=new Fighter(c,Math.round(W*.68),-1,'cpu');e.aiDiff=d;e.maxHp=e.hp=Math.round(c.hp*d.hp*(SF.p.vita||1));e.hpTrail=e._trailHp=e.hp;e.trailWait=0;e.trailSpd=0;
+  game.p[1]=e;g.x=Math.round(W*.32);g.state='idle';g.cur=null;g.hitstun=0;g.facing=1;   /* la vita del giocatore NON si ricarica */
+  game.timer=99;game.timerF=0;game.koPending=false;game.freeze=60;game.banner='ONDATA '+(SF.ondata+1)+'/'+SF.nemici.length;game.bannerT=60;sfx.ok();}
+/* fine del tempo (al posto di game.timeout) */
+function storiaTempo(){if(game.koPending)return;game.koPending=true;game.banner='TEMPO!';game.bannerT=80;const [g,e]=game.p;
+  const esito=SF.modo==='resisti'?'vittoria':SF.modo==='copione'?'copione':(g.hp/g.maxHp>=e.hp/e.maxHp?'vittoria':'sconfitta');
+  if(esito==='vittoria'){setTimeoutFrames(90,()=>{game.banner='VITTORIA!';game.bannerT=70;sfx.ok();});setTimeoutFrames(160,()=>tornaAllaStoria(esito));}
+  else setTimeoutFrames(90,()=>tornaAllaStoria(esito));}
+/* dalla lotta di nuovo alla storia */
+function tornaAllaStoria(esito){if(!SF||!ST.run)return;const p=SF.p;SF=null;ST.fightTrack=null;
+  game.state='story';try{window._screenSwitched&&window._screenSwitched();}catch(e){}storiaVista('play');SC=nuovaScena();SC.nero=true;avviaLoop();
+  if(esito==='sconfitta'){ST.lottaPersa=p.id;apriPop('sp-lose');try{sfx.ko();}catch(_){}return;}
+  passoSuccessivo();}
+function storiaRiprova(){const id=ST.lottaPersa||(SF&&SF.p.id);SF=null;ST.fightTrack=null;chiudiPop();if(!ST.run||!id){storiaEsci();return;}
+  game.state='story';try{window._screenSwitched&&window._screenSwitched();}catch(e){}storiaInizia(ST.run.cap,id);}
+/* disegnato sopra la lotta: ondate, fase, timer in evidenza, lampo di fase */
+function storiaHud(u,top){if(!SF)return;const p=SF.p;
+  if(SF.modo==='ondata')outlineText('ONDATA '+(SF.ondata+1)+'/'+SF.nemici.length,W/2,top+u(96),u(15),COL.oro);
+  if(SF.modo==='resisti')outlineText('RESISTI!',W/2,top+u(96),u(15),game.timer<=5?COL.rosso:COL.oro);
+  if(SF.modo==='boss'&&p.fasi)outlineText('FASE '+(SF.fase+1)+'/'+(p.fasi.length+1),W/2,top+u(96),u(13),COL.oro);
+  if(SF.flash){ctx.globalAlpha=.55*SF.flash.t/SF.flash.max;ctx.fillStyle=SF.flash.col;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;}}
 function testoVelocita(){$('sp-speed').textContent=SPEED_K.toUpperCase();}
 function storiaTasti(){const v=document.getElementById('story-screen').dataset.v;
   if(v==='play'){const pausa=document.querySelector('.sp-pop.on');
-    if(pausa){if(kp('Escape')){chiudiPop();try{sfx.back();}catch(_){}}return;}
+    if(pausa){if(kp('Escape')&&pausa.id!=='sp-squad'&&pausa.id!=='sp-lose'){chiudiPop();try{sfx.back();}catch(_){}}return;}  /* scelta e sconfitta: serve un pulsante */
     if(kp('Enter')||kp('Space')||kp('KeyZ'))storiaAvanti();else if(kp('Escape')){apriPop('sp-pause');testoVelocita();try{sfx.sel();}catch(_){}}}
   else if(kp('Escape')){if(document.getElementById('st-confirm').style.display==='flex')document.getElementById('st-confirm').style.display='none';
     else if(v==='caps')storiaVista('menu');else game.state='title';try{sfx.back();}catch(_){}}}
@@ -4675,6 +4836,7 @@ function pxs(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y)
 const game={
   state:'title',mode:1,sel:[0,1],pickTurn:0,tournament:null,difficulty:'normale',
   cpuDiff(){
+    if(this.mode===5&&SF)return DIFFS[SF.p.difficolta]||DIFFS[this.difficulty];   /* lotte della storia */
     const finale=this.mode===3&&this.tournament&&this.tournament.idx===this.tournament.order.length-1;
     return finale?DIFFS.boss:DIFFS[this.difficulty];},
   p:[null,null],round:1,wins:[0,0],timer:99,timerF:0,
@@ -4704,8 +4866,9 @@ const game={
   /* torneo: schermata del percorso prima di ogni incontro (COMBATTI porta al VS) */
   showPath(){loadChar(ROSTER[this.sel[0]].id);loadChar(ROSTER[this.sel[1]].id);this.state='path';saveTour();},
   startRound(){this.reset();
-    this.p[0]=new Fighter(ROSTER[this.sel[0]],Math.round(W*.32),1,P1MAP);
-    this.p[1]=new Fighter(ROSTER[this.sel[1]],Math.round(W*.68),-1,this.mode===2?P2MAP:'cpu');
+    const st=this.mode===5&&SF;   /* storia: i personaggi vengono dal passo LOTTA (anche quelli che non sono nella selezione) */
+    this.p[0]=new Fighter(st?SF.g:ROSTER[this.sel[0]],Math.round(W*.32),1,P1MAP);
+    this.p[1]=new Fighter(st?SF.nemici[SF.ondata]:ROSTER[this.sel[1]],Math.round(W*.68),-1,this.mode===2?P2MAP:'cpu');
     if(this.p[1].ctrl==='cpu'){const d=this.cpuDiff();this.p[1].aiDiff=d;
       /* Luca Pisani versione BOSS (finale del torneo): vita 220 e potenza 7, prima 280 e 10 (ROSTER resta invariato) */
       if(d===DIFFS.boss&&this.p[1].cfg.id==='pisani')this.p[1].cfg={...this.p[1].cfg,hp:220,power:7};
@@ -4713,8 +4876,9 @@ const game={
     for(const f of this.p){f.hpTrail=f.hp;f._trailHp=f.hp;f.trailWait=0;f.trailSpd=0;} /* scia della vita: parte uguale alla vita */
     this.timer=99;this.timerF=0;this.koPending=false;
     this.banner='ROUND '+this.round;this.bannerT=IS_MOBILE?30:70;this.freeze=IS_MOBILE?40:100;
+    if(this.mode===5&&SF)lottaPreparaRound();
     setTimeoutFrames(IS_MOBILE?30:70,()=>{this.banner='COMBATTETE!';this.bannerT=IS_MOBILE?15:30;sfx.ok();});},
-  onKO(loser){if(this.koPending)return;this.koPending=true;
+  onKO(loser){if(this.koPending)return;if(this.mode===5&&SF)return storiaKO(loser);this.koPending=true;
     const wIdx=this.p[0]===loser?1:0;this.wins[wIdx]++;
     this.banner='K.O.';this.bannerT=80;
     setTimeoutFrames(90,()=>{
@@ -4724,7 +4888,7 @@ const game={
         this.state='victory';if(this.playerLost)sfx.ko();else sfx.ok();
         if(this.matchWinner&&this.matchWinner.cfg.id==='pisani'){const d=playClassical();if(d)this.musicHold=Math.ceil(d*60)+20;}}
       else{this.round++;this.startRound();}});},
-  timeout(){if(this.koPending)return;this.koPending=true;
+  timeout(){if(this.koPending)return;if(this.mode===5&&SF)return storiaTempo();this.koPending=true;
     const h0=this.p[0].hp/this.p[0].maxHp,h1=this.p[1].hp/this.p[1].maxHp;
     const wIdx=h0>=h1?0:1;this.wins[wIdx]++;this.banner='TEMPO!';this.bannerT=80;
     setTimeoutFrames(90,()=>{
@@ -4811,7 +4975,7 @@ function update(){
     kPrev={...keys};return;}
   frame++;
   if(game.musicHold>0){game.musicHold--;if(game.state!=='victory')game.musicHold=0;}
-  wantTrack=game.musicHold>0?'hush':(game.state==='fight'||game.state==='vs')?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):(game.state==='story'&&ST.run&&ST.track)?ST.track:'menu';
+  wantTrack=game.musicHold>0?'hush':(game.state==='fight'&&game.mode===5&&ST.fightTrack)?ST.fightTrack:(game.state==='fight'||game.state==='vs')?'fight':game.state==='victory'?(game.playerLost?'lose':'win'):(game.state==='story'&&ST.run&&ST.track)?ST.track:'menu';
   ensureMusic();
   if(kp('KeyM'))toggleMusic();
   frameTimers=frameTimers.filter(t=>{if(--t.fr<=0){t.fn();return false}return true});
@@ -4864,6 +5028,7 @@ function update(){
         if(aabb(ha,hb2)&&a.state!=='ko'&&b.state!=='ko'){
           const ov=(Math.min(ha.x+ha.w,hb2.x+hb2.w)-Math.max(ha.x,hb2.x))/2;
           const d=Math.sign(b.x-a.x)||1;a.x-=ov*d;b.x+=ov*d;}
+        if(game.mode===5)storiaLottaTick();
         if(game.mode===4)trainTick(); /* allenamento: niente timer, vita che non finisce */
         else if(++game.timerF>=60){game.timerF=0;if(--game.timer<=0)game.timeout();}
       }else{a.input={};b.input={};a.update(b);b.update(a);}
@@ -5145,13 +5310,14 @@ function drawHUD0(){
     const nameY=y+spH+u(15),fs=u(13);
     outlineText(f.cfg.name,flip?bx+bw:bx,nameY,fs,uc,al,true); /* il nome resta normale: nella barra non c'è spazio */
     ctx.font='400 '+fs+'px '+FONT_GIOCO;const nw=ctx.measureText(f.cfg.name).width;
-    for(let i=0;i<2;i++){const ds=u(12),px=flip?bx+bw-nw-u(8)-ds-i*u(16):bx+nw+u(8)+i*u(16),cx=px+ds/2,cy=nameY-u(5),won=game.wins[side]>i;
+    if(game.mode!==5)for(let i=0;i<2;i++){const ds=u(12),px=flip?bx+bw-nw-u(8)-ds-i*u(16):bx+nw+u(8)+i*u(16),cx=px+ds/2,cy=nameY-u(5),won=game.wins[side]>i;
       ctx.beginPath();ctx.moveTo(cx,cy-ds/2);ctx.lineTo(cx+ds/2,cy);ctx.lineTo(cx,cy+ds/2);ctx.lineTo(cx-ds/2,cy);ctx.closePath();
       if(won){ctx.fillStyle=COL.oro;ctx.fill();ctx.lineWidth=u(1.5);ctx.strokeStyle='#7A5A00';ctx.stroke();}
       else{ctx.lineWidth=u(1.5);ctx.strokeStyle='rgba(245,240,225,.8)';ctx.stroke();}}
     if(f.combo>1)outlineText(f.combo+' COMBO',flip?bx+bw:bx,nameY+u(18),u(14),COL.oro,al);
   }
-  outlineText(game.timer,W/2,top+u(76),u(26),'#F5F0E1'); /* sotto il pulsante di pausa */
+  outlineText(game.timer,W/2,top+u(76),u(game.mode===5&&SF&&(SF.modo==='resisti'||SF.modo==='copione')?32:26),game.mode===5&&SF&&SF.modo==='resisti'&&game.timer<=5?COL.rosso:'#F5F0E1');
+  if(game.mode===5)storiaHud(u,top); /* sotto il pulsante di pausa */
   if(game.mode===3&&game.tournament)
     outlineText('TORNEO '+(game.tournament.idx+1)+'/'+game.tournament.order.length,W/2,top+u(94),u(13),COL.oro);
   if(!IS_MOBILE)text('PUGNO+CALCIO insieme (o SPAZIO / I) = SPECIALE quando la barra gialla \u00E8 piena',W/2,H-u(6),u(12),'rgba(245,240,225,.45)');
@@ -6268,6 +6434,7 @@ function loop(ts){
     var skip=function(e){if(game.state!=='vs')return;if(e&&e.cancelable)e.preventDefault();if(vsReady()&&(game.vsT||0)>=20)game.beginFight();};
     v.addEventListener('touchstart',skip,{passive:false});v.addEventListener('click',skip);})();
   _btn('pp-restart', function(){ /* stesso incontro, stessi personaggi */
+    if(game.mode===5&&SF){ setPause(false); ST.lottaPersa=SF.p.id; storiaRiprova(); updateOverlay(); return; }
     setPause(false); game.startMatch(); updateOverlay();
   }, 'ok');
   _btn('pp-settings', function(){ refreshOpts(); pausePage('pp-set'); }, 'sel');
@@ -6275,11 +6442,12 @@ function loop(ts){
   _btn('pp-set-resume', function(){ setPause(false); }, 'ok');
   _btn('pp-menu', function(){ /* ESCI: chiede conferma */
     var m=document.getElementById('pp-confirm-msg');
-    if(m) m.textContent = game.mode===3&&game.tournament ? 'Uscire dall\u2019incontro? Il torneo resta salvato: potrai riprenderlo dalla home.' : 'Uscire dall\u2019incontro?';
+    if(m) m.textContent = game.mode===5&&SF ? 'Uscire dalla lotta? La storia \u00e8 salvata da subito prima della lotta.' : game.mode===3&&game.tournament ? 'Uscire dall\u2019incontro? Il torneo resta salvato: potrai riprenderlo dalla home.' : 'Uscire dall\u2019incontro?';
     pausePage('pp-confirm');
   }, 'sel');
   _btn('pp-exit-no', function(){ pausePage('pp-main'); }, 'back');
   _btn('pp-exit-yes', function(){
+    if(game.mode===5&&SF){ setPause(false); SF=null; ST.fightTrack=null; game.state='story'; storiaEsci(); updateOverlay(); return; }
     setPause(false); game.state='title'; game.tournament=null;
     updateOverlay();
   }, 'ok');
@@ -6437,6 +6605,8 @@ function loop(ts){
   _btn('sp-resume', function(){ chiudiPop(); }, 'ok');
   _btn('sp-speed', function(){ var ks=['lento','normale','veloce']; SPEED_K=ks[(ks.indexOf(SPEED_K)+1)%3]; STORE.set('sopracciglia_testo_storia',SPEED_K); testoVelocita(); }, 'sel');
   _btn('sp-quit', function(){ storiaEsci(); }, 'back');
+  _btn('sp-retry', function(){ storiaRiprova(); }, 'ok');
+  _btn('sp-lose-menu', function(){ storiaEsci(); }, 'back');
   /* scene: tocco ovunque per andare avanti (non sui pulsanti e sulle finestre) */
   (function(){var pl=document.getElementById('st-play');if(!pl)return;var go=function(e){if(game.state!=='story'||trActive())return;
       if(e.target.closest&&e.target.closest('#sp-tools,.sp-pop'))return;if(e.cancelable)e.preventDefault();storiaAvanti();};
