@@ -786,9 +786,9 @@
   @keyframes spBlink { 50%{opacity:0} }
   /* narratore: testo centrato che compare a righe */
   #sp-narr { position:absolute; z-index:2; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:min(2.4vh,14px);
-    padding:60px max(40px,8vw); background:radial-gradient(ellipse at 50% 50%, #141032 0%, #06050f 75%); text-align:center; }
+    padding:56px max(40px,8vw) 30px; background:radial-gradient(ellipse at 50% 50%, #141032 0%, #06050f 75%); text-align:center; }
   #sp-narr.on { display:flex; }
-  #sp-narr p { margin:0; max-width:900px; font:700 min(2.5vw,5.2vh,26px)/1.45 var(--font-testo); color:var(--testo); opacity:0; transform:translateY(6px); transition:opacity .6s, transform .6s; }
+  #sp-narr p { margin:0; max-width:900px; font:700 var(--nf,min(2.5vw,5.2vh,26px))/1.45 var(--font-testo); color:var(--testo); opacity:0; transform:translateY(6px); transition:opacity .6s, transform .6s; }
   #sp-narr p.on { opacity:1; transform:none; }
   /* cartello: schermo nero con titolo grande in dissolvenza */
   #sp-card { position:absolute; z-index:6; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:20px 8vw;
@@ -876,7 +876,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.131</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.132</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -899,7 +899,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.131.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.132.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -3135,6 +3135,34 @@ function findEyes(S){S.eyeFr={};try{
 function registerStoryChar(id){const S=STORY_SPRITES[id],c=STORY_ROSTER[id];if(!S||!c)return null;
   if(!SPRITE_CHARS[id]){S.img=S.img||{};SPRITE_CHARS[id]=S;}loadChar(id);return c;}
 
+/* ---------- POSE DI SCENA (modalità storia) ----------
+   File in <cartella dello sprite>/scena/<posa>.png: strisce di fotogrammi da 128 px, piedi allineati all'attesa da combattimento.
+   "scena" = sprite di scena (in piedi, armi riposte): è la posa di base degli attori nelle scene.
+   n = fotogrammi, fps = velocità. Senza altro: l'animazione va e poi resta sull'ultimo fotogramma.
+   loop:true (+ pingpong:true) = si ripete sempre; ciclo:N = dopo l'entrata ripete i fotogrammi da N in poi;
+   torna:true = posa breve, finita l'animazione si torna alla posa di base. */
+const _P=(f,n,fps,x)=>Object.assign({file:'scena/'+f,n,fps},x||{});
+SPRITE_CHARS.chiara.scenePoses={scena:_P('scena',1,1),parla:_P('parla',16,10,{ciclo:5}),annuisce:_P('annuisce',16,10,{torna:true}),
+  sorpresa:_P('sorpresa',16,12),triste:_P('triste',16,10),arrabbiato:_P('arrabbiato',16,12),ferito:_P('ferito',16,10),seduto:_P('seduto',16,10),
+  indica:_P('indica',16,12),inchino:_P('inchino',16,12),piange:_P('piange',16,8,{ciclo:4}),schiaffo_ricevuto:_P('schiaffo_ricevuto',36,18)};
+SPRITE_CHARS.sito.scenePoses={scena:_P('scena',1,1),parla:_P('parla',16,8,{loop:true,pingpong:true}),annuisce:_P('annuisce',16,10,{torna:true}),
+  sorpresa:_P('sorpresa',16,12),triste:_P('triste',16,10),arrabbiato:_P('arrabbiato',16,12),ferito:_P('ferito',16,10),seduto:_P('seduto',16,10),
+  indica:_P('indica',16,12),piange:_P('piange',16,8,{ciclo:4}),abbraccia:_P('abbraccia',42,10,{loop:true,pingpong:true}),
+  pensieroso:_P('pensieroso',16,10),braccia_conserte:_P('braccia_conserte',16,10)};
+SPRITE_CHARS.pisani.scenePoses={scena:_P('scena',1,1),parla:_P('parla',16,8,{loop:true,pingpong:true}),annuisce:_P('annuisce',16,10,{torna:true}),
+  sorpresa:_P('sorpresa',16,12),triste:_P('triste',16,10),arrabbiato:_P('arrabbiato',16,12),ferito:_P('ferito',16,10),indica:_P('indica',16,12),
+  seduto:_P('seduto',1,1),alzati:_P('seduto',16,10),   /* seduto = primo fotogramma; alzati = si alza dal trono */
+  schiaffo:_P('schiaffo',16,12)};   /* lo schiaffo arriva al fotogramma 7 (circa 0,6 secondi) */
+/* COMPARSE: solo pose di scena (niente lotte) */
+STORY_SPRITES.fratellosito={dir:'sprites/storia/fratellosito/',fw:128,fh:128,ax:64,ay:122,scale:1.3,body:{x0:37,y0:10,x1:91,y1:122},pose:'scena',
+  anims:{idle:{file:'scena',n:1,fps:1}},
+  scenePoses:{scena:_P('scena',1,1),parla:_P('parla',16,8,{loop:true,pingpong:true})}};
+STORY_SPRITES.mogliesito={dir:'sprites/storia/mogliesito/',fw:128,fh:128,ax:64,ay:122,scale:1.3,body:{x0:44,y0:10,x1:84,y1:122},pose:'scena',
+  anims:{idle:{file:'scena',n:1,fps:1}},
+  scenePoses:{scena:_P('scena',1,1),parla:_P('parla',16,10,{ciclo:5}),abbraccia:_P('abbraccia',16,10)}};
+STORY_ROSTER.fratellosito={id:'fratellosito',name:'FRATELLO DI SITO',uso:'comparsa'};
+STORY_ROSTER.mogliesito={id:'mogliesito',name:'MOGLIE DI SITO',uso:'comparsa'};
+
 /* ##########################################################################################
    ##   MODALITÀ STORIA — CONTENUTI                                                        ##
    ##########################################################################################
@@ -3148,17 +3176,24 @@ function registerStoryChar(id){const S=STORY_SPRITES[id],c=STORY_ROSTER[id];if(!
    TIPI DI PASSO
    1. cartello   {id, tipo:'cartello', titolo:'La danza del re', sopra:'ATTO I', durata:3}
    2. narratore  {id, tipo:'narratore', righe:['Prima riga.','Seconda riga.']}
-   3. scena      {id, tipo:'scena', sfondo:'Sala del trono', attori:[{id:'chiara', x:'sinistra', verso:'destra', posa:'attesa'}], azioni:[...]}
+   3. scena      {id, tipo:'scena', sfondo:'sala_trono', anim:'pianeta_in_fiamme', entrata:.5, attori:[{id:'chiara', x:'sinistra', verso:'destra', posa:'base'}], azioni:[...]}
         sfondo: nome di uno sfondo dei combattimenti oppure un file backgrounds/storia/<nome>.png
+        anim (facoltativo): animazione dell'elenco ANIMAZIONI disegnata sullo sfondo per tutta la scena
+        entrata (facoltativo): secondi per comparire dal nero (dopo una dissolvenza, il narratore o un cartello; 0 = di colpo)
         azioni (una per riga, in ordine):
           {chi:'chiara', testo:'Battuta.', pose:{chiara:'sorpresa'}, guarda:{sito:'sinistra'}, nome:'NOME DIVERSO'}
           {didascalia:'(Il re schiaffeggia Chiara.)'}
           {entra:'sito', da:'destra', a:'centro-destra', insieme:true}    {esce:'sito', verso:'destra'}
           {muovi:'sito', a:'centro'}   {posa:{sito:'arrabbiato'}}   {guarda:{sito:'destra'}}
           {effetto:'lampo', colore:'#FFD700'}  {effetto:'trema', forza:8, durata:.6}  {effetto:'nero', durata:1.2}
+          {effetto:'nero', durata:.5, resta:true}   dissolvenza al nero che RESTA nera (la usa la fine di ogni scena; la scena dopo compare dal nero)
           {attesa:1.5}  {musica:'menu'|'fight'|'win'|'lose'|'silenzio'|nome di music/<nome>.mp3}  {suono:'boom'}  {cartello:'Titolo'}
         posizioni: 'sinistra', 'centro-sinistra', 'centro', 'centro-destra', 'destra' oppure un numero da 0 a 1
         pose già pronte: attesa, cammina, vittoria, colpito, ko, parata, salto, attacco, calcio, speciale, accovacciato
+        pose di scena (cerca "POSE DI SCENA"): base (= sprite di scena, se c'è), parla, annuisce, sorpresa, triste, arrabbiato,
+          ferito, seduto, indica e le speciali (chiara: inchino, piange, schiaffo_ricevuto; sito: piange, abbraccia; pisani: schiaffo, alzati)
+   - Fine capitolo: il motore salva da solo che il capitolo è finito. Se è l'ultimo capitolo presente mostra
+     "Fine del capitolo N / Il capitolo N+1 arriverà presto."; l'ultimo capitolo della storia avrà finale:true.
    4. effetto    {id, tipo:'effetto', effetto:'nero', durata:1}   (gli stessi effetti delle scene, tra un passo e l'altro)
    5. animazione {id, tipo:'animazione', sfondo:'Cripta', anim:'pioggia', durata:4}   (animazioni nell'elenco ANIMAZIONI)
    6. lotta      {id, tipo:'lotta', modo:'normale'|'ondata'|'resisti'|'copione'|'interrotta'|'boss',
@@ -3187,12 +3222,104 @@ const STORIA={
      in una scena o in una lotta. ritratto = id dello sprite da cui prendere il ritratto (se manca, solo la sagoma).
      capitolo (facoltativo) = capitolo da mostrare; se manca vale quello in cui è stato incontrato. */
   archivio:[
+    /* capitolo 1 */
+    {id:'chiara',nome:'CHIARA',frase:'Mi chiedo, non pensi di aver esagerato?',ritratto:'chiara',capitolo:'cap01'},
+    {id:'sito',nome:'SITO',frase:'Il prezzo della pace è sempre alto.',ritratto:'sito',capitolo:'cap01'},
+    {id:'pisani',nome:'LUCA PISANI',frase:'Sono io che conduco la danza in questo regno, e tutti gli altri devono seguire il mio ritmo!',ritratto:'pisani',capitolo:'cap01'},
   ].concat(MODALITA_PROVA?[
     {id:'chiara',nome:'CHIARA',frase:'Frase di prova: qui andrà una frase del libro su Chiara.',ritratto:'chiara'},
     {id:'sito',nome:'SITO',frase:'Frase di prova: qui andrà una frase del libro su Sito.',ritratto:'sito'},
   ]:[]),
   capitoli:[
     /* ============ QUI I CAPITOLI VERI (cap01, cap02, ...) ============ */
+
+    /* ---------------- CAPITOLO 1 — La danza del re ---------------- */
+    {id:'cap01',numero:1,titolo:'La danza del re',passi:[
+      {id:'cap01_p01',tipo:'narratore',righe:[
+        'Mille anni dopo la terribile purga degli alpaca, l’Impero delle Tagliatelle al Formaggio raggiunse il suo apice, estendendosi oltre ogni confine conosciuto.',
+        'Il Gran Maestro Luca Pisani vinse la guerra contro il Regno delle Pappardelle al Sugo di Carne. Ma con l’aumento del potere, venne anche l’aumento della corruzione e della tirannia.',
+        'Luca Pisani applicò la sua autorità con punizioni severe e restrizioni ingiuste, specialmente contro coloro che erano intolleranti al lattosio.',
+        'Il generale Sito ordinò un bombardamento indiscriminato su un pianeta ribelle. Il pianeta, un tempo rigoglioso e prospero, venne ridotto a un cumulo di macerie e desolazione.',
+        'Ed è proprio qui, che la nostra storia ha inizio.']},
+      {id:'cap01_p02',tipo:'cartello',sopra:'ATTO I',titolo:'L’abisso che inghiotte',durata:3},
+      {id:'cap01_p03',tipo:'cartello',sopra:'CAPITOLO 1',titolo:'La danza del re',durata:3},
+
+      /* ponte dell'astronave del regno: il pianeta bombardato brucia dietro il finestrone */
+      {id:'cap01_p04',tipo:'scena',sfondo:'ponte_astronave',anim:'pianeta_in_fiamme',
+        attori:[{id:'chiara',x:'sinistra',verso:'destra'}],azioni:[
+        {musica:'menu'},
+        {entra:'sito',da:'destra',a:'destra'},
+        {chi:'chiara',pose:{chiara:'parla'},testo:'Sito, ho appreso del tuo bombardamento sul pianeta ribelle. Mi chiedo, non pensi di aver esagerato?'},
+        {chi:'sito',pose:{chiara:'base',sito:'parla'},testo:'Ho fatto ciò che era necessario per proteggere l’Impero delle Tagliatelle al Formaggio e il nostro Gran Maestro Luca Pisani.'},
+        {chi:'chiara',pose:{chiara:'triste',sito:'arrabbiato'},testo:'...'},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      /* sala del trono: lo schiaffo */
+      {id:'cap01_p05',tipo:'scena',sfondo:'sala_trono',
+        attori:[{id:'pisani',x:'centro-destra',verso:'sinistra',posa:'seduto'}],azioni:[
+        {musica:'menu'},
+        {entra:'chiara',da:'sinistra',a:'centro-sinistra'},
+        {didascalia:'(Chiara si inchina.)',pose:{chiara:'inchino'}},
+        {chi:'chiara',pose:{chiara:'parla'},testo:'Gran Maestro, vengo a parlarvi del recente bombardamento del pianeta ribelle da parte del generale Sito. Desidero sapere se anche Voi condividete la sua decisione di distruggere un intero pianeta e uccidere innumerevoli innocenti.'},
+        {chi:'pisani',pose:{chiara:'base'},testo:'Chiara, la danza del potere richiede passi audaci e decisi. Sito ha eseguito la sua performance con precisione, seguendo il ritmo che gli ho imposto.'},
+        {posa:{chiara:'sorpresa'}},{attesa:1.2},
+        {chi:'chiara',pose:{chiara:'parla'},testo:'Ma Gran Maestro, non temete che la vostra decisione possa causare ulteriore malcontento e ribellione tra il popolo? Forse potremmo adottare un approccio più misurato.'},
+        {didascalia:'(Il re si alza dal trono.)',pose:{chiara:'base',pisani:'alzati'}},
+        {posa:{pisani:'base'}},{muovi:'pisani',a:.47,vel:70},{guarda:{pisani:'sinistra'}},
+        {chi:'pisani',pose:{pisani:'arrabbiato'},testo:'Osate mettere in discussione la mia autorità e le mie decisioni? Sono io che conduco la danza in questo regno, e tutti gli altri devono seguire il mio ritmo!'},
+        {posa:{pisani:'schiaffo'}},{attesa:.55},
+        {posa:{chiara:'schiaffo_ricevuto'}},{effetto:'lampo',colore:'#FFFFFF',durata:.25},{effetto:'trema',forza:4,durata:.35},{suono:'hit'},
+        {attesa:1},
+        {didascalia:'(Il re schiaffeggia Chiara.)'},
+        {chi:'pisani',pose:{pisani:'parla'},testo:'Non permetterò mai che la mia coreografia sia compromessa da indecisioni o debolezze. Se non siete in grado di seguire il mio ritmo, allora forse non meritate un posto in questa danza.'},
+        {didascalia:'(Chiara si inchina di nuovo e si allontana, in lacrime.)',pose:{pisani:'base',chiara:'inchino'}},
+        {posa:{chiara:'piange'}},{attesa:1.2},
+        {esce:'chiara',verso:'sinistra',vel:90},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      {id:'cap01_p06',tipo:'narratore',righe:['In quel momento, Chiara capì che il regno aveva bisogno di un cambiamento.']},
+
+      /* sala del trono: l'ordine a Sito */
+      {id:'cap01_p07',tipo:'scena',sfondo:'sala_trono',
+        attori:[{id:'pisani',x:'centro-destra',verso:'sinistra'}],azioni:[
+        {musica:'menu'},
+        {entra:'sito',da:'sinistra',a:'centro-sinistra'},
+        {chi:'pisani',pose:{pisani:'parla'},testo:'Sito, danziamo insieme questa danza della giustizia. Il palcoscenico è allestito nella piazza centrale, dove i ribelli devono affrontare il loro ultimo atto. È tuo compito assicurarti che lo spettacolo sia portato a termine.'},
+        {posa:{pisani:'base',sito:'annuisce'}},{attesa:1.8},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      /* piazza con il patibolo: il fratello di Sito */
+      {id:'cap01_p08',tipo:'scena',sfondo:'piazza_patibolo',
+        attori:[{id:'sito',x:'sinistra',verso:'destra'},{id:'fratellosito',x:'destra',verso:'sinistra'}],azioni:[
+        {musica:'menu'},
+        {didascalia:'(Tra i ribelli condotti al patibolo, Sito riconosce suo fratello.)',pose:{sito:'sorpresa'}},
+        {chi:'fratellosito',pose:{fratellosito:'parla'},testo:'Sito, come hai potuto voltare le spalle al nostro popolo e ai nostri valori? Siamo sangue dello stesso sangue, eppure servi un tiranno.'},
+        {posa:{fratellosito:'base',sito:'triste'}},{attesa:1.5},
+        {effetto:'nero',durata:2,resta:true},   /* dissolvenza lenta: lo schermo resta nero */
+      ]},
+
+      {id:'cap01_p09',tipo:'narratore',righe:[
+        'Sito sapeva che il re lo stava osservando, mettendo alla prova la sua lealtà.',
+        'Sito eseguì l’ordine. La folla rimase in silenzio, inorridita.']},
+
+      /* casa di Sito (musica più calma) */
+      {id:'cap01_p10',tipo:'scena',sfondo:'casa_sito',
+        attori:[{id:'mogliesito',x:'destra',verso:'sinistra'}],azioni:[
+        {musica:'lose'},
+        {entra:'sito',da:'sinistra',a:'centro-sinistra',vel:70},
+        {chi:'mogliesito',pose:{mogliesito:'parla'},testo:'Cosa è successo, amore mio?'},
+        {didascalia:'(Sito le racconta dell’esecuzione e di suo fratello. Le lacrime gli scorrono sulle guance.)',pose:{mogliesito:'base',sito:'piange'}},
+        {muovi:'mogliesito',a:.42,vel:110},{guarda:{mogliesito:'sinistra'}},
+        {posa:{mogliesito:'abbraccia',sito:'abbraccia'}},
+        {didascalia:'(Lei lo stringe forte tra le braccia.)'},
+        {chi:'mogliesito',testo:'Non sei solo in questo, Sito. Siamo una famiglia, e insieme affronteremo le sfide che il destino ci pone davanti.'},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* cap01_p11 FINE CAPITOLO: salvataggio, archivio e "Il capitolo 2 arriverà presto" li fa il motore */
+    ]},
   ],
 };
 /* ---------- CAPITOLI DI PROVA (visibili solo con MODALITA_PROVA = true) ---------- */
@@ -3273,8 +3400,11 @@ function normalizzaProgressi(d){if(!d||typeof d!=='object')return null;
     cap=raggiunti.map(capById).sort((a,b)=>capIdx(b.id)-capIdx(a.id))[0]||null;passo=null;}
   if(!cap)return null;
   if(!cap.passi.some(p=>p.id===passo)){if(passo)console.warn('Il passo salvato ("'+passo+'") non esiste più: riparto dall\u2019inizio del capitolo');passo=cap.passi[0]&&cap.passi[0].id;}
+  const finiti=[...new Set((Array.isArray(d.finiti)?d.finiti:[]).filter(id=>capById(id)))];
+  /* capitolo salvato già finito e ora esiste il capitolo dopo (aggiunto in un aggiornamento): si riparte da lì */
+  if(finiti.includes(cap.id)&&STORIA.capitoli[capIdx(cap.id)+1]){cap=STORIA.capitoli[capIdx(cap.id)+1];passo=cap.passi[0]&&cap.passi[0].id;}
   if(!raggiunti.includes(cap.id))raggiunti.push(cap.id);
-  return {v:STORIA_V,cap:cap.id,passo,raggiunti,squadra:(d.squadra&&typeof d.squadra==='object')?d.squadra:{}};}
+  return {v:STORIA_V,cap:cap.id,passo,raggiunti,finiti,squadra:(d.squadra&&typeof d.squadra==='object')?d.squadra:{}};}
 function scriviProgressi(p){const ok=STORE.set(KEY_STORIA,JSON.stringify(p));if(ok)mostraSalvataggio();return ok;}
 let _salvT=0;
 function mostraSalvataggio(){const el=document.getElementById('st-saving');if(!el)return;el.classList.add('on');clearTimeout(_salvT);_salvT=setTimeout(()=>el.classList.remove('on'),1000);}
@@ -3322,7 +3452,7 @@ function elencoCapitoli(){const list=document.getElementById('st-list'),p=leggiP
    - {attesa:1.5}   {musica:'menu'|'fight'|'win'|'lose'|'silenzio'}   {suono:'boom'}   {cartello:'...'}
    Posizioni: 'sinistra', 'centro-sinistra', 'centro', 'centro-destra', 'destra', oppure un numero da 0 (bordo sinistro) a 1 (bordo destro).
    RIPIEGHI: posa mancante → attesa; sprite mancante → solo riquadro con il nome; sfondo mancante → fondo sfumato scuro (sempre con avviso in console). */
-const SCENA_H=480,SCENA_SUOLO=316,SCENA_ZOOM=1.3;   /* SCENA_ZOOM: gli attori sono un po' più grandi che in combattimento */   /* altezza logica della scena e linea dei piedi degli attori */
+const SCENA_H=480,SCENA_SUOLO=316,SCENA_ZOOM=1;   /* SCENA_ZOOM: grandezza degli attori rispetto al combattimento (1 = uguale) */   /* altezza logica della scena e linea dei piedi degli attori */
 const POS_X={'sinistra':.2,'centro-sinistra':.35,'centro':.5,'centro-destra':.65,'destra':.8};
 /* pose di scena che corrispondono ad animazioni che i personaggi hanno già */
 const POSA_ALIAS={attesa:'idle',cammina:'walk',vittoria:'win',colpito:'hurt',ko:'ko',parata:'block',salto:'jump',attacco:'punch',calcio:'kick',speciale:'special',accovacciato:'crouch'};
@@ -3337,6 +3467,21 @@ const ANIMAZIONI={
   esplosione:{draw(c,t,w,h,d){const k=Math.min(1,t/1.2),r=40+k*h*.6,x=w*.5,y=h*.55;
     c.globalAlpha=Math.max(0,1-t/2.5);const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'#FFFFFF');g.addColorStop(.25,'#FFE08A');g.addColorStop(.6,'#FF6A00');g.addColorStop(1,'rgba(120,20,0,0)');
     c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.globalAlpha=1;}},
+  /* cap01: piccole esplosioni e bagliori arancioni sul pianeta bombardato, dietro il finestrone del ponte (sfondo ponte_astronave) */
+  pianeta_in_fiamme:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h};
+    const P=(u,v)=>[b.x+u*b.w,b.y+v*b.h];   /* punto dell'immagine (0-1) → scena */
+    d.e=d.e||[];d.next=d.next||0;
+    while(t>=d.next){d.next+=.18+Math.random()*.35;   /* nuove esplosioni sulla zona in fiamme del pianeta */
+      d.e.push({u:.40+Math.random()*.17,v:.42+Math.random()*.14,t0:d.next,r:.006+Math.random()*.012,life:.5+Math.random()*.5});}
+    d.e=d.e.filter(e=>t-e.t0<e.life);
+    c.save();c.globalCompositeOperation='lighter';
+    /* bagliore che pulsa piano su tutta la zona */
+    const [gx,gy]=P(.48,.5),gr=b.w*.09,gl=c.createRadialGradient(gx,gy,0,gx,gy,gr);
+    gl.addColorStop(0,'rgba(255,120,30,'+(.10+.06*Math.sin(t*2.3))+')');gl.addColorStop(1,'rgba(255,80,0,0)');c.fillStyle=gl;c.fillRect(gx-gr,gy-gr,gr*2,gr*2);
+    for(const e of d.e){const k=(t-e.t0)/e.life;if(k<0)continue;const [x,y]=P(e.u,e.v),r=b.w*e.r*(.4+k*1.2),a=(1-k)*(k<.15?k/.15:1);
+      const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(255,240,180,'+a+')');g.addColorStop(.4,'rgba(255,150,40,'+a*.8+')');g.addColorStop(1,'rgba(255,60,0,0)');
+      c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);}
+    c.restore();}},
 };
 /* sfondi delle scene: prima quelli dei combattimenti (per nome), poi i file in backgrounds/storia/<nome>.png */
 const SCENA_BG={};
@@ -3353,9 +3498,15 @@ function spriteAttore(id){let S=SPRITE_CHARS[id];
 function nomeDi(id){const a=SC&&SC.attori[id];if(a&&a.nome)return a.nome;
   const c=ROSTER.find(r=>r.id===id)||STORY_ROSTER[id];return c?c.name:String(id).toUpperCase();}
 /* animazione da usare per una posa (con ripiego sull'attesa) */
-function animPosa(S,id,posa){if(!S)return null;const A=S.anims;posa=posa||'attesa';
-  if(S.scenePoses&&S.scenePoses[posa]){const sp=S.scenePoses[posa];if(!S.img[sp.file]){const im=new Image();im.onerror=()=>avviso('Posa mancante: "'+posa+'" di '+id+' ('+S.dir+sp.file+'.png): uso l\u2019attesa');S.img[sp.file]=im;im.src=S.dir+sp.file+'.png';}
-    if(imgOk(S.img[sp.file]))return sp;}
+/* posa di base nelle scene: lo "sprite di scena" (in piedi, armi riposte) se il personaggio ce l'ha, altrimenti l'attesa da combattimento */
+function posaBase(S){return S&&S.scenePoses&&S.scenePoses.scena?'scena':'attesa';}
+function caricaPosa(S,id,posa){const sp=S&&S.scenePoses&&S.scenePoses[posa];if(!sp)return null;
+  if(!S.img[sp.file]){const im=new Image();im.onerror=()=>avviso('Posa mancante: "'+posa+'" di '+id+' ('+S.dir+sp.file+'.png): uso l\u2019attesa');S.img[sp.file]=im;im.src=S.dir+sp.file+'.png';}
+  return sp;}
+function animPosa(S,id,posa){if(!S)return null;const A=S.anims;posa=!posa||posa==='base'?posaBase(S):posa;
+  if(S.scenePoses&&S.scenePoses[posa]){const sp=caricaPosa(S,id,posa);
+    if(imgOk(S.img[sp.file]))return sp;
+    const b=caricaPosa(S,id,'scena');if(b&&posa!=='scena'&&imgOk(S.img[b.file]))return b;}   /* posa non ancora scaricata: intanto la posa di base */
   const k=POSA_ALIAS[posa]||posa;if(A[k]&&(k==='idle'||imgOk(S.img[A[k].file])))return A[k];
   if(!(S.scenePoses&&S.scenePoses[posa]))avviso('Posa mancante: "'+posa+'" di '+id+': uso l\u2019attesa');
   return A.idle;}
@@ -3378,33 +3529,51 @@ function storiaInizia(capId,passoId){const c=capById(capId);if(!c){console.warn(
   ST.run={cap:c.id,i,paused:false};ST.track=null;storiaVista('play');preparaCapitolo(c);
   $('sp-auto').classList.toggle('on',!!ST.auto);
   if(i===0){salvaStoria(c.id,c.passi[0]&&c.passi[0].id);
-    /* cartello del capitolo automatico, se il capitolo non ne ha già uno all'inizio */
-    if(!c.passi[0]||c.passi[0].tipo!=='cartello'){SC=nuovaScena();SC.nero=true;mostraCartelloFx('CAPITOLO '+(c.numero??capIdx(c.id)+1),c.titolo,2.6,()=>avviaPasso());avviaLoop();return;}}
+    /* cartello del capitolo automatico, se il capitolo non ne ha già uno suo */
+    if(!c.passi.some(p=>p.tipo==='cartello')){SC=nuovaScena();SC.nero=true;mostraCartelloFx('CAPITOLO '+(c.numero??capIdx(c.id)+1),c.titolo,2.6,()=>avviaPasso());avviaLoop();return;}}
   avviaPasso();avviaLoop();}
 /* scarica in anticipo sprite e sfondi del capitolo */
-function preparaCapitolo(c){for(const p of c.passi){if(p.sfondo)sfondoScena(p.sfondo);
-  for(const a of (p.attori||[]))spriteAttore(a.id);for(const a of (p.azioni||[])){if(a.entra)spriteAttore(a.entra);if(a.chi){const S=SPRITE_CHARS[a.chi]||STORY_SPRITES[a.chi];if(S)loadChar(a.chi);}}}}
+function preparaCapitolo(c){const pose=(id,posa)=>{const S=SPRITE_CHARS[id];if(S)caricaPosa(S,id,posa||'scena');};
+  for(const p of c.passi){if(p.sfondo)sfondoScena(p.sfondo);
+  for(const a of (p.attori||[])){spriteAttore(a.id);pose(a.id);pose(a.id,a.posa);}
+  for(const a of (p.azioni||[])){if(a.entra){spriteAttore(a.entra);pose(a.entra);}if(a.chi){const S=SPRITE_CHARS[a.chi]||STORY_SPRITES[a.chi];if(S)loadChar(a.chi);}
+    for(const o of [a.pose,typeof a.posa==='object'?a.posa:null])if(o)for(const k in o)pose(k,o[k]);}}}
 function passoCorrente(){const c=ST.run&&capById(ST.run.cap);return c&&c.passi[ST.run.i];}
 /* esegue il passo corrente */
 function avviaPasso(){const p=passoCorrente();if(!p){storiaFineCapitolo();return;}
   const vecchia=SC;SC=nuovaScena();if(vecchia){SC.shake=0;}
+  /* se lo schermo era nero, la nuova scena compare piano (entrata: secondi, 0 = di colpo) */
+  if(vecchia&&(vecchia.neroFisso||vecchia.nero)&&(p.tipo==='scena'||p.tipo==='animazione')&&p.entrata!==0)SC.entrata={t:0,d:p.entrata||.5};
   nascondiBox();$('sp-narr').classList.remove('on');
   switch(p.tipo){
     case 'cartello':SC.nero=true;mostraCartelloFx(p.sopra||'',p.titolo||p.testo||'',p.durata||2.8,()=>passoSuccessivo());break;
     case 'narratore':{SC.nero=true;const el=$('sp-narr');el.innerHTML='';(p.righe||String(p.testo||'').split('\n')).forEach(r=>{const q=document.createElement('p');q.textContent=r;el.appendChild(q);});
       el.classList.add('on');SC.narr={n:el.children.length,shown:0,t:0};SC.wait={type:'narr'};break;}
     case 'scena':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;if(!p.sfondo)avviso('Scena "'+p.id+'" senza sfondo: uso il fondo sfumato');
+      if(p.anim){SC.anim=ANIMAZIONI[p.anim]||null;if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": scena senza animazione dello sfondo');}   /* animazione sullo sfondo per tutta la scena */
       for(const a of (p.attori||[]))creaAttore(a);SC.azioni=p.azioni||[];prossimaAzione();break;
     case 'effetto':SC.bg=vecchia&&vecchia.bg;SC.attori=vecchia?vecchia.attori:{};SC.azioni=[p];prossimaAzione();break;
     case 'lotta':SC.nero=true;avviaLotta(p);break;
-    case 'animazione':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;SC.anim=ANIMAZIONI[p.anim]||null;
+    case 'animazione':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;SC.anim=ANIMAZIONI[p.anim]||null;SC.animPieno=true;
       if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": mostro solo lo sfondo');SC.wait={type:'time',left:p.durata||3,then:passoSuccessivo};break;
     default:avviso('Tipo di passo non ancora gestito: "'+p.tipo+'" ('+p.id+'): lo salto');passoSuccessivo();}}
+/* testo del narratore lungo: rimpicciolisce le lettere finché tutte le righe stanno nello schermo */
+function adattaNarratore(el){el.style.removeProperty('--nf');const p=el.firstElementChild;if(!p)return;
+  const cs=getComputedStyle(el),posto=el.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),q=el.lastElementChild;
+  const alto=()=>q.offsetTop+q.offsetHeight-p.offsetTop;   /* (centrato: chi esce dallo schermo non fa scorrere, quindi si misura così) */
+  let fs=parseFloat(getComputedStyle(p).fontSize)||20;
+  while(posto>0&&alto()>posto&&fs>11){fs-=.5;el.style.setProperty('--nf',fs+'px');}}
 function passoSuccessivo(){if(!ST.run)return;ST.run.i++;avviaPasso();}
 function storiaFineCapitolo(){const ci=capIdx(ST.run.cap),cap=ST.run.cap,next=STORIA.capitoli[ci+1];
   /* capitolo completato: sblocchi di questo capitolo (e, alla fine della storia, quelli "fine") */
-  const ids=STORIA.sblocchi.filter(e=>e.capitolo===cap||(!next&&e.fine)).map(e=>e.id);
+  const ids=STORIA.sblocchi.filter(e=>e.capitolo===cap||(!next&&capById(cap).finale&&e.fine)).map(e=>e.id);   /* "fine" solo dopo il vero ultimo capitolo (finale:true) */
+  /* salvataggio automatico: il capitolo è finito (CONTINUA porterà al capitolo dopo, anche quando verrà aggiunto più avanti) */
+  {const p=leggiProgressi()||{v:STORIA_V,cap,passo:null,raggiunti:[cap],squadra:{},finiti:[]};if(!p.finiti.includes(cap))p.finiti.push(cap);scriviProgressi(p);}
   const vai=()=>{if(!ST.run)return;if(next){storiaInizia(next.id,null);return;}
+    const c=capById(cap);
+    /* ultimo capitolo disponibile ma la storia non è finita: avviso e ritorno al menu */
+    if(!c.finale){const n=c.numero??ci+1;nascondiBox();SC=nuovaScena();SC.nero=true;
+      mostraCartelloFx('Fine del capitolo '+n,'Il capitolo '+(n+1)+' arriverà presto.',4,()=>storiaEsci());return;}
     /* fine della storia: si torna al menu (qui arriverà l'epilogo) */
     storiaEsci();};
   if(ids.some(id=>!sbloccato(id))){nascondiBox();SC=nuovaScena();SC.nero=true;ST.run.paused=true;sbloccaEMostra(ids,()=>{if(ST.run)ST.run.paused=false;vai();});return;}
@@ -3415,7 +3584,7 @@ function storiaEsci(){ST.run=null;SC=null;ST.track=null;chiudiPop();nascondiBox(
 /* ---- attori ---- */
 function posX(p,w){if(typeof p==='number')return p<=1?p*w:p;return (POS_X[p]??.5)*w;}
 function creaAttore(a){registraArchivio(a.id);const S=spriteAttore(a.id);const W=larghezzaScena();
-  const o={id:a.id,S,nome:a.nome,x:posX(a.x??'centro',W),face:a.verso==='sinistra'?-1:1,posa:a.posa||'attesa',t:0,target:null,vel:a.vel||140,esce:false};
+  const o={id:a.id,S,nome:a.nome,x:posX(a.x??'centro',W),face:a.verso==='sinistra'?-1:1,posa:a.posa||'base',t:0,target:null,vel:a.vel||140,esce:false};
   SC.attori[a.id]=o;return o;}
 function larghezzaScena(){const cv=$('sp-cv');return cv.width&&cv.height?cv.width/cv.height*SCENA_H:854;}
 
@@ -3447,7 +3616,8 @@ function esegui(a){const W=larghezzaScena();
 function effetto(a){const e=a.effetto,d=a.durata;
   if(e==='lampo'){SC.fx.push({k:'flash',col:a.colore||'#FFFFFF',t:0,d:d||.45});return prossimaAzione();}
   if(e==='trema'){SC.shake=a.forza||8;SC.shakeT=d||.6;SC.shakeT0=SC.shakeT;return prossimaAzione();}
-  if(e==='nero'||e==='dissolvenza'){SC.fx.push({k:'nero',t:0,d:d||1.2});SC.wait={type:'fx'};return;}
+  /* resta:true = lo schermo diventa nero in "durata" secondi e resta nero; la scena dopo comparirà piano dal nero */
+  if(e==='nero'||e==='dissolvenza'){SC.fx.push({k:'nero',t:0,d:d||(a.resta?.5:1.2),resta:!!a.resta});SC.wait={type:'fx'};return;}
   if(e==='musica'){ST.track=traccia(a.musica);return prossimaAzione();}
   avviso('Effetto sconosciuto: "'+e+'"');prossimaAzione();}
 
@@ -3481,6 +3651,8 @@ function loopScena(now){if(!ST.run||game.state!=='story'){_spLoop=false;return;}
 function aggiornaScena(dt){const W=larghezzaScena();
   /* attori che camminano */
   for(const k in SC.attori){const o=SC.attori[k];o.t+=dt;
+    /* pose brevi (torna:true): finita l'animazione, dopo una breve pausa si torna alla posa di base */
+    const sp=o.S&&o.S.scenePoses&&o.S.scenePoses[o.posa];if(sp&&sp.torna&&o.t*(sp.fps||10)>=sp.n+(sp.fps||10)*.4){o.posa='base';o.t=0;}
     if(o.target!==null&&o.target!==undefined){const d=o.target-o.x,st=o.vel*dt;
       if(Math.abs(d)<=st){o.x=o.target;o.target=null;if(o.esce)delete SC.attori[k];}else{o.x+=Math.sign(d)*st;if(!o.esce||true)o.face=Math.sign(d);}}}
   const w=SC.wait;
@@ -3496,16 +3668,21 @@ function aggiornaScena(dt){const W=larghezzaScena();
   if(ST.auto&&w&&w.type==='tap'&&ty&&ty.done){ty.autoT+=dt;if(ty.autoT>1.6+ty.full.length*.03)prossimaAzione();}
   if(ST.auto&&w&&w.type==='narr'&&SC.narr.shown>=SC.narr.n){SC.narr.autoT=(SC.narr.autoT||0)+dt;if(SC.narr.autoT>3)passoSuccessivo();}
   /* narratore: una riga alla volta */
+  if(SC.narr){const el=$('sp-narr'),h=el.clientHeight+'x'+el.clientWidth;if(SC.narr.fit!==h&&el.clientHeight>0){SC.narr.fit=h;adattaNarratore(el);}}   /* anche se lo schermo cambia */
   if(SC.narr&&SC.narr.shown<SC.narr.n){SC.narr.t+=dt;if(SC.narr.t>=.9||SC.narr.shown===0){SC.narr.t=0;const p=$('sp-narr').children[SC.narr.shown];if(p)p.classList.add('on');SC.narr.shown++;}}
   /* cartello: entra, resta, esce */
   if(SC.card){const c=SC.card;c.t+=dt;const a=c.t<.6?c.t/.6:c.t>c.d-.6?Math.max(0,(c.d-c.t)/.6):1;$('sp-card').style.opacity=a;
-    if(c.t>=c.d){$('sp-card').style.opacity=0;const f=c.then;SC.card=null;SC.wait=null;f();}}
+    if(c.t>=c.d){$('sp-card').style.opacity=0;const f=c.then;SC.card=null;SC.wait=null;f();if(!SC)return;}}   /* (dopo l'ultimo cartello si può essere tornati al menu) */
   /* effetti */
   let flash=0,flashCol='#FFF',nero=0,fxWait=false;
   SC.fx=SC.fx.filter(f=>{f.t+=dt;const k=f.t/f.d;
     if(f.k==='flash'){flash=Math.max(flash,(1-k)*.9);flashCol=f.col;}
-    if(f.k==='nero'){fxWait=true;nero=Math.max(nero,k<.35?k/.35:k>.65?(1-k)/.35:1);}
+    if(f.k==='nero'&&f.resta){fxWait=true;nero=Math.max(nero,Math.min(1,k));if(f.t>=f.d)SC.neroFisso=true;}
+    else if(f.k==='nero'){fxWait=true;nero=Math.max(nero,k<.35?k/.35:k>.65?(1-k)/.35:1);}
     return f.t<f.d;});
+  if(SC.neroFisso)nero=1;
+  /* entrata dal nero (dopo una dissolvenza, il narratore o un cartello) */
+  if(SC.entrata){const e=SC.entrata;e.t+=dt;nero=Math.max(nero,1-e.t/e.d);if(e.t>=e.d)SC.entrata=null;}
   $('sp-flash').style.opacity=flash;if(flash)$('sp-flash').style.background=flashCol;$('sp-black').style.opacity=nero;
   if(w&&w.type==='fx'&&!fxWait)prossimaAzione();
   if(SC.shakeT>0){SC.shakeT-=dt;if(SC.shakeT<=0)SC.shake=0;}}
@@ -3518,9 +3695,11 @@ function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,c
   if(SC.shake>0){const f=SC.shake*Math.min(1,SC.shakeT/(SC.shakeT0||1)+.2);c.translate((Math.random()-.5)*2*f,(Math.random()-.5)*2*f);}
   /* sfondo: copre la larghezza, con il pavimento all'altezza dei piedi degli attori */
   const bg=SC.bg;
-  if(bg&&imgOk(bg.im)){const im=bg.im,pieno=!!SC.anim;   /* animazione: sfondo a tutto schermo; scena: pavimento all'altezza dei piedi */
+  SC.animD.bg=null;
+  if(bg&&imgOk(bg.im)){const im=bg.im,pieno=!!SC.animPieno;   /* passo animazione: sfondo a tutto schermo; scena: pavimento all'altezza dei piedi */
     const sc=pieno?Math.max(W/im.naturalWidth,SCENA_H/im.naturalHeight):Math.max(W/im.naturalWidth,SCENA_SUOLO/(bg.suolo*im.naturalHeight)),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
     const y0=pieno?SCENA_H-h:Math.min(0,SCENA_SUOLO-bg.suolo*h);c.drawImage(im,(W-w)/2,y0,w,h);
+    SC.animD.bg={x:(W-w)/2,y:y0,w,h};   /* rettangolo dello sfondo: le animazioni lo usano per disegnare su un punto preciso dell'immagine */
     if(y0+h<SCENA_H){c.fillStyle='#0b0814';c.fillRect(0,y0+h,W,SCENA_H-y0-h);}}
   else{const g=c.createLinearGradient(0,0,0,SCENA_H);g.addColorStop(0,'#1d1650');g.addColorStop(.62,'#0d0b2a');g.addColorStop(1,'#050410');c.fillStyle=g;c.fillRect(-20,-20,W+40,SCENA_H+40);
     c.fillStyle='rgba(255,255,255,.05)';c.fillRect(0,SCENA_SUOLO,W,2);}
@@ -3530,7 +3709,9 @@ function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,c
     const walking=o.target!=null,a=walking&&S.anims.walk&&imgOk(S.img[S.anims.walk.file])?S.anims.walk:animPosa(S,o.id,o.posa);if(!a)return;
     const im=S.img[a.file];if(!imgOk(im))return;
     const loop=a===S.anims.idle||a===S.anims.walk||a.loop;let fi=Math.floor(o.t*(a.fps||10));
-    if(loop){if(a.pingpong){const p=2*a.n-2;fi%=p;if(fi>=a.n)fi=p-fi;}else fi%=a.n;}else fi=Math.min(a.n-1,fi);
+    if(loop){if(a.pingpong){const p=2*a.n-2;fi%=p;if(fi>=a.n)fi=p-fi;}else fi%=a.n;}
+    else if(a.ciclo!=null&&fi>=a.n){const L=a.n-a.ciclo,p=2*L-2;let r=fi-a.ciclo;r=p>0?r%p:0;if(r>=L)r=p-r;fi=a.ciclo+r;}   /* ciclo: dopo l'entrata ripete avanti e indietro i fotogrammi da "ciclo" in poi */
+    else fi=Math.min(a.n-1,fi);
     const sc=(a.sc||S.scale)*SCENA_ZOOM,fl=S.float?S.float+Math.sin(o.t*3.6)*3:0;
     c.save();c.translate(Math.round(o.x),Math.round(SCENA_SUOLO-fl));if(o.face<0)c.scale(-1,1);
     c.globalAlpha=.35;c.fillStyle='#000';c.beginPath();c.ellipse(0,fl,(S.body.x1-S.body.x0)*S.scale*SCENA_ZOOM*.4,5,0,0,7);c.fill();c.globalAlpha=1;
