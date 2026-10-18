@@ -771,15 +771,16 @@
   #sp-cv { position:absolute; inset:0; width:100%; height:100%; background:#05040f; image-rendering:pixelated; }
   /* riquadro di dialogo in basso: ritratto, nome in oro, testo lettera per lettera */
   #sp-box { position:absolute; z-index:3; left:50%; transform:translateX(-50%); bottom:max(10px,env(safe-area-inset-bottom)); width:min(calc(100% - 24px),920px);
-    min-height:min(28vh,140px); box-sizing:border-box; padding:10px 16px 18px; display:none; gap:12px; align-items:flex-start;
+    height:min(31vh,150px); box-sizing:border-box; padding:8px 16px 16px; display:none; gap:12px; align-items:flex-start;   /* altezza FISSA: i testi lunghi scorrono a pagine */
     background:rgba(10,8,28,.93); border:3px solid var(--oro); border-radius:12px; box-shadow:0 0 0 3px #1a1205, 0 0 24px rgba(255,193,7,.25); }
   #sp-box.on { display:flex; }
   #sp-face { flex:none; width:min(15vh,72px); height:min(15vh,72px); image-rendering:pixelated; border:2px solid var(--oro); border-radius:8px; background:rgba(20,18,50,.9); }
   #sp-box.noface #sp-face { display:none; }
-  .sp-body { flex:1; min-width:0; }
+  .sp-body { flex:1; min-width:0; align-self:stretch; display:flex; flex-direction:column; min-height:0; }
   #sp-who { color:var(--oro); font-size:min(2.2vw,4.6vh,22px); letter-spacing:.06em; margin-bottom:3px; }
   #sp-who:empty { display:none; }
-  #sp-text { font:700 min(2.2vw,4.8vh,23px)/1.4 var(--font-testo); color:var(--testo); white-space:pre-line; }
+  #sp-text { font:700 min(2.2vw,4.8vh,23px)/1.4 var(--font-testo); color:var(--testo); white-space:pre-line; flex:1; min-height:0; overflow:hidden; }
+  #sp-tx { display:block; transition:transform .25s; }
   #sp-box.dida #sp-text { font-style:italic; font-weight:400; color:#E6DFFF; text-align:center; }
   #sp-next { position:absolute; right:12px; bottom:3px; color:var(--oro); font-size:15px; animation:spBlink 1s steps(2) infinite; visibility:hidden; }
   #sp-box.done #sp-next { visibility:visible; }
@@ -876,7 +877,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.132</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.133</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -899,7 +900,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.132.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.133.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -974,7 +975,7 @@
   <div id="st-play" class="st-view">
     <canvas id="sp-cv"></canvas>
     <div id="sp-narr"></div>
-    <div id="sp-box"><canvas id="sp-face" width="64" height="64"></canvas><div class="sp-body"><div id="sp-who"></div><div id="sp-text"></div></div><span id="sp-next">&#9660;</span></div>
+    <div id="sp-box"><canvas id="sp-face" width="64" height="64"></canvas><div class="sp-body"><div id="sp-who"></div><div id="sp-text"><span id="sp-tx"></span></div></div><span id="sp-next">&#9660;</span></div>
     <div id="sp-black"></div><div id="sp-flash"></div>
     <div id="sp-card"><small></small><b></b></div>
     <div id="sp-tools"><button id="sp-auto" class="btn-secondario">AUTO</button><button id="sp-skip" class="btn-secondario">SALTA</button><button id="sp-menu" class="btn-secondario">MENU</button></div>
@@ -3625,11 +3626,25 @@ function effetto(a){const e=a.effetto,d=a.durata;
 function mostraBattuta(chi,testo,nome,dida){const box=$('sp-box');box.classList.add('on');box.classList.toggle('dida',!!dida);box.classList.remove('done');
   $('sp-who').textContent=dida?'':(nome||(chi?nomeDi(chi):''));
   SC.typing={full:String(testo),n:0,chi,done:false,autoT:0};
-  const face=$('sp-face'),fx=face.getContext('2d');fx.clearRect(0,0,64,64);box.classList.add('noface');
+  /* lo spazio del ritratto c'è subito (così il testo non va a capo in modo diverso quando il ritratto arriva) */
+  const face=$('sp-face'),fx=face.getContext('2d');fx.clearRect(0,0,64,64);box.classList.toggle('noface',!chi||!!dida);
   if(chi&&!dida)ritratto(chi,t=>{if(!t){avviso('Ritratto mancante: "'+chi+'"');return;}if(!SC||!SC.typing||SC.typing.chi!==chi)return;fx.imageSmoothingEnabled=false;fx.clearRect(0,0,64,64);fx.drawImage(t,0,0,64,64);box.classList.remove('noface');});
-  $('sp-text').textContent='';SC.wait={type:'tap'};}
+  $('sp-tx').textContent='';$('sp-tx').style.transform='';SC.wait={type:'tap'};}
 function nascondiBox(){$('sp-box').classList.remove('on');}
-function completaTesto(){const ty=SC.typing;if(!ty)return;ty.n=ty.full.length;ty.done=true;$('sp-text').textContent=ty.full;$('sp-box').classList.add('done');}
+/* RIQUADRO DI ALTEZZA FISSA: un testo lungo si ferma quando il riquadro è pieno (freccia ▼);
+   al tocco le righe scorrono in su e il testo continua nello spazio liberato */
+function trabocca(ty){const h=$('sp-text').clientHeight;return h>0&&$('sp-tx').offsetHeight>(ty.off||0)+h+1;}
+function scriviFino(ty,k){$('sp-tx').textContent=ty.full.slice(0,k);}
+function fermaPagina(ty,lim){const sp=ty.full.lastIndexOf(' ',lim-1),cut=sp>(ty.inizio||0)?sp+1:lim;   /* si ferma a fine parola */
+  scriviFino(ty,cut);ty.n=cut;ty.pausa=true;$('sp-box').classList.add('done');}
+function avanzaTesto(ty,prev,k){scriviFino(ty,k);if(trabocca(ty)){fermaPagina(ty,prev);return;}
+  if(k>=ty.full.length){ty.done=true;$('sp-box').classList.add('done');}}
+function paginaSuccessiva(ty){const el=$('sp-text'),lh=parseFloat(getComputedStyle(el).lineHeight)||24,righe=Math.max(1,Math.floor(el.clientHeight/lh+.01));
+  ty.off=(ty.off||0)+righe*lh;$('sp-tx').style.transform='translateY(-'+ty.off+'px)';
+  ty.pausa=false;ty.autoT=0;ty.inizio=Math.floor(ty.n);$('sp-box').classList.remove('done');}
+function completaTesto(){const ty=SC.typing;if(!ty)return;const len=ty.full.length;
+  for(let k=Math.floor(ty.n)+1;k<=len;k++){scriviFino(ty,k);if(trabocca(ty)){fermaPagina(ty,k-1);return;}}
+  ty.n=len;ty.done=true;$('sp-box').classList.add('done');}
 
 /* ---- cartello in dissolvenza ---- */
 function mostraCartelloFx(sopra,titolo,durata,then){const c=$('sp-card');c.querySelector('small').textContent=sopra||'';c.querySelector('b').textContent=titolo;
@@ -3639,7 +3654,7 @@ function mostraCartelloFx(sopra,titolo,durata,then){const c=$('sp-card');c.query
 function storiaAvanti(){if(!ST.run||!SC||ST.run.paused)return;const w=SC.wait;if(!w)return;
   if(w.type==='card'){if(SC.card.t>.5&&SC.card.t<SC.card.d-.6)SC.card.t=SC.card.d-.6;return;}
   if(w.type==='narr'){if(SC.narr.shown<SC.narr.n){[...$('sp-narr').children].forEach(p=>p.classList.add('on'));SC.narr.shown=SC.narr.n;return;}try{sfx.sel();}catch(_){}passoSuccessivo();return;}
-  if(w.type==='tap'){if(!SC.typing.done){completaTesto();return;}try{sfx.sel();}catch(_){}prossimaAzione();return;}}
+  if(w.type==='tap'){if(SC.typing.pausa){try{sfx.sel();}catch(_){}paginaSuccessiva(SC.typing);return;}if(!SC.typing.done){completaTesto();return;}try{sfx.sel();}catch(_){}prossimaAzione();return;}}
 
 /* ---- ciclo di disegno e tempi (gira solo mentre si gioca la storia) ---- */
 let _spLoop=false,_spLast=0;
@@ -3662,10 +3677,11 @@ function aggiornaScena(dt){const W=larghezzaScena();
   if(w&&w.type==='time'){w.left-=dt;if(w.left<=0){const f=w.then;SC.wait=null;f();}}
   if(SC.anim)SC.animT+=dt;
   /* testo lettera per lettera */
-  const ty=SC.typing;if(ty&&!ty.done){ty.n=Math.min(ty.full.length,ty.n+SPEED[SPEED_K]*dt);$('sp-text').textContent=ty.full.slice(0,Math.floor(ty.n));
-    if(ty.n>=ty.full.length){ty.done=true;$('sp-box').classList.add('done');}}
-  /* AUTO: la battuta va avanti da sola dopo qualche secondo */
-  if(ST.auto&&w&&w.type==='tap'&&ty&&ty.done){ty.autoT+=dt;if(ty.autoT>1.6+ty.full.length*.03)prossimaAzione();}
+  const ty=SC.typing;if(ty&&!ty.done&&!ty.pausa){const prev=Math.floor(ty.n);ty.n=Math.min(ty.full.length,ty.n+SPEED[SPEED_K]*dt);const k=Math.floor(ty.n);
+    if(k>prev)avanzaTesto(ty,prev,k);else if(ty.n>=ty.full.length){ty.done=true;$('sp-box').classList.add('done');}}
+  /* AUTO: la battuta (o la pagina) va avanti da sola dopo qualche secondo */
+  if(ST.auto&&w&&w.type==='tap'&&ty&&ty.pausa){ty.autoT+=dt;if(ty.autoT>2.2)paginaSuccessiva(ty);}
+  if(ST.auto&&w&&w.type==='tap'&&ty&&ty.done){ty.autoT+=dt;if(ty.autoT>1.6+(ty.full.length-(ty.inizio||0))*.03)prossimaAzione();}
   if(ST.auto&&w&&w.type==='narr'&&SC.narr.shown>=SC.narr.n){SC.narr.autoT=(SC.narr.autoT||0)+dt;if(SC.narr.autoT>3)passoSuccessivo();}
   /* narratore: una riga alla volta */
   if(SC.narr){const el=$('sp-narr'),h=el.clientHeight+'x'+el.clientWidth;if(SC.narr.fit!==h&&el.clientHeight>0){SC.narr.fit=h;adattaNarratore(el);}}   /* anche se lo schermo cambia */
@@ -3697,8 +3713,9 @@ function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,c
   const bg=SC.bg;
   SC.animD.bg=null;
   if(bg&&imgOk(bg.im)){const im=bg.im,pieno=!!SC.animPieno;   /* passo animazione: sfondo a tutto schermo; scena: pavimento all'altezza dei piedi */
-    const sc=pieno?Math.max(W/im.naturalWidth,SCENA_H/im.naturalHeight):Math.max(W/im.naturalWidth,SCENA_SUOLO/(bg.suolo*im.naturalHeight)),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
-    const y0=pieno?SCENA_H-h:Math.min(0,SCENA_SUOLO-bg.suolo*h);c.drawImage(im,(W-w)/2,y0,w,h);
+    /* lo sfondo copre SEMPRE tutto lo schermo; nelle scene si avvicina il più possibile il pavimento ai piedi degli attori */
+    const sc=Math.max(W/im.naturalWidth,SCENA_H/im.naturalHeight),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
+    const y0=pieno?SCENA_H-h:Math.max(SCENA_H-h,Math.min(0,SCENA_SUOLO-bg.suolo*h));c.drawImage(im,(W-w)/2,y0,w,h);
     SC.animD.bg={x:(W-w)/2,y:y0,w,h};   /* rettangolo dello sfondo: le animazioni lo usano per disegnare su un punto preciso dell'immagine */
     if(y0+h<SCENA_H){c.fillStyle='#0b0814';c.fillRect(0,y0+h,W,SCENA_H-y0-h);}}
   else{const g=c.createLinearGradient(0,0,0,SCENA_H);g.addColorStop(0,'#1d1650');g.addColorStop(.62,'#0d0b2a');g.addColorStop(1,'#050410');c.fillStyle=g;c.fillRect(-20,-20,W+40,SCENA_H+40);
