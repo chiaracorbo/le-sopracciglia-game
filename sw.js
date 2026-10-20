@@ -1,4 +1,4 @@
-const CACHE = 'sopracciglia-v145';
+const CACHE = 'sopracciglia-v146';
 const ASSETS = [
   './index.html',
   './manifest.json',
