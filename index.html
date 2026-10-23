@@ -781,6 +781,7 @@
   #sp-who:empty { display:none; }
   #sp-text { font:700 min(2.2vw,4.8vh,23px)/1.4 var(--font-testo); color:var(--testo); white-space:pre-line; flex:1; min-height:0; overflow:hidden; }
   #sp-tx { display:block; transition:transform .25s; }
+  #sp-box.abbaia #sp-tx { font-style:italic; }   /* chi abbaia (Mango): la frase è quello che Iacopo capisce */
   #sp-box.dida #sp-text { font-style:italic; font-weight:400; color:#E6DFFF; text-align:center; }
   #sp-next { position:absolute; right:12px; bottom:3px; color:var(--oro); font-size:15px; animation:spBlink 1s steps(2) infinite; visibility:hidden; }
   #sp-box.done #sp-next { visibility:visible; }
@@ -877,7 +878,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.171</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.172</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -900,7 +901,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.171.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.172.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -1170,6 +1171,7 @@ const sfx={
   blinkS:()=>{beep(1100,.07,'sine',.05,-500);noise(.05,.03)},
   ready:()=>beep(880,.09,'sine',.05,220),
   clacson:()=>{beep(392,.5,'square',.07);beep(494,.5,'square',.06);},   /* clacson d'auto: due note insieme */
+  motore:()=>{beep(70,1.3,'sawtooth',.07,170);setTimeout(()=>beep(120,.9,'sawtooth',.05,220),350);noise(.5,.04);},   /* motore che accelera */
   gomme:()=>{noise(.7,.08);for(let i=0;i<5;i++)setTimeout(()=>beep(1300-i*90,.13,'sawtooth',.03,-120),i*120);},   /* stridio di gomme */
   parry:()=>{beep(1568,.12,'triangle',.09);setTimeout(()=>beep(784,.16,'square',.05,-200),60);noise(.06,.05);},
 };
@@ -2360,12 +2362,18 @@ const BG_IMG={},BG_STATE={}; /* stato di ogni sfondo: loading / ok / failed */
 /* scarica uno sfondo; se il download fallisce riprova fino a 4 volte (come gli sprite) */
 function loadBg(i){
   if(BG_IMG[i]&&BG_STATE[i]!=='failed')return; /* già pronto o in arrivo; se era fallito, riprova */
-  const src='backgrounds/bg'+String(i+1).padStart(2,'0')+'.png',im=new Image();let tries=0;
+  const A=i>=ARENA_STORIA_BASE?arenaStoria(i):null;   /* arene solo della storia: backgrounds/storia/<file>.png */
+  const src=A?'backgrounds/storia/'+A.file+'.png':'backgrounds/bg'+String(i+1).padStart(2,'0')+'.png',im=new Image();let tries=0;
   BG_IMG[i]=im;BG_STATE[i]='loading';
   im.onload=()=>{BG_STATE[i]='ok';};
   im.onerror=()=>{if(++tries<=4)setTimeout(()=>{im.src=src+'?r='+tries+'-'+Date.now();},400*tries);
     else{BG_STATE[i]='failed';console.warn('Sfondo non caricato: '+src);}};
   im.src=src;}
+/* ARENE SOLO DELLA STORIA (elenco ARENE_STORIA nei contenuti): non compaiono nelle partite normali; indice = ARENA_STORIA_BASE + posizione */
+const ARENA_STORIA_BASE=100;let BG_RECT=null;
+function arenaStoria(i){const k=Object.keys(ARENE_STORIA)[i-ARENA_STORIA_BASE];return k?{nome:k,...ARENE_STORIA[k]}:null;}
+function indiceArena(nome){const bi=BACKGROUNDS.indexOf(nome);if(bi>=0)return bi;const k=Object.keys(ARENE_STORIA).indexOf(nome);return k>=0?ARENA_STORIA_BASE+k:-1;}
+function nomeArena(i){return i>=ARENA_STORIA_BASE?(arenaStoria(i)||{nome:''}).nome:BACKGROUNDS[i]||'';}
 /* sfondo pronto (o definitivamente non disponibile) */
 function bgReady(i){return BG_STATE[i]==='ok'||BG_STATE[i]==='failed';}
 /* in sottofondo scarica a poco a poco tutti gli sfondi, uno alla volta, così di solito sono già pronti */
@@ -2375,8 +2383,11 @@ setTimeout(function preloadBg(){const next=BACKGROUNDS.findIndex((_,i)=>!BG_IMG[
 function bgPlaceholder(){ctx.fillStyle='#07061a';ctx.fillRect(0,0,W,H);}
 /* disegna lo sfondo riempiendo tutta l'arena (taglia i lati, non deforma) */
 function drawBg(i){const im=BG_IMG[i];if(!im||!im.complete||!im.naturalWidth)return false;
-  const sc=Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*sc,h=im.naturalHeight*sc;
-  ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(im,(W-w)/2,H-h,w,h);
+  const A=i>=ARENA_STORIA_BASE?arenaStoria(i):null;let sc,w,h,y0;
+  if(A){sc=Math.max(W/im.naturalWidth,GROUND/(A.suolo*im.naturalHeight));w=im.naturalWidth*sc;h=im.naturalHeight*sc;y0=Math.min(0,GROUND-A.suolo*h);}   /* arena della storia: pavimento dell'immagine alla linea dei piedi */
+  else{sc=Math.max(W/im.naturalWidth,H/im.naturalHeight);w=im.naturalWidth*sc;h=im.naturalHeight*sc;y0=H-h;}
+  BG_RECT={x:(W-w)/2,y:y0,w,h};
+  ctx.save();ctx.imageSmoothingEnabled=false;if(A&&y0+h<H){ctx.fillStyle='#0b0814';ctx.fillRect(0,0,W,H);}ctx.drawImage(im,(W-w)/2,y0,w,h);
   /* leggera ombra in basso per far risaltare i personaggi */
   const g=ctx.createLinearGradient(0,GROUND-40,0,H);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.45)');
   ctx.fillStyle=g;ctx.fillRect(0,GROUND-40,W,H-GROUND+40);ctx.restore();return true;}
@@ -3152,6 +3163,11 @@ const IACOPO_LETTO={x:.785,su:107};   /* cap02_p10: Iacopo a letto, sul letto de
    File in sprites/storia/coppie/<file>.png: striscia di fotogrammi da 128 px, piedi sulla riga 122, centro della coppia a x 64.
    scala = grandezza (come gli attori); ribalta:true = specchiata. Si usa con l'azione di scena {coppia:'nome', attori:['a','b']}. */
 const COPPIE={
+  /* cap04: fotogrammi 192×192, piedi sulla riga 186, centro a x 96; oscilla:true = sale e scende piano (in volo) */
+  alice_iacopo_abbraccio:{file:'alice_iacopo_abbraccio',n:15,fps:8,pingpong:true,fw:192,fh:192,ax:96,ay:186,scala:1.2},
+  alice_porta_batteo:{file:'alice_porta_batteo',n:15,fps:10,fw:192,fh:192,ax:96,ay:186,scala:1.2},
+  mango_porta_iacopo:{file:'mango_porta_iacopo',n:15,fps:10,fw:192,fh:192,ax:96,ay:186,scala:1.25,oscilla:true},
+  alice_mango_coccole:{file:'alice_mango_coccole',n:15,fps:8,pingpong:true,fw:192,fh:192,ax:96,ay:186,scala:1.2},
   sito_moglie_abbraccio:{file:'sito_moglie_abbraccio',n:16,fps:8,pingpong:true,scala:1.52},   /* cap01: Sito a sinistra, la moglie a destra */
 };
 const _P=(f,n,fps,x)=>Object.assign({file:'scena/'+f,n,fps},x||{});
@@ -3192,6 +3208,8 @@ STORY_SPRITES.ribelle.scenePoses={scena:_P('scena',1,1),parla:_P('parla',16,8,_P
 SPRITE_CHARS.pisani.scenePoses.scettro=_P('scettro',16,12,{fh:160,ay:145});   /* alza lo scettro: fotogramma più alto (160) */
 /* lotta 2 (cap03): forza dei due soldati contro Alice (facile-media), regolata con partite simulate */
 const LOTTA2={hp:75,power:10,pugno:13,calcio:12};
+/* lotta 3 (cap04): i due soldati sui tetti, media difficoltà */
+const LOTTA3={hp:70,power:10,pugno:12,calcio:11};
 /* SOLDATO DEL REGNO: set da lotta (solo storia) + pose di scena. Senza salto, parata e vittoria: il gioco usa l'attesa */
 STORY_SPRITES.soldato={dir:'sprites/storia/soldato/',fw:128,fh:128,ax:46,ay:119,scale:1.32,body:{x0:22,y0:7,x1:80,y1:119},pose:'pose',img:{},
   anims:{idle:{file:'idle',n:16,fps:8},walk:{file:'walk',n:16,fps:12},hurt:{file:'hurt',n:16},ko:{file:'ko',n:16,fps:14},
@@ -3213,6 +3231,11 @@ STORY_SPRITES.soldatoL2=STORY_SPRITES.soldatoL2b=STORY_SPRITES.soldato;
 STORY_ROSTER.soldatoL2={...STORY_ROSTER.soldato,id:'soldatoL2',hp:LOTTA2.hp,power:LOTTA2.power,
   moves:{punch:{...STORY_ROSTER.soldato.moves.punch,dmg:LOTTA2.pugno},kick:{...STORY_ROSTER.soldato.moves.kick,dmg:LOTTA2.calcio}}};
 STORY_ROSTER.soldatoL2b={...STORY_ROSTER.soldatoL2,id:'soldatoL2b'};
+/* soldati della LOTTA 3 (cap04, sui tetti): media difficoltà */
+STORY_SPRITES.soldatoL3=STORY_SPRITES.soldatoL3b=STORY_SPRITES.soldato;
+STORY_ROSTER.soldatoL3={...STORY_ROSTER.soldato,id:'soldatoL3',hp:LOTTA3.hp,power:LOTTA3.power,
+  moves:{punch:{...STORY_ROSTER.soldato.moves.punch,dmg:LOTTA3.pugno},kick:{...STORY_ROSTER.soldato.moves.kick,dmg:LOTTA3.calcio}}};
+STORY_ROSTER.soldatoL3b={...STORY_ROSTER.soldatoL3,id:'soldatoL3b'};
 /* VERSIONI e COMPARSE del capitolo 2 (solo scene) */
 const _comparsa=(id,nome,scale,poses,x)=>{STORY_SPRITES[id]=Object.assign({dir:'sprites/storia/'+id+'/',fw:128,fh:128,ax:64,ay:122,scale,body:{x0:44,y0:10,x1:84,y1:122},pose:'scena',img:{},
   anims:{idle:{file:'scena',n:1,fps:1}},scenePoses:Object.assign({scena:_P('scena',1,1)},poses)},x||{});STORY_ROSTER[id]={id,name:nome,uso:'comparsa'};};
@@ -3288,6 +3311,33 @@ _comparsa('giornalista','GIORNALISTA DEL TG',1.42,{parla:_P('parla',16,8,_PARLA)
 /* membri del Fronte sullo sfondo (comparsa base): un po' più piccoli e sollevati, così sembrano più lontani */
 _comparsa('membrofronte','MEMBRO DEL FRONTE',1.2,{});STORY_SPRITES.membrofronte.scenePoses.scena.su=12;
 STORY_SPRITES.membrofronte2=STORY_SPRITES.membrofronte;STORY_ROSTER.membrofronte2={...STORY_ROSTER.membrofronte,id:'membrofronte2'};
+/* ---------- capitolo 4 ---------- */
+/* MANGO nelle scene (cammina a quattro zampe con la camminata del suo set da lotta). "abbaia" è il suo "parla" */
+SPRITE_CHARS.mango.scenePoses={scena:_P('scena',1,1),abbaia:_P('abbaia',16,10,_PARLA),parla:_P('abbaia',16,10,_PARLA),annuisce:_P('annuisce',16,10,{torna:true}),
+  sorpresa:_P('sorpresa',16,12),triste:_P('triste',16,10),arrabbiato:_P('arrabbiato',16,12),ferito:_P('ferito',16,10),seduto:_P('seduto',16,10),indica:_P('indica',16,12),
+  vola:_P('vola',16,12),volo:_P('volo',1,1)};   /* vola: salta una volta e resta sull'ultimo fotogramma; volo = solo l'ultimo fotogramma (già in volo) */
+/* SITO: pose che partono dall'attesa da lotta (ascia e revolver in mano); fotogrammi larghi 160 (ax +16) */
+const _S160=(f,n,fps,x)=>_P(f,n,fps,Object.assign({fw:160,ax:SPRITE_CHARS.sito.ax+16},x||{}));
+Object.assign(SPRITE_CHARS.sito.scenePoses,{ricarica:_S160('ricarica',12,10),strappa:_S160('strappa',15,12),con_fucile:_S160('con_fucile',1,1),
+  devia:_S160('devia',16,14,{fh:160,ay:SPRITE_CHARS.sito.ay+32}),calcio_volante:_S160('calcio_volante',16,14,{fh:192,ay:SPRITE_CHARS.sito.ay+64}),
+  urla:_S160('urla',12,10),inginocchio:_P('inginocchio',12,10),
+  cammina_lotta:{file:'walk',n:16,fps:14,loop:true}});   /* cammina_lotta: la camminata del set da lotta, con le armi in mano */
+SPRITE_CHARS.zibe.scenePoses.urla=_P('urla',16,12);
+SPRITE_CHARS.alice.scenePoses.comunicatore=_P('comunicatore',16,8,_PARLA);
+STORY_SPRITES.ribelle.scenePoses.para_fucile=_P('para_fucile',10,12,{fh:176,ay:STORY_SPRITES.ribelle.ay+48});   /* si ferma con il fucile alzato sopra la testa */
+/* versioni con il cappello (fotogrammi alti 144: il cappello sporge sopra la testa) */
+const _H144=(id,x)=>Object.assign({fh:144,ay:STORY_SPRITES[id].ay+16},x||{});
+_versione('alicecappello','ALICE','alice',{});_versione('iacopocappello','IACOPO','ribelle',{});
+for(const [id,P] of [['alicecappello',{parla:['parla',15,8,_PARLA],fuma:['fuma',15,6,{loop:true}],triste:['triste',15,8,{ciclo:7}]}],
+  ['iacopocappello',{parla:['parla',15,8,_PARLA],fuma:['fuma',15,6,{loop:true}],sorpresa:['sorpresa',15,12]}]]){const SP=STORY_SPRITES[id].scenePoses;
+  SP.scena=_P('scena',1,1,_H144(id));for(const k in P){const [f,n,fps,x]=P[k];SP[k]=_P(f,n,fps,_H144(id,x));}}
+/* l'INFORMATORE: è Chiara, ma il gioco non lo rivela (niente ritratto, niente archivio) */
+_versione('informatore','INFORMATORE','chiara',{porge:_P('porge',15,10)});STORY_ROSTER.informatore.senzaRitratto=true;
+/* la moglie di Sito prigioniera (incinta, polsi legati) */
+_versione('moglieprigioniera','MOGLIE DI SITO','mogliesito',{grida:_P('grida',15,10,{ciclo:6}),piange:_P('piange',12,8,{loop:true,pingpong:true})});
+/* Iacopo SENZA la mossa speciale del fucile (lotta 5: il fucile si è spezzato) */
+STORY_SPRITES.ribellenf=STORY_SPRITES.ribelle;STORY_ROSTER.ribellenf={...STORY_ROSTER.ribelle,id:'ribellenf',
+  special:{type:'none',name:'',dmg:0,kb:0,st:12,act:1,rec:1,fx:'gold',cost:99999,cd:0}};
 
 /* ##########################################################################################
    ##   MODALITÀ STORIA — CONTENUTI                                                        ##
@@ -3360,7 +3410,11 @@ const TAVOLO_RIUNIONI={img:'tavolo_riunioni',sfondo:true,davanti:true};
 /* cap03_p08: il bancone dei pancake della cucina, ritagliato dallo sfondo: i cuochi stanno dietro */
 const BANCONE_CUCINA={img:'bancone_cucina',sfondo:true,davanti:true};
 const SITO_AFFERRA_X=.548;   /* cap03_p12/p14: dove si ferma Sito perché il pugno arrivi sul collo del costume di Iacopo (Iacopo a .5) */
+/* cap04: ARENE SOLO DELLA STORIA per le lotte (file in backgrounds/storia/, suolo = pavimento dell'immagine) e chi abbaia (Mango) */
+const ARENE_STORIA={'Tetti del quartier generale':{file:'tetti_qg',suolo:.78},'Quartier generale in fiamme':{file:'qg_fiamme',suolo:.86}};
+const ABBAIA={mango:true};
 const SFONDI_STORIA={bar_operai:{suolo:.62},
+  cortile_pista:{suolo:.8},vicolo_pioggia:{suolo:.82},qg_esterno:{suolo:.75},tetti_qg:{suolo:.78},qg_fiamme:{suolo:.86},cielo_notte:{suolo:.95},periferia_notte:{suolo:.87},auto_pioggia:{suolo:.55},
   studio_tg2:{suolo:.83},rifugio_fronte:{suolo:.64},rifugio_cucina:{suolo:.64},rifugio_mensa:{suolo:.64},rifugio_svago:{suolo:.64},rifugio_assemblea:{suolo:.64},sala_danza:{suolo:.8},giardino_ricevimento:{suolo:.78},retro_furgone:{suolo:.9},furgone_fuori:{suolo:.70},tetto_piazza:{suolo:.7},studio_tg:{suolo:.77},sala_riunioni:{suolo:.71},sala_riunioni2:{suolo:.75},
   strada_murale:{suolo:.915},   /* cap02: i piedi sul marciapiede, non sul muro */
 };   /* cap01_p07: Pisani in piedi accanto al trono */
@@ -3388,6 +3442,7 @@ const STORIA={
     {id:'alice',nome:'ALICE',frase:'Ora tutti sapranno chi siamo e perch\u00e9 lottiamo.',ritratto:'alice',capitolo:'cap02'},
     {id:'batteo',nome:'BATTEO',frase:'Non vedo l\u2019ora di far saltare in aria quel dannato stabilimento.',ritratto:'batteo',capitolo:'cap02'},
     {id:'ribelle',nome:'IACOPO',frase:'Non mi piegher\u00f2 mai alla vostra violenza! Il popolo si merita di pi\u00f9!',ritratto:'ribelle',capitolo:'cap02'},
+    {id:'mango',nome:'MANGO',frase:'Iacopo, \u00e8 ora di salire a bordo del treno del dolore!',ritratto:'mango',capitolo:'cap04'},
   ].concat(MODALITA_PROVA?[
     {id:'chiara',nome:'CHIARA',frase:'Frase di prova: qui andrà una frase del libro su Chiara.',ritratto:'chiara'},
     {id:'sito',nome:'SITO',frase:'Frase di prova: qui andrà una frase del libro su Sito.',ritratto:'sito'},
@@ -3929,7 +3984,310 @@ const STORIA={
         {posa:{ufficiale:'parla',agente:'parla',soldato:'parla'}},{attesa:1.6},
         {effetto:'nero',durata:.6,resta:true},
       ]},
-      /* cap03_p18 FINE CAPITOLO: salvataggio e "Il capitolo 4 arriverà presto" li fa il motore */
+      /* cap03_p18 FINE CAPITOLO: salvataggio automatico; poi si passa subito al capitolo 4 */
+    ]},
+    /* ==================== CAPITOLO 4 – IL TRENO DEL DOLORE ==================== */
+    {id:'cap04',numero:4,titolo:'Il treno del dolore',passi:[
+      {id:'cap04_p01',tipo:'cartello',sopra:'Capitolo 4',titolo:'Il treno del dolore'},
+      {id:'cap04_p02',tipo:'narratore',righe:[
+        'Nel giro di pochi mesi, Iacopo si integrò sempre più nel Fronte di Liberazione.',
+        'Il gruppo riconobbe la sua mente acuta e il suo intuito. Iacopo divenne una figura chiave, coinvolto anche nelle decisioni più importanti.',
+        'Nonostante le stranezze dei suoi compagni, aveva trovato un posto in cui sentirsi utile e parte di qualcosa di più grande di lui.']},
+
+      /* il rifugio: Zibe sveglia Iacopo */
+      {id:'cap04_p03',tipo:'scena',sfondo:'rifugio_fronte',
+        attori:[{id:'ribelle',x:.4,verso:'destra',posa:'sul_materasso'}],azioni:[
+        {musica:'win'},
+        {entra:'zibe',da:'destra',a:.64,vel:300,cammina:'cammina_c3'},
+        {didascalia:'(Iacopo dorme beatamente. Zibe irrompe nella stanza, spalancando la porta con un gran fragore.)'},
+        {effetto:'trema',forza:4,durata:.5},{posa:{ribelle:'sorpresa'}},{attesa:.8},
+        {chi:'ribelle',pose:{ribelle:'arrabbiato'},testo:'Zibe, cosa diavolo stai facendo? Non hai mai sentito parlare di privacy? Avresti potuto bussare!'},
+        {chi:'zibe',pose:{ribelle:'base',zibe:'parla'},testo:'Dai, cosa hai da nascondere? Non è che sotto queste coperte c’è qualcosa di interessante?'},
+        {chi:'ribelle',pose:{zibe:'base',ribelle:'arrabbiato'},testo:'Lasciami in pace, Zibe! Non è il momento per le tue stupidaggini!'},
+        {chi:'zibe',pose:{ribelle:'base',zibe:'parla'},testo:'Va bene, va bene, non ti arrabbiare! Comunque, vestiti in fretta, abbiamo un ospite importante in arrivo.'},
+        {posa:{zibe:'base'}},{effetto:'nero',durata:.35,resta:true},
+      ]},
+
+      /* il cortile della base: arriva Mango */
+      {id:'cap04_p04',tipo:'scena',sfondo:'cortile_pista',entrata:.4,
+        attori:[{id:'zibe',x:.18,verso:'destra'},{id:'ribelle',x:.3,verso:'destra'}],azioni:[
+        {attesa:.5},{livello:'navicella'},{attesa:3},{effetto:'trema',forza:4,durata:.5},{posa:{ribelle:'sorpresa'}},{attesa:1.6},
+        {entra:'mango',da:'alto',a:.72,daAlt:.01,alt:0,verso:'sinistra',insieme:true},{muovi:'mango',a:.5,vel:70},   /* esce dalla navicella, tra il vapore */
+        {chi:'zibe',pose:{ribelle:'base',zibe:'indica'},testo:'Ti presento Mango, uno dei membri più importanti del Fronte di Liberazione del Lattosio, di ritorno da una lunga missione. Sai, è un cane spaziale, lui.'},
+        {didascalia:'(Mango, come tutti i cani, sa soltanto abbaiare. Ma quando lo fa, Iacopo riesce a capire cosa dice.)',pose:{zibe:'base'}},
+        {chi:'ribelle',pose:{ribelle:'sorpresa'},testo:'Come è possibile che riesca a capire quello che dici?'},
+        {chi:'mango',pose:{ribelle:'base'},testo:'Nemmeno io lo so con certezza, ma sembra che io abbia un modo unico di comunicare attraverso gli abbai, che viene percepito e compreso facilmente. È un mistero che nessuno è riuscito a spiegare finora.'},
+        {chi:'ribelle',pose:{mango:'base',ribelle:'parla'},testo:'Ma... ma come? E come mai io riesco a capirti? Non ha senso!'},
+        {chi:'mango',pose:{ribelle:'base'},testo:'Onestamente, non ne ho idea. Ma in qualche modo, siamo in grado di comunicare, e questo è ciò che conta. La comunicazione è fondamentale per la nostra lotta.'},
+        {posa:{mango:'base',ribelle:'annuisce'}},{attesa:1.2},
+        {chi:'ribelle',pose:{ribelle:'parla'},testo:'Quindi, Mango, qual è stata la tua missione nello spazio? Dev’essere stata qualcosa di veramente importante, dato che sembri essere stato via per molto tempo.'},
+        {chi:'mango',pose:{ribelle:'base'},testo:'Sì, è stata una missione cruciale. Sono stato incaricato di infiltrarmi in una base nemica per recuperare informazioni vitali sulla loro tecnologia e sui loro piani futuri. Sono riuscito a portare indietro dati preziosi che potrebbero aiutarci a combattere meglio il regime del Re Pisani.'},
+        {chi:'mango',testo:'Zibe mi ha parlato molto di te. Mi ha detto che sei una persona coraggiosa e determinata. Raccontami, com’è stata la tua esperienza finora con il Fronte di Liberazione del Lattosio?'},
+        {chi:'ribelle',pose:{mango:'base',ribelle:'parla'},testo:'All’inizio ero scettico e non capivo molte delle loro azioni, ma poi ho visto quanto seriamente affrontano le missioni cruciali e mi sono reso conto che, nonostante le loro stranezze, sono pronti a sacrificarsi per la causa. Sono orgoglioso di far parte di questo gruppo.'},
+        {chi:'mango',pose:{ribelle:'base'},testo:'Grazie, Iacopo. Sono felice di averti con noi. Insieme, possiamo fare grandi cose e portare avanti la nostra lotta per la libertà e la giustizia.'},
+        {posa:{mango:'base'}},{effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      /* il vicolo sotto la pioggia: l'informatore */
+      {id:'cap04_p05',tipo:'scena',sfondo:'vicolo_pioggia',livelli:['pioggia_forte'],entrata:.5,
+        attori:[{id:'iacopocappello',x:.42,verso:'destra',posa:'fuma'},{id:'alicecappello',x:.66,verso:'sinistra',posa:'fuma'}],azioni:[
+        {musica:'lose'},{attesa:1.2},
+        {chi:'alicecappello',pose:{alicecappello:'parla'},testo:'Speriamo che il nostro informatore si presenti presto. Non mi piace stare qui fuori oltre il coprifuoco, soprattutto con tutti i soldati in giro.'},
+        {chi:'iacopocappello',pose:{alicecappello:'base',iacopocappello:'parla'},testo:'È la prima volta che sento parlare di questo informatore. Chi è?'},
+        {chi:'alicecappello',pose:{iacopocappello:'base',alicecappello:'parla'},testo:'Non ne sappiamo molto. Sappiamo solo che proviene dal palazzo e che finora tutte le informazioni che ci ha fornito sono state accurate e veritiere. Qualcuno lì dentro è dalla nostra parte.'},
+        {didascalia:'(L’accendino di Alice non funziona più, bagnato dalla pioggia. Alice si avvicina a Iacopo e gli accende la sigaretta con la sua.)',pose:{alicecappello:'base'}},
+        /* alice_iacopo_sigaretta (disegnata nel codice): si avvicinano piano, le sigarette si toccano, la brace si accende, poi si allontanano */
+        {posa:{alicecappello:'fuma',iacopocappello:'fuma'}},
+        {muovi:'alicecappello',a:.56,vel:22,insieme:true},{muovi:'iacopocappello',a:.5,vel:16},
+        {livello:'sigaretta'},{attesa:2.2},
+        {muovi:'alicecappello',a:.66,vel:22,insieme:true},{muovi:'iacopocappello',a:.42,vel:16},{guarda:{alicecappello:'sinistra',iacopocappello:'destra'}},{togliLivello:'sigaretta'},
+        {chi:'alicecappello',pose:{alicecappello:'parla'},testo:'Sai, Iacopo, all’inizio non mi fidavo di te. Sei apparso all’improvviso e ti sei unito al nostro gruppo, e non sapevamo nulla di te.'},
+        {chi:'iacopocappello',pose:{alicecappello:'fuma',iacopocappello:'parla'},testo:'Oh, davvero? Non avevo notato il tuo atteggiamento diffidente. Che sorpresa!'},
+        {chi:'alicecappello',pose:{iacopocappello:'fuma',alicecappello:'parla'},testo:'Sì, lo so, sono stata molto brava a nasconderlo. Ma ora, per fortuna, mi sono resa conto che in fondo sei un tipo affidabile.'},
+        {chi:'iacopocappello',pose:{alicecappello:'fuma',iacopocappello:'parla'},testo:'Alice, posso farti una domanda personale? Perché ti sei unita al Fronte?'},
+        {chi:'alicecappello',pose:{iacopocappello:'base',alicecappello:'triste'},testo:'È una storia lunga e complicata, Iacopo.'},
+        {chi:'iacopocappello',pose:{iacopocappello:'parla'},testo:'Oh, come mi ferisci! Non ti fidi ancora di me? E io che pensavo che fossimo diventati amici!'},
+        {chi:'alicecappello',pose:{iacopocappello:'base',alicecappello:'parla'},testo:'Va bene, Iacopo. Te la racconto.'},
+        {chi:'alicecappello',pose:{alicecappello:'triste'},testo:'Sai, la mia famiglia era molto benestante. Avevamo tutto ciò che si poteva desiderare: una grande casa, servitori, soldi... Ma un giorno tutto è cambiato. Il regime di Pisani ha cominciato a perseguitare le persone come noi, persone che esercitavano potere, che fosse economico o sociale senza il beneplacito del regno. Hanno preso mio padre e l’hanno arrestato con false accuse. Hanno distrutto la nostra vita.'},
+        {chi:'iacopocappello',pose:{iacopocappello:'parla'},testo:'E tua madre?'},
+        {chi:'alicecappello',pose:{iacopocappello:'base',alicecappello:'triste'},testo:'Mia madre non ce l’ha fatta. Si è ammalata e non siamo riusciti a trovare l’aiuto di cui aveva bisogno. È morta poco dopo.'},
+        {chi:'iacopocappello',pose:{iacopocappello:'parla'},testo:'Mi dispiace, Alice.'},
+        {chi:'alicecappello',pose:{iacopocappello:'base',alicecappello:'parla'},testo:'Non preoccuparti. In fondo, è grazie a quelle difficoltà che ho deciso di unirmi al Fronte. Ho capito che dovevo lottare per un mondo migliore, non solo per me, ma anche per tutte le persone che hanno subito ingiustizie a causa di questo regime.'},
+        {chi:'iacopocappello',pose:{alicecappello:'base',iacopocappello:'parla'},testo:'Grazie per avermelo raccontato, Alice. Spero che insieme possiamo fare la differenza e mettere fine a tutto questo.'},
+        {chi:'alicecappello',pose:{iacopocappello:'base',alicecappello:'parla'},testo:'Lo spero anch’io, Iacopo. Lo spero anch’io.'},
+        {posa:{alicecappello:'base'}},
+        {entra:'informatore',da:'destra',a:.82,vel:170,verso:'sinistra'},{livello:'luccichio_stella'},
+        {chi:'alicecappello',pose:{alicecappello:'parla'},testo:'È l’informatore.'},
+        {didascalia:'(Al suo esile polso, l’informatore porta un braccialetto molto costoso, con un pendaglio a forma di stella.)',pose:{alicecappello:'base'}},
+        {posa:{informatore:'porge'}},{attesa:1.2},
+        {didascalia:'(L’informatore apre la mano: dentro c’è una penna USB. Alice la prende.)'},
+        {posa:{informatore:'base'}},{guarda:{informatore:'destra'}},{muovi:'informatore',a:.9,vel:70},
+        {chi:'iacopocappello',pose:{iacopocappello:'parla'},testo:'È difficile fidarsi di qualcuno che non possiamo vedere in faccia!'},
+        {posa:{iacopocappello:'base'}},{attesa:2},   /* l'informatore si ferma, immobile, di spalle */
+        {esce:'informatore',verso:'destra',vel:90},{togliLivello:'luccichio_stella'},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      /* l'auto sotto la pioggia, vista da fuori: si sentono solo le voci */
+      {id:'cap04_p06',tipo:'scena',sfondo:'auto_pioggia',livelli:['schermo_verde','pioggia_forte','gocce_vetro'],entrata:.5,azioni:[
+        {attesa:1},
+        {didascalia:'(Alice inserisce la pennetta nel cruscotto. Dal fianco del volante esce un terminale con schermo e tastiera.)'},
+        {didascalia:'(Alice decripta i file con abilità e precisione. Poi il suo viso impallidisce.)'},
+        {chi:'alicecappello',testo:'Oh no.'},
+        {chi:'iacopocappello',testo:'Cosa c’è? Che succede, Alice?'},
+        {chi:'iacopocappello',testo:'Dai, dimmi cosa hai trovato! Non farmi stare sulle spine!'},
+        {chi:'alicecappello',testo:'Ci sono molte informazioni utili: postazioni nemiche, linee logistiche da attaccare per rubare armi all’esercito, nomi e posizioni di alcuni ufficiali... Ma c’è un rapporto che mi ha fatto gelare il sangue nelle vene.'},
+        {chi:'alicecappello',testo:'Questo è un rapporto dell’intelligence reale che elenca delle possibili posizioni di attività ribelle da attaccare.'},
+        {didascalia:'(Una delle coordinate corrisponde esattamente al loro quartier generale.)'},
+        {chi:'alicecappello',testo:'Non possiamo perdere tempo. Dobbiamo avvertire gli altri. Siamo in pericolo.'},
+        {suono:'motore'},{attesa:1},{effetto:'nero',durata:.6,resta:true},
+      ]},
+
+      /* fuori dal quartier generale in fiamme: Sito */
+      {id:'cap04_p07',tipo:'scena',sfondo:'qg_esterno',livelli:['sirene_qg','fiamme_qg_est','spari_qg_est','pioggia_forte'],entrata:.6,
+        attori:[{id:'sito',x:.5,verso:'destra'}],azioni:[
+        {musica:'fight'},{attesa:1},
+        {didascalia:'(La pioggia scende ininterrottamente sul volto di Sito. Le fiamme illuminano la notte.)'},
+        {entra:'soldato',da:'destra',a:.7,verso:'sinistra'},
+        {chi:'soldato',pose:{soldato:'parla'},testo:'C’è della resistenza, ma la situazione è sotto controllo.'},
+        {posa:{soldato:'scena',sito:'annuisce'}},{attesa:1.3},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      {id:'cap04_p08',tipo:'narratore',righe:[
+        'Alice e Iacopo videro le fiamme alzarsi nel buio, in direzione del quartier generale. La zona era piena di posti di blocco.',
+        'Lasciarono l’auto e passarono dai tetti dei palazzi lì intorno, per aggirare il perimetro dei soldati.']},
+
+      /* LOTTA 3: squadra (Iacopo o Alice) contro un'ondata di 2 soldati, sui tetti sotto la pioggia */
+      {id:'cap04_p09',tipo:'lotta',modo:'ondata',squadra:['ribelle','alice'],avversari:['soldatoL3','soldatoL3b'],arena:'Tetti del quartier generale',
+        difficolta:'normale',musica:'fight',effetti:['bagliore_tetti','pioggia_forte']},
+      {id:'cap04_p09b',tipo:'narratore',righe:['(Alice e Iacopo sorprendono i due soldati e rubano le loro armi.)']},
+
+      /* dentro il quartier generale: Zibe e Batteo */
+      {id:'cap04_p10',tipo:'scena',sfondo:'qg_fiamme',livelli:['fiamme_qg_int','fumo_qg','spari_qg_int','colpi_zibe'],entrata:.5,
+        attori:[{id:'zibe',x:.35,verso:'destra',posa:'attesa'},{id:'batteo',x:.62,verso:'destra',posa:'attesa'}],azioni:[
+        {musica:'fight'},{posa:{zibe:'attacco'}},{attesa:1},{posa:{zibe:'attesa'}},
+        {chi:'zibe',testo:'Dove sono Alice e Iacopo?'},
+        {posa:{zibe:'attacco'}},
+        {chi:'batteo',testo:'Non lo so, ma dobbiamo uscire di qui prima che le fiamme raggiungano anche noi!'},
+        {posa:{zibe:'attesa'}},{effetto:'nero',durata:.35,resta:true},
+      ]},
+      {id:'cap04_p11',tipo:'scena',sfondo:'qg_fiamme',livelli:['fiamme_qg_int','fumo_qg','spari_qg_int'],entrata:.4,
+        attori:[{id:'alice',x:.3,verso:'destra',posa:'comunicatore'},{id:'ribelle',x:.42,verso:'destra',posa:'attesa'}],azioni:[
+        {chi:'alice',testo:'Alice a Zibe, rispondi. Alice a Batteo, rispondete!'},
+        {didascalia:'(Nessuna risposta. Il rumore degli spari e delle esplosioni soffoca la sua voce.)'},
+        {chi:'ribelle',pose:{alice:'base',ribelle:'arrabbiato'},testo:'Alice, dobbiamo andare avanti. Non possiamo fermarci adesso!'},
+        {posa:{alice:'annuisce',ribelle:'attesa'}},{attesa:1.1},
+        {esce:'alice',verso:'destra',vel:240,insieme:true},{esce:'ribelle',verso:'destra',vel:240},
+        {effetto:'nero',durata:.35,resta:true},
+      ]},
+
+      /* fuori: Sito prende le armi ed entra tra le fiamme */
+      {id:'cap04_p12',tipo:'scena',sfondo:'qg_esterno',livelli:['sirene_qg','fiamme_qg_est','spari_qg_est','pioggia_forte'],entrata:.4,
+        attori:[{id:'sito',x:.5,verso:'destra'}],azioni:[
+        {entra:'soldato',da:'destra',a:.7,verso:'sinistra',vel:200},
+        {chi:'soldato',pose:{soldato:'parla'},testo:'Signore, due nemici hanno sfondato le nostre linee dall’esterno.'},
+        {chi:'sito',pose:{soldato:'scena',sito:'arrabbiato'},testo:'Come è possibile? Come hanno potuto penetrare le nostre difese?'},
+        {didascalia:'(Sito afferra il suo revolver con intarsi dorati e, con l’altra mano, la sua ascia bipenne reale.)',pose:{sito:'attesa'}},
+        {muovi:'sito',a:.62,vel:60,cammina:'cammina_lotta'},
+        {chi:'soldato',pose:{soldato:'parla'},testo:'Signore, è troppo pericoloso!'},
+        {posa:{soldato:'scena'}},{esce:'sito',verso:'destra',vel:70,cammina:'cammina_lotta'},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+
+      /* dentro: Sito contro Zibe e Batteo */
+      {id:'cap04_p13',tipo:'scena',sfondo:'qg_fiamme',livelli:['fiamme_qg_int','fumo_qg'],entrata:.4,
+        attori:[{id:'batteo',x:.14,verso:'destra',posa:'attesa'},{id:'zibe',x:.27,verso:'destra',posa:'attesa'}],azioni:[
+        {entra:'sito',da:'destra',a:.66,verso:'sinistra',posa:'attesa',vel:60,cammina:'cammina_lotta'},
+        {didascalia:'(Sito avanza tra le fiamme. La sua ascia bipenne spezza le pareti in fiamme.)'},
+        {chi:'zibe',pose:{zibe:'sorpresa'},testo:'Cazzo.'},
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Perché? Perché fai tutto questo? Per il potere? Per la gloria?'},
+        {chi:'sito',pose:{zibe:'attesa',sito:'parla'},testo:'Non capisci, vero? Non si tratta di potere o di gloria. È un dovere, una missione per mantenere l’ordine e la stabilità. Voi, ribelli, siete una minaccia per tutto ciò che abbiamo costruito.'},
+        {chi:'batteo',pose:{sito:'attesa',batteo:'arrabbiato'},testo:'Ma a quale costo? Quante vite avete distrutto, quanti innocenti avete calpestato nel vostro desiderio di dominazione?'},
+        {chi:'sito',pose:{batteo:'attesa',sito:'parla'},testo:'Il prezzo della pace è sempre alto. Ma non posso permettere che gente come voi distrugga ciò che abbiamo creato. Il vostro sogno di libertà è una menzogna, una promessa vuota che porterà solo al caos.'},
+        {chi:'zibe',pose:{sito:'attesa',zibe:'parla'},testo:'Dimmi, Sito, è questo il futuro che stai costruendo per tuo figlio? Un futuro di morte e dittatura, tutto per quel pazzo di un re?'},
+        {chi:'sito',pose:{zibe:'attesa',sito:'arrabbiato'},testo:'Quel che faccio, lo faccio per proteggere il mio paese e la mia famiglia. Il tuo Fronte di Liberazione è un cancro che minaccia tutto ciò che è caro a me.'},
+        {chi:'zibe',pose:{sito:'attesa',zibe:'parla'},testo:'Non vedi l’ironia, Sito? Stai combattendo per un re che vuole solo il potere e la sottomissione, mentre noi lottiamo per la libertà e la giustizia. È solo questione di tempo prima che il tuo precario castello di carte crolli.'},
+        {chi:'sito',pose:{zibe:'attesa',sito:'arrabbiato'},testo:'Il mio più grande errore è stato permetterti di nominare la mia famiglia.'},
+      ]},
+
+      /* LOTTA 4: Zibe contro Sito (si interrompe quando Zibe scende sotto metà vita) */
+      {id:'cap04_p14',tipo:'lotta',modo:'interrotta',giocatore:'zibe',avversario:'sito',soglia:.5,chi:'giocatore',difficolta:'difficile',vita:3,
+        arena:'Quartier generale in fiamme',musica:'fight',effetti:['fiamme_qg_int','fumo_qg'],spettatori:[{id:'batteo',x:.06,verso:'destra',posa:'attesa'}]},
+
+      /* Sito ferisce Batteo, Iacopo para l'ascia, Alice porta via Batteo */
+      {id:'cap04_p15',tipo:'scena',sfondo:'qg_fiamme',livelli:['fiamme_qg_int','fumo_qg'],entrata:.3,
+        attori:[{id:'zibe',x:.2,verso:'destra',posa:'attesa'},{id:'batteo',x:.45,verso:'destra',posa:'attesa'},{id:'sito',x:.57,verso:'sinistra',posa:'attesa'}],azioni:[
+        {didascalia:'(In un attimo di distrazione, Sito colpisce Batteo al petto con la sua ascia.)'},
+        {posa:{sito:'attacco'}},{attesa:.35},{effetto:'lampo',colore:'#FFFFFF',durata:.25},{suono:'boom'},{posa:{batteo:'ferito'}},{attesa:.9},{posa:{sito:'attesa'}},
+        {didascalia:'(Zibe urla il nome del suo compagno.)',pose:{zibe:'urla'}},
+        {muovi:'sito',a:.3,vel:110,cammina:'cammina_lotta'},
+        {didascalia:'(Sito strappa il fucile a pompa dalle mani di Zibe.)',pose:{sito:'strappa'}},
+        {attesa:.9},{posa:{zibe:'base'}},{attesa:.4},{posa:{sito:'con_fucile'}},{attesa:.6},   /* quando il braccio torna indietro il fucile passa a Sito */
+        {posa:{sito:'attesa'}},{muovi:'sito',a:.42,vel:90,cammina:'cammina_lotta'},{guarda:{sito:'sinistra'}},
+        {didascalia:'(Sito fa roteare l’ascia, lancia dei proiettili in aria e li fa cadere nel tamburo della pistola, ricaricandola in un istante.)',pose:{sito:'ricarica'}},
+        {livello:'proiettili_ricarica'},{attesa:1.3},{togliLivello:'proiettili_ricarica'},{posa:{sito:'attesa'}},
+        {didascalia:'(Sito punta la pistola verso Zibe e fa calare l’ascia sulla sua testa.)'},
+        {posa:{sito:'calcio'}},   /* colpo dall'alto con l'ascia */
+        {entra:'ribelle',da:'sinistra',a:.32,vel:420,posa:'para_fucile'},   /* PROPRIO ADESSO: Iacopo si mette tra Zibe e l'ascia */
+        {posa:{ribelle:'para_fucile'}},{attesa:.55},
+        {effetto:'lampo',colore:'#FFFFFF',durata:.35},{effetto:'trema',forza:14,durata:.8},{suono:'parry'},{livello:'fucile_spezzato'},{attesa:1.3},{togliLivello:'fucile_spezzato'},
+        {posa:{ribelle:'attesa',sito:'attesa'}},
+        {didascalia:'(Alice copre la ritirata con il fuoco di soppressione e porta via Batteo, ferito, sulle spalle.)'},
+        {entra:'alice',da:'sinistra',a:.46,vel:300,insieme:true},{muovi:'zibe',a:.06,vel:120},
+        {posa:{alice:'attacco'}},{attesa:.9},{posa:{alice:'attesa'}},
+        {coppia:'alice_porta_batteo',attori:['alice','batteo'],dissolvenza:.25,verso:'sinistra'},{esceCoppia:'sinistra',vel:130},
+        {chi:'ribelle',pose:{ribelle:'arrabbiato'},testo:'Non credevo di incontrarti così presto, Generale Sito. Ma sono felice di averti finalmente di fronte a me.'},
+        {chi:'sito',pose:{ribelle:'attesa',sito:'parla'},testo:'E chi sei tu per parlarmi in questo modo?'},
+        {chi:'ribelle',pose:{sito:'attesa',ribelle:'parla'},testo:'Mi chiamo Iacopo. E sono uno dei membri del Fronte di Liberazione. Non ti permetterò di far del male ai miei amici e di distruggere ciò per cui lottiamo.'},
+        {chi:'sito',pose:{ribelle:'attesa',sito:'parla'},testo:'Ah, il Fronte di Liberazione... Quanti come te ho già ucciso. Pensi davvero di potermi fermare?'},
+        {chi:'ribelle',pose:{sito:'attesa',ribelle:'arrabbiato'},testo:'Lo farò, o morirò nel tentativo. Non permetterò che tu calpesti la nostra speranza di libertà e giustizia.'},
+        {chi:'sito',pose:{ribelle:'attesa',sito:'parla'},testo:'Parole nobili. Ma temo che la tua morte sarà solo un’altra delle tante inutili. Tu e i tuoi amici siete solo delle pedine sacrificali in questo scacchiere.'},
+        {chi:'ribelle',pose:{sito:'attesa',ribelle:'arrabbiato'},testo:'Lo vedremo. Se vuoi distruggere il nostro movimento, dovrai passare sopra il mio cadavere.'},
+        {chi:'sito',pose:{ribelle:'attesa',sito:'indica'},testo:'Se questo è ciò che desideri, sarò più che felice di esaudire il tuo desiderio.'},
+      ]},
+
+      /* LOTTA 5: Iacopo (senza fucile) resiste 45 secondi contro Sito */
+      {id:'cap04_p16',tipo:'lotta',modo:'resisti',durata:45,giocatore:'ribellenf',avversario:'sito',difficolta:'difficile',
+        arena:'Quartier generale in fiamme',musica:'fight',effetti:['fiamme_qg_int','fumo_qg'],
+        spettatori:[{id:'batteo',x:.06,verso:'destra',posa:'ferito'},{id:'alice',x:.04,verso:'destra',posa:'attesa'},{id:'zibe',x:.12,verso:'destra',posa:'attesa'}]},
+
+      /* la colonna crolla, Iacopo resta solo con Sito */
+      {id:'cap04_p17',tipo:'scena',sfondo:'qg_fiamme',livelli:['fiamme_qg_int','fumo_qg'],entrata:.3,
+        attori:[{id:'batteo',x:.08,verso:'destra',posa:'ferito'},{id:'alice',x:.13,verso:'destra',posa:'attesa'},{id:'zibe',x:.19,verso:'destra',posa:'attesa'},
+          {id:'ribelle',x:.4,verso:'destra',posa:'attesa'},{id:'sito',x:.6,verso:'sinistra',posa:'attesa'}],azioni:[
+        {livello:'colonna'},{attesa:.7},{suono:'boom'},{effetto:'trema',forza:14,durata:1},{attesa:1},
+        {chi:'ribelle',pose:{ribelle:'indica'},guarda:{ribelle:'sinistra'},testo:'Fuggite! Andatevene da qui, salvatevi!'},
+        {chi:'zibe',pose:{ribelle:'attesa',zibe:'parla'},testo:'Non possiamo lasciarti qui da solo, Iacopo!'},
+        {chi:'ribelle',pose:{zibe:'attesa',ribelle:'arrabbiato'},testo:'Non c’è tempo per discutere, andate! Io mi occuperò di Sito.'},
+        {posa:{ribelle:'attesa'}},
+        {coppia:'alice_porta_batteo',attori:['alice','batteo'],dissolvenza:.25,verso:'sinistra'},{esceCoppia:'sinistra',vel:120,insieme:true},{esce:'zibe',verso:'sinistra',vel:150},
+        {guarda:{ribelle:'destra'}},
+        {chi:'sito',pose:{sito:'parla'},testo:'Devo ammettere che sei un avversario degno. È un peccato che le tue abilità siano al servizio di una causa tanto futile.'},
+        {chi:'ribelle',pose:{sito:'attesa',ribelle:'parla'},testo:'Non sottovalutare la nostra causa, generale. Presto vedrai quanto è forte la nostra determinazione.'},
+        {posa:{ribelle:'attesa'}},{togliLivello:'colonna'},
+        {didascalia:'(Iacopo pianta il suo pugnale nella coscia di Sito. Il generale lo scaraventa a qualche metro di distanza e getta il pugnale tra le fiamme.)'},
+        {muovi:'ribelle',a:.52,vel:200},{posa:{ribelle:'calcio'}},{attesa:.45},{posa:{sito:'colpito'}},{attesa:.6},
+        {posa:{sito:'attacco',ribelle:'colpito'}},{attesa:.35},{muovi:'ribelle',a:.3,vel:380},{guarda:{ribelle:'destra'}},{posa:{ribelle:'attesa',sito:'attesa'}},{attesa:.5},
+        {didascalia:'(Iacopo si rialza e colpisce Sito al costato. Ma il generale è come una solida quercia.)'},
+        {muovi:'ribelle',a:.5,vel:200},{posa:{ribelle:'attacco'}},{attesa:.55},{posa:{ribelle:'attesa'}},{attesa:.15},{posa:{ribelle:'attacco'}},{attesa:.55},{posa:{ribelle:'attesa'}},{attesa:.4},
+        {posa:{sito:'calcio_volante'}},{attesa:.7},{muovi:'ribelle',a:.24,vel:700},{guarda:{ribelle:'destra'}},{posa:{ribelle:'ko'}},{attesa:1.2},{posa:{sito:'attesa'}},{attesa:.4},
+        /* il tetto esplode */
+        {livello:'esplosione_tetto'},{effetto:'lampo',colore:'#FFFFFF',durata:.25},{effetto:'lampo',colore:'#FF9A3C',durata:.7},{suono:'boom'},{effetto:'trema',forza:16,durata:1.4},
+        {livello:'tetto_squarciato'},{attesa:2},
+      ]},
+
+      /* il tetto squarciato: arriva Mango */
+      {id:'cap04_p18',tipo:'scena',sfondo:'qg_fiamme',livelli:['tetto_squarciato','fiamme_qg_int','fumo_qg','razzi'],entrata:0,
+        attori:[{id:'ribelle',x:.22,verso:'destra',posa:'a_terra'},{id:'sito',x:.6,verso:'sinistra',posa:'parata'}],azioni:[
+        {entra:'mango',da:'alto',a:.42,alt:70,daAlt:520,verso:'destra',posa:'volo',vel:200,cammina:'volo'},   /* scende dal buco nel tetto (in volo) e resta in aria */
+        {didascalia:'(Sulla schiena di Mango ci sono degli spara laser comandati dal suo braccio meccanico.)'},
+        {posa:{sito:'devia'}},{livello:'laser_mango'},{suono:'zap'},{attesa:.55},{suono:'zap'},{attesa:.55},{suono:'zap'},{attesa:.9},{togliLivello:'laser_mango'},{posa:{sito:'attesa'}},
+        {chi:'mango',pose:{mango:'volo'},testo:'Iacopo, è ora di salire a bordo del treno del dolore!'},
+        {chi:'ribelle',testo:'Te ne devo una, amico!'},
+        {muovi:'mango',a:.3,alt:40,vel:160,cammina:'volo'},
+        {coppia:'mango_porta_iacopo',attori:['mango','ribelle'],dissolvenza:.25,x:.3,alt:40},{esceCoppia:'alto',vel:220},
+        {posa:{sito:'urla'}},{livello:'fiamme_forti'},{effetto:'trema',forza:12,durata:2},{attesa:2.2},
+        {effetto:'nero',durata:.6,resta:true},
+      ]},
+
+      /* in volo sopra la città */
+      {id:'cap04_p19',tipo:'scena',sfondo:'cielo_notte',livelli:['vento','razzi'],entrata:.5,
+        attori:[{id:'mango',x:.5,verso:'destra'},{id:'ribelle',x:.5,verso:'destra'}],azioni:[
+        {coppia:'mango_porta_iacopo',attori:['mango','ribelle'],dissolvenza:.01,x:.5,alt:150},
+        {chi:'ribelle',testo:'Non so come ringraziarti, Mango.'},
+        {chi:'mango',testo:'Non preoccuparti, è quello che fanno gli amici. Dobbiamo restare uniti per affrontare nemici come Sito.'},
+        {esceCoppia:'destra',vel:260},{effetto:'nero',durata:.35,resta:true},
+      ]},
+
+      /* la periferia: il ricongiungimento */
+      {id:'cap04_p20',tipo:'scena',sfondo:'periferia_notte',livelli:['sirene_periferia','razzi'],entrata:.4,
+        attori:[{id:'alice',x:.5,verso:'sinistra'},{id:'zibe',x:.66,verso:'sinistra'},{id:'batteo',x:.8,verso:'sinistra',posa:'ferito'},
+          {id:'mango',x:.2,verso:'destra'},{id:'ribelle',x:.2,verso:'destra'}],azioni:[
+        {musica:'win'},
+        {coppia:'mango_porta_iacopo',attori:['mango','ribelle'],dissolvenza:.01,x:.2,alt:380},{muoviCoppia:true,alt:0,velAlt:110},
+        {fineCoppia:true,dissolvenza:.25,vicini:true},{posa:{mango:'base',ribelle:'base'}},
+        {muovi:'mango',a:.1,vel:120,insieme:true},{muovi:'ribelle',a:.24,vel:90},{guarda:{mango:'destra',ribelle:'destra'}},
+        {muovi:'alice',a:.33,vel:220},
+        {coppia:'alice_iacopo_abbraccio',attori:['alice','ribelle'],dissolvenza:.25,verso:'sinistra'},
+        {chi:'alice',testo:'Avevo paura che fossi morto per mano del generale.'},
+        {chi:'ribelle',testo:'È stato tutto merito di Mango.'},
+        {fineCoppia:true,dissolvenza:.25},
+        {muovi:'alice',a:.16,vel:160},{coppia:'alice_mango_coccole',attori:['alice','mango'],dissolvenza:.25,verso:'sinistra'},{attesa:2.5},{fineCoppia:true,dissolvenza:.25},
+        {posa:{mango:'abbaia'}},{attesa:1.2},{posa:{mango:'base'}},
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Mi dispiace dover interrompere il ricongiungimento, ma dobbiamo andarcene e raggiungere i sopravvissuti per riorganizzarci. Non possiamo permetterci di perdere altro tempo.'},
+        {posa:{zibe:'annuisce',alice:'annuisce',ribelle:'annuisce',mango:'annuisce'}},{attesa:1.4},
+        {effetto:'nero',durata:.6,resta:true},
+      ]},
+
+      /* la sala del trono: il re e la moglie di Sito */
+      {id:'cap04_p21',tipo:'scena',sfondo:'sala_trono',oggetti:[TRONO_CAP01],entrata:.5,
+        attori:[{id:'pisani',x:'centro-destra',verso:'sinistra',posa:'seduto'}],azioni:[
+        {musica:'menu'},
+        {entra:'sito',da:'sinistra',a:.36,vel:80},{posa:{sito:'inginocchio'}},{attesa:1.2},
+        {didascalia:'(La mattina seguente, Sito è convocato a corte. Il re lo osserva in silenzio, con il mento appoggiato sulla mano.)'},
+        {chi:'sito',testo:'Majesté, abbiamo dato una bella batosta al Fronte. Abbiamo distrutto il loro quartier generale e catturato numerosi membri dell’organizzazione.'},
+        {chi:'pisani',testo:'Basta. Dimmi, hai fatto fuori gli elementi di spicco dell’organizzazione? Quelli che rappresentano una minaccia maggiore?'},
+        {chi:'sito',testo:'Majesté, non siamo riusciti a eliminare i membri più importanti del Fronte. Tuttavia, ora sappiamo chi sono e ci stiamo attivamente adoperando per rintracciarli e neutralizzarli.'},
+        {didascalia:'(Il re schiocca le dita.)'},
+        {entra:'soldato',da:'destra',a:.96,verso:'sinistra',insieme:true,vel:90},{entra:'moglieprigioniera',da:'destra',a:.8,verso:'sinistra',vel:90,insieme:true},{entra:'soldato2',da:'destra',a:.89,verso:'sinistra',vel:75},   /* i soldati la lasciano e restano indietro */
+        {posa:{pisani:'alzati'}},{attesa:1.3},{posa:{pisani:'base'}},
+        {chi:'pisani',pose:{pisani:'parla'},testo:'Ho pensato che avrei fatto bene a premunirmi e catturare tua moglie, generale. La sua prigionia sarà un incentivo affinché migliori il tuo recente lavoro, che ha prodotto risultati del tutto insoddisfacenti. Se fallirai ancora, tua moglie morirà, così come il figlio che porta in grembo.'},
+        {chi:'sito',pose:{pisani:'base',sito:'triste'},testo:'Majesté, questo non è necessario.'},
+        {didascalia:'(Il re afferra la moglie di Sito per un braccio e la costringe a un valzer grottesco e macabro.)',pose:{sito:'inginocchio'}},
+        /* pisani_moglie_valzer (nel codice): vicinissimi, girano uno intorno all'altra a scatti, goffi e forzati */
+        {musica:'valzer'},{muovi:'pisani',a:.7,vel:140},{posa:{pisani:'danza',moglieprigioniera:'piange'}},
+        {muovi:'pisani',a:.81,vel:520,insieme:true},{muovi:'moglieprigioniera',a:.7,vel:520},{guarda:{pisani:'sinistra',moglieprigioniera:'destra'}},{attesa:.45},
+        {muovi:'pisani',a:.71,vel:520,insieme:true},{muovi:'moglieprigioniera',a:.8,vel:520},{guarda:{pisani:'destra',moglieprigioniera:'sinistra'}},{attesa:.45},
+        {muovi:'pisani',a:.8,vel:520,insieme:true},{muovi:'moglieprigioniera',a:.71,vel:520},{guarda:{pisani:'sinistra',moglieprigioniera:'destra'}},{attesa:.45},
+        {muovi:'pisani',a:.7,vel:520,insieme:true},{muovi:'moglieprigioniera',a:.79,vel:520},{guarda:{pisani:'destra',moglieprigioniera:'sinistra'}},{attesa:.45},
+        {didascalia:'(In preda alla disperazione, la moglie grida a Sito, chiedendo il suo aiuto.)',pose:{moglieprigioniera:'grida'},guarda:{moglieprigioniera:'sinistra'}},
+        {musica:'menu'},{posa:{pisani:'base'}},{guarda:{pisani:'sinistra'}},
+        {chi:'pisani',pose:{pisani:'parla'},testo:'Sono certo che tuo marito farà meglio il suo lavoro e riuscirà a salvarti.'},
+        {posa:{pisani:'base',moglieprigioniera:'piange',sito:'triste'}},{muovi:'pisani',a:.62,vel:60},{guarda:{pisani:'sinistra'}},{attesa:1},
+        {effetto:'nero',durata:2,resta:true},
+      ]},
+      /* cap04_p22 FINE CAPITOLO: salvataggio e "Il capitolo 5 arriverà presto" li fa il motore */
     ]},
   ],
 };
@@ -4142,6 +4500,86 @@ const ANIMAZIONI={
     for(const dy of [-r*.15,r*.15]){const xx=x+(dy<0?-r*.9:r*.9),g=c.createRadialGradient(xx,y+dy,0,xx,y+dy,r);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.4,'rgba(255,250,215,.9)');g.addColorStop(1,'rgba(255,240,180,0)');
       c.fillStyle=g;c.beginPath();c.arc(xx,y+dy,r,0,7);c.fill();}
     c.restore();if(t>1.5){c.globalAlpha=Math.min(.75,(t-1.5)*1.5);c.fillStyle='#FFFFF4';c.fillRect(0,0,w,h);c.globalAlpha=1;}}},
+  /* ===== cap04 ===== (si usano come livelli: più effetti insieme) */
+  /* pioggia fitta: righe sottili inclinate e piccoli schizzi a terra (poche particelle: leggera sul telefono) */
+  pioggia_forte:{sopra:true,draw(c,t,w,h,d){c.strokeStyle='rgba(225,235,255,.42)';c.lineWidth=1.2;c.beginPath();
+    for(let i=0;i<95;i++){const v=.9+.5*sr(i+11),x=((sr(i+3)*1.3-t*.18*v)%1.3+1.3)%1.3*w,y=((sr(i+7)+t*v*1.4)%1)*h;c.moveTo(x,y);c.lineTo(x-5,y+16);}c.stroke();
+    c.fillStyle='rgba(230,240,255,.5)';for(let i=0;i<16;i++){const k=(t*2.2+sr(i+40))%1,x=sr(i+50+Math.floor(t*2.2+sr(i+40))*7)*w,y=h*(.68+.3*sr(i+60));if(k>.35)continue;const r=2+k*12;
+      c.fillRect(x-r,y,2,1);c.fillRect(x+r-2,y,2,1);c.fillRect(x-1,y-3*k*3,2,2);}}},
+  /* gocce che scorrono sul vetro (scena dell'auto) */
+  gocce_vetro:{sopra:true,draw(c,t,w,h){for(let i=0;i<22;i++){const sp=.05+.08*sr(i+5),y=((sr(i+9)+t*sp)%1.1)*h,x=sr(i+13)*w;
+    c.fillStyle='rgba(200,215,240,.22)';c.fillRect(x,y-18,2,18);c.fillStyle='rgba(235,245,255,.55)';c.fillRect(x-1,y,4,4);}}},
+  /* il bagliore verde dello schermo nel finestrino dell'auto (pulsa mentre Alice decripta i file) */
+  schermo_verde:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},x=b.x+b.w*.47,y=b.y+b.h*.47,a=.45+.25*Math.sin(t*3.2)+.08*Math.sin(t*11);
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,0,x,y,b.w*.05);g.addColorStop(0,'rgba(90,255,140,'+a+')');g.addColorStop(1,'rgba(40,200,90,0)');
+    c.fillStyle=g;c.beginPath();c.arc(x,y,b.w*.05,0,7);c.fill();c.fillStyle='rgba(150,255,170,'+(a*.7)+')';c.fillRect(x-7,y-4,14,8);c.restore();}},
+  /* fiamme del quartier generale (fuori e dentro) e quelle più forti quando Sito urla */
+  fiamme_qg_est:{draw(c,t,w,h,d){fiamme(c,t,d.bg||{x:0,y:0,w,h},[[.125,.45],[.18,.45],[.31,.57],[.56,.43],[.7,.36],[.76,.37],[.88,.58]],1);}},
+  fiamme_qg_int:{draw(c,t,w,h,d){fiamme(c,t,d.bg||{x:0,y:0,w,h},[[.13,.62],[.56,.64],[.62,.6],[.68,.66],[.45,.72],[.9,.68]],1.3);}},
+  fiamme_forti:{draw(c,t,w,h,d){fiamme(c,t*1.8,d.bg||{x:0,y:0,w,h},[[.13,.62],[.3,.7],[.56,.64],[.62,.6],[.68,.66],[.45,.72],[.8,.7],[.9,.68]],2);}},
+  /* fumo grigio che sale lento (dentro il quartier generale) */
+  fumo_qg:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h};for(let i=0;i<9;i++){const per=6+3*sr(i+2),k=((t+sr(i+4)*per)%per)/per,x=b.x+b.w*(.1+.8*sr(i+6))+Math.sin(t*.5+i)*12,y=b.y+b.h*(.7-.75*k),r=b.w*(.03+.05*k);
+    const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(95,90,92,'+(.35*Math.sin(k*3.14))+')');g.addColorStop(1,'rgba(80,76,78,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();}}},
+  /* luci delle sirene: bagliori rossi e blu lontani che si alternano */
+  sirene_qg:{draw(c,t,w,h,d){sirene(c,t,d.bg||{x:0,y:0,w,h},[[.04,.45],[.97,.42]]);}},
+  sirene_periferia:{draw(c,t,w,h,d){sirene(c,t,d.bg||{x:0,y:0,w,h},[[.2,.33],[.52,.3],[.8,.33]]);}},
+  /* spari lontani: piccoli lampi gialli */
+  spari_qg_est:{draw(c,t,w,h,d){spari(c,t,d.bg||{x:0,y:0,w,h},.05,.95,.4,.62,2,.6);}},
+  spari_qg_int:{draw(c,t,w,h,d){spari(c,t*.6,d.bg||{x:0,y:0,w,h},.75,.98,.45,.65,1,.8);}},
+  /* tetti (lotta 3 e scene): il bagliore del quartier generale che brucia in lontananza */
+  bagliore_tetti:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},x=b.x+b.w*.4,y=b.y+b.h*.34,a=.22+.08*Math.sin(t*2.3)+.05*Math.sin(t*7.1);
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,0,x,y,b.w*.22);g.addColorStop(0,'rgba(255,140,40,'+a+')');g.addColorStop(1,'rgba(255,90,20,0)');c.fillStyle=g;c.fillRect(0,0,w,h);c.restore();}},
+  /* la navicella di Mango scende sulla pista con fumo e vapore (3 secondi), poi resta lì */
+  navicella:{draw(c,t,w,h,d){const N=immagineOggetto('navicella');if(!imgOk(N.im)||N.base==null)return;const k=Math.min(1,t/3),e=1-Math.pow(1-k,2),s=.55,x=w*.74,y=SCENA_SUOLO-(1-e)*(SCENA_SUOLO+40);
+    const vap=t<3?1:Math.max(0,1-(t-3)/2.5);   /* fumo e vapore bianchi sotto la navicella (poi si dirada) */
+    for(let i=0;i<14;i++){const ph=(t*1.3+sr(i+5))%1,dx=(sr(i+9)-.5)*120*(1+ph),r=14+30*ph,yy=Math.min(SCENA_SUOLO-6,y+4)-ph*30;c.globalAlpha=vap*.55*(1-ph);c.fillStyle=i%2?'#F4F4F2':'#D8D8DC';c.beginPath();c.arc(x+dx,yy,r,0,7);c.fill();}
+    c.globalAlpha=1;c.drawImage(N.im,x-N.cx*s,y-N.base*s,N.im.naturalWidth*s,N.im.naturalHeight*s);
+    if(t<3){c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y+6,0,x,y+6,40);g.addColorStop(0,'rgba(255,200,120,.8)');g.addColorStop(1,'rgba(255,120,40,0)');c.fillStyle=g;c.beginPath();c.arc(x,y+6,40,0,7);c.fill();c.restore();}}},
+  /* il pendaglio a stella dell'informatore brilla (un piccolo luccichio sul polso) */
+  luccichio_stella:{sopra:true,draw(c,t){const o=SC&&SC.attori.informatore;if(!o)return;const p=o.posa==='porge'&&o.t>.6,x=o.x+o.face*(p?16:8),y=SCENA_SUOLO-(p?70:62),a=Math.max(0,Math.sin(t*4)),r=4+8*a;
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,0,x,y,10);g.addColorStop(0,'rgba(255,230,140,'+(.5+.4*a)+')');g.addColorStop(1,'rgba(255,200,80,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,10,0,7);c.fill();c.globalCompositeOperation='source-over';c.globalAlpha=.5+.5*a;c.fillStyle='#FFF6C0';c.fillRect(x-r,y-.5,r*2,1.5);c.fillRect(x-.5,y-r,1.5,r*2);c.fillStyle='#FFFFFF';c.fillRect(x-1.5,y-1.5,3,3);c.restore();}},
+  /* sigaretta: la brace si accende sulla sigaretta di Iacopo e sale un filo di fumo */
+  sigaretta:{sopra:true,draw(c,t){const A=SC&&SC.attori.alicecappello,I=SC&&SC.attori.iacopocappello;if(!A||!I)return;const x=(A.x+I.x)/2,y=SCENA_SUOLO-138;
+    const acc=t<.6?0:Math.min(1,(t-.6)/.4),p=.6+.4*Math.sin(t*6);
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,0,x,y,7);g.addColorStop(0,'rgba(255,160,60,'+(acc*p)+')');g.addColorStop(1,'rgba(255,80,20,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,7,0,7);c.fill();c.restore();
+    if(acc>0){c.fillStyle='#FF8A30';c.fillRect(x-1,y-1,3,2);for(let i=0;i<6;i++){const k=((t*.6+i/6)%1);c.globalAlpha=acc*.45*(1-k);c.fillStyle='#D8D8E0';c.fillRect(x+Math.sin(k*9+i)*4,y-6-k*40,2,3);}c.globalAlpha=1;}}},
+  /* Zibe spara col fucile a pompa verso destra: lampo davanti alla canna quando fa l'attacco */
+  colpi_zibe:{sopra:true,draw(c,t){const o=SC&&SC.attori.zibe;if(!o||o.posa!=='attacco'||o.t<.3||o.t>.5)return;const x=o.x+o.face*70,y=SCENA_SUOLO-82;
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,0,x,y,26);g.addColorStop(0,'rgba(255,255,220,1)');g.addColorStop(.4,'rgba(255,200,80,.9)');g.addColorStop(1,'rgba(255,120,20,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,26,0,7);c.fill();c.restore();}},
+  /* Sito ricarica: 6 piccoli proiettili dorati salgono e ricadono nel revolver */
+  proiettili_ricarica:{sopra:true,draw(c,t){const o=SC&&SC.attori.sito;if(!o)return;const x0=o.x+o.face*34,y0=SCENA_SUOLO-88;
+    for(let i=0;i<6;i++){const t0=i*.09,k=(t-t0)/.8;if(k<0||k>1)continue;const x=x0+o.face*(14-14*k)+(i-2.5)*3*(1-k),y=y0-Math.sin(k*Math.PI)*70;
+      c.fillStyle='#FFD54A';c.fillRect(Math.round(x)-1,Math.round(y)-3,3,6);c.fillStyle='#FFF4B0';c.fillRect(Math.round(x)-1,Math.round(y)-3,1,2);}}},
+  /* il fucile di Iacopo si spezza a metà: due pezzi che cadono girando */
+  fucile_spezzato:{sopra:true,draw(c,t){const o=SC&&SC.attori.ribelle;if(!o||t>1.4)return;const x0=o.x,y0=SCENA_SUOLO-170;
+    for(const s of [-1,1]){const x=x0+s*(10+50*t),y=y0+Math.min(160,40*t+260*t*t),a=s*t*7;c.save();c.translate(x,y);c.rotate(a);c.fillStyle='#3A3A40';c.fillRect(-16,-3,32,6);c.fillStyle='#6A5030';c.fillRect(s<0?-16:6,-3,10,6);c.fillStyle='#9A9AA4';c.fillRect(-16,-3,32,1);c.restore();}
+    if(t<.25){c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,240,200,'+(1-t/.25)+')';c.beginPath();c.arc(x0,y0,18,0,7);c.fill();c.restore();}}},
+  /* la colonna di legno in fiamme cade in diagonale tra Iacopo e gli amici, con polvere e scintille */
+  colonna:{sopra:true,draw(c,t,w,h){const px=w*.27,k=Math.min(1,t/.7),ang=-1.45+1.1*k*k;   /* cade ruotando attorno alla base */
+    c.save();c.translate(px,SCENA_SUOLO);c.rotate(ang+Math.PI/2);c.fillStyle='#4A2E1A';c.fillRect(-11,-240,22,240);c.fillStyle='#6E4626';c.fillRect(-11,-240,6,240);
+    for(let i=0;i<5;i++){c.fillStyle=i%2?'#FF9A2A':'#FFD27A';c.fillRect(-9+((i*7)%14),-230+i*44,5,10);}c.restore();
+    if(t>.6){const p=Math.min(1,(t-.6)/1.6);for(let i=0;i<22;i++){const a=sr(i+3)*3.14,r=30+120*p*sr(i+5);c.globalAlpha=(1-p)*.55;c.fillStyle=i%3?'#8C8478':'#B5AA98';c.beginPath();c.arc(px+80+Math.cos(a)*r,SCENA_SUOLO-10-Math.sin(a)*r*.5,10+16*p,0,7);c.fill();}
+      for(let i=0;i<18;i++){const vx=(sr(i+30)-.5)*260,vy=-150-200*sr(i+31),tt=t-.6;c.globalAlpha=Math.max(0,1-tt);c.fillStyle='#FFC24A';c.fillRect(px+80+vx*tt,SCENA_SUOLO-20+vy*tt+300*tt*tt,2,2);}c.globalAlpha=1;}}},
+  /* il tetto squarciato (dopo l'esplosione): un buco sul cielo notturno, con detriti che cadono */
+  tetto_squarciato:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},x0=b.x+b.w*.36,x1=b.x+b.w*.64,y0=0,yb=Math.max(60,b.y+b.h*.2);   /* (sempre visibile in alto, anche se lo sfondo è tagliato) */
+    c.fillStyle='#0B1026';c.beginPath();c.moveTo(x0,y0);for(let i=0;i<=12;i++){const u=i/12;c.lineTo(x0+(x1-x0)*u,yb-(1-Math.abs(u-.5)*2)*0+(sr(i+3)-.3)*28*(1-Math.abs(u-.5)));}c.lineTo(x1,y0);c.closePath();c.fill();
+    c.fillStyle='#E8ECFF';for(let i=0;i<10;i++)c.fillRect(x0+(x1-x0)*sr(i+20),y0+(yb-y0)*.6*sr(i+21),1,1);
+    c.fillStyle='#2A1A10';for(let i=0;i<8;i++){const k=((t*.5+sr(i+40))%1);c.fillRect(x0+(x1-x0)*sr(i+41),yb+k*(SCENA_SUOLO-yb),3,3);}}},
+  /* l'esplosione del tetto: lampo bianco e arancione e detriti */
+  esplosione_tetto:{sopra:true,draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},x=b.x+b.w*.5,y=Math.max(10,b.y+b.h*.08);if(t<1.2){c.globalAlpha=Math.max(0,.6*(1-t/1.2));c.fillStyle='#FFB060';c.fillRect(0,0,w,h);c.globalAlpha=1;}
+    for(let i=0;i<26;i++){const vx=(sr(i+60)-.5)*300,tt=Math.min(t,2);const px=x+vx*tt,py=y+60*tt+220*tt*tt;if(py>SCENA_SUOLO)continue;c.fillStyle=i%2?'#3A2A1E':'#5A4030';c.fillRect(px,py,4,4);}}},
+  /* fuoco dei razzi di Mango (quando vola, da solo o con Iacopo) */
+  razzi:{sopra:true,draw(c,t){const fiamma=(x,y,dir)=>{for(let i=0;i<3;i++){const L=16+12*Math.random()-i*4;c.fillStyle=i===0?'#FFF0B0':i===1?'#FFB040':'#FF5A1A';c.globalAlpha=.9-i*.2;c.fillRect(dir>0?x-L:x,y-2+i*2,L,3);}c.globalAlpha=1;};   /* getto dei razzi all'indietro */
+    const o=SC&&SC.attori.mango;if(o&&(o.alt||0)>2&&!(SC.coppia&&SC.coppia.ids.includes('mango')))fiamma(o.x-o.face*48,SCENA_SUOLO-o.alt-72,o.face);
+    const q=SC&&SC.coppia;if(q&&q.ids.includes('mango')&&(q.alt||0)>2)fiamma(q.x-(q.ribalta?-1:1)*60,SCENA_SUOLO-q.alt-150,q.ribalta?-1:1);}},
+  /* i laser di Mango: tre raffiche ciano verso Sito, che le devia con l'ascia (scintille gialle) */
+  laser_mango:{sopra:true,draw(c,t){const M=SC&&SC.attori.mango,S=SC&&SC.attori.sito;if(!M||!S)return;
+    for(let r=0;r<3;r++){const t0=r*.55,k=(t-t0)/.35;if(k<0||k>1.4)continue;const x0=M.x+M.face*30,y0=SCENA_SUOLO-(M.alt||0)-60,x1=S.x-S.face*-0+(-M.face)*22,y1=SCENA_SUOLO-95;
+      if(k<=1){const xe=x0+(x1-x0)*k,ye=y0+(y1-y0)*k;c.save();c.globalCompositeOperation='lighter';c.strokeStyle='rgba(120,240,255,.9)';c.lineWidth=5;c.beginPath();c.moveTo(x0,y0);c.lineTo(xe,ye);c.stroke();c.strokeStyle='#FFFFFF';c.lineWidth=2;c.stroke();c.restore();}
+      else{const p=(k-1)/.4;for(let i=0;i<10;i++){const a=sr(r*20+i)*6.28;c.fillStyle=i%2?'#FFE04A':'#FFFFFF';c.globalAlpha=1-p;c.fillRect(x1+Math.cos(a)*30*p,y1+Math.sin(a)*30*p,2,2);}c.globalAlpha=1;
+        if(p<.15)try{sfx.parry();}catch(e){}}}}},
+  /* vento in volo: righe bianche veloci in orizzontale */
+  vento:{sopra:true,draw(c,t,w,h){c.fillStyle='rgba(255,255,255,.35)';for(let i=0;i<26;i++){const sp=1.2+sr(i+3),x=w-((sr(i+5)*w*1.4+t*w*sp)%(w*1.4)),y=sr(i+7)*h;c.fillRect(x,y,30+40*sr(i+9),1);}}},
   /* ===== cap03 ===== */
   /* scritte piccole in alto ("Mattina", "Pranzo"...): compaiono per 1 secondo, sopra le teste */
   momento_mattina:momento('Mattina'),momento_pranzo:momento('Pranzo'),momento_pomeriggio:momento('Pomeriggio'),momento_sera:momento('Sera'),
@@ -4182,6 +4620,19 @@ const ANIMAZIONI={
 };
 /* numero pseudo-casuale fisso per l'indice i (le animazioni restano uguali a ogni fotogramma) */
 function sr(i){const x=Math.sin(i*12.9898+78.233)*43758.5453;return x-Math.floor(x);}
+/* cap04: lingue di fuoco arancioni sui punti indicati (frazioni dello sfondo) e scintille che salgono; f = forza */
+function fiamme(c,t,b,P,f){c.save();c.globalCompositeOperation='lighter';
+  P.forEach(([u,v],j)=>{const x=b.x+b.w*u,y=b.y+b.h*v,W=b.w*.022*f;
+    for(let i=0;i<4;i++){const ph=t*(4+i*1.3)+j*1.7+i*2.1,hh=W*(1.5+.7*Math.sin(ph)+.3*Math.sin(ph*2.7))*(1-i*.15),bx=x+(i-1.5)*W*.28,tip=Math.sin(ph*1.6)*W*.35;
+      const g=c.createLinearGradient(bx,y,bx,y-hh);g.addColorStop(0,'rgba(255,120,20,.24)');g.addColorStop(.55,'rgba(255,190,70,.17)');g.addColorStop(1,'rgba(255,240,170,0)');
+      c.fillStyle=g;c.beginPath();c.moveTo(bx-W*.3,y);c.quadraticCurveTo(bx-W*.32+tip*.3,y-hh*.55,bx+tip,y-hh);c.quadraticCurveTo(bx+W*.32+tip*.3,y-hh*.55,bx+W*.3,y);c.closePath();c.fill();}   /* lingue di fuoco */
+    for(let i=0;i<3;i++){const k=((t*.7+sr(j*7+i))%1),sx=x+(sr(j*11+i)-.5)*W*2+Math.sin(t*3+i)*6,sy=y-k*b.h*.25*f;c.fillStyle='rgba(255,200,90,'+(1-k)+')';c.fillRect(sx,sy,2,2);}});   /* scintille */
+  c.restore();}
+/* cap04: luci delle sirene lontane (rosso e blu che si alternano) */
+function sirene(c,t,b,P){c.save();c.globalCompositeOperation='lighter';const rosso=Math.floor(t*2.5)%2===0;
+  P.forEach(([u,v],j)=>{const x=b.x+b.w*u,y=b.y+b.h*v,r=b.w*.07,col=(rosso^(j%2===1))?'255,40,50':'50,90,255',a=.35+.15*Math.sin(t*10+j);
+    const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba('+col+','+a+')');g.addColorStop(1,'rgba('+col+',0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();});
+  c.restore();}
 /* cap03: scritta piccola in alto per un secondo (le giornate alla base) */
 function momento(testo){return {draw(c,t,w,h){const a=t<.25?t/.25:t<1.15?1:Math.max(0,1-(t-1.15)/.3);if(a<=0)return;
   c.save();c.globalAlpha=a;c.font='600 22px "Pixelify Sans", monospace';c.textAlign='center';c.textBaseline='middle';
@@ -4266,7 +4717,7 @@ function ritratto(id,cb){if(RITRATTI[id]){cb(RITRATTI[id]);return;}if(typeof HUD
 let SC=null;
 const SPEED={lento:22,normale:40,veloce:85};let SPEED_K='normale';
 try{const v=STORE.get('sopracciglia_testo_storia');if(SPEED[v])SPEED_K=v;}catch(e){}
-function nuovaScena(){return {attori:{},bg:null,anim:null,animD:{},animT:0,azioni:[],ai:-1,wait:null,typing:null,shake:0,shakeF:0,fx:[],card:null,narr:null,nero:false};}
+function nuovaScena(){return {attori:{},livelli:[],bg:null,anim:null,animD:{},animT:0,azioni:[],ai:-1,wait:null,typing:null,shake:0,shakeF:0,fx:[],card:null,narr:null,nero:false};}
 const $=id=>document.getElementById(id);
 
 /* avvia la storia dal capitolo capId (dal passo passoId, o dall'inizio) */
@@ -4298,12 +4749,12 @@ function avviaPasso(){const p=passoCorrente();if(!p){storiaFineCapitolo();return
       el.classList.add('on');SC.narr={n:el.children.length,shown:0,t:0};SC.wait={type:'narr'};break;}
     case 'scena':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;if(!p.sfondo)avviso('Scena "'+p.id+'" senza sfondo: uso il fondo sfumato');
       if(p.anim){SC.anim=ANIMAZIONI[p.anim]||null;if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": scena senza animazione dello sfondo');}   /* animazione sullo sfondo per tutta la scena */
-      SC.oggetti=(p.oggetti||[]).map(creaOggetto);
+      SC.oggetti=(p.oggetti||[]).map(creaOggetto);SC.livelli=(p.livelli||[]).map(nuovoLivello);   /* livelli: altre animazioni insieme (pioggia, fiamme...) */
       {const via=()=>{for(const a of (p.attori||[]))creaAttore(a);SC.azioni=p.azioni||[];prossimaAzione();};
         /* sfondo non ancora scaricato: schermo nero finché arriva (al massimo 8 secondi), poi la scena compare dal nero */
         if(SC.bg&&!imgOk(SC.bg.im)&&!SC.bg.bad){SC.attesaSfondo={t:0,via,entrata:p.entrata};SC.entrata=null;}else via();}
       break;
-    case 'effetto':SC.bg=vecchia&&vecchia.bg;SC.attori=vecchia?vecchia.attori:{};SC.oggetti=vecchia?vecchia.oggetti:[];SC.azioni=[p];prossimaAzione();break;
+    case 'effetto':SC.bg=vecchia&&vecchia.bg;SC.livelli=vecchia?vecchia.livelli:[];SC.attori=vecchia?vecchia.attori:{};SC.oggetti=vecchia?vecchia.oggetti:[];SC.azioni=[p];prossimaAzione();break;
     case 'lotta':SC.nero=true;avviaLotta(p);break;
     case 'animazione':SC.bg=p.sfondo?sfondoScena(p.sfondo):null;SC.anim=ANIMAZIONI[p.anim]||null;SC.animPieno=true;
       if(!SC.anim)avviso('Animazione mancante: "'+p.anim+'": mostro solo lo sfondo');SC.wait={type:'time',left:p.durata||3,then:passoSuccessivo};break;
@@ -4367,17 +4818,32 @@ function applicaPose(a){if(a.pose)for(const k in a.pose){const o=SC.attori[k];if
 function esegui(a){const W=larghezzaScena();
   if(a.posa&&typeof a.posa==='object'&&!a.testo&&!a.chi){applicaPose({pose:a.posa});return prossimaAzione();}   /* (in entra, posa è il nome di una posa) */
   applicaPose(a);
-  if(a.testo!==undefined&&!a.didascalia){if(a.chi)registraArchivio(a.chi);mostraBattuta(a.chi,a.testo,a.nome);return;}
+  if(a.testo!==undefined&&!a.didascalia){if(a.chi)registraArchivio(a.chi);
+    if(ABBAIA[a.chi]&&SC.attori[a.chi]&&!(a.pose&&a.pose[a.chi])){SC.attori[a.chi].posa='abbaia';SC.attori[a.chi].t=0;}   /* chi abbaia parla abbaiando */
+    mostraBattuta(a.chi,a.testo,a.nome);return;}
   if(a.didascalia){mostraBattuta(null,a.didascalia,null,true);return;}
-  if(a.entra){const id=a.entra,da=a.da==='sinistra'?-1:1;const o=SC.attori[id]||creaAttore({id,x:0,nome:a.nome});
+  /* entra dall'alto: {entra:'mango', da:'alto', a:'centro', alt:0, daAlt:400} = scende in verticale fino all'altezza alt */
+  if(a.entra&&a.da==='alto'){const id=a.entra,o=SC.attori[id]||creaAttore({id,x:0,nome:a.nome});o.x=posX(a.a??'centro',W);o.alt=a.daAlt??SCENA_SUOLO+160;o.altTarget=a.alt||0;o.target=null;
+    if(a.verso)o.face=a.verso==='sinistra'?-1:1;o.posa=a.posa||o.posa;o.velAlt=a.velAlt||a.vel||120;o.camminaPosa=a.cammina||null;o.primoPiano=a.primoPiano??o.primoPiano;
+    if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[id]};return;}
+  if(a.entra){const id=a.entra,da=a.da==='sinistra'?-1:1;const o=SC.attori[id]||creaAttore({id,x:0,nome:a.nome});if(a.primoPiano!=null)o.primoPiano=a.primoPiano;
     o.x=da<0?-70:W+70;o.face=a.verso?(a.verso==='sinistra'?-1:1):(da<0?1:-1);o.target=posX(a.a??(da<0?'sinistra':'destra'),W);o.posa=a.posa||o.posa;o.vel=a.vel||o.vel;o.camminaPosa=a.cammina||null;
     if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[id]};return;}
   if(a.esce){const o=SC.attori[a.esce];if(!o){avviso('Esce un attore non in scena: '+a.esce);return prossimaAzione();}
+    if(a.verso==='alto'){o.target=null;o.altTarget=SCENA_SUOLO+180;o.velAlt=a.velAlt||a.vel||160;o.esce=true;o.camminaPosa=a.cammina||null;if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[a.esce]};return;}   /* esce volando verso l'alto */
     const d=a.verso==='sinistra'?-1:a.verso==='destra'?1:(o.x<W/2?-1:1);o.target=d<0?-90:W+90;o.face=d;o.esce=true;o.camminaPosa=a.cammina||null;if(a.vel)o.vel=a.vel;
     if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[a.esce]};return;}
   if(a.muovi){const o=SC.attori[a.muovi];if(!o){avviso('Si muove un attore non in scena: '+a.muovi);return prossimaAzione();}
-    o.target=posX(a.a,W);if(a.vel)o.vel=a.vel;o.camminaPosa=a.cammina||null;if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[a.muovi]};return;}
+    if(a.a!==undefined)o.target=posX(a.a,W);if(a.alt!==undefined){o.altTarget=a.alt;o.velAlt=a.velAlt||a.vel||o.vel;}if(a.vel)o.vel=a.vel;o.camminaPosa=a.cammina||null;if(a.insieme)return prossimaAzione();SC.wait={type:'walk',ids:[a.muovi]};return;}
   if(a.guarda||a.pose)return prossimaAzione();
+  /* LIVELLI: {livello:'pioggia'} aggiunge un'animazione che si disegna insieme alle altre; {togliLivello:'pioggia'} la toglie */
+  if(a.livello){SC.livelli=SC.livelli.filter(L=>L.n!==a.livello);SC.livelli.push(nuovoLivello(a.livello));return prossimaAzione();}
+  if(a.togliLivello){SC.livelli=SC.livelli.filter(L=>L.n!==a.togliLivello);return prossimaAzione();}
+  /* COPPIA CHE SI SPOSTA: {muoviCoppia:true, a:'centro', alt:120, vel:80, velAlt:60}   {esceCoppia:'sinistra'|'destra'|'alto'} (poi i due attori escono di scena) */
+  if(a.muoviCoppia||a.esceCoppia){const q=SC.coppia;if(!q)return prossimaAzione();q.vel=a.vel||q.vel||90;q.velAlt=a.velAlt||a.vel||q.velAlt||90;
+    if(a.esceCoppia==='alto')q.altTarget=SCENA_SUOLO+200;else if(a.esceCoppia)q.target=a.esceCoppia==='sinistra'?-140:W+140;
+    else{if(a.a!==undefined)q.target=posX(a.a,W);if(a.alt!==undefined)q.altTarget=a.alt;}
+    if(a.esceCoppia)q.esce=true;if(a.verso)q.ribalta=a.verso==='sinistra';if(a.insieme)return prossimaAzione();SC.wait={type:'coppia'};return;}
   /* {anim:'nome'} fa partire a metà scena un'animazione dell'elenco ANIMAZIONI (sostituisce quella che c'era); {anim:null} la ferma */
   if(a.anim!==undefined){SC.anim=a.anim?ANIMAZIONI[a.anim]||null:null;if(a.anim&&!SC.anim)avviso('Animazione mancante: "'+a.anim+'"');SC.animT=0;SC.animD={};return prossimaAzione();}
   if(a.effetto||a.tipo==='effetto'){effetto(a);return;}
@@ -4390,9 +4856,10 @@ function esegui(a){const W=larghezzaScena();
   if(a.coppia){const def=COPPIE[a.coppia];if(!def){avviso('Animazione di coppia mancante: "'+a.coppia+'"');return prossimaAzione();}
     const ids=(a.attori||[]).filter(id=>SC.attori[id]),xs=ids.map(id=>SC.attori[id].x);
     const x=a.x!=null?posX(a.x,W):xs.length?(Math.min(...xs)+Math.max(...xs))/2:W/2,d=a.dissolvenza??.2;
-    SC.coppia={def,I:immagineCoppia(a.coppia),ids,x,t:0,k:0,dir:1,d:Math.max(.01,d)};
+    SC.coppia={def,I:immagineCoppia(a.coppia),ids,x,alt:a.alt||0,t:0,k:0,dir:1,d:Math.max(.01,d),ribalta:a.verso?a.verso==='sinistra':!!def.ribalta,off:ids.map(id=>SC.attori[id].x-x)};
     SC.wait={type:'time',left:d,then:prossimaAzione};return;}
-  if(a.fineCoppia){if(SC.coppia){SC.coppia.dir=-1;SC.coppia.d=Math.max(.01,a.dissolvenza??.2);SC.wait={type:'time',left:SC.coppia.d,then:prossimaAzione};return;}return prossimaAzione();}
+  if(a.fineCoppia){if(SC.coppia){const q=SC.coppia;q.ids.forEach((id,i)=>{const o=SC.attori[id];if(o){o.x=q.x+(a.vicini?q.off[i]*.3:q.off[i]);o.alt=q.alt;}});   /* gli attori tornano dove è arrivata la coppia */
+    SC.coppia.dir=-1;SC.coppia.d=Math.max(.01,a.dissolvenza??.2);SC.wait={type:'time',left:SC.coppia.d,then:prossimaAzione};return;}return prossimaAzione();}
   avviso('Azione sconosciuta: '+JSON.stringify(a));prossimaAzione();}
 function effetto(a){const e=a.effetto,d=a.durata;
   if(e==='lampo'){SC.fx.push({k:'flash',col:a.colore||'#FFFFFF',t:0,d:d||.45});return prossimaAzione();}
@@ -4404,6 +4871,7 @@ function effetto(a){const e=a.effetto,d=a.durata;
 
 /* ---- riquadro di dialogo ---- */
 function mostraBattuta(chi,testo,nome,dida){const box=$('sp-box');box.classList.add('on');box.classList.toggle('dida',!!dida);box.classList.remove('done');
+  const bau=!dida&&chi&&ABBAIA[chi];box.classList.toggle('abbaia',!!bau);if(bau&&SC.attori[chi])SC.bau={id:chi,t:0};   /* chi abbaia: frase in corsivo e fumetto "Bau!" sopra la testa */
   $('sp-who').textContent=dida?'':(nome||(chi?nomeDi(chi):''));
   SC.typing={full:String(testo),n:0,chi,done:false,autoT:0};
   /* lo spazio del ritratto c'è subito (così il testo non va a capo in modo diverso quando il ritratto arriva) */
@@ -4456,14 +4924,22 @@ function aggiornaScena(dt){const W=larghezzaScena();
   if(SC.attesaSfondo){const a=SC.attesaSfondo;a.t+=dt;$('sp-black').style.opacity=0;
     if(imgOk(SC.bg.im)||SC.bg.bad||a.t>8){SC.attesaSfondo=null;if(a.entrata!==0)SC.entrata={t:0,d:a.entrata||.5};a.via();}else return;}
   /* attori che camminano */
-  if(SC.coppia){const q=SC.coppia;q.t+=dt;q.k=Math.max(0,Math.min(1,q.k+q.dir*dt/q.d));if(q.dir<0&&q.k<=0)SC.coppia=null;}
+  if(SC.coppia){const q=SC.coppia;q.t+=dt;q.k=Math.max(0,Math.min(1,q.k+q.dir*dt/q.d));if(q.dir<0&&q.k<=0)SC.coppia=null;
+    else{if(q.target!=null){const d=q.target-q.x,st=q.vel*dt;if(Math.abs(d)<=st){q.x=q.target;q.target=null;}else q.x+=Math.sign(d)*st;}   /* la coppia si sposta */
+      if(q.altTarget!=null){const d=q.altTarget-q.alt,st=q.velAlt*dt;if(Math.abs(d)<=st){q.alt=q.altTarget;q.altTarget=null;}else q.alt+=Math.sign(d)*st;}
+      if(q.esce&&q.target==null&&q.altTarget==null){for(const id of q.ids)delete SC.attori[id];SC.coppia=null;}}}
+  for(const L of SC.livelli)L.t+=dt;if(SC.bau){SC.bau.t+=dt;if(SC.bau.t>1.1)SC.bau=null;}
   for(const k in SC.attori){const o=SC.attori[k];o.t+=dt;
     /* pose brevi (torna:true): finita l'animazione, dopo una breve pausa si torna alla posa di base */
     const sp=o.S&&o.S.scenePoses&&o.S.scenePoses[o.posa];if(sp&&sp.torna&&o.t*(sp.fps||10)>=sp.n+(sp.fps||10)*.4){o.posa='base';o.t=0;}
     if(o.target!==null&&o.target!==undefined){const d=o.target-o.x,st=o.vel*dt;
-      if(Math.abs(d)<=st){o.x=o.target;o.target=null;if(o.esce)delete SC.attori[k];}else{o.x+=Math.sign(d)*st;if(!o.esce||true)o.face=Math.sign(d);}}}
+      if(Math.abs(d)<=st){o.x=o.target;o.target=null;}else{o.x+=Math.sign(d)*st;if(!o.esce||true)o.face=Math.sign(d);}}
+    /* movimento in altezza (alt = punti sopra il pavimento): volare, scendere dall'alto, salire */
+    if(o.altTarget!=null){const d=o.altTarget-(o.alt||0),st=(o.velAlt||o.vel)*dt;if(Math.abs(d)<=st){o.alt=o.altTarget;o.altTarget=null;}else o.alt=(o.alt||0)+Math.sign(d)*st;}
+    if(o.esce&&o.target==null&&o.altTarget==null)delete SC.attori[k];}
   const w=SC.wait;
-  if(w&&w.type==='walk'&&w.ids.every(id=>!SC.attori[id]||SC.attori[id].target==null)){
+  if(w&&w.type==='coppia'&&(!SC.coppia||(SC.coppia.target==null&&SC.coppia.altTarget==null)))prossimaAzione();
+  if(w&&w.type==='walk'&&w.ids.every(id=>!SC.attori[id]||(SC.attori[id].target==null&&SC.attori[id].altTarget==null))){
     /* chi è arrivato guarda verso il centro della scena */
     prossimaAzione();}
   if(w&&w.type==='time'){w.left-=dt;if(w.left<=0){const f=w.then;SC.wait=null;f();}}
@@ -4513,11 +4989,12 @@ function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,c
     c.fillStyle='rgba(255,255,255,.05)';c.fillRect(0,SCENA_SUOLO,W,2);}
   const animazione=()=>{c.save();try{SC.anim.draw(c,SC.animT,W,SCENA_H,SC.animD);}catch(e){avviso('Errore nell\u2019animazione: '+e.message);}c.restore();};
   if(SC.anim&&!SC.anim.sopra)animazione();   /* (un'animazione con sopra:true si disegna alla fine, sopra a tutto) */
+  disegnaLivelli(c,W,false);
   disegnaOggetti(c,false);   /* oggetti di scena DIETRO gli attori */
   /* attori (da sinistra a destra; quelli in primo piano per ultimi, sopra gli altri e sopra gli oggetti davanti) */
   const attore=o=>{const S=o.S;if(!S)return;
     /* camminata: quella di scena (posa "cammina") se il personaggio ce l'ha, altrimenti quella delle lotte */
-    const walking=o.target!=null,wp=walking&&o.camminaPosa&&caricaPosa(S,o.id,o.camminaPosa),cs=walking&&caricaPosa(S,o.id,'cammina');
+    const walking=o.target!=null||o.altTarget!=null,wp=walking&&o.camminaPosa&&caricaPosa(S,o.id,o.camminaPosa),cs=walking&&caricaPosa(S,o.id,'cammina');
     const a=wp&&imgOk(S.img[wp.file])?wp:cs&&imgOk(S.img[cs.file])?cs:walking&&S.anims.walk&&imgOk(S.img[S.anims.walk.file])?S.anims.walk:animPosa(S,o.id,o.posa);if(!a)return;
     const im=S.img[a.file];if(!imgOk(im))return;
     const loop=a===S.anims.idle||a===S.anims.walk||a.loop||walking;let fi=Math.floor(o.t*(a.fps||10));
@@ -4527,8 +5004,8 @@ function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,c
     const sc=(a.sc||S.scale)*SCENA_ZOOM,fl=S.float?S.float+Math.sin(o.t*3.6)*3:0;
     /* su: la posa è sollevata da terra (punti dello sprite), per esempio seduto su un trono; un elenco = un valore per fotogramma */
     const su=(Array.isArray(a.su)?(a.su[fi]||0):(a.su||0))*sc;
-    c.save();c.translate(Math.round(o.x),Math.round(SCENA_SUOLO-fl-su));if(o.face<0)c.scale(-1,1);
-    if(!a.su&&!(SC.coppia&&SC.coppia.ids.includes(o.id))){c.globalAlpha=.35;c.fillStyle='#000';c.beginPath();c.ellipse(0,fl,(S.body.x1-S.body.x0)*S.scale*SCENA_ZOOM*.4,5,0,0,7);c.fill();c.globalAlpha=1;}
+    c.save();c.translate(Math.round(o.x),Math.round(SCENA_SUOLO-fl-su-(o.alt||0)));if(o.face<0)c.scale(-1,1);
+    if(!a.su&&!o.alt&&!(SC.coppia&&SC.coppia.ids.includes(o.id))){c.globalAlpha=.35;c.fillStyle='#000';c.beginPath();c.ellipse(0,fl,(S.body.x1-S.body.x0)*S.scale*SCENA_ZOOM*.4,5,0,0,7);c.fill();c.globalAlpha=1;}
     const cq=SC.coppia;if(cq&&cq.ids.includes(o.id)&&imgOk(cq.I.im))c.globalAlpha=1-cq.k;   /* sostituito dall'animazione di coppia */
     const fw=a.fw||S.fw,fh=a.fh||S.fh,ax=a.ax??S.ax,ay=a.ay??S.ay;   /* una posa può avere un fotogramma più grande (es. lo scettro alzato) */
     if(c.globalAlpha>0)c.drawImage(im,fi*fw,0,fw,fh,-ax*sc,-ay*sc,fw*sc,fh*sc);c.restore();};
@@ -4537,12 +5014,23 @@ function disegnaScena(){const cv=$('sp-cv');const r=window.devicePixelRatio||1,c
   disegnaCoppia(c);
   disegnaOggetti(c,true);
   ordine.filter(o=>o.primoPiano).forEach(attore);   /* primo piano: sopra gli altri attori e anche sopra gli oggetti davanti */
+  disegnaLivelli(c,W,true);disegnaBau(c);
   if(SC.anim&&SC.anim.sopra)animazione();}
-function disegnaCoppia(c){const q=SC.coppia;if(!q||!imgOk(q.I.im)||q.k<=0)return;const a=q.def,im=q.I.im,n=a.n||Math.max(1,Math.round(im.naturalWidth/128));
+/* livelli di animazione della scena: quelli con sopra:true davanti agli attori, gli altri dietro */
+function nuovoLivello(n){const A=ANIMAZIONI[n];if(!A)avviso('Animazione mancante: "'+n+'"');return {n,A,t:0,d:{}};}
+function disegnaLivelli(c,W,sopra){for(const L of SC.livelli){if(!L.A||!!L.A.sopra!==sopra)continue;L.d.bg=SC.animD.bg;c.save();try{L.A.draw(c,L.t,W,SCENA_H,L.d);}catch(e){avviso('Errore nell\u2019animazione '+L.n+': '+e.message);}c.restore();}}
+/* fumetto "Bau!" sopra la testa di chi abbaia (per un attimo, all'inizio della battuta) */
+function disegnaBau(c){const b=SC.bau,o=b&&SC.attori[b.id];if(!o||!o.S)return;const S=o.S,a=b.t<.15?b.t/.15:b.t>.85?Math.max(0,(1.1-b.t)/.25):1;
+  const x=o.x+o.face*14,y=SCENA_SUOLO-(o.alt||0)-(S.ay-S.body.y0)*S.scale*SCENA_ZOOM-22;
+  c.save();c.globalAlpha=a;c.font='700 18px "Pixelify Sans", monospace';const tw=c.measureText('Bau!').width+14;
+  c.fillStyle='#FFFFFF';c.strokeStyle='#1A1530';c.lineWidth=2;c.beginPath();c.rect(x-tw/2,y-14,tw,24);c.fill();c.stroke();
+  c.beginPath();c.moveTo(x-5,y+10);c.lineTo(x-o.face*8,y+19);c.lineTo(x+5,y+10);c.closePath();c.fill();c.stroke();c.fillRect(x-4,y+8,8,3);
+  c.fillStyle='#1A1530';c.textAlign='center';c.textBaseline='middle';c.fillText('Bau!',x,y-1);c.restore();}
+function disegnaCoppia(c){const q=SC.coppia;if(!q||!imgOk(q.I.im)||q.k<=0)return;const a=q.def,im=q.I.im,fw=a.fw||128,fh=a.fh||128,ax=a.ax??fw/2,ay=a.ay??(fh-6),n=a.n||Math.max(1,Math.round(im.naturalWidth/fw));
   let fi=Math.floor(q.t*(a.fps||8));if(a.pingpong&&n>1){const p=2*n-2;fi%=p;if(fi>=n)fi=p-fi;}else fi%=n;
-  const sc=(a.scala||1)*SCENA_ZOOM;c.save();c.globalAlpha=q.k;c.translate(Math.round(q.x),SCENA_SUOLO);if(a.ribalta)c.scale(-1,1);
-  c.globalAlpha=q.k*.35;c.fillStyle='#000';c.beginPath();c.ellipse(0,0,40*sc,5,0,0,7);c.fill();c.globalAlpha=q.k;
-  c.drawImage(im,fi*128,0,128,128,-64*sc,-122*sc,128*sc,128*sc);c.restore();}
+  const sc=(a.scala||1)*SCENA_ZOOM,bob=a.oscilla&&q.alt?Math.sin(q.t*2.2)*5:0;c.save();c.globalAlpha=q.k;c.translate(Math.round(q.x),Math.round(SCENA_SUOLO-(q.alt||0)-bob));if(q.ribalta)c.scale(-1,1);
+  if(!q.alt){c.globalAlpha=q.k*.35;c.fillStyle='#000';c.beginPath();c.ellipse(0,0,40*sc,5,0,0,7);c.fill();c.globalAlpha=q.k;}
+  c.drawImage(im,fi*fw,0,fw,fh,-ax*sc,-ay*sc,fw*sc,fh*sc);c.restore();}
 const COPPIA_IMG={};
 function immagineCoppia(nome){if(COPPIA_IMG[nome])return COPPIA_IMG[nome];const def=COPPIE[nome],im=new Image(),o=COPPIA_IMG[nome]={im};
   if(!def){avviso('Animazione di coppia mancante: "'+nome+'"');return o;}
@@ -4601,12 +5089,13 @@ function scegliSquadra(p,ids,sub,then){const pr=leggiProgressi(),last=pr&&pr.squ
   nascondiBox();apriPop('sp-squad');}
 function iniziaLotta(p,gid){const gc=cfgDi(gid)||cfgDi('iacopo'),ec=(p.avversari||[p.avversario]).filter(Boolean).map(cfgDi).filter(Boolean);
   if(!ec.length){avviso('Lotta senza avversario: '+p.id+': la salto');passoSuccessivo();return;}
-  SF={p,modo:p.modo||'normale',g:gc,gid:gc.id,nemici:ec,ondata:0,fase:0,t:0,flash:null};
+  SF={p,modo:p.modo||'normale',g:gc,gid:gc.id,nemici:ec,ondata:0,fase:0,t:0,flash:null,livelli:(p.effetti||[]).map(n=>({n,A:ANIMAZIONI[n],d:{}}))};
+  for(const sp of (p.spettatori||[])){const S=spriteAttore(sp.id);if(S){caricaPosa(S,sp.id,sp.posa||'scena');}}
   [gc,...ec].forEach(c=>registraArchivio(c.id));
   [gc,...ec].forEach(c=>ritratto(c.id,t=>{if(t&&!HUD_THUMB[c.id])HUD_THUMB[c.id]=t;}));
   for(const f of (p.fasi||[]))if(f.sprite)cfgDi(f.sprite);
   game.mode=5;game.tournament=null;game.reset();game.playerLost=false;game.stats={maxHit:0,parry:0};
-  let bi=BACKGROUNDS.indexOf(p.arena);if(bi<0){if(p.arena)avviso('Arena mancante: "'+p.arena+'": ne uso una a caso');bi=(Math.random()*BACKGROUNDS.length)|0;}
+  let bi=indiceArena(p.arena);if(bi<0){if(p.arena)avviso('Arena mancante: "'+p.arena+'": ne uso una a caso');bi=(Math.random()*BACKGROUNDS.length)|0;}
   game.bg=bi;loadBg(bi);game.round=1;game.wins=[0,0];game.loadWait=0;
   ST.fightTrack=traccia(p.musica)||null;
   game.startRound();game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}}
@@ -4632,7 +5121,7 @@ function nuovaFase(fz){SF.fase++;const d=game.cpuDiff();game.freeze=Math.max(gam
   if(fz.sprite){const c=cfgDi(fz.sprite),e=game.p[1];if(c){const r=e.hp/e.maxHp,nf=new Fighter(c,e.x,e.facing,'cpu');nf.aiDiff=e.aiDiff;
     nf.maxHp=Math.round(c.hp*d.hp*(SF.p.vita||1.5));nf.hp=Math.round(nf.maxHp*r);nf.hpTrail=nf._trailHp=nf.hp;nf.trailWait=0;nf.trailSpd=0;nf.meter=e.meter;game.p[1]=nf;}}
   if(fz.aura)game.p[1].aura=fz.aura;
-  if(fz.arena){const bi=BACKGROUNDS.indexOf(fz.arena);if(bi>=0){game.bg=bi;loadBg(bi);}else avviso('Arena mancante: "'+fz.arena+'"');}
+  if(fz.arena){const bi=indiceArena(fz.arena);if(bi>=0){game.bg=bi;loadBg(bi);}else avviso('Arena mancante: "'+fz.arena+'"');}
   if(fz.ricarica){const g=game.p[0];g.hp=g.maxHp;g.hpTrail=g._trailHp=g.hp;}
   const dopo=()=>{if(fz.cambio!==false&&SF.p.squadra&&SF.p.squadra.length>1)cambiaLottatore(()=>{});};
   if(fz.scena&&fz.scena.length)interludio(fz.scena,fz.arena||SF.p.arena,()=>{dopo();});else dopo();}
@@ -4645,9 +5134,19 @@ function cambiaLottatore(then){const p=SF.p;game.state='story';try{window._scree
   scegliSquadra(p,p.squadra.filter(id=>cfgDi(id)),'Nuova fase: puoi cambiare lottatore',id=>{const g=game.p[0];
     if(id!==g.cfg.id){const c=cfgDi(id),r=g.hp/g.maxHp,nf=new Fighter(c,g.x,g.facing,P1MAP);nf.hp=Math.max(1,Math.round(nf.maxHp*r));nf.hpTrail=nf._trailHp=nf.hp;nf.trailWait=0;nf.trailSpd=0;game.p[0]=nf;SF.g=c;SF.gid=id;}
     game.freeze=Math.max(game.freeze,50);game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}then();});}
+/* LOTTE DELLA STORIA: effetti dell'arena (p.effetti: animazioni dell'elenco ANIMAZIONI; quelle con sopra:true davanti ai lottatori)
+   e compagni fermi sullo sfondo (p.spettatori: [{id, x:0-1, verso:'destra', posa:'attesa'}]), che non combattono */
+function storiaSfondoLotta(sopra){if(!SF)return;
+  for(const L of SF.livelli){if(!L.A||!!L.A.sopra!==sopra)continue;L.d.bg=BG_RECT;ctx.save();try{L.A.draw(ctx,SF.t,W,H,L.d);}catch(e){avviso('Errore nell\u2019effetto '+L.n+': '+e.message);}ctx.restore();}
+  if(sopra)return;
+  for(const sp of (SF.p.spettatori||[])){const S=SPRITE_CHARS[sp.id]||STORY_SPRITES[sp.id];if(!S)continue;const a=animPosa(S,sp.id,sp.posa||'base');if(!a)continue;const im=S.img[a.file];if(!imgOk(im))continue;
+    let fi=Math.floor(SF.t*(a.fps||8));fi=(a===S.anims.idle||a.loop)?fi%a.n:Math.min(a.n-1,fi);
+    const fw=a.fw||S.fw,fh=a.fh||S.fh,ax=a.ax??S.ax,ay=a.ay??S.ay,sc=(a.sc||S.scale)*.85,su=(Array.isArray(a.su)?0:(a.su||0))*sc;   /* un po' più piccoli: sono più indietro */
+    ctx.save();ctx.translate(Math.round(sp.x*W),Math.round(GROUND-8-su));if(sp.verso==='sinistra')ctx.scale(-1,1);ctx.globalAlpha=.85;
+    ctx.drawImage(im,fi*fw,0,fw,fh,-ax*sc,-ay*sc,fw*sc,fh*sc);ctx.restore();}}
 /* KO di uno dei due (al posto di game.onKO) */
 function storiaKO(loser){const [g,e]=game.p;
-  if(loser===g){game.koPending=true;game.banner='K.O.';game.bannerT=80;fineLotta(90,SF.modo==='copione'?'copione':'sconfitta');return;}
+  if(loser===g){game.koPending=true;game.banner='K.O.';game.bannerT=80;fineLotta(90,SF.modo==='copione'?'copione':SF.modo==='interrotta'?'vittoria':'sconfitta');return;}   /* interrotta: anche il KO del giocatore ferma la lotta e la storia continua */
   /* copione con infiniti:true: l'avversario cade e subito ne entra un altro, finché finisce il tempo o il giocatore va KO */
   if(SF.modo==='copione'&&SF.p.infiniti){if(!SF.cambio){SF.cambio=true;const sf=SF,e0=e;setTimeoutFrames(55,()=>{if(SF===sf&&game.p[1]===e0)nemicoInfinito();});
     setTimeout(()=>{if(SF===sf&&game.p[1]===e0&&!game.paused)nemicoInfinito();},3500);}return;}   /* (timer di riserva in tempo reale) */
@@ -6521,13 +7020,15 @@ function drawFight(){
     /* nome dello sfondo solo all'inizio del round, insieme al banner "ROUND …", poi sfuma */
     const k=cv.width/(cv.getBoundingClientRect().width||cv.width);
     ctx.globalAlpha=Math.min(1,game.bannerT/12);
-    text(BACKGROUNDS[game.bg].toUpperCase(),W/2,IS_MOBILE?H-18:H-30,Math.max(9,13*k/ZOOM),'rgba(245,240,225,.75)');
+    text(nomeArena(game.bg).toUpperCase(),W/2,IS_MOBILE?H-18:H-30,Math.max(9,13*k/ZOOM),'rgba(245,240,225,.75)');
     ctx.globalAlpha=1;}
   ctx.save();ctx.translate(-camX*0.0,0); // fighters in world≈screen, cam già nei layer
   const ps=[...game.p].sort((a,b)=>(a.state==='attack'?1:0)-(b.state==='attack'?1:0));
+  if(SF)storiaSfondoLotta(false);   /* lotte della storia: effetti dell'arena e compagni fermi sullo sfondo */
   drawFxObjs(true);drawBeams();
   ps.forEach(drawFighter);
   drawBeamFlashes();drawFxObjs();
+  if(SF)storiaSfondoLotta(true);
   projectiles.forEach(p=>{
     if(p.hidden)return;
     if(p.orbShot){const C=p.orbCol==='yellow'?['#FFD700','#E8B800','#FFF07A','#FFFFF0','#FFE94A']:['#FF2A2A','#E01020','#FF7A7A','#FFF0F0','#FF4040'],r=(p.orbR||14)+Math.sin(frame*.7)*1.5;
@@ -7686,7 +8187,7 @@ function loop(ts){
     CTL_EDIT=JSON.parse(JSON.stringify(CTL));
     var ov=document.getElementById('ctl-edit'),mc=document.getElementById('m-controls');if(!ov||!mc)return;
     /* sfondo: l'arena dell'incontro (se siamo in pausa) o uno degli sfondi già scaricati */
-    var bi=typeof game.bg==='number'?game.bg:Math.max(0,BACKGROUNDS.findIndex(function(_,i){return BG_STATE[i]==='ok';}));
+    var bi=typeof game.bg==='number'&&game.bg<ARENA_STORIA_BASE?game.bg:Math.max(0,BACKGROUNDS.findIndex(function(_,i){return BG_STATE[i]==='ok';}));
     ov.style.backgroundImage='url(backgrounds/bg'+String(bi+1).padStart(2,'0')+'.png)';
     var p1=document.getElementById('ce-p1'),p2=document.getElementById('ce-p2');
     if(p1)p1.src=SEL_POSE[ROSTER[game.sel[0]].id]||'';if(p2)p2.src=SEL_POSE[ROSTER[game.sel[1]].id]||'';
