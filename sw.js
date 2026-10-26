@@ -1,4 +1,4 @@
-const CACHE = 'sopracciglia-v177';
+const CACHE = 'sopracciglia-v178';
 /* IMMAGINI (sprite, sfondi): una cache che resta tra una versione e l'altra. Si prendono subito dalla memoria del telefono
    e si aggiornano in silenzio dalla rete una volta per sessione (così gli sfondi compaiono subito, anche con rete lenta). */
 const MEDIA = 'sopracciglia-immagini';
