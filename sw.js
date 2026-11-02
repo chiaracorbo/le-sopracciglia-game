@@ -1,4 +1,4 @@
-const CACHE = 'sopracciglia-v210';
+const CACHE = 'sopracciglia-v211';
 /* IMMAGINI (sprite, sfondi): una cache che resta tra una versione e l'altra. Si prendono subito dalla memoria del telefono
    e si aggiornano in silenzio dalla rete una volta per sessione (così gli sfondi compaiono subito, anche con rete lenta). */
 const MEDIA = 'sopracciglia-immagini';
@@ -20,9 +20,28 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE && k !== MEDIA).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    ).then(() => self.clients.claim()).then(rinfrescaImmagini)
   );
 });
+
+/* NUOVA VERSIONE: ricontrolla tutte le immagini in memoria. Quelle sostituite (stesso nome, contenuto nuovo) vengono
+   riscaricate, quelle eliminate dal gioco vengono tolte dalla memoria del telefono. Le immagini uguali costano pochissimo
+   (il server risponde solo "non è cambiata"). */
+function rinfrescaImmagini() {
+  return caches.open(MEDIA).then(c => c.keys().then(reqs => {
+    const coda = reqs.map(r => r.url);
+    const lavora = () => {
+      const key = coda.shift();
+      if (!key) return Promise.resolve();
+      aggiornati.add(key);
+      return fetch(key, { cache: 'no-cache' }).then(res => {
+        if (res.ok) return c.put(key, res);
+        if (res.status === 404 || res.status === 410) return c.delete(key);
+      }).catch(() => {}).then(lavora);
+    };
+    return Promise.all([1, 2, 3, 4, 5, 6].map(lavora));   /* 6 alla volta */
+  }));
+}
 
 const aggiornati = new Set();   /* immagini già ricontrollate in questa sessione */
 function aggiornaImmagine(key) {
