@@ -783,6 +783,10 @@
   #sp-tx { display:block; transition:transform .25s; }
   #sp-box.abbaia #sp-tx { font-style:italic; }   /* chi abbaia (Mango): la frase è quello che Iacopo capisce */
   #sp-box.dida #sp-text { font-style:italic; font-weight:400; color:#E6DFFF; text-align:center; }
+  /* durante le VIGNETTE a tutto schermo (cap09): riquadro più piccolo (al massimo un quinto dello schermo) e semitrasparente */
+  #sp-box.vig { height:min(18vh,92px); padding:5px 14px 8px; background:rgba(10,8,28,.62); border-width:2px; width:min(calc(100% - 24px),820px); bottom:max(6px,env(safe-area-inset-bottom)); }
+  #sp-box.vig #sp-text { font-size:min(2vw,3.9vh,19px); line-height:1.32; }
+  .st-atto { flex:none; margin:10px 4px 2px; color:var(--oro); font-size:min(2vw,4.2vh,19px); letter-spacing:.06em; text-align:left; }
   #sp-next { position:absolute; right:12px; bottom:3px; color:var(--oro); font-size:15px; animation:spBlink 1s steps(2) infinite; visibility:hidden; }
   #sp-box.done #sp-next { visibility:visible; }
   @keyframes spBlink { 50%{opacity:0} }
@@ -878,7 +882,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.235</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.236</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -901,7 +905,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.235.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.236.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -3802,6 +3806,125 @@ const SFONDI_STORIA={corridoio_reale:{suolo:.74},   /* corridoio del palazzo (nu
   studio_tg2:{suolo:.83},rifugio_fronte:{suolo:.64},rifugio_cucina:{suolo:.64},rifugio_mensa:{suolo:.64},rifugio_svago:{suolo:.64},rifugio_assemblea:{suolo:.64},sala_danza:{suolo:.8},giardino_ricevimento:{suolo:.78},retro_furgone:{suolo:.9},furgone_fuori:{suolo:.70},tetto_piazza:{suolo:.7},studio_tg:{suolo:.77},sala_riunioni:{suolo:.71},sala_riunioni2:{suolo:.75},
   strada_murale:{suolo:.915},   /* cap02: i piedi sul marciapiede, non sul muro */
 };   /* cap01_p07: Pisani in piedi accanto al trono */
+/* ==================== CAPITOLO 9 – Il Fronte rinasce: personaggi, versioni, oggetti ====================
+   Tutte le pose nuove sono convertite con la stessa scala (riferimento: Zibe, piedi alla riga 118, centro 52, scala 1.36),
+   in fotogrammi larghi 160 (o 192/224/256 per le pose con le braccia aperte); i personaggi più alti hanno fotogrammi alti 160. */
+const _P9=(f,n,fps,x)=>{const o=Object.assign({fw:160,fh:128},x||{});return _P(f,n,fps,Object.assign({ax:52+(o.fw-128)/2,ay:118+(o.fh-128),sc:1.36},o));};
+const _P9A=(f,n,fps,x)=>_P9(f,n,fps,Object.assign({fh:160},x||{}));   /* fotogrammi alti 160 (Luca ministro, buttafuori, Antonio) */
+const _pose9=(P,extra)=>Object.assign({scena:P('scena',1,1),cammina:P('cammina',12,12,{loop:true}),parla:P('parla',12,8,_PARLA),annuisce:P('annuisce',12,10,{torna:true}),
+  sorpresa:P('sorpresa',12,12),triste:P('triste',12,8),arrabbiato:P('arrabbiato',12,10,{ciclo:8}),ferito:P('ferito',12,10),ferito_a_terra:P('ferito',12,10),
+  seduto:P('seduto',12,8),indica:P('indica',12,10,{fw:192,ciclo:6})},extra||{});
+/* IMPERATORE IACOPO (cappotto nero, senza armatura): pose standard + versa, firma, seduto_parla (alla scrivania) */
+STORY_SPRITES.imperatore.scenePoses=_pose9(_P9,{versa:_P9('versa',12,8),firma:_P9('firma',12,8,{loop:true,pingpong:true}),seduto_parla:_P9('seduto_parla',12,8,_PARLA)});
+/* ETTORE (da questo capitolo è il protagonista) */
+SPRITE_CHARS.ettore.scenePoses=_pose9(_P9,{sorpresa:_P9('sorpresa',12,12,{fw:192})});
+/* VIOLA: la sorpresa e l'accoglienza sono la stessa animazione (braccia aperte) */
+STORY_SPRITES.viola.scenePoses=_pose9(_P9,{accoglie:_P9('accoglie',12,10,{fw:192,ciclo:6}),sorpresa:_P9('accoglie',12,12,{fw:192})});
+/* MASSIMO PERICOLO: niente "ferito" nel kit (ripiego: triste); lavagna = scrive con il pennarello */
+STORY_SPRITES.massimo.scenePoses=_pose9(_P9,{parla:_P9('parla',12,8,{..._PARLA,fw:192}),arrabbiato:_P9('arrabbiato',12,10,{fw:192,ciclo:8}),seduto:_P9('seduto',12,8,{fw:192}),
+  cammina:_P9('cammina',12,12,{loop:true,fw:192}),ferito:_P9('triste',12,8),ferito_a_terra:_P9('triste',12,8),lavagna:_P9('lavagna',12,8,{fw:192,loop:true,pingpong:true})});
+/* ANTONIO GIBRONDI: poltrona = seduto in poltrona (fermo), poltrona_parla = respira e muove la testa */
+STORY_SPRITES.antonio.scenePoses=_pose9(_P9A,{parla:_P9A('parla',12,8,{..._PARLA,fw:192}),poltrona:_P9A('poltrona_parla',1,1,{fw:256}),poltrona_parla:_P9A('poltrona_parla',12,8,{..._PARLA,fw:256})});
+/* VERSIONI: Luca di Mauro ministro (divisa nera), Zibe trasandato, Zibe con lo zaino */
+const _versione9=(id,nome,poses)=>{STORY_SPRITES[id]={dir:'sprites/storia/'+id+'/',fw:160,fh:128,ax:68,ay:118,scale:1.36,body:{x0:50,y0:8,x1:110,y1:118},pose:'scena',img:{},
+  anims:{idle:{file:'scena',n:1,fps:1}},scenePoses:poses};STORY_ROSTER[id]={id,name:nome,uso:'comparsa'};};
+_versione9('dimauroministro','LUCA DI MAURO',{scena:_P9A('scena',1,1),cammina:_P9A('cammina',8,8,{loop:true}),parla:_P9A('parla',12,8,_PARLA),
+  annuisce:_P9A('annuisce',12,10,{torna:true}),sorpresa:_P9A('sorpresa',12,12,{ciclo:6})});
+STORY_SPRITES.dimauroministro.fh=160;STORY_SPRITES.dimauroministro.ay=150;
+/* Zibe trasandato: il kit non ha camminata, sorpresa, rabbia, tristezza e cenno: si usano i fotogrammi della versione trasandata */
+_versione9('zibet','ZIBE',{scena:_P9('scena',1,1),cammina:_P9('cammina',8,8,{loop:true}),parla:_P9('parla',12,8,_PARLA),beve:_P9('beve',12,10),
+  ride:_P9('ride',12,10,_PARLA),lancia:_P9('lancia',12,12,{fw:224}),piange:_P9('piange',12,8,_PARLA),
+  seduto:_P9('seduto_parla',1,1,{fw:192}),seduto_parla:_P9('seduto_parla',12,8,{..._PARLA,fw:192}),
+  sorpresa:_P9('parla',1,1),arrabbiato:_P9('parla',12,10,_PARLA),triste:_P9('piange',1,1),annuisce:_P9('parla',4,6)});
+_versione9('zibez','ZIBE',{scena:_P9('scena',1,1),corre:_P9('corre',8,14,{loop:true}),cammina:_P9('corre',8,10,{loop:true}),parla:_P9('parla',12,8,_PARLA)});
+/* comparsa: il buttafuori dello strip club (grande: ~1,3 H) */
+_versione9('buttafuori','BUTTAFUORI',{scena:_P9A('scena',1,1),cammina:_P9A('cammina',8,8,{loop:true}),parla:_P9A('parla',12,8,_PARLA),blocca:_P9A('blocca',12,10)});
+STORY_SPRITES.buttafuori.fh=160;STORY_SPRITES.buttafuori.ay=150;
+/* Sito con le due birre: cammina tenendole (birra) e le offre (birra_ferma = primo fotogramma) */
+Object.assign(SPRITE_CHARS.sito.scenePoses,{birra:_P9('birra',12,10,{loop:true}),birra_ferma:_P9('birra',1,1)});
+/* COPPIE del capitolo 9 (fotogrammi 224×160, piedi alla riga 150, centro 112) */
+COPPIE.zibe_mango_abbraccio={file:'zibe_mango_abbraccio',n:12,fps:8,pingpong:true,fw:224,fh:160,ax:112,ay:150,scala:1.36};
+COPPIE.ettore_antonio_massaggio={file:'ettore_antonio_massaggio',n:12,fps:8,pingpong:true,fw:224,fh:160,ax:112,ay:150,scala:1.36};
+COPPIE.sito_zibe_brindisi={file:'sito_zibe_brindisi',n:12,fps:8,pingpong:true,fw:224,fh:160,ax:112,ay:150,scala:1.36};
+/* OGGETTI E POSIZIONI DEL CAPITOLO 9 (oggetti: 1 pixel = 1 punto di scena; un personaggio in piedi è alto ~143) */
+const CAP9={
+  /* appartamento di Zibe: TV a destra, tavolo al centro, sedia accanto (girata verso sinistra, verso Batteo) */
+  tv:{img:'tv_vecchia',x:.86,scala:1},tavolo:{img:'tavolo_zibe',x:.52,scala:1},sedia:{img:'sedia_zibe',x:.62,scala:1,ribalta:true},
+  schermo:{x:26,y:13,w:48,h:41},   /* lo schermo grigio dentro l'immagine della TV (pixel) */
+  neon:{u:.21,v:.195},   /* il tubo al neon nello sfondo (frazioni dell'immagine) */
+  /* strada: l'auto parcheggiata al centro-destra, girata verso destra, un po' più avanti della linea dei piedi */
+  auto:{x:.66,scala:1.12,dy:10},traffico:{v:.705,scala:.55},
+  /* parcheggio dello strip club: insegna sul cartello vuoto sopra il portone; portone */
+  insegna:{u0:.441,u1:.652,v0:.189,v1:.278},portone:.545,
+  /* dentro lo strip club */
+  bancone:{img:'bancone_guardaroba',x:.62,scala:1,davanti:true},
+  folla:[{img:'folla_club',x:.17,dy:-46,scala:.92},{img:'folla_club',x:.44,dy:-46,scala:.92,ribalta:true}],
+  porta:.855,attaccapanni:{x:.855,dy:-62,scala:1.08,sposta:120},altViola:30,
+  /* covo: divano e poltrona a sinistra, lavagna e tavolo a destra, l'angolo cucina al centro libero */
+  divano:{img:'divano_covo',x:.13,scala:1},poltrona:{img:'poltrona_seduta',x:.278,scala:1},
+  massaggioDx:0,massaggioDy:0,antonioX:.285,ettoreX:.325,divanoSx:.075,divanoDx:.19,   /* la coppia del massaggio rispetto alla poltrona */
+  lavagna:{img:'lavagna',x:.735,scala:1},tavoloCovo:{img:'tavolo_covo',x:.925,scala:1,dy:-8},
+  sediaCovo:{img:'sedia_zibe',x:.835,scala:1,ribalta:true},sediaCovo2:{img:'sedia_zibe',x:.985,scala:1,ribalta:true,dy:-8},
+  schermiCovo:[[.578,.272,.627,.35],[.614,.262,.664,.335],[.633,.358,.664,.418],[.667,.323,.7,.395]],   /* monitor dell'angolo cucina (frazioni dello sfondo) */
+  /* studio dell'Imperatore: scrivania al centro-destra girata verso sinistra, sedia dietro, mobiletto dei liquori a destra */
+  imperatoreX:.688,suSedia:0,
+  scrivania:{img:'scrivania_imperiale',x:.63,scala:1,davanti:true},sediaImp:{img:'sedia_imperiale',x:.708,scala:1},mobiletto:{img:'mobiletto_liquori',x:.9,scala:1},
+  monitor:[[37,7,3,20],[43,8,5,19],[50,10,6,17],[59,12,4,15],[66,13,4,14],[71,14,5,13]],   /* schermi sulla scrivania (pixel dell'immagine) */
+};
+const OGGETTI_ZIBE9=[CAP9.tv,CAP9.tavolo,CAP9.sedia];
+const OGGETTI_CLUB9=[...CAP9.folla,CAP9.bancone];
+const OGGETTI_COVO9=[CAP9.divano,CAP9.poltrona,CAP9.lavagna,CAP9.sediaCovo2,CAP9.tavoloCovo,CAP9.sediaCovo];
+const OGGETTI_STUDIO9=[CAP9.sediaImp,CAP9.mobiletto,CAP9.scrivania];
+Object.assign(SFONDI_STORIA,{appartamento_zibe:{suolo:.74,taglio:'alto',cima:.1},strada_agosto:{suolo:.8},parcheggio_club:{suolo:.62},strip_club:{suolo:.7},
+  covo:{suolo:.64},studio_imperatore:{suolo:.68}});
+/* le vignette a tutto schermo (si caricano come sfondi: backgrounds/storia/vig_*.png) */
+for(const n of ['vig_propaganda','vig_bagno','vig_colazione','vig_lettura','vig_meditazione'])SFONDI_STORIA[n]={suolo:.85};
+/* ---------- capitolo 9: funzioni degli effetti ---------- */
+/* durante le vignette il riquadro del testo è più piccolo e semitrasparente (classe "vig"): resta finché la vignetta si disegna */
+function _vigBox(){const b=document.getElementById('sp-box');if(!b)return;b.classList.add('vig');clearTimeout(_vigBox.t);_vigBox.t=setTimeout(()=>b.classList.remove('vig'),350);}
+/* rettangolo della vignetta: intera, alta quanto lo schermo sopra il riquadro del testo (che sta nel quinto più basso) */
+function _vigRett(w,h){const top=8,bot=h*.775,ah=bot-top,r=960/549;let fh=ah,fw=fh*r;if(fw>w-20){fw=w-20;fh=fw/r;}return {x:(w-fw)/2,y:top+(ah-fh)/2,w:fw,h:fh};}
+/* VIGNETTA a tutto schermo: fondo scuro ai lati, bordo chiaro sottile, lentissimo zoom (al massimo +4%) verso il punto fx,fy, dissolvenza d'entrata */
+function _vignetta(c,t,w,h,nome,o){o=o||{};const B=sfondoScena(nome),im=B&&B.im;if(!imgOk(im))return null;const a=Math.min(1,t/(o.dissolvi||.9));
+  const R=_vigRett(w,h),iw=im.naturalWidth,ih=im.naturalHeight,k=Math.min(1,t/(o.durata||10)),e=k*k*(3-2*k),z=1+(o.zoom??.04)*e;
+  const sw=iw/z,sh=ih/z,sx=Math.max(0,Math.min(iw-sw,(o.fx??.5)*iw-sw/2)),sy=Math.max(0,Math.min(ih-sh,(o.fy??.5)*ih-sh/2));
+  const primo=SC.livelli.find(L=>/^vig_/.test(L.n));   /* la prima vignetta copre tutto lo sfondo; le altre entrano in dissolvenza sopra di lei */
+  c.save();c.globalAlpha=(!primo||primo.n===nome)?1:a;c.fillStyle='#07060c';c.fillRect(-30,-30,w+60,h+60);c.globalAlpha=a;
+  c.fillStyle='rgba(0,0,0,.7)';c.fillRect(R.x-6,R.y-6,R.w+12,R.h+12);c.imageSmoothingEnabled=false;c.drawImage(im,sx,sy,sw,sh,R.x,R.y,R.w,R.h);
+  c.strokeStyle='#EDE3C8';c.lineWidth=2;c.strokeRect(R.x-1,R.y-1,R.w+2,R.h+2);c.restore();_vigBox();
+  return {R,a,map:(u,v)=>[R.x+(u*iw-sx)/sw*R.w,R.y+(v*ih-sy)/sh*R.h]};}
+/* propaganda: il riquadro CENSURATO sopra le mani alzate di Iacopo (u0,v0,u1,v1 = frazioni dell'immagine) */
+const CENSURA9=[.437,.088,.56,.236];
+function _censura(c,V,a){const [x0,y0]=V.map(CENSURA9[0],CENSURA9[1]),[x1,y1]=V.map(CENSURA9[2],CENSURA9[3]),bw=x1-x0,bh=y1-y0;c.save();c.globalAlpha=a;
+  c.fillStyle='#000';c.fillRect(x0,y0,bw,bh);c.fillStyle='#fff';c.font='bold '+Math.max(6,bw*.155)+'px "Pixelify Sans", monospace';c.textAlign='center';c.textBaseline='middle';
+  c.fillText('CENSURATO',x0+bw/2,y0+bh/2);c.restore();}
+/* lo schermo della vecchia TV di Zibe (rettangolo sullo schermo, dall'oggetto tv_vecchia) */
+function _schermoTV(){const o=(SC.oggetti||[]).find(q=>q.img==='tv_vecchia');if(!o||!imgOk(o.I.im)||o.I.base==null)return null;const s=o.scala||1,S=CAP9.schermo;
+  const l=o.x-o.I.cx*s,tp=SCENA_SUOLO+(o.dy||0)-o.I.base*s;return {x:l+S.x*s,y:tp+S.y*s,w:S.w*s,h:S.h*s};}
+/* auto che passa sullo sfondo (più piccola e più scura): dir 1 = verso destra */
+function _autoLontana(c,x,y,s,dir){const A=immagineOggetto('auto_ribelli');if(!imgOk(A.im)||A.base==null)return;const im=_scurito(A.im,.35);
+  c.save();c.translate(x,y);if(dir<0)c.scale(-1,1);c.drawImage(im,-A.cx*s,-A.base*s,A.im.naturalWidth*s,A.im.naturalHeight*s);c.restore();}
+/* un attore che entra in una porta o in un'auto: l'ultimo fotogramma svanisce (vale anche per fotogrammi larghi 160-256) */
+function _svanisci9(c,t,d,id){if(!d.f){const o=SC.attori[id];if(!o||!o.fot)return;const im=o.S&&o.S.img[o.fot.file];if(!imgOk(im))return;
+    const P=o.S.scenePoses||{},sp=Object.values(P).find(p=>p.file===o.fot.file)||{},fw=sp.fw||o.S.fw||128,fh=sp.fh||o.S.fh||im.naturalHeight;
+    d.f={im,fi:o.fot.fi,sc:o.fot.sc,ax:o.fot.ax,ay:o.fot.ay,y:o.fot.y,x:o.x,face:o.face,fw,fh};delete SC.attori[id];}
+  const f=d.f,a=Math.max(0,1-t/.5);if(a<=0)return;c.save();c.globalAlpha=a;c.translate(Math.round(f.x),f.y);if(f.face<0)c.scale(-1,1);
+  c.drawImage(f.im,f.fi*f.fw,0,f.fw,f.fh,-f.ax*f.sc,-f.ay*f.sc,f.fw*f.sc,f.fh*f.sc);c.restore();}
+/* suoni del capitolo (una volta sola, quando l'effetto parte) */
+function _suono9(d,fn){if(d.s)return;d.s=1;try{fn();}catch(e){}}
+const SUONI9={
+  campanello:()=>{beep(880,.28,'sine',.05);setTimeout(()=>beep(698,.42,'sine',.05),300);},
+  bussa:()=>{for(let i=0;i<4;i++)setTimeout(()=>{beep(95,.07,'square',.06,-30);noise(.04,.05);},i*(i===2?320:200));},
+  vetro:()=>{noise(.18,.09);for(let i=0;i<9;i++)setTimeout(()=>beep(2200+Math.random()*2600,.05+Math.random()*.06,'triangle',.03),40+i*45+Math.random()*30);},
+  porta_click:()=>{noise(.03,.06);setTimeout(()=>{beep(1300,.025,'square',.04);noise(.02,.04);},90);},
+  cigolio:()=>{beep(470,.5,'sawtooth',.022,-200);setTimeout(()=>beep(350,.45,'sawtooth',.018,160),420);},
+  porta_scatto:()=>{noise(.12,.1);beep(110,.18,'square',.07,-40);setTimeout(()=>beep(520,.25,'sawtooth',.02,-220),90);},
+  rotelle:()=>{for(let i=0;i<10;i++)setTimeout(()=>beep(180+(i%3)*30,.06,'triangle',.02),i*110);noise(.9,.012);},
+  tv_click:()=>{beep(1900,.03,'square',.04);noise(.05,.05);setTimeout(()=>beep(7000,.4,'sine',.012,-6000),40);},
+  passo:()=>{beep(70+Math.random()*25,.06,'square',.05,-20);noise(.035,.04);},
+  battito:()=>{beep(52,.14,'sine',.12,-18);noise(.03,.012);},
+  piatto:()=>noise(.025,.008),
+};
 
 const STORIA={
   /* SBLOCCHI IN LOTTA LIBERA: il personaggio si sblocca quando il giocatore COMPLETA quel capitolo (fine:true = dopo l'epilogo).
@@ -3830,6 +3953,12 @@ const STORIA={
     {id:'riccardo',nome:'RICCARDO',frase:'Iacopo, non lasciare che l\u2019odio ti consumi.',ritratto:'riccardo',capitolo:'cap05'},
     {id:'baumizio',nome:'BAUMIZIO',frase:'La chiamo la \u2018Segaspada\u2019, il perfetto connubio tra l\u2019antico e il moderno!',ritratto:'baumizio',capitolo:'cap07'},
     {id:'dimauro',nome:'LUCA DI MAURO',frase:'Non dovresti strapparti quelle sopracciglia, secondo me sono molto belle, di un colore che non avevo mai visto prima.',ritratto:'dimauro',capitolo:'cap06'},
+    /* capitolo 9 (l'Imperatore Iacopo ha una scheda sua, diversa da quella di Iacopo) */
+    {id:'imperatore',nome:'IMPERATORE IACOPO',frase:'Da quando esiste il potere, ci sono sempre stati coloro che tentano di usurparlo.',ritratto:'imperatore',capitolo:'cap09'},
+    {id:'ettore',nome:'ETTORE',frase:'Se devi incolparti di qualcosa, forse dovresti pensare al motivo per cui lo avete perso.',ritratto:'ettore',capitolo:'cap09'},
+    {id:'viola',nome:'VIOLA',frase:'Tesori, siete tornati!',ritratto:'viola',capitolo:'cap09'},
+    {id:'massimo',nome:'MASSIMO PERICOLO',frase:'Ai tempi del regno delle Tagliatelle al Formaggio, tu eri un eroe per me, Zibe.',ritratto:'massimo',capitolo:'cap09'},
+    {id:'antonio',nome:'ANTONIO GIBRONDI',frase:'Zibe. Intendi\u2026 quello Zibe?',ritratto:'antonio',capitolo:'cap09'},
   ].concat(MODALITA_PROVA?[
     {id:'chiara',nome:'CHIARA',frase:'Frase di prova: qui andrà una frase del libro su Chiara.',ritratto:'chiara'},
     {id:'sito',nome:'SITO',frase:'Frase di prova: qui andrà una frase del libro su Sito.',ritratto:'sito'},
@@ -5758,7 +5887,352 @@ const STORIA={
         'E così, in quel giorno di tumulto e caos, l’epoca antica si concluse con la caduta brutale di un re.',
         'Una nuova era stava per iniziare. Iacopo, Zibe, Alice, Batteo, Mango e Luca di Mauro erano allo stesso tempo uniti e divisi, pronti a scrivere la storia con le loro speranze e i loro timori.']},
       {id:'cap08_p18',tipo:'cartello',sopra:'',titolo:'Fine dell’Atto I',durata:3.5},
-      /* cap08_p19 FINE CAPITOLO: salvataggio e "Il capitolo 9 arriverà presto" li fa il motore (Iacopo con la Segaspada è già giocabile in lotta libera) */
+      /* cap08_p19 FINE CAPITOLO: salvataggio automatico, poi si passa subito al capitolo 9 (Iacopo con la Segaspada è già giocabile in lotta libera) */
+    ]},
+    /* ---------------- CAPITOLO 9 — Il Fronte rinasce (inizio dell'Atto II, solo scene) ---------------- */
+    {id:'cap09',numero:9,titolo:'Il Fronte rinasce',atto:'Atto II – Le sopracciglia della guerra',passi:[
+      {id:'cap09_p01',tipo:'cartello',sopra:'ATTO II',titolo:'Le sopracciglia della guerra',durata:3.5},
+      {id:'cap09_p02',tipo:'cartello',sopra:'Capitolo 9',titolo:'Il Fronte rinasce'},
+      {id:'cap09_p03',tipo:'narratore',righe:[
+        'Erano passati tredici anni dalla caduta del re Luca Pisani.',
+        'Dopo la vittoria, il Fronte di Liberazione del Lattosio si era sciolto. Iacopo se n’era andato, portando con sé Luca di Mauro e molti membri del Fronte.',
+        'Ora Iacopo era l’Imperatore dell’Impero delle Sopracciglia Gialle. E il suo impero era peggiore del regno che aveva abbattuto.']},
+      /* VIGNETTA: la propaganda in TV (titolo in sovrimpressione, riquadro CENSURATO); poi si restringe nello schermo della TV di Zibe */
+      {id:'cap09_p04',tipo:'scena',sfondo:'vig_propaganda',livelli:['vig_propaganda'],entrata:.6,azioni:[
+        {musica:'propaganda'},{attesa:1.8},
+        {didascalia:'(Il documentario di propaganda imperiale mostra la lussureggiante capitale di Sopraccigliaia, lo splendore dei suoi sudditi, la gioia in ogni angolo della vita quotidiana.)'},
+        {didascalia:'(Poi il giorno della nascita dell’Impero: Iacopo sul balcone della vecchia capitale, con la testa del re censurata tra le mani, e l’urlo festoso della folla.)'},
+      ]},
+      /* APPARTAMENTO DI ZIBE (penombra, neon che tremola) */
+      {id:'cap09_p05',tipo:'scena',sfondo:'appartamento_zibe',oggetti:OGGETTI_ZIBE9,livelli:['penombra_zibe','tv_zibe'],entrata:0,
+        attori:[{id:'zibet',x:.68,verso:'destra',posa:'base'}],azioni:[
+        {attesa:3.4},{livello:'tv_spegni'},{musica:'malinconia'},{attesa:1.1},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Che gran mucchio di cazzate...'},
+        {posa:{zibet:'base'}},{livello:'campanello'},{attesa:1.1},{livello:'bussa'},{attesa:1.2},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Okay, okay, sto arrivando...'},
+        {muovi:'zibet',a:.13,cammina:'cammina',vel:95},{guarda:{zibet:'sinistra'}},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Ti pagherò l’affitto la settimana prossima, giuro...'},
+        {didascalia:'(Non c’è nessuno. Poi Zibe abbassa lo sguardo.)',pose:{zibet:'base'}},
+        {entra:'batteo',da:'sinistra',a:.05,cammina:'cammina_c3',verso:'destra'},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'Ciao Zibe, quanto tempo...'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'sorpresa'},testo:'Batteo... che ci fai qui?'},
+        {didascalia:'(Zibe guarda il suo appartamento in disordine, sospira e fa entrare il suo vecchio amico.)',pose:{zibet:'base'}},
+        {muovi:'zibet',a:.58,cammina:'cammina',vel:95,insieme:true},{muovi:'batteo',a:.36,cammina:'cammina_c3'},{guarda:{zibet:'sinistra'}},{attesa:.4},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'Ti trovo bene, Zibe'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'Puoi risparmiarti la pietà, Batteo. Non serve che ti faccia delle remore, tira fuori la tua onestà, come sempre.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Non sei cambiato, Zibe. Hai ragione, mi scuso. Ricominciamo.'},
+        {chi:'batteo',testo:'Zibe, stai davvero una merda. Sembri uno di quei tossici che si trovano alla stazione in cerca di una dose.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'ride'},testo:'Cazzo, Batteo... è proprio vero.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Sono passati otto anni, no?'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'Dieci'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Che hai fatto in tutto questo tempo, Zibe? Dopo che il Fronte di Liberazione del Lattosio si è sciolto, intendo.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'Ho fatto il grafico. Un lavoro qua, un altro là. Ma non è andata mai davvero bene. Con tutti gli incentivi che l’impero dà alle intelligenze artificiali, gente come me ha iniziato a perdere il lavoro. Ho fatto un po’ di tutto, e ora eccomi qui.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Mi è andata meglio per un po’. Avevo trovato un buon lavoro come intrecciatore di racchette da tennis.'},
+        {didascalia:'(Zibe versa un po’ di rum in un bicchiere pulito e lo passa a Batteo.)',pose:{batteo:'base'}},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'Non ti manca il Fronte, Zibe?'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'Mi manca ogni singolo giorno. Ma non la versione del Fronte dopo l’arrivo di Iacopo.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'triste'},testo:'È stata dura, soprattutto tenere a bada Iacopo. E ancora più dura mandarlo via. A volte mi chiedo se non sia stata la scelta giusta.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'Non potevamo fare altro. Voleva trasformare il Fronte nel suo giocattolino personale. E un po’ ci è anche riuscito.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'arrabbiato'},testo:'Comunque, dopo essersene andato, portandosi via Luca di Mauro e molti membri del Fronte, quel bastardo di Iacopo è comunque riuscito a fare ciò che voleva'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'ride'},testo:'Attento alle tue parole, Batteo. Stai parlando del potentissimo e stimatissimo Imperatore dell’Impero delle Sopracciglia Gialle, il grande Imperatore Iacopo.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Non riesco a credere che Iacopo, quello sbandato che abbiamo trovato rotolante ubriaco in mezzo alla strada quella notte, sia adesso un imperatore. È ancora peggio del re che abbiamo sconfitto tredici anni fa.'},
+        {chi:'batteo',testo:'Mi chiedo... se Iacopo non fosse entrato a far parte del Fronte, cosa sarebbe successo? Saremmo riusciti a sconfiggere Luca Pisani senza di lui? Forse è stato un male necessario, forse noi non ne avremmo avuto la forza...'},
+        {posa:{batteo:'base'}},{muovi:'zibet',a:.72,cammina:'cammina',vel:95},{muovi:'zibet',a:.48,cammina:'cammina',vel:95},{muovi:'zibet',a:.6,cammina:'cammina',vel:95},{guarda:{zibet:'sinistra'}},   /* avanti e indietro, nervoso */
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Cosa stai dicendo, Batteo? Iacopo era solo un folle. E io... io mi sento estremamente responsabile per quello che è successo. Sono stato io che l’ho incontrato in quel bar quella notte. Io che l’ho invitato nel gruppo, che l’ho convinto...'},
+        {chi:'zibet',testo:'Sono sicuro che da soli ce l’avremmo fatta, Batteo. Noi eravamo forti. Tu, Alice, Mango... tutti eravamo guidati dalla voglia di giustizia. Forse ci sarebbe voluto di più, ma ce l’avremmo fatta lo stesso. E adesso non ci sarebbe un Impero peggiore di quello di Luca Pisani.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Non devi sentirti responsabile, Zibe. Tutti abbiamo accettato Iacopo. Se c’è una colpa, è condivisa. Non abbiamo saputo contenerlo.'},
+        {chi:'batteo',testo:'Se la pensi così, Zibe... perché non riprovarci?'},
+        {posa:{batteo:'base',zibet:'beve'}},{attesa:1.4},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Cosa intendi?'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Voglio dire, sono venuto qui per chiederti di tornare nel Fronte.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'Ma il Fronte non esiste più'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Un giorno ho incontrato Mango. Abbiamo parlato a lungo. E abbiamo deciso di ristabilire il Fronte per lottare contro l’Impero.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'È una enorme sciocchezza, Batteo. Una puttanata.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Perché è una cazzata, Zibe? Abbiamo ritrovato Alice. Abbiamo trovato altri che vogliono unirsi a noi. Certo, per ora siamo pochi. Ma è come all’inizio, ricordi? Eravamo solo noi quattro. È bello. È divertente. E stiamo facendo qualcosa di buono.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'arrabbiato'},testo:'Ma è una pazzia, Batteo! L’impero non è come il regno di Luca Pisani. L’impero distrugge interi pianeti! Solo l’altro giorno, hanno fatto esplodere un intero pianeta senza battere ciglio. Non puoi pensare seriamente di lottare contro di loro!'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Ma lo stiamo già facendo, Zibe. Alcuni dei membri che si sono uniti a noi provengono proprio da quei pianeti. Hanno perso tutto: il loro popolo, la loro famiglia... Ma ora hanno noi. E stiamo organizzando qualcosa di grande, Zibe. Qualcosa che potrebbe davvero fare la differenza.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'parla'},testo:'È una pazzia, Batteo. Una pura e semplice pazzia.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'triste'},testo:'Lo so, Zibe. Ma a volte, la pazzia è l’unica cosa che ci resta.'},
+        /* Zibe si siede sulla sedia accanto al tavolo, a testa bassa */
+        {posa:{batteo:'base'}},{muovi:'zibet',a:CAP9.sedia.x,cammina:'cammina',vel:90},{guarda:{zibet:'sinistra'}},{posa:{zibet:'seduto'}},{attesa:.8},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'E se ti dicessi che non siamo soli? Che ci sono altri che hanno deciso di unirsi a noi? Persino alcune persone che non ti aspetteresti... Sito, per esempio. E Chiara.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'seduto_parla'},testo:'Sito? Il generale Sito? E Chiara, la consigliera di Luca Pisani? Perché mai si unirebbero a noi?'},
+        {chi:'batteo',pose:{zibet:'seduto',batteo:'parla'},testo:'Perché anche loro vedono l’ingiustizia di questa situazione. Perché anche loro vogliono un cambiamento, vogliono un riscatto.'},
+        {chi:'batteo',pose:{batteo:'triste'},testo:'Zibe, abbiamo bisogno di te. Non possiamo farlo senza di te.'},
+        /* si alza di scatto */
+        {posa:{batteo:'base',zibet:'base'}},{effetto:'trema',forza:2,durata:.2},
+        {chi:'zibet',pose:{zibet:'arrabbiato'},testo:'Basta, Batteo! Non posso... non posso mettere in pericolo tutto ciò che mi rimane!'},
+        {guarda:{zibet:'destra'}},{posa:{zibet:'lancia'}},{attesa:.42},{livello:'vetro_zibe'},{attesa:1.1},{posa:{zibet:'base'}},
+        {musica:'silenzio'},{attesa:2},
+        {chi:'batteo',pose:{batteo:'triste'},testo:'Mi dispiace, Zibe. Davvero. È stato bello rivederti.'},
+        {posa:{batteo:'base'}},{esce:'batteo',verso:'sinistra',cammina:'cammina_c3'},{livello:'porta_click'},{attesa:.8},
+        {posa:{zibet:'piange'}},{livello:'neon_trema'},{attesa:3},
+        {effetto:'nero',durata:2.6,resta:true},
+      ]},
+      /* STRADA SOTTO CASA, pomeriggio d'agosto: dialogo in auto visto da fuori (Alice e Batteo parlano solo nel riquadro) */
+      {id:'cap09_p06',tipo:'scena',sfondo:'strada_agosto',livelli:['traffico9','auto9','calore9'],entrata:.8,azioni:[
+        {musica:'strada'},{attesa:.6},
+        {entra:'batteo',da:'sinistra',a:.56,cammina:'cammina_c3',vel:90},{livello:'svanisce_batteo'},{livello:'porta_click'},{attesa:1},
+        {chi:'alice',testo:'Dalla tua faccia non sembra essere andata bene'},
+        {chi:'alice',testo:'Non riesco a credere quanto faccia caldo oggi'},
+        {chi:'batteo',testo:'Sì, non è andata come speravo. Zibe non si è lasciato convincere.'},
+        {chi:'alice',testo:'Mi dispiace, Batteo. So quanto fosse importante per te avere Zibe con noi.'},
+        {chi:'batteo',testo:'Sì, mi manca, ma non posso obbligarlo a vedere le cose come noi. Tutto quello che possiamo fare è continuare a lottare per quello in cui crediamo.'},
+        {chi:'alice',testo:'Hai ragione, Batteo. Non possiamo forzare nessuno a unirsi a noi. Ma è ancora difficile quando le persone che ci importano scelgono di rimanere fuori.'},
+        {suono:'motore'},{livello:'motore9'},{attesa:1.2},
+        {chi:'alice',testo:'Batteo, non fare quel muso lungo. Forse c’è ancora speranza.'},
+        /* Zibe arriva di corsa con lo zaino, schivando un'auto che passa, e si ferma accanto al finestrino */
+        {livello:'auto_passa'},{entra:'zibez',da:'sinistra',a:.53,cammina:'corre',vel:230},{posa:{zibez:'base'}},{attesa:.6},
+        {chi:'zibez',pose:{zibez:'parla'},testo:'Ali'},
+        {chi:'zibez',testo:'Ehi...'},
+        {chi:'batteo',pose:{zibez:'base'},testo:'Hai dimenticato qualcosa?'},
+        {chi:'zibez',pose:{zibez:'parla'},testo:'Pensavo... pensavo che potrei salutare Mango. E passare un po’ di tempo coi miei vecchi amici. Solo per una chiacchierata, niente di più.'},
+        {chi:'alice',pose:{zibez:'base'},testo:'Solo una chiacchierata, eh? E allora perché hai portato tutto lo zaino?'},
+        {chi:'zibez',pose:{zibez:'parla'},testo:'Oh, avanti...'},
+        {chi:'batteo',pose:{zibez:'base'},testo:'Monta dietro, Zibe'},
+        {muovi:'zibez',a:.6,cammina:'cammina',vel:95},{livello:'svanisce_zibez'},{livello:'porta_click'},{attesa:.8},
+        {livello:'auto9_parte'},{suono:'gomme'},{attesa:2.8},
+        {effetto:'nero',durata:1,resta:true},
+      ]},
+      /* MONTAGGIO: la giornata dell'Imperatore (4 vignette in dissolvenza, senza dialoghi) */
+      {id:'cap09_p07',tipo:'scena',sfondo:'vig_bagno',livelli:['vig_bagno'],entrata:.8,azioni:[
+        {musica:'elegante'},{attesa:1.2},
+        {didascalia:'(Alle sei in punto, con la precisione di un orologio svizzero, l’Imperatore Iacopo apre gli occhi. Passa quindici minuti nella vasca, contemplando le venature del marmo.)'},
+        {livello:'vig_colazione'},{attesa:1.1},{togliLivello:'vig_bagno'},
+        {didascalia:'(La colazione arriva su un vassoio d’argento. L’Imperatore non toglie mai gli occhi dal giornale.)'},
+        {livello:'vig_lettura'},{attesa:1.1},{togliLivello:'vig_colazione'},
+        {didascalia:'(Dopo una giornata di riunioni, ordini e decisioni, si concede un’ora di letture in solitudine.)'},
+        {livello:'vig_meditazione'},{attesa:1.1},{togliLivello:'vig_lettura'},
+        {didascalia:'(Poi la meditazione, davanti al giardino zen. L’Imperatore Iacopo, isolato nella solitudine del suo potere.)'},
+        {attesa:1.5},{effetto:'nero',durata:1.2,resta:true},
+      ]},
+      /* PARCHEGGIO DELLO STRIP CLUB di notte: l'insegna al neon, il buttafuori davanti al portone */
+      {id:'cap09_p08',tipo:'scena',sfondo:'parcheggio_club',livelli:['insegna9','battito_lontano','auto_arriva'],entrata:.8,
+        attori:[{id:'buttafuori',x:CAP9.portone,verso:'sinistra',posa:'base'}],azioni:[
+        {musica:'strada'},{attesa:3},{livello:'porta_click'},{attesa:.3},
+        {entra:'batteo',da:'alto',a:.3,alt:0,daAlt:0,verso:'destra'},{entra:'alice',da:'alto',a:.24,alt:0,daAlt:0,verso:'destra'},{entra:'zibet',da:'alto',a:.36,alt:0,daAlt:0,verso:'destra'},{attesa:.3},
+        {muovi:'zibet',a:.44,cammina:'cammina',vel:95,insieme:true},{muovi:'batteo',a:.38,cammina:'cammina_c3',insieme:true},{muovi:'alice',a:.31,cammina:'cammina_calma'},{attesa:.4},
+        {guarda:{zibet:'sinistra'}},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Cosa... cosa stiamo facendo qui?'},
+        {chi:'alice',pose:{zibet:'base',alice:'parla'},testo:'Beh, Zibe, vedrai, qui dentro possiamo trovare... opportunità di lavoro'},
+        {chi:'batteo',pose:{alice:'base',batteo:'parla'},testo:'Sì. Dopo tutto, siamo tutti alla ricerca di un modo per guadagnare qualche soldo, no? E qui, amico mio, è uno dei posti migliori per farlo. Dico, non è esattamente la compagnia in cui avevamo sognato di lavorare, ma pagano bene. E poi... beh, diciamo che l’atmosfera di lavoro qui è... unica.'},
+        {chi:'zibet',pose:{batteo:'base',zibet:'ride'},testo:'Quindi... voi due... lavorate qui?'},
+        {chi:'alice',pose:{zibet:'base',alice:'parla'},testo:'Oh, Zibe, sei così ingenuo. Non preoccuparti, non ti chiederemo di fare il ballerino. Almeno non subito.'},
+        /* verso il portone: il buttafuori ferma Zibe */
+        {posa:{alice:'base'}},{muovi:'alice',a:.42,cammina:'cammina_calma',insieme:true},{muovi:'batteo',a:.37,cammina:'cammina_c3',insieme:true},{muovi:'zibet',a:.48,cammina:'cammina',vel:95},
+        {posa:{buttafuori:'blocca'}},{attesa:.6},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Sono con loro'},
+        {posa:{zibet:'base',alice:'annuisce',batteo:'annuisce'}},{attesa:1},
+        {posa:{buttafuori:'base'}},{muovi:'buttafuori',a:.68,cammina:'cammina',vel:80},{guarda:{buttafuori:'sinistra'}},
+        {posa:{zibet:'annuisce'}},{attesa:.7},{posa:{zibet:'base'}},   /* si spolvera la maglietta */
+        {muovi:'alice',a:CAP9.portone,cammina:'cammina_calma'},{livello:'svanisce_alice'},
+        {muovi:'batteo',a:CAP9.portone,cammina:'cammina_c3'},{livello:'svanisce_batteo'},
+        {muovi:'zibet',a:CAP9.portone,cammina:'cammina',vel:95},{livello:'svanisce_zibet'},{attesa:.4},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* DENTRO LO STRIP CLUB: Viola dietro il bancone del guardaroba, la porta segreta dietro l'attaccapanni */
+      {id:'cap09_p09',tipo:'scena',sfondo:'strip_club',oggetti:OGGETTI_CLUB9,livelli:['luci_club','attaccapanni9','battito9'],entrata:.5,
+        attori:[{id:'viola',x:CAP9.bancone.x,verso:'sinistra',posa:'base',alt:CAP9.altViola}],azioni:[
+        {musica:'club'},
+        {entra:'batteo',da:'sinistra',a:.4,cammina:'cammina_c3',insieme:true},{attesa:.5},{entra:'alice',da:'sinistra',a:.34,cammina:'cammina_calma',insieme:true},{attesa:.5},{entra:'zibet',da:'sinistra',a:.27,cammina:'cammina',vel:95},{attesa:.3},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'Viola, sei sempre un miraggio per gli occhi stanchi.'},
+        {chi:'viola',pose:{batteo:'base',viola:'accoglie'},testo:'Tesori, siete tornati!'},
+        {chi:'viola',pose:{viola:'parla'},testo:'E chi sarebbe questo bel pezzo di alpaca?'},
+        {chi:'batteo',pose:{viola:'base',batteo:'parla'},testo:'Oh, quello? È Zibe. Sì, proprio lui.'},
+        {posa:{batteo:'base',viola:'sorpresa'}},{attesa:.7},
+        {chi:'viola',pose:{viola:'parla'},testo:'Zibe? Quello Zibe di cui mi hanno tanto parlato? Oh, tesoro, sei in buona compagnia!'},
+        {chi:'batteo',pose:{viola:'base',batteo:'parla'},testo:'Abbiamo bisogno di passare, Viola'},
+        {posa:{batteo:'base',viola:'annuisce'}},{attesa:.8},{livello:'attaccapanni_sposta'},{attesa:1.6},
+        {chi:'viola',pose:{viola:'parla'},testo:'Passate, tesori'},
+        {posa:{viola:'base'}},
+        {muovi:'batteo',a:CAP9.porta,cammina:'cammina_c3'},{livello:'svanisce_batteo'},{attesa:.3},
+        {muovi:'alice',a:CAP9.porta,cammina:'cammina_calma'},{livello:'svanisce_alice'},{attesa:.3},
+        {muovi:'zibet',a:CAP9.porta,cammina:'cammina',vel:95},{livello:'svanisce_zibet'},{attesa:.3},
+        {muovi:'viola',a:CAP9.porta,alt:0,cammina:'cammina',vel:95},{livello:'svanisce_viola'},{attesa:.5},
+        {effetto:'nero',durata:.4,resta:true},
+      ]},
+      /* schermo nero: passi su una scala stretta */
+      {id:'cap09_p10',tipo:'scena',sfondo:'covo',livelli:['buio_scala'],entrata:0,azioni:[
+        {musica:'silenzio'},{attesa:1.6},
+        {chi:'zibet',testo:'Dunque, è qui che vi nascondete?'},
+        {chi:'batteo',testo:'Sì, Zibe. Lo strip club è solo una copertura. Sa di molto meno sospetto di un bunker sotterraneo, non trovi?'},
+        {livello:'porta_cigola_luce'},{attesa:1.8},
+      ]},
+      /* IL COVO SOTTERRANEO */
+      {id:'cap09_p11',tipo:'scena',sfondo:'covo',oggetti:OGGETTI_COVO9,livelli:['schermi_covo','massaggio9'],entrata:.6,
+        attori:[{id:'massimo',x:.79,verso:'destra',posa:'lavagna'},{id:'mango',x:.62,verso:'sinistra',posa:'base'}],azioni:[
+        {musica:'covo'},
+        {entra:'zibet',da:'sinistra',a:.52,cammina:'cammina',vel:95,insieme:true},{attesa:.45},{entra:'batteo',da:'sinistra',a:.46,cammina:'cammina_c3',insieme:true},{attesa:.45},
+        {entra:'alice',da:'sinistra',a:.41,cammina:'cammina_calma',insieme:true},{attesa:.45},{entra:'viola',da:'sinistra',a:.36,cammina:'cammina'},{attesa:.6},
+        /* Mango corre in braccio a Zibe */
+        {muovi:'mango',a:.565,vel:220},{coppia:'zibe_mango_abbraccio',attori:['zibet','mango'],dissolvenza:.15,verso:'sinistra'},
+        {chi:'mango',testo:'Zibe, così sei tornato con noi!'},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'Mango, Zibe non è qui per unirsi a noi. È solo passato a salutare i suoi vecchi amici.'},
+        {posa:{batteo:'base'}},{fineCoppia:true,dissolvenza:.2},{posa:{mango:'triste'}},
+        {chi:'mango',testo:'Oh... capisco'},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Mi dispiace, Mango'},
+        {chi:'mango',pose:{zibet:'base'},testo:'Va bene, Zibe. Non c’è problema.'},
+        {didascalia:'(Zibe nota tre alpaca che non ha mai visto. L’ultimo ha il pelo bianco candido e le sopracciglia gialle. A Zibe ricordano Iacopo.)',pose:{zibet:'triste',mango:'base'}},
+        {guarda:{alice:'destra'}},
+        {chi:'alice',pose:{zibet:'base',alice:'indica'},testo:'Zibe, ti presento Massimo Pericolo'},
+        {posa:{alice:'base',massimo:'base'}},{guarda:{massimo:'sinistra'}},{muovi:'massimo',a:.66,cammina:'cammina',vel:90},
+        {chi:'massimo',pose:{massimo:'parla'},testo:'Un piacere, Zibe'},
+        {guarda:{alice:'sinistra',zibet:'sinistra'}},
+        {chi:'alice',pose:{massimo:'base',alice:'indica'},testo:'Questo è Antonio Gibrondi'},
+        {chi:'antonio',pose:{alice:'base'},testo:'Benvenuto'},
+        {chi:'alice',pose:{alice:'indica'},testo:'Infine, Ettore.'},
+        /* fine del massaggio: Antonio resta in poltrona, Ettore si gira */
+        {posa:{alice:'base'}},{togliLivello:'massaggio9'},
+        {entra:'antonio',da:'alto',a:CAP9.antonioX,alt:0,daAlt:0,verso:'destra',posa:'poltrona'},{entra:'ettore',da:'alto',a:CAP9.ettoreX,alt:0,daAlt:0,verso:'sinistra',posa:'base'},
+        {chi:'ettore',pose:{ettore:'parla'},testo:'Ciao, Zibe! È un onore conoscerti!'},
+        {posa:{ettore:'base',zibet:'annuisce'}},{attesa:.8},{posa:{zibet:'base'}},
+        {chi:'alice',pose:{alice:'parla'},testo:'Ragazzi, questo è Zibe. Sì, quello Zibe.'},
+        {chi:'antonio',pose:{alice:'base',antonio:'poltrona_parla'},testo:'Zibe. Intendi… quello Zibe? Il vostro vecchio compagno, uno dei membri originali del Fronte di Liberazione?'},
+        {chi:'alice',pose:{antonio:'poltrona',alice:'annuisce'},testo:'Sì, proprio lui. È Zibe.'},
+        {guarda:{zibet:'destra'}},
+        {chi:'massimo',pose:{alice:'base',massimo:'parla'},testo:'Ai tempi del regno delle Tagliatelle al Formaggio, tu eri un eroe per me, Zibe. È un vero onore averti qui con noi.'},
+        {chi:'zibet',pose:{massimo:'base',zibet:'parla'},testo:'Non ho mai fatto nulla di speciale. Era l’unione di tutti i cuori e le menti del Fronte che hanno permesso di ottenere il risultato di sconfiggere il re Luca Pisani. Da solo, non avrei potuto fare nulla.'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'È proprio così, è perché abbiamo collaborato tutti insieme e credevamo in un sogno comune che siamo riusciti nella nostra missione.'},
+        {guarda:{zibet:'sinistra'}},
+        {chi:'ettore',pose:{batteo:'base',ettore:'parla'},testo:'E Iacopo? Che tipo di Alpaca era prima di diventare l’Imperatore?'},
+        {didascalia:'(Antonio dà una gomitata a Ettore.)',pose:{ettore:'base'}},
+        {muovi:'antonio',a:CAP9.antonioX+.012,vel:260,indietro:true},{muovi:'antonio',a:CAP9.antonioX,vel:120,indietro:true},
+        {chi:'ettore',pose:{ettore:'sorpresa'},testo:'Ahia!'},
+        {chi:'zibet',pose:{ettore:'base',zibet:'parla'},testo:'Non ti preoccupare, Ettore. Dopotutto, Iacopo è stato un tassello fondamentale del Fronte, nonostante quello che è successo.'},
+        /* Zibe va al tavolo e si siede */
+        {posa:{zibet:'base'}},{muovi:'zibet',a:CAP9.sediaCovo.x,cammina:'cammina',vel:95},{guarda:{zibet:'sinistra',massimo:'destra'}},{posa:{zibet:'seduto'}},{attesa:.6},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Iacopo era un Alpaca come tutti gli altri. Lavorava in un allevamento per la produzione di latte del regno e a un certo punto si era visto portare via tutto dalle leggi del re.'},
+        {chi:'zibet',testo:'È entrato per caso in contatto con noi. Ero stato io a convincerlo ad unirsi al Fronte.'},
+        {chi:'zibet',testo:'E me ne sento responsabile'},
+        {chi:'massimo',pose:{zibet:'seduto',massimo:'parla'},testo:'Non dovresti incolparti, Zibe. Iacopo ha scelto la strada delle tenebre, lasciandosi accecare dal potere. Non è colpa tua.'},
+        {chi:'zibet',pose:{massimo:'base',zibet:'seduto_parla'},testo:'Forse hai ragione. Ma non riesco a togliermi dalla testa l’idea che, se non gli avessi parlato quella sera in quel bar, forse adesso non ci sarebbe un impero da combattere.'},
+        {didascalia:'(Il volto di Ettore si fa serio, in netto contrasto con il suo fare sbadato di poco fa.)',pose:{zibet:'seduto'}},
+        {guarda:{ettore:'destra'}},
+        {chi:'ettore',pose:{ettore:'parla'},testo:'Se non avessi coinvolto Iacopo, forse non avreste sconfitto il re. Dopotutto, Iacopo era molto forte. Quello che davvero conta è che Iacopo è stato vostro amico e un prezioso alleato. Se devi incolparti di qualcosa, forse dovresti pensare al motivo per cui lo avete perso.'},
+        {posa:{ettore:'base'}},{attesa:2},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Hai ragione, Ettore'},
+        /* la porta si apre di scatto: Sito e Chiara */
+        {posa:{zibet:'seduto'}},{livello:'porta_scatto'},{effetto:'trema',forza:3,durata:.25},
+        {entra:'sito',da:'sinistra',a:.2,cammina:'cammina',insieme:true},{attesa:.5},{entra:'chiara',da:'sinistra',a:.1,cammina:'cammina'},
+        {guarda:{ettore:'sinistra',alice:'sinistra',batteo:'sinistra',viola:'sinistra'}},
+        {chi:'sito',pose:{sito:'indica'},testo:'Proprio tu, Ettore. Prima di parlare di forza o debolezza, e fare la morale a Zibe, dovresti parlare solo dopo che sarai riuscito a sconfiggermi in combattimento.'},
+        {posa:{sito:'base',zibet:'base'}},{attesa:.3},
+        {chi:'zibet',pose:{zibet:'ride'},testo:'Sito!'},
+        {chi:'sito',pose:{zibet:'base',sito:'parla'},testo:'Non sei cambiato, Zibe.'},
+        {chi:'chiara',pose:{sito:'base',chiara:'parla'},testo:'Zibe, che gioia rivederti.'},
+        {chi:'sito',pose:{chiara:'base',sito:'parla'},testo:'Come sono stati gli ultimi anni, Zibe?'},
+        {chi:'zibet',pose:{sito:'base',zibet:'parla'},testo:'Sono stati duri, ma ho imparato molto. Ho lavorato duramente, ho cercato di trovare il mio posto nel mondo. Ma è stato difficile, soprattutto dopo tutto quello che è successo.'},
+        {chi:'zibet',testo:'E come sta la tua famiglia, Sito?'},
+        {chi:'sito',pose:{zibet:'base',sito:'parla'},testo:'Stanno bene. Mia moglie sta bene e il mio piccolo è diventato un bel giovanotto. Non potrei essere più orgoglioso.'},
+        {chi:'zibet',pose:{sito:'base',zibet:'parla'},testo:'E tu, Chiara? Cosa hai fatto negli ultimi anni?'},
+        {chi:'chiara',pose:{zibet:'base',chiara:'parla'},testo:'Ho viaggiato, ho visitato molti posti, ho conosciuto molti alpaca. È stato un viaggio incredibile.'},
+        {posa:{chiara:'base'}},{attesa:.5},{effetto:'nero',durata:1.2,resta:true},
+      ]},
+      {id:'cap09_p12',tipo:'narratore',righe:[
+        'Quella sera Antonio sfoggiò le sue abilità in cucina e preparò la cena per tutti. Ettore tirò fuori una bottiglia di liquore, e brindarono alla loro compagnia e alla lotta per la libertà.',
+        'Per un momento, Zibe si dimenticò dell’Impero e di Iacopo. Sapeva di non essere solo.']},
+      /* STUDIO DELL'IMPERATORE al tramonto: l'Imperatore alla scrivania, Luca di Mauro ministro fa rapporto */
+      {id:'cap09_p13',tipo:'scena',sfondo:'studio_imperatore',oggetti:OGGETTI_STUDIO9,livelli:['tramonto9','schermi_studio'],entrata:.8,
+        attori:[{id:'imperatore',x:CAP9.imperatoreX,verso:'sinistra',posa:'firma'}],azioni:[
+        {musica:'elegante'},{attesa:1.2},{livello:'bussa'},{attesa:1.3},
+        {chi:'imperatore',pose:{imperatore:'seduto_parla'},testo:'Avanti'},
+        {posa:{imperatore:'firma'}},{entra:'dimauroministro',da:'sinistra',a:.42,cammina:'cammina',vel:95},
+        {chi:'dimauroministro',pose:{dimauroministro:'parla'},testo:'Sua Maestà. Mi dispiace disturbarla, ma ho un rapporto molto importante da parte dei servizi segreti.'},
+        {chi:'imperatore',pose:{dimauroministro:'base'},testo:'Vai avanti.'},
+        {chi:'dimauroministro',pose:{dimauroministro:'parla'},testo:'A quanto pare, negli ultimi tempi ci sono state delle attività sospette. Ci sono prove che suggeriscono l’esistenza di uno o più gruppi sovversivi che potrebbero minare la stabilità dell’Impero.'},
+        {chi:'imperatore',pose:{dimauroministro:'base'},testo:'La notizia non mi coglie di sorpresa. Da quando esiste il potere, ci sono sempre stati coloro che tentano di usurparlo.'},
+        {chi:'dimauroministro',pose:{dimauroministro:'parla'},testo:'Con tutto il rispetto, Sua Maestà, se ciò fosse vero, rappresenterebbe un problema serio.'},
+        {chi:'imperatore',pose:{dimauroministro:'base',imperatore:'seduto_parla'},testo:'Lo so. Ma sappiamo entrambi che quando si detiene il potere, c’è sempre qualcuno pronto a contestarlo.'},
+        {chi:'dimauroministro',pose:{imperatore:'firma',dimauroministro:'parla'},testo:'Ma il nostro Impero fa tutto per il benessere dei propri cittadini. Le nostre azioni sono motivate da nobili intenti.'},
+        {chi:'imperatore',pose:{dimauroministro:'base',imperatore:'seduto_parla'},testo:'È vero. Ma è anche vero che ogni azione provoca una reazione. Se esistono dissidenti, è perché siamo stati efficaci nel nostro operato.'},
+        {chi:'dimauroministro',pose:{imperatore:'firma',dimauroministro:'sorpresa'},testo:'Non capisco, Sua Maestà. Dovremmo punire queste persone per il bene dell’Impero.'},
+        /* l'Imperatore si alza, si versa da bere al mobiletto e torna davanti alla scrivania */
+        {posa:{dimauroministro:'base',imperatore:'base'}},{attesa:.4},{guarda:{imperatore:'destra'}},{muovi:'imperatore',a:.84,cammina:'cammina',vel:90},
+        {posa:{imperatore:'versa'}},{attesa:1.7},{posa:{imperatore:'base'}},{muovi:'imperatore',a:.53,cammina:'cammina',vel:90},{guarda:{imperatore:'sinistra'}},
+        {chi:'imperatore',pose:{imperatore:'parla'},testo:'Sì, Luca. Risponderemo a questa presunta ribellione con tutta la ferocia necessaria. Ma non dobbiamo dimenticare che questi ribelli stanno lottando per quello che credono sia il loro bene. In questo, li rispetto.'},
+        {chi:'dimauroministro',pose:{imperatore:'base',dimauroministro:'sorpresa'},testo:'Ma come può rispettare coloro che vogliono rovesciare il Suo impero, Sua Maestà?'},
+        {chi:'imperatore',pose:{dimauroministro:'base',imperatore:'parla'},testo:'Perché hanno il coraggio di lottare per quello in cui credono. A differenza di molti dei nostri cittadini, che accettano senza protestare qualsiasi cosa gli imponiamo. Ricordi cosa mi dicesti quando ero prigioniero del Fronte di Liberazione del Lattosio, in quel magazzino lurido?'},
+        {posa:{imperatore:'base',dimauroministro:'annuisce'}},{attesa:.3},{posa:{dimauroministro:'base'}},{attesa:.6},   /* scuote la testa */
+        {chi:'imperatore',pose:{imperatore:'parla'},testo:'Mi dicesti che la violenza è l’unico modo per sconfiggere la violenza. E che rimanere a guardare è stupido.'},
+        {chi:'dimauroministro',pose:{imperatore:'base',dimauroministro:'annuisce'},testo:'È vero, lo penso ancora.'},
+        {posa:{dimauroministro:'base'}},{muovi:'imperatore',a:.49,cammina:'cammina',vel:80},
+        {chi:'imperatore',pose:{imperatore:'parla'},testo:'Bene. Perché se questi ribelli pensano di poter usare la violenza per rovesciare il nostro Impero, allora useremo la violenza per difenderlo. E la nostra causa sarà ancora più legittimata.'},
+        {chi:'dimauroministro',pose:{imperatore:'base',dimauroministro:'annuisce'},testo:'Sì, Sua Maestà.'},
+        {chi:'imperatore',pose:{dimauroministro:'base',imperatore:'indica'},testo:'Continua a indagare, Luca.'},
+        {posa:{imperatore:'base'}},{esce:'dimauroministro',verso:'sinistra',cammina:'cammina',vel:95},
+        {guarda:{imperatore:'destra'}},{attesa:2},{effetto:'nero',durata:1.5,resta:true},
+      ]},
+      {id:'cap09_p14',tipo:'narratore',righe:[
+        'Zibe tornò a casa. Ma nei giorni seguenti, un inquieto fermento gli serpeggiava dentro.',
+        'E così, un giorno, decise di tornare al covo.']},
+      /* DI NUOVO ALLO STRIP CLUB */
+      {id:'cap09_p15',tipo:'scena',sfondo:'strip_club',oggetti:OGGETTI_CLUB9,livelli:['luci_club','attaccapanni9','battito9'],entrata:.5,azioni:[
+        {musica:'club'},
+        {entra:'zibet',da:'sinistra',a:.4,cammina:'cammina',vel:95},{entra:'viola',da:'destra',a:.5,cammina:'cammina'},
+        {chi:'viola',pose:{viola:'accoglie'},testo:'Zibe! Sono così contenta di vederti! Sei venuto a trovare gli altri?'},
+        {chi:'zibet',pose:{viola:'base',zibet:'parla'},testo:'Sì, beh, volevo... volevo godermi lo spettacolo'},
+        {chi:'zibet',testo:'Intendo dire, sì, sono venuto a trovare voi altri'},
+        {chi:'viola',pose:{zibet:'base',viola:'indica'},testo:'Verrò giù con te. C’è una riunione, lo sai?'},
+        {posa:{viola:'base'}},{livello:'attaccapanni_sposta'},{attesa:1.6},
+        {muovi:'viola',a:CAP9.porta,cammina:'cammina'},{livello:'svanisce_viola'},{attesa:.3},
+        {muovi:'zibet',a:CAP9.porta,cammina:'cammina',vel:95},{livello:'svanisce_zibet'},{attesa:.4},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* LA RIUNIONE NEL COVO */
+      {id:'cap09_p16',tipo:'scena',sfondo:'covo',oggetti:OGGETTI_COVO9,livelli:['schermi_covo'],entrata:.6,
+        attori:[{id:'sito',x:.43,verso:'destra'},{id:'chiara',x:.49,verso:'sinistra'},{id:'alice',x:.55,verso:'sinistra'},{id:'batteo',x:.61,verso:'sinistra'},
+          {id:'mango',x:.665,verso:'sinistra'},{id:'massimo',x:.72,verso:'sinistra'},{id:'antonio',x:.79,verso:'sinistra'},{id:'ettore',x:.865,verso:'sinistra'}],azioni:[
+        {musica:'covo'},
+        {entra:'viola',da:'sinistra',a:.3,cammina:'cammina',insieme:true},{attesa:.5},{entra:'zibet',da:'sinistra',a:.07,cammina:'cammina',vel:95},
+        {chi:'zibet',pose:{zibet:'parla'},testo:'Sono solo passato per salutare'},
+        {chi:'batteo',pose:{zibet:'base',batteo:'parla'},testo:'Il carico di armi è arrivato'},
+        {chi:'alice',pose:{batteo:'base',alice:'parla'},testo:'Da dove le hai prese, Batteo?'},
+        {chi:'batteo',pose:{alice:'base',batteo:'parla'},testo:'Un vecchio amico, Baumizio, mi ha aiutato. Mi ha fatto un buon prezzo, in onore dei vecchi tempi.'},
+        {guarda:{sito:'destra'}},
+        {chi:'sito',pose:{batteo:'base',sito:'arrabbiato'},testo:'Baumizio? Non mi fido di lui. Perché ci avrebbe aiutato?'},
+        {chi:'batteo',pose:{sito:'base',batteo:'parla'},testo:'Non ci ha aiutato per generosità, ci ha solo fatto un prezzo ‘da amici’.'},
+        {chi:'chiara',pose:{batteo:'base',chiara:'parla'},testo:'Batteo, non dubito delle tue intenzioni, ma sai bene che abbiamo poco margine di errore. Questa operazione deve funzionare al primo tentativo.'},
+        {chi:'alice',pose:{chiara:'base',alice:'annuisce'},testo:'Sono d’accordo. Non possiamo rischiare di fare errori, specialmente se ci si mette di mezzo Baumizio. Dobbiamo essere sicuri che queste armi siano affidabili.'},
+        {chi:'batteo',pose:{alice:'base',batteo:'parla'},testo:'Ho controllato personalmente ogni singolo pezzo. Posso assicurarvi che non ci daranno problemi.'},
+        {chi:'mango',pose:{batteo:'base'},testo:'Sappiamo cosa rischiamo. Ma sappiamo anche cosa possiamo guadagnare. Non dobbiamo permettere all’Impero di continuare a opprimere la gente. Questa operazione potrebbe essere il nostro primo passo verso la libertà.'},
+        {chi:'viola',pose:{viola:'annuisce'},testo:'Ha ragione Mango. Non è il momento di avere dubbi. Dobbiamo essere uniti e concentrati. L’Impero non si aspetta un attacco da parte nostra. Dobbiamo sfruttare questo vantaggio.'},
+        /* Chiara si avvicina a Zibe */
+        {posa:{viola:'base'}},{muovi:'chiara',a:.16,cammina:'cammina'},{guarda:{chiara:'sinistra',zibet:'destra'}},
+        {chi:'chiara',pose:{chiara:'parla'},testo:'Non preoccuparti. So che può sembrare tutto troppo, ma siamo pronti. Abbiamo passato notti insonni a prepararci per questo.'},
+        {posa:{chiara:'base'}},{attesa:.5},{effetto:'nero',durata:1.2,resta:true},
+      ]},
+      {id:'cap09_p17',tipo:'narratore',righe:[
+        'Nei giorni successivi, il covo fu pervaso da un’atmosfera frenetica. Studiavano le rotte spaziali, i dettagli del convoglio imperiale, ogni possibile contingenza.',
+        'Zibe tornava quasi ogni giorno. Si sedeva sul divano e osservava.']},
+      /* IL DIVANO: Sito porta due birre a Zibe e lo convince */
+      {id:'cap09_p18',tipo:'scena',sfondo:'covo',oggetti:OGGETTI_COVO9,livelli:['schermi_covo','discussione9'],entrata:.6,
+        attori:[{id:'zibet',x:CAP9.divanoSx,verso:'destra',posa:'seduto'},{id:'viola',x:.47,verso:'destra'},{id:'chiara',x:.53,verso:'destra'},{id:'alice',x:.59,verso:'sinistra'},
+          {id:'sito',x:.645,verso:'sinistra'},{id:'batteo',x:.7,verso:'sinistra'},{id:'massimo',x:.76,verso:'sinistra'},{id:'antonio',x:.82,verso:'sinistra'},{id:'ettore',x:.885,verso:'sinistra'}],azioni:[
+        {musica:'covo'},{attesa:2},
+        {guarda:{sito:'sinistra'}},{posa:{sito:'birra'}},{muovi:'sito',a:CAP9.divanoDx,cammina:'birra',vel:90},{posa:{sito:'birra_ferma'}},
+        {chi:'sito',testo:'Birra?'},
+        {posa:{zibet:'seduto_parla'}},{attesa:.6},{posa:{zibet:'seduto',sito:'seduto'}},{attesa:.6},
+        {didascalia:'(Rimangono in silenzio, sorseggiando le birre. Un silenzio pieno di cose non dette.)'},
+        {chi:'sito',testo:'Zibe, non ti manca tutto questo?'},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Non molto'},
+        {chi:'sito',pose:{zibet:'seduto'},testo:'Sei qui quasi tutti i giorni. Se non ti manca, perché torni?'},
+        {chi:'sito',testo:'Ho bisogno del tuo aiuto, Zibe'},
+        {chi:'sito',testo:'C’è una missione in programma tra due giorni. Niente di troppo complicato, solo un incontro con una cellula sovversiva su un pianeta vicino. Vorrei che tu venissi con me.'},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Non faccio più queste cose, Sito.'},
+        {chi:'sito',pose:{zibet:'seduto'},testo:'E cosa stai facendo della tua vita, Zibe? Non stai facendo niente per migliorare questo universo.'},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Ho dato fiducia a Iacopo, e questo universo è stato gettato in una nuova era di oscurità a causa di quel gesto'},
+        {chi:'sito',pose:{zibet:'seduto'},testo:'Non è stata colpa tua. E pensa a me, ero il braccio destro di re Luca Pisani, ho combattuto contro tutti voi, quasi vi ho uccisi.'},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Non posso credere che sia proprio tu a chiedermi di fare una cosa del genere. I tempi sono davvero cambiati.'},
+        {chi:'sito',pose:{zibet:'seduto'},testo:'Sì, sono cambiati. E abbiamo bisogno di te, Zibe.'},
+        {chi:'sito',testo:'Quindi, che ne pensi?'},
+        {attesa:2},
+        {chi:'zibet',pose:{zibet:'seduto_parla'},testo:'Va bene. Ma solo per questa volta.'},
+        {posa:{zibet:'seduto'}},{coppia:'sito_zibe_brindisi',attori:['zibet','sito'],dissolvenza:.2,verso:'sinistra'},
+        {chi:'sito',testo:'Allora è deciso'},
+        {fineCoppia:true,dissolvenza:.2},{posa:{sito:'base'}},{guarda:{sito:'destra'}},{muovi:'sito',a:.645,cammina:'cammina'},{guarda:{sito:'sinistra'}},
+        {attesa:1.5},{effetto:'nero',durata:1.5,resta:true},
+      ]},
+      /* cap09_p19 FINE CAPITOLO: salvataggio automatico e "Il capitolo 10 arriverà presto" li fa il motore (nessuno sblocco in questo capitolo) */
     ]},
   ],
 };
@@ -5854,7 +6328,8 @@ function salvaStoria(capId,passoId){let p=leggiProgressi()||{v:STORIA_V,cap:capI
   if(posizione(capId,passoId)>=posizione(p.cap,p.passo)){p.cap=capId;p.passo=passoId;}   /* non torna mai indietro */
   scriviProgressi(p);}
 function capRaggiunto(id,p){if(capIdx(id)===0)return true; /* il primo capitolo è sempre aperto */
-  p=p||leggiProgressi();if(!p)return false;return p.raggiunti.includes(id)||capIdx(id)<=capIdx(p.cap);}
+  p=p||leggiProgressi();if(!p)return false;const prima=STORIA.capitoli[capIdx(id)-1];   /* si apre anche quando il capitolo prima è completato */
+  return p.raggiunti.includes(id)||capIdx(id)<=capIdx(p.cap)||!!(prima&&(p.finiti||[]).includes(prima.id));}
 
 /* stato della storia in corso */
 const ST={run:null,auto:false,track:null};
@@ -5869,7 +6344,8 @@ function aggiornaMenuStoria(){const vuota=!STORIA.capitoli.length;
   if(p){const c=capById(p.cap);inf.textContent='Capitolo '+(c.numero??capIdx(c.id)+1)+' \u00b7 '+c.titolo;}else inf.textContent='';
   document.getElementById('st-nosave').hidden=STORE.ok;}
 function elencoCapitoli(){const list=document.getElementById('st-list'),p=leggiProgressi();list.innerHTML='';
-  STORIA.capitoli.forEach((c,i)=>{const ok=capRaggiunto(c.id,p),b=document.createElement('button');
+  STORIA.capitoli.forEach((c,i)=>{if(c.atto){const h=document.createElement('div');h.className='st-atto';h.textContent=c.atto;list.appendChild(h);}   /* titolo dell'atto sopra il suo primo capitolo */
+    const ok=capRaggiunto(c.id,p),b=document.createElement('button');
     b.className='btn-secondario st-cap'+(ok?'':' locked')+(p&&p.cap===c.id?' cur':'');
     b.innerHTML='<span class="n">'+(c.numero??i+1)+'</span><span class="t"></span>'+(ok?'':'<span class="lk"></span>');
     b.querySelector('.t').textContent=ok?c.titolo:'???';
@@ -5900,6 +6376,131 @@ const _avvisati=new Set();
 function avviso(msg){if(_avvisati.has(msg))return;_avvisati.add(msg);console.warn('[STORIA] '+msg);}
 /* ANIMAZIONI dei passi "animazione" (si aggiungono qui, capitolo per capitolo): draw(ctx, t secondi, larghezza, altezza, dati) */
 const ANIMAZIONI={
+  /* ==================== capitolo 9 – Il Fronte rinasce ==================== */
+  /* VIGNETTE a tutto schermo (sopra tutto). La propaganda: grana da vecchia pellicola, titolo televisivo in alto, riquadro CENSURATO */
+  vig_propaganda:{sopra:true,draw(c,t,w,h,d){const V=_vignetta(c,t,w,h,'vig_propaganda',{fx:.47,fy:.42,durata:12});if(!V)return;const R=V.R;
+    c.save();c.beginPath();c.rect(R.x,R.y,R.w,R.h);c.clip();
+    c.globalAlpha=V.a*(.05+.04*Math.sin(t*23));c.fillStyle='#fff6d0';c.fillRect(R.x,R.y,R.w,R.h);   /* pellicola che tremola */
+    c.globalAlpha=V.a;for(let i=0;i<70;i++){const k=Math.floor(t*12),u=sr(i*7+k),v=sr(i*13+k*3);c.fillStyle=i%3?'rgba(255,250,230,.35)':'rgba(20,10,0,.4)';c.fillRect(R.x+u*R.w,R.y+v*R.h,1.5,1.5);}
+    if(sr(Math.floor(t*6))>.6){const x=R.x+sr(Math.floor(t*6)+9)*R.w;c.fillStyle='rgba(255,255,240,.25)';c.fillRect(x,R.y,1,R.h);}   /* graffio verticale */
+    c.restore();_censura(c,V,V.a);
+    const ta=Math.max(0,Math.min(1,(t-.7)/.8))*V.a;if(ta>0){c.save();c.globalAlpha=ta;const fs=Math.max(8,R.h*.052),x=R.x+R.w*.025,y=R.y+R.h*.035,righe=['L’ascesa della luce','sulle tenebre'];   /* titolo televisivo in alto a sinistra (lontano dalle mani alzate e dai pulsanti) */
+      c.font='bold '+fs+'px "Pixelify Sans", monospace';c.textAlign='left';c.textBaseline='top';const tw=Math.max(...righe.map(r=>c.measureText(r).width));
+      c.fillStyle='rgba(10,8,30,.72)';c.fillRect(x-6,y-4,tw+12,fs*2.3+8);c.fillStyle='#FFD54A';c.fillRect(x-6,y+fs*2.3+4,tw+12,2);
+      righe.forEach((r,i)=>{c.fillStyle='#000';c.fillText(r,x+1.2,y+i*fs*1.15+1.2);c.fillStyle='#FFF4C8';c.fillText(r,x,y+i*fs*1.15);});c.restore();}}},
+
+  /* la giornata dell'Imperatore: ogni vignetta entra in dissolvenza sopra la precedente */
+  vig_bagno:{sopra:true,draw(c,t,w,h,d){_vignetta(c,t,w,h,'vig_bagno',{fx:.55,fy:.45,durata:9});}},
+  vig_colazione:{sopra:true,draw(c,t,w,h,d){_vignetta(c,t,w,h,'vig_colazione',{fx:.42,fy:.55,durata:9});}},
+  vig_lettura:{sopra:true,draw(c,t,w,h,d){_vignetta(c,t,w,h,'vig_lettura',{fx:.45,fy:.5,durata:9});}},
+  vig_meditazione:{sopra:true,draw(c,t,w,h,d){_vignetta(c,t,w,h,'vig_meditazione',{fx:.5,fy:.5,durata:9});}},
+  /* APPARTAMENTO DI ZIBE. La vignetta della propaganda si restringe dentro lo schermo della TV, poi la TV trasmette in piccolo
+     (tremolio e righe orizzontali); con il livello "tv_spegni" lo schermo si spegne (si schiaccia in una riga, poi in un punto) */
+  tv_zibe:{sopra:true,draw(c,t,w,h,d){const S=_schermoTV(),B=sfondoScena('vig_propaganda'),im=B&&B.im;if(!S||!imgOk(im))return;
+    const off=SC.livelli.find(L=>L.n==='tv_spegni'),iw=im.naturalWidth,ih=im.naturalHeight;
+    const k=Math.min(1,t/1.4),e=k*k*(3-2*k);
+    if(k<1){const R0=_vigRett(w,h),z=1+.04*(1-e),sw=iw/z,sh=ih/z,sx=Math.max(0,Math.min(iw-sw,.47*iw-sw/2)),sy=Math.max(0,Math.min(ih-sh,.42*ih-sh/2));
+      const r={x:R0.x+(S.x-R0.x)*e,y:R0.y+(S.y-R0.y)*e,w:R0.w+(S.w-R0.w)*e,h:R0.h+(S.h-R0.h)*e};
+      c.save();c.globalAlpha=1-e;c.fillStyle='#07060c';c.fillRect(-30,-30,w+60,h+60);c.globalAlpha=1;c.imageSmoothingEnabled=false;c.drawImage(im,sx,sy,sw,sh,r.x,r.y,r.w,r.h);c.restore();_vigBox();return;}
+    const ts=off?off.t:-1;if(ts>=0)_suono9(d,SUONI9.tv_click);
+    c.save();c.beginPath();c.rect(S.x,S.y,S.w,S.h);c.clip();c.fillStyle='#0b0d0f';c.fillRect(S.x,S.y,S.w,S.h);
+    if(ts<0||ts<.45){let sx=1,sy=1;if(ts>=0){sy=Math.max(.04,1-ts/.25);sx=ts>.25?Math.max(.03,1-(ts-.25)/.2):1;}
+      const jx=Math.sin(t*37)*.4,dw=S.w*sx,dh=S.h*sy,x=S.x+(S.w-dw)/2+jx,y=S.y+(S.h-dh)/2;
+      if(ts>=0&&ts>.2){c.fillStyle='#f4f8ff';c.fillRect(x,y,dw,Math.max(1,dh));}
+      else{c.imageSmoothingEnabled=true;c.globalAlpha=.88+.12*Math.sin(t*29);c.drawImage(im,x,y,dw,dh);c.globalAlpha=1;
+        const V={map:(u,v)=>[x+u*dw,y+v*dh]};_censura(c,V,1);
+        for(let yy=S.y;yy<S.y+S.h;yy+=1.6){c.fillStyle='rgba(0,0,0,.22)';c.fillRect(S.x,yy,S.w,.7);}   /* righe orizzontali */
+        const rb=(t*14)%(S.h+10)-5;c.fillStyle='rgba(255,255,255,.08)';c.fillRect(S.x,S.y+rb,S.w,4);}}
+    else if(ts<.8){const a=1-(ts-.45)/.35;c.fillStyle='rgba(230,240,255,'+a+')';c.beginPath();c.arc(S.x+S.w/2,S.y+S.h/2,1.6,0,7);c.fill();}
+    c.fillStyle='rgba(255,255,255,.06)';c.beginPath();c.ellipse(S.x+S.w*.3,S.y+S.h*.25,S.w*.25,S.h*.12,-.4,0,7);c.fill();c.restore();   /* riflesso sul vetro */
+    if(ts<0){c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(S.x+S.w/2,S.y+S.h/2,4,S.x+S.w/2,S.y+S.h/2,150);
+      g.addColorStop(0,'rgba(140,170,255,'+(.16+.05*Math.sin(t*17))+')');g.addColorStop(1,'rgba(140,170,255,0)');c.fillStyle=g;c.fillRect(S.x-160,S.y-160,S.w+320,S.h+320);c.restore();}}},
+  tv_spegni:{draw(){}},   /* (segnale per tv_zibe) */
+  /* penombra dell'appartamento e vecchio neon che ogni tanto tremola (con "neon_trema" tremola molto di più) */
+  penombra_zibe:{sopra:true,draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},forte=SC.livelli.some(L=>L.n==='neon_trema'),ph=t%(forte?1.1:6.3);
+    const spento=forte?(ph<.09||(ph>.2&&ph<.26)||(ph>.5&&ph<.62)||(ph>.8&&ph<.84)):((ph>4.1&&ph<4.17)||(ph>4.29&&ph<4.34)||(ph>5.2&&ph<5.24));
+    c.fillStyle='rgba(8,6,18,'+(spento?.5:.3)+')';c.fillRect(-30,-30,w+60,h+60);
+    if(!spento){const x=b.x+b.w*CAP9.neon.u,y=b.y+b.h*CAP9.neon.v;c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,4,x,y,190);
+      g.addColorStop(0,'rgba(255,120,150,.22)');g.addColorStop(1,'rgba(255,120,150,0)');c.fillStyle=g;c.fillRect(x-200,y-200,400,400);c.restore();}}},
+  neon_trema:{draw(){}},
+  /* il bicchiere che Zibe lancia: schegge che volano e cadono a terra (e restano a brillare) */
+  vetro_zibe:{sopra:true,draw(c,t,w,h,d){_suono9(d,SUONI9.vetro);if(!d.o){const z=SC.attori.zibet;d.o={x:z?z.x+z.face*78:w*.7,y:SCENA_SUOLO-104};}
+    for(let i=0;i<18;i++){const vx=(sr(i)-.35)*150,vy=-60-sr(i+40)*90,g=420,fl=SCENA_SUOLO+2+sr(i+80)*10;let x=d.o.x+vx*t,y=d.o.y+vy*t+g*t*t/2;
+      if(y>fl){const tf=(-vy+Math.sqrt(vy*vy+2*g*(fl-d.o.y)))/g;x=d.o.x+vx*tf+vx*.15*Math.min(.3,t-tf);y=fl;}
+      const lu=.55+.45*Math.sin(t*9+i*2);c.fillStyle='rgba(225,240,255,'+lu+')';c.save();c.translate(x,y);c.rotate(i+t*(y<fl?9:0));c.fillRect(-1.6,-.8,3.2,1.6);c.restore();}}},
+  /* suoni */
+  campanello:{draw(c,t,w,h,d){_suono9(d,SUONI9.campanello);}},
+  bussa:{draw(c,t,w,h,d){_suono9(d,SUONI9.bussa);}},
+  porta_click:{draw(c,t,w,h,d){_suono9(d,SUONI9.porta_click);}},
+  cigolio:{draw(c,t,w,h,d){_suono9(d,SUONI9.cigolio);}},
+  porta_scatto:{draw(c,t,w,h,d){_suono9(d,SUONI9.porta_scatto);}},
+  /* STRADA D'AGOSTO: aria calda che ondeggia nella parte bassa, luce calda */
+  calore9:{sopra:true,draw(c,t,w,h,d){const cv=c.canvas,W2=cv.width,H2=cv.height,y0=Math.floor(H2*.5),hh=H2-y0;if(!d.tmp)d.tmp=document.createElement('canvas');
+    if(d.tmp.width!==W2||d.tmp.height!==hh){d.tmp.width=W2;d.tmp.height=hh;}const g=d.tmp.getContext('2d');g.clearRect(0,0,W2,hh);g.drawImage(cv,0,y0,W2,hh,0,0,W2,hh);
+    c.save();c.setTransform(1,0,0,1,0,0);const st=Math.max(2,Math.round(H2/250));for(let y=0;y<hh;y+=st){const k=y/hh,off=Math.sin(y*.11+t*4.2)*1.6*k*(W2/1600);if(Math.abs(off)<.2)continue;c.drawImage(d.tmp,0,y,W2,st,off,y0+y,W2,st);}
+    c.restore();c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,170,70,.05)';c.fillRect(-30,-30,w+60,h+60);c.restore();}},
+  /* auto che passano sulla corsia lontana (ogni tanto, alternando la direzione); "auto_passa" = ne passa una subito, veloce */
+  traffico9:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},y=b.y+b.h*CAP9.traffico.v,s=CAP9.traffico.scala;
+    for(const [per,fase,dir,vel] of [[7.5,1.5,-1,330],[9.5,5,1,290]]){const q=(t+fase)%per,x=dir>0?-120+q*vel:w+120-q*vel;if(x>-150&&x<w+150)_autoLontana(c,x,y,s,dir);}
+    const P=SC.livelli.find(L=>L.n==='auto_passa');if(P&&P.t<3)_autoLontana(c,w+130-P.t*520,y+6,s*1.05,-1);}},
+  auto_passa:{draw(c,t,w,h,d){if(t<.1)_suono9(d,()=>{beep(140,.6,'sawtooth',.03,-60);noise(.5,.02);});}},
+  /* l'auto dei ribelli parcheggiata (girata verso destra); "motore9" = acceso (vibra e fuma), "auto9_parte" = parte ed esce a destra */
+  auto9:{draw(c,t,w,h,d){const A=immagineOggetto('auto_ribelli');if(!imgOk(A.im)||A.base==null)return;const P=CAP9.auto,s=P.scala;
+    const on=SC.livelli.find(L=>L.n==='motore9'),go=SC.livelli.find(L=>L.n==='auto9_parte');let x=w*P.x,y=SCENA_SUOLO+P.dy;
+    if(go){x+=40*go.t*go.t+30*go.t;}if(on||go)y+=Math.sin(t*55)*.6;
+    if(on||go)for(let i=0;i<5;i++){const ph=(t*1.4+i/5)%1;c.globalAlpha=.3*(1-ph);c.fillStyle='#d8d4cc';c.beginPath();c.arc(x-A.cx*s-4-ph*40,y-12-ph*14,3+ph*10,0,7);c.fill();}
+    c.globalAlpha=1;c.drawImage(A.im,x-A.cx*s,y-A.base*s,A.im.naturalWidth*s,A.im.naturalHeight*s);}},
+  motore9:{draw(){}},auto9_parte:{draw(){}},
+  /* PARCHEGGIO DELLO STRIP CLUB: l'insegna al neon rosa "The Horny Alpaca" sul cartello vuoto, con lo sfarfallio; dentro la musica pulsa ovattata */
+  insegna9:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},I=CAP9.insegna,x0=b.x+b.w*I.u0,x1=b.x+b.w*I.u1,y0=b.y+b.h*I.v0,y1=b.y+b.h*I.v1,cx=(x0+x1)/2,cy=(y0+y1)/2;
+    const fs=(y1-y0)*.42,parti=[['The ',0],['Horny',1],[' Alpaca',2]];c.save();c.font='bold '+fs+'px "Pixelify Sans", monospace';c.textBaseline='middle';
+    const tot=parti.reduce((a,[s])=>a+c.measureText(s).width,0);let x=cx-tot/2;
+    for(const [s,i] of parti){const fl=i===1?(sr(Math.floor(t*9))>.86?.25:1):(i===2&&(t%5.3)>5.05?.35:1);
+      c.shadowColor='rgba(255,70,190,'+(.9*fl)+')';c.shadowBlur=12*fl;c.fillStyle=fl<1?'rgba(150,60,120,.8)':'#FFC2EC';c.fillText(s,x,cy);c.shadowBlur=0;
+      if(fl===1){c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,60,180,.25)';c.fillText(s,x,cy);c.globalCompositeOperation='source-over';}
+      x+=c.measureText(s).width;}
+    c.globalCompositeOperation='lighter';const g=c.createRadialGradient(cx,cy,10,cx,cy,(x1-x0)*.9);g.addColorStop(0,'rgba(255,60,170,.14)');g.addColorStop(1,'rgba(255,60,170,0)');c.fillStyle=g;c.fillRect(cx-(x1-x0),cy-(x1-x0),(x1-x0)*2,(x1-x0)*2);c.restore();}},
+  /* musica ovattata: un battito basso (120 al minuto); "battito_lontano" = da fuori, più piano */
+  battito9:{draw(c,t,w,h,d){const k=Math.floor(t/.5);if(d.k!==k){d.k=k;try{SUONI9.battito();}catch(e){}}const k2=Math.floor((t+.25)/.5);if(d.k2!==k2){d.k2=k2;try{SUONI9.piatto();}catch(e){}}}},
+  battito_lontano:{draw(c,t,w,h,d){const k=Math.floor(t/.5);if(d.k!==k){d.k=k;try{beep(48,.12,'sine',.05,-12);}catch(e){}}}},
+  /* DENTRO LO STRIP CLUB: bagliori colorati che passano sui muri e scintille delle palle da discoteca */
+  luci_club:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h},yb=b.y+b.h*.59;c.save();c.globalCompositeOperation='lighter';
+    [['255,60,200',.7,0],['80,200,255',.5,2.1],['255,210,90',.9,4.2],['170,90,255',.6,1.3]].forEach(([col,v,f],i)=>{const x=w*(.5+.48*Math.sin(t*v+f)),y=yb-120+Math.sin(t*v*1.7+f)*60;
+      const g=c.createRadialGradient(x,y,6,x,y,120);g.addColorStop(0,'rgba('+col+',.2)');g.addColorStop(1,'rgba('+col+',0)');c.fillStyle=g;c.fillRect(x-130,y-130,260,260);});
+    for(let i=0;i<26;i++){const u=sr(i*3+Math.floor(t*3)),v=sr(i*5+1);c.fillStyle='rgba(255,255,255,'+(.4*sr(i+Math.floor(t*8)))+')';c.fillRect(w*u,b.y+b.h*.05+v*(yb-b.y-b.h*.05),2,2);}c.restore();}},
+  /* l'attaccapanni davanti alla porta segreta; con "attaccapanni_sposta" scivola a sinistra e scopre la porta */
+  attaccapanni9:{draw(c,t,w,h,d){const P=CAP9.attaccapanni,S=SC.livelli.find(L=>L.n==='attaccapanni_sposta');let x=w*P.x;
+    if(S){const k=Math.min(1,S.t/1.4);x-=P.sposta*k*k*(3-2*k);}_oggetto(c,'attaccapanni',x,SCENA_SUOLO+P.dy,P.scala,false);}},
+  attaccapanni_sposta:{draw(c,t,w,h,d){_suono9(d,SUONI9.rotelle);}},
+  /* SCALA AL BUIO (schermo nero, passi su una scala stretta); con "porta_cigola_luce" una porta si apre e passa una lama di luce */
+  buio_scala:{sopra:true,draw(c,t,w,h,d){c.fillStyle='#000';c.fillRect(-30,-30,w+60,h+60);const k=Math.floor(t/.42);if(d.k!==k&&!SC.livelli.some(L=>L.n==='porta_cigola_luce')){d.k=k;try{SUONI9.passo();}catch(e){}}
+    const L=SC.livelli.find(L=>L.n==='porta_cigola_luce');if(L){_suono9(d,SUONI9.cigolio);const a=Math.min(1,L.t/1.2),lw=4+a*60;const g=c.createLinearGradient(w/2-lw,0,w/2+lw,0);
+      g.addColorStop(0,'rgba(255,190,120,0)');g.addColorStop(.5,'rgba(255,200,130,'+(.55*a)+')');g.addColorStop(1,'rgba(255,190,120,0)');c.fillStyle=g;c.fillRect(w/2-lw,h*.12,lw*2,h*.6);}}},
+  porta_cigola_luce:{draw(){}},
+  /* IL COVO: i monitor dell'angolo cucina con righe di dati che scorrono */
+  schermi_covo:{draw(c,t,w,h,d){const b=d.bg||{x:0,y:0,w,h};c.save();
+    CAP9.schermiCovo.forEach(([u0,v0,u1,v1],i)=>{const x=b.x+b.w*u0,y=b.y+b.h*v0,sw=b.w*(u1-u0),sh=b.h*(v1-v0);c.save();c.beginPath();c.rect(x,y,sw,sh);c.clip();
+      c.fillStyle='rgba(20,60,40,.55)';c.fillRect(x,y,sw,sh);for(let r=0;r<12;r++){const yy=y+((r*4-t*9*(1+i*.3))%(sh+8)+sh+8)%(sh+8)-4,l=sw*(.3+.6*sr(r+i*20+Math.floor(t*2+r)));
+        c.fillStyle=r%4?'rgba(120,255,170,.7)':'rgba(255,230,120,.75)';c.fillRect(x+2,yy,l-3,1.3);}
+      c.fillStyle='rgba(200,255,220,'+(.06+.05*Math.sin(t*13+i))+')';c.fillRect(x,y,sw,sh);c.restore();});c.restore();}},
+  /* il massaggio (Ettore dietro Antonio in poltrona): disegnato come effetto, perché nello stesso momento c'è l'abbraccio di Zibe e Mango */
+  massaggio9:{sopra:true,draw(c,t,w,h,d){const n=12,f=Math.floor(t*8)%(n*2-2),fi=f<n?f:n*2-2-f;
+    _fotogramma(c,'../coppie/ettore_antonio_massaggio',fi,{x:w*CAP9.poltrona.x+CAP9.massaggioDx,y:SCENA_SUOLO+CAP9.massaggioDy,ax:112,ay:150,sc:1.36,fw:224,fh:160});}},
+  /* il covo, giorni dopo: gli altri discutono intorno al tavolo, a turno (senza riquadro) */
+  discussione9:{draw(c,t,w,h,d){const ids=['chiara','alice','batteo','massimo','antonio','ettore','viola'].filter(id=>SC.attori[id]),k=Math.floor(t/2.3);if(d.k===k||!ids.length)return;d.k=k;
+    ids.forEach((id,i)=>{const o=SC.attori[id];const p=(i===k%ids.length||i===(k+3)%ids.length)?'parla':'base';if(o.posa!==p){o.posa=p;o.t=0;}});}},
+  /* STUDIO DELL'IMPERATORE: luce dorata del tramonto e monitor di sorveglianza accesi sulla scrivania */
+  tramonto9:{sopra:true,draw(c,t,w,h,d){c.save();c.globalCompositeOperation='lighter';const g=c.createLinearGradient(0,0,w*.3,h);g.addColorStop(0,'rgba(255,170,70,.14)');g.addColorStop(1,'rgba(255,140,40,.03)');
+    c.fillStyle=g;c.fillRect(-30,-30,w+60,h+60);c.restore();}},
+  schermi_studio:{sopra:true,draw(c,t,w,h,d){const o=(SC.oggetti||[]).find(q=>q.img==='scrivania_imperiale');if(!o||!imgOk(o.I.im)||o.I.base==null)return;const s=o.scala||1,l=o.x-o.I.cx*s,tp=SCENA_SUOLO+(o.dy||0)-o.I.base*s;
+    c.save();CAP9.monitor.forEach(([x,y,mw,mh],i)=>{const X=l+x*s,Y=tp+y*s,MW=mw*s,MH=mh*s;c.save();c.beginPath();c.rect(X,Y,MW,MH);c.clip();
+      for(let r=0;r<8;r++){const yy=Y+((r*3-t*7*(1+i*.2))%(MH+4)+MH+4)%(MH+4)-2;c.fillStyle=(r+i)%3?'rgba(170,255,210,.75)':'rgba(255,240,150,.8)';c.fillRect(X,yy,MW*(.4+.6*sr(r+i*9+Math.floor(t*1.5))),1);}
+      c.fillStyle='rgba(200,255,230,'+(.12+.08*Math.sin(t*11+i*2))+')';c.fillRect(X,Y,MW,MH);c.restore();});
+    c.globalCompositeOperation='lighter';const x=l+50*s,y=tp+18*s,g=c.createRadialGradient(x,y,3,x,y,70);g.addColorStop(0,'rgba(120,255,200,.12)');g.addColorStop(1,'rgba(120,255,200,0)');c.fillStyle=g;c.fillRect(x-80,y-80,160,160);c.restore();}},
+  /* attori che entrano in una porta o salgono in auto: l'ultimo fotogramma svanisce */
+  svanisce_batteo:{draw(c,t,w,h,d){_svanisci9(c,t,d,'batteo');}},svanisce_zibez:{draw(c,t,w,h,d){_svanisci9(c,t,d,'zibez');}},
+  svanisce_zibet:{draw(c,t,w,h,d){_svanisci9(c,t,d,'zibet');}},svanisce_alice:{draw(c,t,w,h,d){_svanisci9(c,t,d,'alice');}},
+  svanisce_viola:{draw(c,t,w,h,d){_svanisci9(c,t,d,'viola');}},
   /* ==================== capitolo 8 – La caduta del re ==================== */
   /* soppalco in penombra (prima dei riflettori): si schiarisce quando i riflettori si accendono */
   penombra:{sopra:true,draw(c,t,w,h,d){const R=SC.livelli.find(L=>L.n==='riflettori'),a=R?Math.max(0,.62-R.t*.3):.62;if(a<=0)return;
