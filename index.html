@@ -822,6 +822,8 @@
   .sq-card { position:relative; width:min(26vw,130px); min-height:auto !important; padding:8px 6px !important; display:flex; flex-direction:column; align-items:center; gap:6px; }
   .sq-card canvas { width:min(16vh,80px); height:min(16vh,80px); image-rendering:pixelated; border-radius:8px; background:rgba(20,18,50,.9); }
   .sq-card span { font-size:14px; letter-spacing:.04em; }
+.sq-card.svenuto { filter:grayscale(1); opacity:.55; cursor:default; }
+  .sq-card.svenuto::after { content:'SVENUTO'; position:absolute; top:-9px; left:50%; transform:translateX(-50%); padding:1px 6px; border-radius:6px; background:#777; color:#111; font-size:10px; white-space:nowrap; }
   .sq-card.last { box-shadow:0 0 0 2px var(--oro), 0 0 14px rgba(255,193,7,.5); }
   .sq-card.last::after { content:'ULTIMA SCELTA'; position:absolute; top:-9px; left:50%; transform:translateX(-50%); padding:1px 6px; border-radius:6px; background:var(--oro); color:#1a1205; font-size:10px; white-space:nowrap; }
   .sp-row { display:flex; align-items:center; justify-content:space-between; gap:10px; font:700 14px var(--font-testo); color:var(--testo); }
@@ -882,7 +884,7 @@
       <button class="hs-btn btn-secondario" id="hb-3">TORNEO</button>
     </div>
     <div class="hs-extra"><button class="btn-secondario" id="hb-4">ALLENAMENTO</button><button class="btn-secondario" id="hb-chars">PERSONAGGI</button></div>
-    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.254</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
+    <div class="hs-foot"><span>Dal libro Le Sopracciglia della Guerra · v1.255</span><button id="hb-cred">Crediti</button><button id="hb-install" class="hs-install" hidden>Installa l’app</button></div>
   </div>
   <!-- impostazioni: icona in alto a sinistra, pannello a comparsa -->
   <button id="hb-set" class="btn-icona" aria-label="Impostazioni"><svg class="pxi" viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges" aria-hidden="true"><rect class="px-o" x="6" y="1" width="4" height="1"/><rect class="px-o" x="2" y="2" width="2" height="1"/><rect class="px-o" x="6" y="2" width="1" height="1"/><rect class="px-g" x="7" y="2" width="2" height="1"/><rect class="px-o" x="9" y="2" width="1" height="1"/><rect class="px-o" x="12" y="2" width="2" height="1"/><rect class="px-o" x="1" y="3" width="1" height="1"/><rect class="px-g" x="2" y="3" width="2" height="1"/><rect class="px-o" x="4" y="3" width="2" height="1"/><rect class="px-g" x="6" y="3" width="4" height="1"/><rect class="px-o" x="10" y="3" width="2" height="1"/><rect class="px-g" x="12" y="3" width="2" height="1"/><rect class="px-o" x="14" y="3" width="1" height="1"/><rect class="px-o" x="1" y="4" width="1" height="1"/><rect class="px-g" x="2" y="4" width="11" height="1"/><rect class="px-G" x="13" y="4" width="1" height="1"/><rect class="px-o" x="14" y="4" width="1" height="1"/><rect class="px-o" x="2" y="5" width="1" height="1"/><rect class="px-g" x="3" y="5" width="4" height="1"/><rect class="px-o" x="7" y="5" width="2" height="1"/><rect class="px-g" x="9" y="5" width="4" height="1"/><rect class="px-o" x="13" y="5" width="1" height="1"/><rect class="px-o" x="1" y="6" width="2" height="1"/><rect class="px-g" x="3" y="6" width="3" height="1"/><rect class="px-o" x="6" y="6" width="1" height="1"/><rect class="px-o" x="9" y="6" width="1" height="1"/><rect class="px-g" x="10" y="6" width="3" height="1"/><rect class="px-o" x="13" y="6" width="2" height="1"/><rect class="px-o" x="0" y="7" width="1" height="1"/><rect class="px-g" x="1" y="7" width="4" height="1"/><rect class="px-o" x="5" y="7" width="1" height="1"/><rect class="px-o" x="10" y="7" width="1" height="1"/><rect class="px-g" x="11" y="7" width="2" height="1"/><rect class="px-G" x="13" y="7" width="2" height="1"/><rect class="px-o" x="15" y="7" width="1" height="1"/><rect class="px-o" x="0" y="8" width="1" height="1"/><rect class="px-g" x="1" y="8" width="4" height="1"/><rect class="px-o" x="5" y="8" width="1" height="1"/><rect class="px-o" x="10" y="8" width="1" height="1"/><rect class="px-g" x="11" y="8" width="1" height="1"/><rect class="px-G" x="12" y="8" width="3" height="1"/><rect class="px-o" x="15" y="8" width="1" height="1"/><rect class="px-o" x="1" y="9" width="2" height="1"/><rect class="px-g" x="3" y="9" width="3" height="1"/><rect class="px-o" x="6" y="9" width="1" height="1"/><rect class="px-o" x="9" y="9" width="1" height="1"/><rect class="px-g" x="10" y="9" width="1" height="1"/><rect class="px-G" x="11" y="9" width="2" height="1"/><rect class="px-o" x="13" y="9" width="2" height="1"/><rect class="px-o" x="2" y="10" width="1" height="1"/><rect class="px-g" x="3" y="10" width="3" height="1"/><rect class="px-G" x="6" y="10" width="1" height="1"/><rect class="px-o" x="7" y="10" width="2" height="1"/><rect class="px-G" x="9" y="10" width="4" height="1"/><rect class="px-o" x="13" y="10" width="1" height="1"/><rect class="px-o" x="1" y="11" width="1" height="1"/><rect class="px-g" x="2" y="11" width="2" height="1"/><rect class="px-G" x="4" y="11" width="10" height="1"/><rect class="px-o" x="14" y="11" width="1" height="1"/><rect class="px-o" x="1" y="12" width="1" height="1"/><rect class="px-G" x="2" y="12" width="2" height="1"/><rect class="px-o" x="4" y="12" width="2" height="1"/><rect class="px-G" x="6" y="12" width="4" height="1"/><rect class="px-o" x="10" y="12" width="2" height="1"/><rect class="px-G" x="12" y="12" width="2" height="1"/><rect class="px-o" x="14" y="12" width="1" height="1"/><rect class="px-o" x="2" y="13" width="2" height="1"/><rect class="px-o" x="6" y="13" width="1" height="1"/><rect class="px-G" x="7" y="13" width="2" height="1"/><rect class="px-o" x="9" y="13" width="1" height="1"/><rect class="px-o" x="12" y="13" width="2" height="1"/><rect class="px-o" x="6" y="14" width="4" height="1"/></svg></button>
@@ -905,7 +907,7 @@
     <div class="cr-b"><div class="cr-r">IDEAZIONE, SVILUPPO<br>E GRAFICHE DEL GIOCO</div><div class="cr-n">Chiara Corbo</div></div>
     <div class="cr-b"><div class="cr-r">MUSICHE</div><div class="cr-n">Federico Baccetti</div></div>
     <div class="cr-end">Grazie per aver giocato!<br>Che le vostre sopracciglia siano sempre in guerra.</div>
-    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.254.</p>
+    <p class="lic">Vittoria di Luca Pisani: W. A. Mozart, <i>Eine kleine Nachtmusik</i> (pubblico dominio). Carattere Pixelify Sans © 2021 The Pixelify Sans Project Authors, SIL Open Font License 1.1 (openfontlicense.org). Versione v1.255.</p>
     <button id="cred-close" class="btn-primario">CHIUDI</button>
   </div></div>
 </div>
@@ -4020,6 +4022,135 @@ function _olografica(path){if(_OLO[path])return _OLO[path];const I=immagineOgget
 function _scia10(d,o){d.p=d.p||[];if(o&&o.fot){const S=o.S,sp=Object.values(S.scenePoses||{}).find(p=>p.file===o.fot.file)||{};
   d.p.push({x:o.x,y:o.fot.y,fi:o.fot.fi,file:o.fot.file,sc:o.fot.sc,ax:o.fot.ax,ay:o.fot.ay,face:o.face,fw:sp.fw||S.fw||128,fh:sp.fh||S.fh||128,im:S.img[o.fot.file]});if(d.p.length>14)d.p.shift();}}
 
+
+/* ==================== CAPITOLO 11 – Il convoglio: personaggi, nemici, oggetti, posizioni ==================== */
+/* NEMICI DEL CONVOGLIO (set da lotta 128×128, guardano a destra): fuciliere imperiale (lotta 12), soldato imperiale (lotte 13 e 14), mitragliere (miniboss della lotta 14).
+   Sparano con i colpi del motore (come i cacciatori del capitolo 5): gunA / gunB = punta dell'arma nei fotogrammi dello sparo.
+   Valori della lotta: vita, forza e danni (media difficoltà come i soldati delle lotte 3, 7 e 8; il mitragliere ha più vita e spara raffiche) */
+const LOTTA12={hp:48,power:8,colpo:6,colpo2:7};
+const LOTTA13={hp:42,power:8,pugno:9,colpo:5};
+const LOTTA14={mitHp:82,mitPower:8,raffica:4};
+const _NIENTE_SPECIALE={type:'none',name:'',dmg:0,kb:0,st:12,act:1,rec:1,fx:'gold',cost:99999,cd:0};
+const _imp11=(id,nome,gunA,gunB,anims,hp,power,speed,moves,quote)=>{
+  STORY_SPRITES[id]=Object.assign(_setLotta(id,63,119,1.38,{x0:36,y0:8,x1:92,y1:119}),{gunA,gunB});
+  if(anims)STORY_SPRITES[id].anims=Object.assign({},STORY_SPRITES[id].anims,anims);
+  STORY_SPRITES[id].scenePoses={scena:_P('../idle',16,8,{loop:true}),cammina:_P('../walk',16,12,{loop:true}),spara:_P('../attack2',16,12)};
+  STORY_ROSTER[id]={...ROSTER.find(c=>c.id==='dimauro'),id,name:nome,title:nome,uso:'storia',hp,speed,power,h:150,def:4,aer:0,exoMove:undefined,moves,special:_NIENTE_SPECIALE,quote};};
+/* fuciliere: attacco 1 = sparo in piedi (lampo al fotogramma 11), attacco 2 = sparo mirato */
+_imp11('fuciliereimp','FUCILIERE IMPERIALE',{x:114,y:52},{x:118,y:46},{punch:{file:'attack1',n:16,hit:9,act:3},kick:{file:'attack2',n:16,hit:12,act:3}},LOTTA12.hp,LOTTA12.power,3,
+  {punch:{startup:13,active:4,recovery:14,lag:8,shots:[{at:0,muzzle:'gunA'}],shotDmg:LOTTA12.colpo,shotSpd:14,shotKb:8},
+   kick:{startup:15,active:4,recovery:16,lag:10,shots:[{at:0,muzzle:'gunB'}],shotDmg:LOTTA12.colpo2,shotSpd:16,shotKb:12,shotBig:true}},'Per l’Impero!');
+/* soldato: attacco 1 = colpo col calcio del fucile (corpo a corpo), attacco 2 = sparo */
+_imp11('soldatoimp','SOLDATO IMPERIALE',{x:104,y:62},{x:102,y:63},{punch:{file:'attack1',n:16,hit:5,act:3},kick:{file:'attack2',n:16,hit:4,act:3}},LOTTA13.hp,LOTTA13.power,3,
+  {punch:{startup:11,active:4,recovery:13,lag:8,range:80,hh:60,yFrac:.55,dmg:LOTTA13.pugno,kb:14},
+   kick:{startup:12,active:4,recovery:15,lag:9,shots:[{at:0,muzzle:'gunB'}],shotDmg:LOTTA13.colpo,shotSpd:15,shotKb:10}},'Fermi dove siete!');
+/* mitragliere: in ginocchio dietro la sua cassa, NON si muove (velocità 0) e spara raffiche lunghe */
+_imp11('mitragliere','MITRAGLIERE',{x:110,y:52},{x:110,y:52},{walk:{file:'idle',n:16,fps:8},punch:{file:'attack1',n:16,hit:3,act:12},kick:{file:'attack1',n:16,hit:3,act:6},
+  jump:{file:'hurt',n:16,jf:{squat:1,up:2,peak:3,down:4,land:2}}},LOTTA14.mitHp,LOTTA14.mitPower,0,
+  {punch:{startup:16,active:14,recovery:34,lag:30,shots:[0,6,12].map(at=>({at,muzzle:'gunA'})),shotDmg:LOTTA14.raffica,shotSpd:13,shotKb:3},
+   kick:{startup:14,active:8,recovery:30,lag:26,shots:[0,6].map(at=>({at,muzzle:'gunA'})),shotDmg:LOTTA14.raffica,shotSpd:13,shotKb:3}},'Nessuno passa!');
+STORY_SPRITES.mitragliere.scenePoses={scena:_P('../idle',16,8,{loop:true}),spara:_P('../attack1',16,14,{loop:true})};
+['fuciliereimp2'].forEach(id=>{STORY_SPRITES[id]=STORY_SPRITES.fuciliereimp;STORY_ROSTER[id]={...STORY_ROSTER.fuciliereimp,id};});
+['soldatoimp2','soldatoimp3','soldatoimp4','soldatoimp5'].forEach(id=>{STORY_SPRITES[id]=STORY_SPRITES.soldatoimp;STORY_ROSTER[id]={...STORY_ROSTER.soldatoimp,id};});
+/* POSE NUOVE (fogli 4x3 → strisce da 12, stessa scala del capitolo 9: _P9) */
+Object.assign(SPRITE_CHARS.ettore.scenePoses,{spada:_P9('spada',12,6,{fw:192})});
+Object.assign(SPRITE_CHARS.zibe.scenePoses,{panico:_P9('panico',12,10,{loop:true,pingpong:true}),guance:_P9('guance',12,12,{fw:192})});
+Object.assign(SPRITE_CHARS.alice.scenePoses,{batteria:_P9('batteria',12,10,{fw:192})});
+Object.assign(STORY_SPRITES.massimo.scenePoses,{taglia:_P9('taglia',12,10,{fw:224,loop:true,pingpong:true})});
+Object.assign(STORY_SPRITES.antonio.scenePoses,{console:_P9A('console',12,10,{fw:192,loop:true})});
+STORY_SPRITES.dimauroexo.scenePoses=Object.assign(STORY_SPRITES.dimauroexo.scenePoses||{},{sfida:_P9A('sfida',12,8,{fw:256,ciclo:6})});
+Object.assign(STORY_SPRITES.dimauroministro.scenePoses,{spara:_P9A('spara',12,12,{fw:224,loop:true})});
+/* i 5 piloti della motrice che si arrendono: un'unica immagine di gruppo, un po' più piccoli (più indietro) */
+_versione9('piloti','PILOTI',{scena:_P9('scena',1,1,{fw:224,sc:1.2}),resa:_P9('resa',12,8,{fw:224,sc:1.2,loop:true,pingpong:true})});
+/* COPPIE (immagini ferme) */
+COPPIE.sito_ettore_spada={file:'sito_ettore_spada',n:1,fps:1,fw:128,fh:160,ax:64,ay:154,scala:1.36};
+COPPIE.massimo_cura_viola={file:'massimo_cura_viola',n:1,fps:1,fw:96,fh:96,ax:48,ay:90,scala:1.36};
+COPPIE.mango_cura_sito={file:'mango_cura_sito',n:1,fps:1,fw:128,fh:128,ax:64,ay:122,scala:1.36};
+COPPIE.ettore_zibe_ferita={file:'ettore_zibe_ferita',n:1,fps:1,fw:128,fh:128,ax:64,ay:122,scala:1.36};
+/* POSIZIONI E OGGETTI (frazioni della larghezza dello schermo) */
+const CAP11={
+  /* capannone: navicella a destra (davanti agli attori: chi sale ci sparisce dietro), carrello al centro-destra, cassa al centro */
+  navicella:{scala:.79,fuori:30},
+  carrello:{img:'carrello_ordigno',x:.715,scala:1},
+  cassa:{img:'cassa_munizioni',x:.5,scala:1},altCassa:40,   /* il coperchio della cassa è a 40 punti da terra: Alice ci sale sopra (disegnata davanti alla cassa) */
+  furgone:{x:.17,scala:1},
+  /* vagoni: casse di munizioni usate come copertura (davanti agli attori: coprono le gambe) */
+  coperture14:[{img:'cassa_munizioni',x:.3,scala:1.1,davanti:true},{img:'cassa_munizioni',x:.44,scala:1.1,davanti:true},{img:'cassa_munizioni',x:.8,scala:1.2,davanti:true}],
+  casse11:[{img:'cassa_munizioni',x:.7,scala:1.1,davanti:true},{img:'cassa_munizioni',x:.84,scala:1.1,davanti:true}],
+  coperture16:[{img:'cassa_munizioni',x:.14,scala:1.1,davanti:true},{img:'cassa_munizioni',x:.27,scala:1.1,davanti:true},{img:'cassa_munizioni',x:.8,scala:1.2,davanti:true}],
+  console:{img:'console_cabina',x:.6,scala:1,davanti:true},
+  capsule:[.53,.645,.76,.875],   /* le 4 capsule lungo la parete di fondo del vagone delle capsule */
+  dentro:.06,   /* x dei portelloni a destra (porta = 1 - dentro) */
+};
+const OGGETTI_CAPANNONE=[CAP11.carrello,CAP11.cassa];
+Object.assign(SFONDI_STORIA,{capannone:{suolo:.88},vagone_convoglio:{suolo:.87},vagone_munizioni:{suolo:.79},armeria_vagone:{suolo:.85},vagone_caldaia:{suolo:.86},
+  vagone_capsule:{suolo:.88},cabina_guida:{suolo:.88}});
+/* arene delle lotte (lo stesso nome del file, così anche le scene dentro le lotte trovano lo sfondo) */
+Object.assign(ARENE_STORIA,{vagone_convoglio:{file:'vagone_convoglio',suolo:.87},vagone_munizioni:{file:'vagone_munizioni',suolo:.79},
+  armeria_vagone:{file:'armeria_vagone',suolo:.85},vagone_caldaia:{file:'vagone_caldaia',suolo:.86}});
+/* suoni del capitolo 11 */
+const SUONI11={
+  grida:()=>{for(let i=0;i<9;i++)setTimeout(()=>{beep(300+Math.random()*350,.18,'sawtooth',.018,120);},i*90+Math.random()*60);for(let i=0;i<8;i++)setTimeout(()=>{noise(.06,.07);beep(70,.08,'square',.04,-20);},i*170);},
+  allarme:()=>{beep(760,.3,'square',.025,-260);setTimeout(()=>beep(760,.3,'square',.025,-260),450);},
+  raffica:()=>{for(let i=0;i<8;i++)setTimeout(()=>{noise(.04,.07);beep(180,.04,'square',.03,-60);},i*85);},
+  battito:()=>{beep(55,.12,'sine',.12,-10);setTimeout(()=>beep(48,.12,'sine',.09,-10),210);},
+  metallo:()=>{noise(.5,.1);beep(220,.5,'sawtooth',.04,-150);setTimeout(()=>beep(160,.4,'square',.03,-90),180);},
+  scintille:()=>{noise(.05,.03);beep(2400+Math.random()*900,.03,'square',.012,-500);},
+  fischio:()=>{beep(3400,2.8,'sine',.025,-120);},
+  propulsori:()=>{noise(1.1,.05);beep(90,1.2,'sawtooth',.035,260);},
+  scoppio:()=>{noise(.12,.08);beep(120,.1,'square',.04,-60);},
+  vetro:()=>{beep(1800,.06,'triangle',.03,-300);noise(.04,.03);},
+  rombo:(v)=>{noise(.5,.03+.06*(v||0));beep(45+30*(v||0),.5,'sawtooth',.02+.03*(v||0),-10);},
+};
+/* ---------- capitolo 11: funzioni degli effetti ---------- */
+/* testo con il bordo, centrato (scene e lotte) */
+function _testo11(c,s,x,y,size,col,al){c.save();c.globalAlpha=al??1;c.font='400 '+size+'px '+FONT_GIOCO;c.textAlign='center';c.textBaseline='middle';
+  c.lineWidth=Math.max(3,size*.3);c.strokeStyle='#000';c.strokeText(s,x,y);c.fillStyle=col||'#fff';c.fillText(s,x,y);c.restore();}
+/* un'immagine qualsiasi (per gli effetti delle lotte: Massimo alla porta, le casse) */
+const _IMG11={};function _img11(src){let im=_IMG11[src];if(!im){im=_IMG11[src]=new Image();im.src=src;}return im;}
+/* punto di un attore della scena: piedi (x,y) e verso */
+function _att11(id){const o=SC&&SC.attori[id];if(!o)return null;return {x:o.x,y:(o.fot&&o.fot.y)||SCENA_SUOLO-(o.alt||0),face:o.face||1,o};}
+/* scintille / fiamme di un attrezzo (punto x,y) */
+function _scintille11(c,t,x,y,dir,fiamme){c.save();c.globalCompositeOperation='lighter';
+  for(let i=0;i<18;i++){const ph=(t*2.2+sr(i))%1,a=sr(i+3)*1.6-.8,v=30+sr(i+9)*70,px=x+dir*Math.cos(a)*v*ph*-1+dir*4,py=y+Math.sin(a)*v*ph*.6+ph*ph*40;
+    c.globalAlpha=1-ph;c.fillStyle=fiamme?(i%2?'#ff7a1a':'#ffd23a'):(i%3?'#fff6b0':'#ffb020');c.fillRect(px,py,fiamme?4:2,fiamme?4:2);}
+  const g=c.createRadialGradient(x,y,0,x,y,fiamme?26:14);g.addColorStop(0,fiamme?'rgba(255,200,90,.95)':'rgba(255,255,230,.95)');g.addColorStop(1,'rgba(255,120,20,0)');
+  c.globalAlpha=.7+.3*Math.sin(t*40);c.fillStyle=g;c.beginPath();c.arc(x,y,fiamme?26:14,0,7);c.fill();c.restore();}
+/* luci rosse d'emergenza: lo schermo si colora di rosso a intermittenza */
+function _rosso11(c,t,w,h){const p=Math.max(0,Math.sin(t*3.4)),k=.45+.45*p,a=.06+.14*p;c.save();c.globalCompositeOperation='multiply';c.fillStyle='rgb(255,'+Math.round(255-170*k)+','+Math.round(255-165*k)+')';c.fillRect(-40,-40,w+80,h+80);
+  c.globalCompositeOperation='source-over';c.fillStyle='rgba(255,30,30,'+a+')';c.fillRect(-40,-40,w+80,h+80);
+  const g=c.createRadialGradient(w/2,h*.4,h*.2,w/2,h*.4,w*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(60,0,0,'+(.25+a)+')');c.fillStyle=g;c.fillRect(-40,-40,w+80,h+80);c.restore();}
+/* nebbia verdastra del gas che si allarga dal basso (k = 0..1 quanto è salita) */
+function _gas11(c,t,w,suolo,h,k){c.save();for(let i=0;i<26;i++){const x=((sr(i)*w*1.2+t*(8+sr(i+4)*14)*(i%2?1:-1))%(w*1.3)+w*1.3)%(w*1.3)-w*.15,y=suolo+20-sr(i+7)*(60+170*k)-Math.sin(t*.7+i)*8,r=40+sr(i+2)*70;
+    const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(120,200,70,'+(.22*k)+')');g.addColorStop(1,'rgba(90,160,50,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();}
+  const g=c.createLinearGradient(0,suolo-200*k,0,h);g.addColorStop(0,'rgba(110,190,60,0)');g.addColorStop(1,'rgba(110,190,60,'+(.3*k)+')');c.fillStyle=g;c.fillRect(-40,suolo-200*k,w+80,h);c.restore();}
+/* lingue di fuoco dal portello dell'inceneritore (hx,hy = centro del portello) */
+function _fuocoPortello11(c,t,hx,hy,s){c.save();c.globalCompositeOperation='lighter';for(let i=0;i<16;i++){const ph=(t*1.6+sr(i))%1,x=hx+(sr(i+5)-.5)*34*s+Math.sin(t*9+i)*4,y=hy-ph*60*s,r=(14+sr(i+1)*12)*(1-ph*.6)*s;
+    const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(255,235,150,'+(.9*(1-ph))+')');g.addColorStop(.5,'rgba(255,130,30,'+(.7*(1-ph))+')');g.addColorStop(1,'rgba(200,40,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();}c.restore();}
+/* una lingua di fuoco che striscia sul pavimento da x0 verso x1 (k = 0..1 avanzata, a = trasparenza) */
+function _linguaFuoco11(c,t,x0,x1,y,k,a){if(a<=0)return;c.save();c.globalCompositeOperation='lighter';const xe=x0+(x1-x0)*k,n=Math.max(4,Math.abs(xe-x0)/14|0);
+  for(let i=0;i<n;i++){const u=i/n,x=x0+(xe-x0)*u,hh=(18+Math.sin(t*14+i*1.7)*7)*(0.6+.4*Math.sin(u*3.14));const g=c.createRadialGradient(x,y-hh*.5,0,x,y-hh*.5,hh);
+    g.addColorStop(0,'rgba(255,240,170,'+(.85*a)+')');g.addColorStop(.45,'rgba(255,120,20,'+(.6*a)+')');g.addColorStop(1,'rgba(200,30,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y-hh*.5,hh,0,7);c.fill();}c.restore();}
+/* proiettili traccianti da destra verso sinistra (raffica nel vagone) */
+function _traccianti11(c,t,w,y0,y1,dir,n){c.save();c.globalCompositeOperation='lighter';for(let i=0;i<(n||9);i++){const ph=(t*2.3+sr(i))%1,x=dir<0?w+20-ph*(w+60):-20+ph*(w+60),y=y0+(y1-y0)*sr(i+11);
+    c.strokeStyle='rgba(255,230,120,.95)';c.lineWidth=2.5;c.beginPath();c.moveTo(x,y);c.lineTo(x-dir*26,y);c.stroke();}c.restore();}
+/* lampo con i proiettili che rimbalzano su una lama o su un'ascia (x,y), colore azzurro o giallo */
+function _rimbalzo11(c,t,x,y,dir,col){c.save();c.globalCompositeOperation='lighter';const k=(t*3)%1;
+  const g=c.createRadialGradient(x,y,0,x,y,22);g.addColorStop(0,col==='blu'?'rgba(200,245,255,.95)':'rgba(255,250,200,.95)');g.addColorStop(1,col==='blu'?'rgba(40,140,255,0)':'rgba(255,170,40,0)');
+  c.globalAlpha=.55+.45*Math.sin(t*31);c.fillStyle=g;c.beginPath();c.arc(x,y,22,0,7);c.fill();c.globalAlpha=1;
+  for(let i=0;i<5;i++){const ph=(k+i/5)%1,a=-1.2+sr(i)*2.4;c.strokeStyle=col==='blu'?'rgba(150,220,255,'+(1-ph)+')':'rgba(255,220,120,'+(1-ph)+')';c.lineWidth=2;
+    c.beginPath();c.moveTo(x+dir*ph*60*Math.cos(a),y+ph*60*Math.sin(a));c.lineTo(x+dir*(ph*60+10)*Math.cos(a),y+(ph*60+10)*Math.sin(a));c.stroke();}c.restore();}
+/* LOTTA 15: le due pause con una scena nell'arena (le fa partire l'effetto boss15) */
+const AZ_RISVEGLIO15=[   /* al 70%: Massimo si risveglia e colpisce Luca */
+  {entra:'dimauroexo',da:'alto',a:.66,alt:0,daAlt:0,verso:'sinistra',posa:'attesa'},{entra:'massimo',da:'alto',a:.1,alt:0,daAlt:0,verso:'destra',posa:'ko'},{attesa:.7},
+  {posa:{massimo:'base'}},{attesa:.5},{muovi:'massimo',a:.56,vel:340,cammina:'cammina'},{posa:{massimo:'attacco'}},{attesa:.35},
+  {effetto:'trema',forza:7,durata:.35},{posa:{dimauroexo:'colpito'}},{muovi:'dimauroexo',a:.8,vel:320,indietro:true},{posa:{massimo:'attesa'}},
+  {chi:'dimauroexo',pose:{dimauroexo:'attesa'},testo:'Non male, ma non abbastanza.'}];
+const AZ_TUBO15=[   /* al 50%: Ettore trancia il tubo idraulico del braccio dell'esoscheletro */
+  {entra:'dimauroexo',da:'alto',a:.62,alt:0,daAlt:0,verso:'sinistra',posa:'attesa'},{entra:'ettore',da:'alto',a:.4,alt:0,daAlt:0,verso:'destra',posa:'attesa'},
+  {didascalia:'(Seguendo il piano di Zibe, Ettore colpisce il braccio dell’esoscheletro e trancia di netto un tubo idraulico.)'},
+  {muovi:'ettore',a:.53,vel:340,cammina:'attesa'},{posa:{ettore:'attacco'}},{attesa:.3},{effetto:'lampo',colore:'#bfe8ff'},{posa:{dimauroexo:'colpito'}},{livello:'getto11'},{attesa:2}];
+
 const STORIA={
   /* SBLOCCHI IN LOTTA LIBERA: il personaggio si sblocca quando il giocatore COMPLETA quel capitolo (fine:true = dopo l'epilogo).
      Se lo sprite del personaggio non è ancora nel gioco, lo sblocco viene salvato ma il personaggio non compare. */
@@ -6607,7 +6738,408 @@ const STORIA={
         {chi:'sito',testo:'Torniamo alla base. C’è molto lavoro da fare.'},
         {effetto:'nero',durata:2.4,resta:true},
       ]},
-      /* cap10_p18 FINE CAPITOLO: salvataggio e "Il capitolo 11 arriverà presto" li fa il motore (nessuno sblocco) */
+      /* cap10_p18 FINE CAPITOLO: salvataggio automatico e passaggio diretto al capitolo 11 li fa il motore (nessuno sblocco) */
+    ]},
+    /* ==================== CAPITOLO 11 – Il convoglio (4 lotte: 12 e 13 squadra Bravo, 14 squadra Alfa, 15 boss in due fasi) ==================== */
+    {id:'cap11',numero:11,titolo:'Il convoglio',passi:[
+      {id:'cap11_p01',tipo:'cartello',sopra:'Capitolo 11',titolo:'Il convoglio'},
+      {id:'cap11_p02',tipo:'narratore',righe:['I giorni dopo il ritorno da Fornax-6 furono silenziosi e pesanti.','Ettore era diverso. Il sorriso e la vivacità che un tempo lo avevano contraddistinto erano svaniti.']},
+      /* IL COVO: Alice e Zibe */
+      {id:'cap11_p03',tipo:'scena',sfondo:'covo',entrata:.6,attori:[{id:'zibe',x:.68,verso:'sinistra'}],azioni:[
+        {musica:'musica_capannone'},
+        {didascalia:'(Zibe si sta infilando la maglietta.)'},
+        {entra:'alice',da:'sinistra',a:.17,cammina:'cammina_calma'},{guarda:{alice:'destra'}},
+        {chi:'alice',pose:{alice:'parla'},testo:'Sito mi ha detto che hai deciso di tornare a far parte delle operazioni. È vero?'},
+        {chi:'zibe',pose:{alice:'base',zibe:'arrabbiato'},testo:'Perché me lo chiedi?'},
+        {chi:'alice',pose:{zibe:'base',alice:'parla'},testo:'Perché è una decisione importante. Sei sicuro di ciò che stai facendo, Zibe?'},
+        {chi:'zibe',pose:{alice:'base',zibe:'arrabbiato'},testo:'Tutti qui mi hanno pregato di tornare per mesi, e ora che ho finalmente deciso di farlo, mi chiedi se ne sono sicuro?'},
+        {chi:'alice',pose:{zibe:'base',alice:'arrabbiato'},testo:'A differenza di tutti gli altri io non ti ho mai pregato di tornare. Ho capito perché te ne sei andato e ho anche cercato di dissuadere Batteo dal venire a cercarti quella volta. Ho capito che avevi bisogno di tempo per te stesso. Ma ora che sei tornato, ho bisogno di sapere che non te ne pentirai.'},
+        {chi:'zibe',pose:{alice:'base',zibe:'triste'},testo:'Mi dispiace. Non avrei dovuto esplodere così. È solo... è una decisione che ho dovuto prendere.'},
+        {posa:{zibe:'base',alice:'annuisce'}},{attesa:.9},
+        {chi:'alice',pose:{alice:'parla'},testo:'Perché hai deciso di tornare allora, Zibe?'},
+        {chi:'zibe',pose:{alice:'base',zibe:'parla'},testo:'Perché ho visto cosa l’Impero ha fatto a quel pianeta. Ho visto come hanno distrutto vite, distrutto speranze. Ho visto il terrore nei loro occhi, la disperazione. E ho capito che non posso restare a guardare, è proprio come un tempo.'},
+        {chi:'alice',pose:{zibe:'base',alice:'parla'},testo:'E sei sicuro che combattere sia la risposta?'},
+        {chi:'zibe',pose:{alice:'base',zibe:'parla'},testo:'Non lo so. Ma so che non posso restare a fare niente. Non posso restare a guardare mentre l’Impero fa quello che vuole. Ho bisogno di fare qualcosa, Alice. Ho bisogno di combattere.'},
+        {chi:'alice',pose:{zibe:'base',alice:'parla'},testo:'E sei sicuro che non te ne pentirai?'},
+        {posa:{alice:'base',zibe:'annuisce'}},{attesa:.9},
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Sì. Ho già fatto i conti con il passato, Alice. Ho già affrontato le mie paure, i miei rimorsi. Penso che questa sia l’opportunità per buttarmi alle spalle la storia di Iacopo. Sono pronto a tornare in campo. Sono pronto a combattere.'},
+        {posa:{zibe:'base',alice:'annuisce'}},{attesa:1.2},{effetto:'nero',durata:.8,resta:true},
+      ]},
+      /* IL CAPANNONE ABBANDONATO: i preparativi, la spada del padre di Sito, Massimo e Zibe, il discorso di Alice sulla cassa */
+      {id:'cap11_p04',tipo:'scena',sfondo:'capannone',oggetti:OGGETTI_CAPANNONE,livelli:['smog11','navicella11'],entrata:.8,azioni:[
+        {musica:'musica_capannone'},{attesa:.6},
+        {entra:'mango',da:'sinistra',a:.05,insieme:true},{attesa:.7},
+        {entra:'batteo',da:'sinistra',a:.115,cammina:'cammina_c3',insieme:true},{attesa:.7},
+        {entra:'chiara',da:'sinistra',a:.18,insieme:true},{attesa:.7},
+        {entra:'viola',da:'sinistra',a:.245,cammina:'cammina',insieme:true},{attesa:.7},
+        {entra:'ettore',da:'sinistra',a:.43,cammina:'cammina',insieme:true},{attesa:.7},
+        {entra:'antonio',da:'sinistra',a:.57,cammina:'cammina',insieme:true},{attesa:.7},
+        {entra:'massimo',da:'sinistra',a:.615,cammina:'cammina',insieme:true},{attesa:.7},
+        {entra:'zibe',da:'sinistra',a:.655,cammina:'cammina_c3'},{attesa:.3},
+        {livello:'furgone11'},{attesa:2.8},
+        {entra:'alice',da:'alto',a:.335,alt:0,daAlt:0,verso:'destra'},{entra:'sito',da:'alto',a:.38,alt:0,daAlt:0,verso:'destra'},{attesa:.5},
+        {didascalia:'(I membri del Fronte arrivano uno per uno, per non destare sospetti: in taxi, a piedi, in bicicletta. Alice e Sito arrivano con un furgone che sembra fatto per consegnare formaggio, ma dentro nasconde un piccolo arsenale.)'},
+      ]},
+      /* (stessa scena, senza il riquadro: i nomi delle armi si vedono in basso) */
+      {id:'cap11_p04b',tipo:'scena',sfondo:'capannone',oggetti:OGGETTI_CAPANNONE,livelli:['smog11','furgone_fermo11','navicella11'],entrata:0,
+        attori:[{id:'mango',x:.05,verso:'destra'},{id:'batteo',x:.115,verso:'destra'},{id:'chiara',x:.18,verso:'destra'},{id:'viola',x:.245,verso:'destra'},{id:'alice',x:.335,verso:'destra'},
+          {id:'sito',x:.38,verso:'destra'},{id:'ettore',x:.43,verso:'destra'},{id:'antonio',x:.57,verso:'destra'},{id:'massimo',x:.615,verso:'destra'},{id:'zibe',x:.655,verso:'destra'}],azioni:[
+        /* i preparativi: ognuno per un secondo con la sua arma (posa di attesa del set da lotta), nome e arma in basso */
+        {posa:{alice:'attesa'}},{livello:'arma11_alice'},{attesa:1.3},
+        {posa:{mango:'attesa'}},{livello:'arma11_mango'},{attesa:1.3},
+        {posa:{batteo:'attesa'}},{livello:'arma11_batteo'},{attesa:1.3},
+        {posa:{viola:'attesa'}},{livello:'arma11_viola'},{attesa:1.3},
+        {posa:{antonio:'attesa'}},{livello:'arma11_antonio'},{attesa:1.3},
+        {posa:{massimo:'attesa'}},{livello:'arma11_massimo'},{attesa:1.3},
+        {posa:{chiara:'attesa'}},{livello:'arma11_chiara'},{attesa:1.3},
+        {posa:{sito:'attesa'}},{livello:'arma11_sito'},{attesa:1.5},
+        {posa:{alice:'base',mango:'base',batteo:'base',viola:'base',antonio:'base',massimo:'base',chiara:'base',sito:'base'}},{attesa:.5},
+        /* Sito regala a Ettore la spada di suo padre */
+        {muovi:'sito',a:.47,cammina:'cammina'},{guarda:{sito:'sinistra',ettore:'destra'}},
+        {coppia:'sito_ettore_spada',attori:['ettore','sito'],dissolvenza:.25},{attesa:.6},
+        {chi:'sito',testo:'Apri'},
+        {fineCoppia:true,vicini:true},{posa:{ettore:'spada'}},{attesa:1.6},
+        {chi:'sito',pose:{sito:'parla'},testo:'Apparteneva a mio padre. Non l’ho mai usata... mio padre era un alpaca di principi forti, un leader che portava con sé il rispetto e l’amore del suo popolo. Non ho mai voluto sporcare il suo ricordo utilizzando questa spada sotto il comando di re Luca Pisani.'},
+        {chi:'sito',pose:{sito:'parla'},testo:'Ettore, non capisci? Tu sei degno di questa spada. Vedo in te la luce che una volta ho visto in mio padre. Hai l’animo di un leader, il coraggio di combattere per ciò in cui credi. Hai l’onestà e la lealtà che ho visto in mio padre.'},
+        {chi:'ettore',pose:{sito:'base',ettore:'triste'},testo:'Sito, non so cosa dire... non mi sento all’altezza di questo onore'},
+        {chi:'sito',pose:{ettore:'base',sito:'parla'},testo:'Non devi dire nulla, Ettore. Devi solo accettare questa spada e l’onore che porta con sé. Hai il cuore di un vero guerriero, Ettore, e io so che farai onore a questa spada, così come avrebbe fatto mio padre.'},
+        {chi:'ettore',pose:{sito:'base',ettore:'parla'},testo:'Sito, grazie. Onorerò questa spada e la sua eredità. E non deluderò te o il Fronte di Liberazione.'},
+        {chi:'sito',pose:{ettore:'base',sito:'parla'},testo:'Lo so, Ettore. Ecco perché te l’ho data.'},
+        {posa:{sito:'base'}},{muovi:'sito',a:.385,cammina:'cammina'},{guarda:{sito:'destra'}},
+        /* Zibe lavora sul carrello; Massimo si avvicina */
+        {guarda:{zibe:'destra'}},{muovi:'massimo',a:.625,cammina:'cammina'},{guarda:{massimo:'destra'}},
+        {chi:'massimo',pose:{massimo:'parla'},testo:'Zibe?'},
+        {guarda:{zibe:'sinistra'}},
+        {chi:'zibe',pose:{massimo:'base',zibe:'parla'},testo:'Certo, Massimo. Dimmi'},
+        {chi:'massimo',pose:{zibe:'base',massimo:'triste'},testo:'Vedi, non posso fare a meno di sentirmi... incerto. Guardo te, guardo tutti voi... e vedo eroi, combattenti provati. E poi ci sono io.'},
+        {chi:'zibe',pose:{massimo:'base',zibe:'parla'},testo:'E in te cosa vedi, Massimo?'},
+        {chi:'massimo',pose:{zibe:'base',massimo:'triste'},testo:'Ecco... io... Io vedo un alpaca che non ha il vostro coraggio, le vostre cicatrici, le vostre storie. Mi chiedo se sono all’altezza, se sono degno di stare con voi.'},
+        {chi:'zibe',pose:{massimo:'base',zibe:'parla'},testo:'Massimo, ricordi i giorni della resistenza contro re Luca Pisani? Ti ricorderai che non eravamo tutti guerrieri. Alcuni di noi erano semplici alpaca, come te. Ma non ci siamo lasciati fermare da quello. Abbiamo combattuto per ciò che era giusto.'},
+        {chi:'massimo',pose:{zibe:'base',massimo:'sorpresa'},testo:'Ma tu... tu eri un eroe. Un combattente.'},
+        {chi:'zibe',pose:{massimo:'base',zibe:'parla'},testo:'Ero un alpaca, Massimo. Un alpaca che aveva paura, che aveva dei dubbi. Ma ho scelto di lottare, nonostante tutto. E tu... tu hai fatto la stessa scelta. Non lasciare che i tuoi dubbi offuschino quella scelta. Non sei meno di nessuno di noi.'},
+        {chi:'massimo',pose:{zibe:'base',massimo:'annuisce'},testo:'Grazie, Zibe. Credo... credo che ne avessi bisogno.'},
+        {posa:{massimo:'base'}},
+        /* Alice sale sulla cassa (i piedi sul coperchio) e tutti si girano verso di lei */
+        {muovi:'alice',a:CAP11.cassa.x,cammina:'cammina_calma'},{muovi:'alice',alt:CAP11.altCassa,velAlt:150},
+        {guarda:{alice:'destra',mango:'destra',batteo:'destra',chiara:'destra',viola:'destra',sito:'sinistra',ettore:'destra',antonio:'sinistra',massimo:'sinistra',zibe:'sinistra'}},{attesa:.4},
+        {chi:'alice',pose:{alice:'parla'},testo:'Compagni. Oggi ci troviamo qui, uniti non solo da una causa comune, ma da una fede invariabile nel futuro.'},
+        {guarda:{alice:'sinistra'}},
+        {chi:'alice',pose:{alice:'indica'},testo:'Batteo. Le tue ali non sono state fatte solo per volare, ma per trasportarci verso la libertà. Il tuo spirito irrefrenabile è il vento che ci spinge avanti.'},
+        {guarda:{alice:'destra'}},
+        {chi:'alice',pose:{alice:'indica'},testo:'Massimo. Le tue parole possono non essere molte, ma quando parli, noi ascoltiamo. Il tuo silenzio non è timidezza, ma una tempesta in attesa di esplodere.'},
+        {chi:'alice',pose:{alice:'indica'},testo:'Antonio. Tu sei il cuore pulsante della nostra resistenza. Il tuo coraggio non conosce limiti, la tua determinazione non conosce confini.'},
+        {posa:{alice:'base'}},
+        {didascalia:'(Alice si rivolge a ognuno. Viola, la silenziosa, la tenace. Zibe, l’infallibile, l’inaspettato eroe. Sito, il veterano, il guerriero. E infine, Ettore… sei il tipo più strano qua dentro ma sei anche la nostra luce tra le tenebre.)'},
+        {chi:'alice',pose:{alice:'parla'},testo:'Oggi, ci prepariamo a colpire il convoglio dell’Impero. Sarà il primo di tanti attacchi, il battito d’ali che scatenerà una tempesta. Non ci illudiamo che sarà facile. Non ci illudiamo che sarà rapido. Ma sappiamo che sarà giusto.'},
+        {chi:'alice',pose:{alice:'parla'},testo:'Misureremo il tempo in battaglie, non in giorni. Forse in mesi, forse in anni, forse in decenni, ma la nostra resistenza non conoscerà fine.'},
+        {chi:'alice',pose:{alice:'indica'},testo:'Loro hanno gli orologi, ma noi abbiamo il tempo.'},
+        {posa:{alice:'annuisce',mango:'annuisce',batteo:'annuisce',chiara:'annuisce',viola:'annuisce',sito:'annuisce',ettore:'annuisce',antonio:'annuisce',massimo:'annuisce',zibe:'annuisce'}},{livello:'grida11'},{effetto:'trema',forza:3,durata:1.2},{attesa:2},
+        {posa:{alice:'base',mango:'base',batteo:'base',chiara:'base',viola:'base',sito:'base',ettore:'base',antonio:'base',massimo:'base',zibe:'base'}},
+        /* uno a uno verso la navicella: ci spariscono dietro; poi la navicella si alza ed esce in alto */
+        {muovi:'alice',alt:0,velAlt:150},
+        {esce:'zibe',verso:'destra',cammina:'cammina_c3',insieme:true},{attesa:.5},{esce:'massimo',verso:'destra',cammina:'cammina',insieme:true},{attesa:.5},
+        {esce:'antonio',verso:'destra',cammina:'cammina',insieme:true},{attesa:.5},{esce:'ettore',verso:'destra',cammina:'cammina',insieme:true},{attesa:.5},
+        {esce:'alice',verso:'destra',cammina:'cammina_calma',insieme:true},{attesa:.5},{esce:'sito',verso:'destra',cammina:'cammina',insieme:true},{attesa:.5},
+        {esce:'viola',verso:'destra',cammina:'cammina',insieme:true},{attesa:.5},{esce:'chiara',verso:'destra',insieme:true},{attesa:.5},
+        {esce:'batteo',verso:'destra',cammina:'cammina_c3',insieme:true},{attesa:.5},{esce:'mango',verso:'destra'},{attesa:.6},
+        {livello:'decollo11'},{attesa:3},{effetto:'nero',durata:.8,resta:true},
+      ]},
+      /* IL BRIEFING DI ANTONIO: lo schema del convoglio (le battute nel riquadro, sopra lo schema) */
+      {id:'cap11_p05',tipo:'scena',sfondo:'spazio',livelli:['schema11'],entrata:.8,azioni:[
+        {musica:'musica_assalto_convoglio'},{attesa:.8},
+        {chi:'antonio',testo:'So che abbiamo preparato questo attacco per molto tempo, ma permettetemi di ripassare i dettagli. Non possiamo permetterci errori.'},
+        {chi:'antonio',testo:'Sappiamo che non vedremo più la nostra nave. È un prezzo che siamo disposti a pagare. Quello che otterremo in cambio vale molto di più.'},
+        {chi:'antonio',testo:'Avvicinandoci al convoglio, attiveremo un jammer. Questo disattiverà i sensori della nave imperiale. Ci darà un vantaggio cruciale.'},
+        {livello:'schema_v3'},
+        {chi:'antonio',testo:'Abbiamo 4 minuti e 37 secondi. 4 minuti e 37 secondi per avvicinarci al terzo vagone e far detonare la nostra nave, fino a prendere il controllo del convoglio.'},
+        {chi:'antonio',testo:'Il tempo sarà essenziale. Abbiamo circa 40 secondi per installare il kit e tagliare la parete. Non possiamo permetterci ritardi.'},
+        {livello:'schema_bravo'},
+        {chi:'antonio',testo:'Zibe, Ettore, Alice, Viola. Dovrete attraversare tutti e 12 i vagoni verso il fondo. Eliminare ogni soldato di guardia che incontrerete. So che potete farlo.'},
+        {livello:'schema_alfa'},
+        {chi:'antonio',testo:'Il nostro obiettivo è la motrice. Prenderne il controllo sarà la chiave del successo. Ci aspettiamo resistenza, ma siamo pronti.'},
+        {chi:'antonio',testo:'Ricordate, abbiamo un solo tentativo. Dobbiamo riuscire al primo colpo. Il futuro del Fronte di Liberazione del Lattosio dipende da noi.'},
+        {chi:'antonio',testo:'Non dimenticate. Non siamo solo un gruppo di combattenti. Siamo il Fronte di Liberazione del Lattosio. E stiamo per cambiare il corso della storia.'},
+        {chi:'antonio',testo:'Inizia il conto alla rovescia'},
+        {effetto:'nero',durata:.6,resta:true},
+      ]},
+      /* L'ASSALTO NELLO SPAZIO (senza dialoghi) */
+      {id:'cap11_p06',tipo:'scena',sfondo:'spazio',livelli:['assalto11'],entrata:.6,azioni:[
+        {attesa:12.5},{effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* SQUADRA ALFA davanti alla porta (luci rosse e allarme) */
+      {id:'cap11_p07',tipo:'scena',sfondo:'vagone_convoglio',livelli:['emergenza11'],entrata:.5,
+        attori:[{id:'mango',x:.5,verso:'destra'},{id:'batteo',x:.57,verso:'destra'},{id:'sito',x:.64,verso:'destra'},{id:'chiara',x:.7,verso:'sinistra'},{id:'antonio',x:.77,verso:'sinistra'}],azioni:[
+        {chi:'sito',pose:{sito:'parla'},testo:'Sappiamo tutti cosa dobbiamo fare. Fino a quando il jammer sarà attivo, siamo da soli. Nessuna comunicazione con la squadra Bravo. Ricordatevi il nostro obiettivo: dobbiamo prendere il controllo della locomotiva. Due vagoni di distanza.'},
+        {chi:'sito',pose:{sito:'parla'},testo:'Siamo pronti. Quando quella porta si aprirà, ci sarà l’inferno. Siate pronti.'},
+        {chi:'chiara',pose:{sito:'base',chiara:'parla'},testo:'Siamo pronti. Andiamo a conquistare quella locomotiva.'},
+        {posa:{chiara:'base',sito:'annuisce'}},
+        {chi:'sito',testo:'Andiamo'},
+        {guarda:{chiara:'destra',antonio:'destra'}},{posa:{sito:'base'}},{attesa:.4},{effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* SQUADRA BRAVO: la pioggia di proiettili, Viola colpita alla spalla, Massimo la cura */
+      {id:'cap11_p08',tipo:'scena',sfondo:'vagone_convoglio',livelli:['emergenza11'],entrata:.5,azioni:[
+        {musica:'musica_assalto_convoglio'},
+        {entra:'viola',da:'sinistra',a:.5,cammina:'cammina',insieme:true},{attesa:.35},{entra:'zibe',da:'sinistra',a:.42,cammina:'cammina_c3',insieme:true},{attesa:.35},
+        {entra:'alice',da:'sinistra',a:.34,cammina:'cammina_calma',insieme:true},{attesa:.35},{entra:'ettore',da:'sinistra',a:.27,cammina:'cammina',insieme:true},{attesa:.35},
+        {entra:'massimo',da:'sinistra',a:.2,cammina:'cammina'},
+        {livello:'raffica11'},{attesa:.5},{posa:{viola:'ko'}},{effetto:'lampo',colore:'#ff2020'},{attesa:1.2},
+        {didascalia:'(Una pioggia di proiettili li accoglie. Viola, la prima della fila, viene colpita alla spalla.)'},
+        {posa:{zibe:'attacco',alice:'attacco'}},{livello:'raffica11'},{attesa:1.4},{posa:{zibe:'attesa',alice:'attesa'}},
+        {muovi:'massimo',a:.455,cammina:'cammina'},{guarda:{massimo:'destra'}},
+        {coppia:'massimo_cura_viola',attori:['massimo','viola'],dissolvenza:.25},{attesa:.6},
+        {didascalia:'(Massimo tira fuori il kit di pronto soccorso e chiude la ferita. Nonostante il dolore, Viola si rialza.)'},
+        {fineCoppia:true,vicini:true},{posa:{viola:'base',massimo:'base'}},{attesa:.6},
+        {posa:{ettore:'attesa'}},{attesa:.5},{muovi:'ettore',a:.72,vel:380,cammina:'attesa'},{attesa:.3},{effetto:'nero',durata:.4,resta:true},
+      ]},
+      /* LOTTA 12: la squadra Bravo contro i fucilieri imperiali (vagone 4) */
+      {id:'cap11_p09',tipo:'lotta',modo:'ondata',squadra:['ettore','zibe','alice','viola','massimo'],avversari:['fuciliereimp','fuciliereimp2'],arena:'vagone_convoglio',
+        difficolta:'normale',musica:'musica_assalto_convoglio',effetti:['emergenza11l','parata11']},
+      /* le sopracciglia gialle di Ettore alla luce rossa: Zibe rivede Iacopo */
+      {id:'cap11_p10',tipo:'scena',sfondo:'vagone_convoglio',livelli:['emergenza11'],entrata:.5,
+        attori:[{id:'viola',x:.13,verso:'destra'},{id:'alice',x:.2,verso:'destra'},{id:'massimo',x:.27,verso:'destra'},{id:'zibe',x:.42,verso:'destra'},{id:'ettore',x:.62,verso:'destra',posa:'attesa'}],azioni:[
+        {didascalia:'(Alla luce rossa e lampeggiante degli allarmi, le sopracciglia gialle di Ettore risaltano. In quel volto, Zibe vede un fantasma dal passato: Iacopo.)'},
+        {musica:'silenzio'},{livello:'battito11'},{posa:{zibe:'panico'}},{attesa:2.4},
+        {didascalia:'(Massimo gli passa accanto, ignaro, e gli dà una pacca sulla spalla mentre va verso la porta blindata.)'},
+        {muovi:'massimo',a:.4,cammina:'cammina'},{attesa:.3},{muovi:'massimo',a:.86,cammina:'cammina'},
+        {posa:{massimo:'taglia'}},{livello:'taglio11'},{attesa:1},
+        {guarda:{ettore:'sinistra'}},{posa:{ettore:'parla'}},{attesa:1.4},{posa:{ettore:'attesa'}},
+        {posa:{zibe:'guance'}},{attesa:1.2},{togliLivello:'battito11'},{posa:{zibe:'base'}},{musica:'musica_assalto_convoglio'},
+        {togliLivello:'taglio11'},{posa:{massimo:'base'}},{livello:'metallo11'},{effetto:'trema',forza:5,durata:.5},{attesa:.6},
+        {guarda:{ettore:'destra'}},
+        {esce:'ettore',verso:'destra',cammina:'cammina',insieme:true},{esce:'massimo',verso:'destra',cammina:'cammina',insieme:true},{attesa:.3},
+        {esce:'zibe',verso:'destra',cammina:'cammina_c3',insieme:true},{esce:'alice',verso:'destra',cammina:'cammina_calma',insieme:true},{esce:'viola',verso:'destra',cammina:'cammina'},
+        {effetto:'nero',durata:.4,resta:true},
+      ]},
+      /* IL MAGAZZINO DELLE MUNIZIONI: i soldati dietro le casse */
+      {id:'cap11_p11',tipo:'scena',sfondo:'vagone_munizioni',oggetti:CAP11.casse11,livelli:['emergenza11'],entrata:.5,
+        attori:[{id:'soldatoimp',x:.72,verso:'sinistra'},{id:'soldatoimp2',x:.86,verso:'sinistra'}],azioni:[
+        {entra:'zibe',da:'sinistra',a:.4,cammina:'cammina_c3',insieme:true},{attesa:.3},{entra:'ettore',da:'sinistra',a:.33,cammina:'cammina',insieme:true},{attesa:.3},
+        {entra:'alice',da:'sinistra',a:.26,cammina:'cammina_calma',insieme:true},{attesa:.3},{entra:'viola',da:'sinistra',a:.19,cammina:'cammina',insieme:true},{attesa:.3},
+        {entra:'massimo',da:'sinistra',a:.12,cammina:'cammina'},
+        {posa:{zibe:'attesa',ettore:'attesa',alice:'attesa'}},
+        {chi:'zibe',testo:'Alice, Ettore, copriteci'},
+        {effetto:'nero',durata:.4,resta:true},
+      ]},
+      /* LOTTA 13: la squadra Bravo contro i soldati imperiali (vagoni 5-7); tra un soldato e l'altro Massimo apre la porta */
+      {id:'cap11_p12',tipo:'lotta',modo:'ondata',squadra:['ettore','zibe','alice','viola','massimo'],avversari:['soldatoimp','soldatoimp2','soldatoimp3'],arena:'vagone_munizioni',
+        difficolta:'normale',musica:'musica_assalto_convoglio',effetti:['emergenza11l','parata11','porta13']},
+      /* L'OTTAVO VAGONE è vuoto (le luci rosse si spengono un attimo) */
+      {id:'cap11_p13',tipo:'scena',sfondo:'vagone_convoglio',livelli:['emergenza11','buio11'],entrata:.5,azioni:[
+        {entra:'zibe',da:'sinistra',a:.5,cammina:'cammina_c3',insieme:true},{attesa:.3},{entra:'ettore',da:'sinistra',a:.43,cammina:'cammina',insieme:true},{attesa:.3},
+        {entra:'alice',da:'sinistra',a:.36,cammina:'cammina_calma',insieme:true},{attesa:.3},{entra:'viola',da:'sinistra',a:.29,cammina:'cammina',insieme:true},{attesa:.3},
+        {entra:'massimo',da:'sinistra',a:.22,cammina:'cammina'},
+        {posa:{zibe:'attesa',ettore:'attesa',alice:'attesa',viola:'attesa',massimo:'attesa'}},{attesa:.6},
+        {didascalia:'(L’ottavo vagone è vuoto. Ma restano quattro vagoni da attraversare, e il tempo scorre.)'},
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Non possiamo permetterci di rallentare. Dobbiamo andare avanti, per noi e per la squadra Alfa.'},
+        {posa:{zibe:'base',ettore:'base',alice:'base',viola:'base',massimo:'base'}},
+        {muovi:'massimo',a:.86,cammina:'cammina'},{posa:{massimo:'taglia'}},{livello:'taglio11'},{attesa:1.4},
+        {effetto:'nero',durata:.4,resta:true},
+      ]},
+      /* IL VAGONE 2: la squadra Alfa in trappola, il mitragliere */
+      {id:'cap11_p14',tipo:'scena',sfondo:'vagone_convoglio',oggetti:CAP11.coperture14,livelli:['emergenza11'],entrata:.5,
+        attori:[{id:'soldatoimp',x:.88,verso:'sinistra'},{id:'soldatoimp2',x:.94,verso:'sinistra'}],azioni:[
+        {entra:'sito',da:'sinistra',a:.3,cammina:'cammina',insieme:true},{attesa:.25},{entra:'chiara',da:'sinistra',a:.44,insieme:true},{attesa:.25},
+        {entra:'batteo',da:'sinistra',a:.23,cammina:'cammina_c3',insieme:true},{attesa:.25},{entra:'antonio',da:'sinistra',a:.37,cammina:'cammina',insieme:true},{attesa:.25},
+        {entra:'mango',da:'sinistra',a:.16},
+        {livello:'raffica11'},{posa:{sito:'attesa',chiara:'attesa',batteo:'attesa',antonio:'attesa'}},{attesa:.8},
+        {chi:'sito',testo:'Ragazzi, siamo in trappola!'},
+        {didascalia:'(Dal vagone della motrice arriva un soldato imperiale. Piazza una mitragliatrice leggera su una cassa e inizia a sparare.)'},
+        {entra:'mitragliere',da:'destra',a:.8,vel:220},{posa:{mitragliere:'spara'}},{livello:'raffica11'},{attesa:1.2},
+        {chi:'sito',testo:'Abbiamo bisogno di un piano. Non possiamo lasciare che quella mitragliatrice torni in funzione. Avremo bisogno di fuoco di copertura.'},
+        {chi:'batteo',pose:{batteo:'arrabbiato'},testo:'Sito, è una follia! Non sopravviverai a quell’inferno di proiettili!'},
+        {chi:'sito',pose:{batteo:'attesa'},testo:'Abbiamo un’alternativa?'},
+        {attesa:1.2},
+        {chi:'sito',pose:{sito:'indica'},testo:'Batteo, Antonio, Mango, dovrete tenere a bada quei soldati mentre avanziamo. Non abbiamo altra scelta. O riusciamo, o moriamo tutti.'},
+        {chi:'sito',pose:{sito:'attesa'},testo:'Adesso!'},
+        {effetto:'nero',durata:.4,resta:true},
+      ]},
+      /* LOTTA 14: la squadra Alfa contro i soldati e il mitragliere (miniboss: sotto il 30% la lotta si ferma) */
+      {id:'cap11_p15',tipo:'lotta',modo:'ondata',squadra:['sito','chiara','batteo','mango','antonio'],avversari:['soldatoimp4','soldatoimp5','mitragliere'],arena:'vagone_convoglio',
+        difficolta:'normale',musica:'musica_assalto_convoglio',effetti:['emergenza11l','cassa_mitragliere11','fine_mitragliere11']},
+      /* Sito avanza deviando i colpi con l'ascia, Chiara piomba sul mitragliere */
+      {id:'cap11_p16',tipo:'scena',sfondo:'vagone_convoglio',oggetti:CAP11.coperture16,livelli:['emergenza11'],entrata:.5,
+        attori:[{id:'batteo',x:.11,verso:'destra',posa:'attesa'},{id:'mango',x:.17,verso:'destra'},{id:'antonio',x:.27,verso:'destra',posa:'attesa'},
+          {id:'chiara',x:.33,verso:'destra',posa:'attesa'},{id:'sito',x:.39,verso:'destra',posa:'devia'},{id:'mitragliere',x:.8,verso:'sinistra',posa:'spara'}],azioni:[
+        {livello:'spari_mitra11'},
+        {muovi:'sito',a:.47,vel:28,cammina:'devia',insieme:true},{muovi:'chiara',a:.41,vel:28,insieme:true},{posa:{chiara:'calcio'}},{attesa:.4},
+        {chi:'sito',testo:'Non ci fermeremo. Non possiamo permetterci di fallire. Non ora.'},
+        {chi:'sito',pose:{chiara:'calcio'},testo:'Continua a sparare, Chiara!'},
+        {effetto:'lampo',colore:'#ff2020'},{posa:{sito:'colpito'}},{attesa:.5},{posa:{sito:'devia'}},
+        {muovi:'sito',a:.53,vel:28,cammina:'devia',insieme:true},{muovi:'chiara',a:.47,vel:28,insieme:true},
+        {chi:'sito',testo:'Non possiamo permetterci di fermarci.'},
+        {chi:'sito',pose:{chiara:'calcio'},testo:'Avanti, Chiara! Non mollare!'},
+        {effetto:'lampo',colore:'#ff2020'},{posa:{sito:'colpito'}},{attesa:.5},
+        {chi:'chiara',pose:{chiara:'sorpresa'},testo:'Sito!'},
+        {chi:'sito',pose:{chiara:'attesa',sito:'attesa'},testo:'Sto bene. Continua a sparare.'},
+        {didascalia:'(Chiara salta sulla schiena di Sito, spara in volo e piomba sul mitragliere con i suoi pugnali al plasma.)'},
+        {posa:{chiara:'salto'}},{muovi:'chiara',a:.6,alt:110,vel:420,velAlt:300},{posa:{chiara:'calcio'}},{muovi:'chiara',a:.74,alt:0,vel:330,velAlt:300},
+        {posa:{chiara:'attacco'}},{togliLivello:'spari_mitra11'},{effetto:'lampo',colore:'#c080ff'},{posa:{mitragliere:'ko'}},{attesa:1},
+        {posa:{sito:'ferito',chiara:'attesa'}},{attesa:.8},
+        {chi:'antonio',pose:{antonio:'parla'},testo:'Stiamo perdendo tempo'},
+        {chi:'sito',pose:{antonio:'attesa'},testo:'Andate. Io... starò bene.'},
+        {guarda:{chiara:'sinistra'}},
+        {chi:'sito',testo:'Vai, Chiara. Conquista quella locomotiva.'},
+        {posa:{chiara:'annuisce'}},{attesa:1},{effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* LA CABINA DI GUIDA: i piloti si arrendono, Antonio alla console, Mango cura Sito */
+      {id:'cap11_p17',tipo:'scena',sfondo:'cabina_guida',oggetti:[CAP11.console],entrata:.6,
+        attori:[{id:'sito',x:.07,verso:'destra',posa:'ferito'},{id:'mango',x:.12,verso:'sinistra'},{id:'antonio',x:.22,verso:'destra'},{id:'chiara',x:.28,verso:'destra'},{id:'batteo',x:.42,verso:'destra'}],azioni:[
+        {coppia:'mango_cura_sito',attori:['sito','mango'],dissolvenza:.01},
+        {entra:'piloti',da:'alto',a:.86,alt:14,daAlt:14,verso:'sinistra',posa:'resa'},
+        {livello:'metallo11'},{attesa:.6},
+        {didascalia:'(Antonio taglia il portellone. Dentro ci sono cinque piloti, che si arrendono.)'},
+        {chi:'batteo',pose:{batteo:'arrabbiato'},testo:'Non siamo qui per uccidervi, arrendetevi e avrete salva la vita.'},
+        {posa:{batteo:'annuisce'}},{attesa:.7},
+        {chi:'batteo',pose:{batteo:'parla'},testo:'Avete fatto la scelta giusta'},
+        {posa:{batteo:'base'}},
+        {muovi:'antonio',a:.6,cammina:'cammina',insieme:true},{muovi:'chiara',a:.52,cammina:'cammina'},{guarda:{chiara:'destra'}},
+        {posa:{antonio:'console',chiara:'parla'}},{attesa:.6},{posa:{chiara:'base'}},
+        {chi:'antonio',testo:'Abbiamo solo pochi secondi prima che il jammer smetta di funzionare, dobbiamo disattivare i sistemi di comunicazione della nave prima di allora.'},
+        {chi:'antonio',testo:'Dieci secondi. Sito, appena il jammer smetterà di funzionare, contatta gli altri. Devono sapere che abbiamo avuto successo.'},
+        {chi:'antonio',testo:'Tre... due... uno...'},
+        {chi:'sito',testo:'Squadra Bravo, qui la squadra Alfa. La missione è un successo. La locomotiva è sotto il nostro controllo. Adesso tocca a voi.'},
+        {livello:'radio'},
+        {chi:'zibe',testo:'Ricevuto, squadra Alfa. Portiamo a termine la messa in sicurezza. Ottimo lavoro, ragazzi.'},
+        {livello:'radio_fine'},{guarda:{antonio:'sinistra'}},
+        {chi:'antonio',pose:{antonio:'parla'},testo:'Bene, direi che abbiamo appena conquistato una nave imperiale.'},
+        {posa:{antonio:'base'}},{attesa:.4},{effetto:'nero',durata:.8,resta:true},
+      ]},
+      /* IL PORTELLONE DELL'ARMERIA: la granata stordente e l'idea di Alice */
+      {id:'cap11_p18',tipo:'scena',sfondo:'vagone_convoglio',livelli:['emergenza11'],entrata:.5,
+        attori:[{id:'viola',x:.5,verso:'destra'},{id:'alice',x:.57,verso:'destra'},{id:'ettore',x:.64,verso:'destra'},{id:'zibe',x:.71,verso:'sinistra'},{id:'massimo',x:.84,verso:'destra'}],azioni:[
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Non abbassate la guardia. Abbiamo fatto buoni progressi, ma potrebbero esserci sorprese nei prossimi vagoni.'},
+        {posa:{zibe:'base'}},{guarda:{zibe:'destra'}},{attesa:.3},
+      ]},
+      /* (stessa scena, senza il riquadro: il tagliafiamme, la raffica, la granata stordente) */
+      {id:'cap11_p18b',tipo:'scena',sfondo:'vagone_convoglio',livelli:['emergenza11'],entrata:0,
+        attori:[{id:'viola',x:.5,verso:'destra'},{id:'alice',x:.57,verso:'destra'},{id:'ettore',x:.64,verso:'destra'},{id:'zibe',x:.71,verso:'destra'},{id:'massimo',x:.84,verso:'destra'}],azioni:[
+        {posa:{massimo:'taglia'}},{livello:'taglio_fiamme11'},{attesa:1.6},{togliLivello:'taglio_fiamme11'},
+        {livello:'raffica11'},{muovi:'massimo',a:.74,vel:360,indietro:true,cammina:'attesa',insieme:true},{muovi:'zibe',a:.62,vel:360,indietro:true,cammina:'attesa',insieme:true},
+        {muovi:'ettore',a:.5,vel:360,indietro:true,cammina:'attesa',insieme:true},{muovi:'alice',a:.4,vel:360,indietro:true,cammina:'attesa',insieme:true},{muovi:'viola',a:.32,vel:360,indietro:true,cammina:'attesa'},
+        {posa:{massimo:'attesa',zibe:'attesa',ettore:'attesa',alice:'attesa',viola:'attesa'}},{attesa:.4},
+        {livello:'granata11'},{attesa:1.2},{posa:{ettore:'sorpresa'}},{livello:'esclama11'},{attesa:1.1},
+        {musica:'silenzio'},{livello:'stordente11'},{attesa:3.4},
+        {didascalia:'(Alice riapre gli occhi a fatica. Il vagone dei soldati è un’armeria piena di munizioni. Le viene un’idea.)'},
+        {posa:{alice:'batteria'}},{attesa:.9},{livello:'batteria11'},{attesa:.9},{effetto:'trema',forza:9,durata:1.2},{musica:'musica_assalto_convoglio'},{attesa:1.2},{posa:{alice:'attesa'}},
+        {didascalia:'(Ettore, Zibe e Viola si gettano nell’armeria, approfittando del caos.)'},
+        {posa:{ettore:'attesa',zibe:'attesa',viola:'attesa'}},
+        {esce:'ettore',verso:'destra',vel:320,cammina:'attesa',insieme:true},{esce:'zibe',verso:'destra',vel:300,cammina:'attesa',insieme:true},{esce:'viola',verso:'destra',vel:300,cammina:'attesa'},
+        {livello:'rumori11'},{attesa:2.2},{effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* L'ARMERIA: l'esplosione al portellone, la voce nel fumo, Luca di Mauro nell'esoscheletro */
+      {id:'cap11_p19',tipo:'scena',sfondo:'armeria_vagone',livelli:['fumo_armeria11'],entrata:.6,
+        attori:[{id:'viola',x:.32,verso:'destra'},{id:'alice',x:.4,verso:'destra'},{id:'zibe',x:.48,verso:'sinistra'},{id:'ettore',x:.56,verso:'sinistra'}],azioni:[
+        {entra:'massimo',da:'sinistra',a:.2,cammina:'cammina'},{guarda:{zibe:'sinistra',alice:'sinistra'}},
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Hai avuto un’ottima idea. Ci hai salvati.'},
+        {chi:'massimo',pose:{zibe:'base',massimo:'parla'},testo:'Dobbiamo proseguire'},
+        {posa:{massimo:'base'}},{muovi:'massimo',a:.85,cammina:'cammina'},{posa:{massimo:'taglia'}},{livello:'taglio11'},{attesa:1.2},{togliLivello:'taglio11'},
+        {livello:'scoppio_porta11'},{effetto:'trema',forza:12,durata:.8},{posa:{massimo:'colpito'}},
+        {muovi:'massimo',a:.6,alt:60,vel:700,velAlt:240,indietro:true},{muovi:'massimo',alt:0,velAlt:400},
+        {posa:{massimo:'ko',ettore:'ko'}},{effetto:'trema',forza:4,durata:.3},{attesa:1.4},
+        {chi:'voce11',nome:'???',testo:'Allora... Devo dire che mai mi sarei aspettato di vedervi qui. Credevo foste morti, oppure finiti a pulire i cessi di qualche lurido locale in qualche città sperduta di un pianeta desolato dell’impero.'},
+        {guarda:{zibe:'destra',alice:'destra',viola:'destra'}},
+        {chi:'zibe',pose:{zibe:'sorpresa'},testo:'Quella voce...'},
+        {chi:'alice',pose:{zibe:'base',alice:'triste'},testo:'Sì. È lui. Non potrei dimenticare quella fastidiosa voce neanche se mi trovassi all’altro capo dell’universo. È Luca di Mauro.'},
+        {posa:{alice:'base'}},
+        {entra:'dimauroexo',da:'alto',a:.84,alt:0,daAlt:0,verso:'sinistra',posa:'attesa'},{livello:'fumo_via11'},{musica:'musica_ultimatum'},{attesa:1.8},
+        {posa:{ettore:'base'}},{guarda:{ettore:'destra'}},{attesa:.4},
+        {chi:'ettore',pose:{ettore:'sorpresa'},testo:'È lui? Il Luca di Mauro che ha tradito il Fronte per unirsi a Iacopo?'},
+        {chi:'dimauroexo',pose:{ettore:'base'},testo:'Se pensavate che l’Impero non si sarebbe accorto del baccano che stavate facendo cercando informazioni sul convoglio, siete proprio dei poveri illusi.'},
+        {chi:'dimauroexo',testo:'Davvero, mai avrei pensato che foste voi a dare tanto fastidio. Ho chiesto all’Imperatore di occuparmi personalmente dei ribelli che stavano pianificando l’attacco al convoglio. E adesso che vedo che siete voi... beh, capisco di aver preso la decisione giusta. Ora posso farvi pagare per come mi trattavate con superiorità ai tempi del Fronte.'},
+        {chi:'zibe',pose:{zibe:'arrabbiato'},testo:'Così questo è quello che sei diventato, Luca? Un lacchè dell’Imperatore?'},
+        {chi:'dimauroexo',pose:{zibe:'base',dimauroexo:'sfida'},testo:'Mi definisci un lacchè, Zibe? E perché? Solo perché sto al fianco dell’alpaca più potente dell’universo?'},
+        {chi:'zibe',pose:{dimauroexo:'attesa',zibe:'arrabbiato'},testo:'Credo che la definizione sia appropriata.'},
+        {chi:'alice',pose:{zibe:'base',alice:'arrabbiato'},testo:'Era questo che desideravi, Luca? Sentirti superiore tradendo tutto ciò in cui credevamo?'},
+        {chi:'dimauroexo',pose:{alice:'base'},testo:'Alice, Alice... non ho tradito niente. Ho solo cambiato la mia visione delle cose. Ho sempre condiviso il quadro dell’Imperatore, dopotutto. Le masse... non sono pronte per la libertà. Sono come l’argilla nelle mani di un artista, pronte a essere modellate.'},
+        {chi:'alice',pose:{alice:'arrabbiato'},testo:'E tu ti consideri l’artista, immagino?'},
+        {chi:'zibe',pose:{alice:'base',zibe:'arrabbiato'},testo:'O forse è l’Imperatore Iacopo a giocare a fare Dio?'},
+        {chi:'dimauroexo',pose:{zibe:'base'},testo:'Zibe, Alice... Siete così legati ai vostri ideali di libertà e uguaglianza da non riuscire a vedere la realtà. L’Impero porta stabilità, ordine, prosperità. Chiunque può trovare il suo posto sotto la sua ala, a patto di seguire le regole.'},
+        {chi:'alice',pose:{alice:'arrabbiato'},testo:'Le regole di un despota impazzito! Iacopo si è lasciato corrompere dal potere e tu lo hai seguito come un cieco.'},
+        {chi:'dimauroexo',pose:{alice:'base'},testo:'Iacopo non è impazzito. Ha solo capito che la libertà è un lusso che le masse non possono permettersi. È il pastore che guida il gregge, a volte con la carota, a volte con il bastone.'},
+        {chi:'zibe',pose:{zibe:'arrabbiato'},testo:'Quindi giustifichi la tirannia con la necessità di guida?'},
+        {chi:'dimauroexo',pose:{zibe:'base'},testo:'Non si tratta di giustificare. Si tratta di accettare la verità. La società che l’Impero ha costruito è perfetta. È a prova di stupido, direbbe qualcuno. Chi fallisce, fallisce perché vuole fallire. La selezione naturale, nient’altro.'},
+        {chi:'dimauroexo',testo:'Certo che siete degli idealisti, non posso negarlo. Ma non capite. L’Imperatore è più benevolo di quanto pensiate. Capisce la vostra lotta, capisce la vostra voglia di libertà.'},
+        {chi:'dimauroexo',testo:'Iacopo crede nel diritto di ognuno di lottare per ciò in cui crede. Lo abbiamo fatto in passato, contro il Re. E ha ammesso, più di una volta, che è vostro diritto farlo ora.'},
+        {chi:'dimauroexo',testo:'Ma io non sono così indulgente. Non sono dell’opinione che dobbiamo aspettare che diventiate un problema. Se posso schiacciare un problema prima che esploda, lo farò.'},
+        {chi:'dimauroexo',testo:'Tu ricordi, Alice. Sai cosa succede quando si lascia che un problema cresca troppo.'},
+        {posa:{alice:'arrabbiato'}},{attesa:1.2},
+        {chi:'dimauroexo',pose:{alice:'base',dimauroexo:'sfida'},testo:'Quindi, cosa aspettate? Venite a prendermi.'},
+        {posa:{dimauroexo:'attesa',zibe:'attesa',alice:'attesa',viola:'attesa',ettore:'attesa'}},{attesa:.6},
+      ]},
+      /* LOTTA 15, FASE 1: Luca di Mauro nell'esoscheletro (armeria). Massimo è svenuto: non si può scegliere finché non si risveglia (70%).
+         Al 50% Ettore trancia il tubo idraulico (da lì Luca combatte col solo braccio sinistro); al 35% la lotta si ferma. Vedi l'effetto boss15. */
+      {id:'cap11_p20',tipo:'lotta',modo:'normale',squadra:['ettore','alice','zibe','viola','massimo'],svenuti:['massimo'],avversario:'dimauroexo',arena:'armeria_vagone',
+        vita:1.3,difficolta:'difficile',musica:'musica_esoscheletro',effetti:['spettatori15','frase_luca11','parata11','boss15']},
+      /* la granata di Luca: le rastrelliere cadono e lui fugge a destra */
+      {id:'cap11_p20b',tipo:'scena',sfondo:'armeria_vagone',livelli:['fumo_armeria11','fumo_via11'],entrata:.3,
+        attori:[{id:'massimo',x:.14,verso:'destra'},{id:'viola',x:.22,verso:'destra',posa:'attesa'},{id:'alice',x:.3,verso:'destra',posa:'attesa'},{id:'zibe',x:.38,verso:'destra',posa:'attesa'},
+          {id:'ettore',x:.48,verso:'destra',posa:'attesa'},{id:'dimauroexo',x:.74,verso:'sinistra',posa:'colpito'}],azioni:[
+        {attesa:.6},{posa:{dimauroexo:'speciale'}},{attesa:.6},{livello:'rastrelliere11'},{effetto:'trema',forza:10,durata:1.2},{attesa:1.4},
+        {posa:{dimauroexo:'attesa'}},{esce:'dimauroexo',verso:'destra',vel:180},{attesa:.4},{effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* IL VAGONE CALDAIA: Luca lacera i tubi del gas e strappa il portello dell'inceneritore */
+      {id:'cap11_p21a',tipo:'scena',sfondo:'vagone_caldaia',entrata:.5,
+        attori:[{id:'massimo',x:.12,verso:'destra',posa:'attesa'},{id:'viola',x:.19,verso:'destra',posa:'attesa'},{id:'alice',x:.26,verso:'destra',posa:'attesa'},{id:'zibe',x:.33,verso:'destra',posa:'attesa'},
+          {id:'ettore',x:.41,verso:'destra',posa:'attesa'},{id:'dimauroexo',x:.78,verso:'sinistra',posa:'attesa'}],azioni:[
+        {posa:{dimauroexo:'attacco'}},{livello:'metallo11'},{livello:'gas11'},{livello:'inceneritore11'},{effetto:'trema',forza:6,durata:.6},{attesa:.6},
+        {didascalia:'(Luca lacera i tubi del gas e strappa via il portello dell’inceneritore.)'},
+        {posa:{dimauroexo:'attesa'}},{attesa:.4},
+      ]},
+      /* LOTTA 15, FASE 2: vagone caldaia. Luca riparte dal 35% e senza il braccio; lingue di fuoco sul pavimento; sotto il 15% la lotta si ferma */
+      {id:'cap11_p21',tipo:'lotta',modo:'normale',squadra:['ettore','alice','zibe','viola','massimo'],avversario:'dimauroexo',arena:'vagone_caldaia',vita:1.3,
+        difficolta:'difficile',musica:'musica_esoscheletro',pericolo:'fiamme11',effetti:['vita35_11','inceneritore11l','gas11l','parata11','fine15_11']},
+      /* Luca in ginocchio; Zibe ed Ettore lo inseguono, gli altri vanno a chiudere il passaggio */
+      {id:'cap11_p22',tipo:'scena',sfondo:'vagone_caldaia',livelli:['gas11','inceneritore11'],entrata:.4,
+        attori:[{id:'massimo',x:.1,verso:'destra'},{id:'viola',x:.17,verso:'destra'},{id:'alice',x:.24,verso:'destra'},{id:'zibe',x:.32,verso:'destra'},{id:'ettore',x:.4,verso:'destra'},
+          {id:'dimauroexo',x:.76,verso:'sinistra',posa:'colpito'}],azioni:[
+        {didascalia:'(Ettore colpisce il pistone della gamba sinistra dell’esoscheletro. Luca cade in ginocchio.)'},
+        {chi:'dimauroexo',testo:'Siete stati bravi. Ma non lascerò che sopravviviate.'},
+        {posa:{dimauroexo:'attesa'}},{esce:'dimauroexo',verso:'destra',vel:60},
+        {muovi:'ettore',a:.5,vel:200,cammina:'cammina'},{muovi:'zibe',a:.45,vel:240,cammina:'cammina_c3'},{guarda:{ettore:'sinistra'}},
+        {chi:'zibe',pose:{zibe:'parla'},testo:'Dobbiamo fermare il gas'},
+        {chi:'ettore',pose:{zibe:'base',ettore:'arrabbiato'},testo:'Non possiamo lasciarlo scappare!'},
+        {chi:'zibe',pose:{ettore:'base',zibe:'arrabbiato'},testo:'Dobbiamo fermare il gas. Non lasceremo scappare quel traditore, ma dobbiamo calcolare bene i nostri passi.'},
+        {guarda:{zibe:'sinistra'}},
+        {chi:'zibe',pose:{zibe:'indica'},testo:'Dovete andare nel vagone armeria. Trovate un modo per chiudere il passaggio prima dell’esplosione.'},
+        {posa:{zibe:'base',alice:'arrabbiato'}},{attesa:1},{posa:{alice:'annuisce'}},{attesa:.8},
+        {esce:'alice',verso:'sinistra',cammina:'cammina_calma',insieme:true},{esce:'viola',verso:'sinistra',cammina:'cammina',insieme:true},{esce:'massimo',verso:'sinistra',cammina:'cammina'},
+        {guarda:{zibe:'destra'}},{attesa:.8},
+        {esce:'ettore',verso:'destra',vel:260,cammina:'scatto',insieme:true},{esce:'zibe',verso:'destra',vel:240,cammina:'cammina_c3'},
+        {effetto:'nero',durata:.5,resta:true},
+      ]},
+      /* IL VAGONE DELLE CAPSULE: Luca fugge, Zibe è colpito, Ettore chiude il portellone */
+      {id:'cap11_p23',tipo:'scena',sfondo:'vagone_capsule',livelli:['capsule11'],entrata:.6,
+        attori:[{id:'dimauroexo',x:.44,verso:'destra',posa:'ko'},{id:'dimauroministro',x:.68,verso:'sinistra'}],azioni:[
+        {musica:'musica_deriva'},
+        {entra:'zibe',da:'sinistra',a:.3,cammina:'cammina_c3',insieme:true},{attesa:.25},{entra:'ettore',da:'sinistra',a:.36,cammina:'cammina'},
+        {posa:{dimauroministro:'spara'}},{livello:'colpi_luca11'},{posa:{zibe:'ferito',ettore:'ferito'}},{attesa:1.6},{togliLivello:'colpi_luca11'},{posa:{dimauroministro:'base'}},
+        {didascalia:'(Zibe gli grida di arrendersi.)'},
+        {chi:'dimauroministro',pose:{dimauroministro:'spara'},testo:'Perché mai dovrei?'},
+        {posa:{dimauroministro:'base'}},{livello:'caps1'},{attesa:1.8},{livello:'caps2'},{attesa:1.8},{livello:'caps3'},{attesa:1.2},
+        {posa:{ettore:'parata'}},{posa:{dimauroministro:'spara'}},{livello:'spari_luca11'},{muovi:'ettore',a:.5,vel:40,cammina:'parata'},
+        {togliLivello:'spari_luca11'},{effetto:'lampo',colore:'#ff2020'},{suono:'boom'},{posa:{zibe:'ferito'}},{attesa:.8},{posa:{dimauroministro:'base'}},
+        {guarda:{ettore:'sinistra'}},{didascalia:'(Ettore urla il nome di Zibe.)',pose:{ettore:'urla'}},
+        {guarda:{ettore:'destra'}},{muovi:'dimauroministro',a:CAP11.capsule[3],cammina:'cammina',insieme:true},{muovi:'ettore',a:.74,vel:240,cammina:'scatto'},
+        {livello:'svanisce_luca11'},{livello:'caps4_chiusa'},{attesa:.5},
+        {posa:{ettore:'attacco'}},{livello:'vetro11'},{attesa:1.2},{posa:{ettore:'attesa'}},
+        {didascalia:'(Dall’altro lato del vetro, Luca ride. Il suo volto è contorto in una smorfia di puro trionfo.)'},
+        {livello:'caps4_via'},{attesa:2.2},
+        {guarda:{ettore:'sinistra'}},{muovi:'ettore',a:.335,vel:260,cammina:'scatto'},
+        {coppia:'ettore_zibe_ferita',attori:['zibe','ettore'],dissolvenza:.25},{attesa:.8},
+        {chi:'zibe',testo:'Chiudi il portellone'},
+        {fineCoppia:true,vicini:true},{posa:{zibe:'ferito'}},
+        {muovi:'ettore',a:.08,vel:260,cammina:'scatto'},{livello:'portellone11'},{effetto:'trema',forza:14,durata:1.3},{attesa:1.6},
+        {guarda:{ettore:'destra'}},{muovi:'ettore',a:.2,cammina:'cammina'},{posa:{ettore:'triste'}},{attesa:1.6},{effetto:'nero',durata:.8,resta:true},
+      ]},
+      /* LA DERIVA (senza dialoghi): il vagone alla deriva, il pianeta verde, l'atmosfera, lo schianto */
+      {id:'cap11_p24',tipo:'scena',sfondo:'spazio',livelli:['deriva11'],entrata:1,azioni:[
+        {musica:'musica_deriva'},{attesa:3},
+        {didascalia:'(Il loro vagone si è staccato dal convoglio. Fluttua nello spazio, senza motori. Ettore riesce a fermare l’emorragia di Zibe, che è svenuto.)'},
+        {livello:'deriva_dopo11'},{attesa:5.5},{livello:'deriva_atmo11'},{attesa:2},
+        {didascalia:'(L’ultimo pensiero di Ettore, prima di perdere conoscenza, è una preghiera silenziosa per la salvezza dei suoi amici.)'},
+        {attesa:2.2},{effetto:'trema',forza:16,durata:.4},{attesa:.3},{musica:'silenzio'},{effetto:'nero',durata:.05,resta:true},{attesa:1.5},
+      ]},
+      /* cap11_p25 FINE CAPITOLO: salvataggio, sblocco di Viola, Massimo e Antonio (elenco "sblocchi") e "Il capitolo 12 arriverà presto" li fa il motore */
     ]},
 
   ],
@@ -7711,6 +8243,236 @@ CAP9.monitor.forEach(([x,y,mw,mh],i)=>{const X=l+x*s,Y=tp+y*s,MW=mw*s,MH=mh*s;c.
       if(p2>0){c.globalAlpha=(1-p3)*.5;c.fillRect(x-dw*.1,y-lh*2,dw*1.2,dh+lh*4);}}
     c.restore();}},
 };
+/* ==================== CAPITOLO 11 – Il convoglio: effetti delle scene e delle lotte ==================== */
+Object.assign(ANIMAZIONI,{
+  /* CAPANNONE: luce giallognola di smog che entra dal tetto e polvere nell'aria */
+  smog11:{sopra:true,draw(c,t,w,h,d){c.save();c.globalCompositeOperation='lighter';
+    for(const [u,a] of [[.12,.07],[.37,.06],[.6,.08],[.84,.05]]){const g=c.createLinearGradient(w*u,0,w*u+120,SCENA_SUOLO);g.addColorStop(0,'rgba(255,225,120,'+(a*(.85+.15*Math.sin(t*.7+u*8)))+')');g.addColorStop(1,'rgba(255,215,110,0)');
+      c.fillStyle=g;c.beginPath();c.moveTo(w*u-30,0);c.lineTo(w*u+40,0);c.lineTo(w*u+170,SCENA_SUOLO);c.lineTo(w*u+50,SCENA_SUOLO);c.closePath();c.fill();}
+    for(let i=0;i<45;i++){const x=((sr(i)*w+t*(4+sr(i+2)*6))%w+w)%w,y=(sr(i+9)*SCENA_SUOLO+Math.sin(t*.6+i)*10);c.globalAlpha=.25+.25*Math.sin(t*1.3+i);c.fillStyle='#ffe9a8';c.fillRect(x,y,1.6,1.6);}
+    c.restore();c.save();c.fillStyle='rgba(120,100,40,.08)';c.fillRect(-40,-40,w+80,h+80);c.restore();}},
+  /* il furgone delle consegne di formaggio (dentro c'è un piccolo arsenale): entra da sinistra e si ferma */
+  furgone11:{draw(c,t,w,h,d){const I=immagineOggetto('furgone_formaggio');if(!imgOk(I.im)||I.base==null)return;_suono9(d,()=>SUONI10.motore_furgone());
+    const k=Math.min(1,t/2.6),e=1-Math.pow(1-k,3),x=-I.im.naturalWidth*.6+(w*CAP11.furgone.x+I.im.naturalWidth*.6)*e,s=CAP11.furgone.scala,bump=k<1?Math.sin(t*22)*1:0;
+    c.drawImage(I.im,x-I.cx*s,SCENA_SUOLO-I.base*s+bump,I.im.naturalWidth*s,I.im.naturalHeight*s);}},
+  /* la navicella del Fronte a destra, DAVANTI agli attori (chi sale ci sparisce dietro); con "decollo11" si alza ed esce in alto */
+  navicella11:{sopra:true,draw(c,t,w,h,d){const N=immagineOggetto('navicella');if(!imgOk(N.im)||N.base==null)return;const P=CAP11.navicella,s=P.scala,x=w-N.im.naturalWidth*s/2+P.fuori,
+    D=SC.livelli.find(L=>L.n==='decollo11');let y=SCENA_SUOLO;if(D){y-=30*D.t*D.t+10*D.t;if(!D.d.s){D.d.s=1;try{SUONI11.propulsori();setTimeout(()=>SUONI11.propulsori(),900);}catch(e){}}
+      const fl=10+Math.random()*8;c.save();c.globalCompositeOperation='lighter';const g=c.createLinearGradient(0,y,0,y+fl*6);g.addColorStop(0,'rgba(255,240,180,.9)');g.addColorStop(1,'rgba(255,100,20,0)');c.fillStyle=g;c.fillRect(x-30,y-6,60,fl*6);c.restore();}
+    c.drawImage(N.im,x-N.cx*s,y-N.base*s,N.im.naturalWidth*s,N.im.naturalHeight*s);}},
+  furgone_fermo11:{draw(c,t,w,h,d){const I=immagineOggetto('furgone_formaggio');if(!imgOk(I.im)||I.base==null)return;const s=CAP11.furgone.scala;
+    c.drawImage(I.im,w*CAP11.furgone.x-I.cx*s,SCENA_SUOLO-I.base*s,I.im.naturalWidth*s,I.im.naturalHeight*s);}},
+  decollo11:{draw(){}},
+  /* grida di approvazione e zampe che battono sul pavimento */
+  grida11:{draw(c,t,w,h,d){_suono9(d,()=>{SUONI11.grida();setTimeout(()=>SUONI11.grida(),800);});}},
+  /* BRIEFING DI ANTONIO: lo schema del convoglio su fondo blu scuro (la motrice a destra, i vagoni da 1 a 12 verso sinistra) */
+  schema11:{draw(c,t,w,h,d){c.save();c.fillStyle='#08142e';c.fillRect(-40,-40,w+80,h+80);
+    c.strokeStyle='rgba(80,140,255,.12)';c.lineWidth=1;for(let x=0;x<w;x+=32){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();}for(let y=0;y<h;y+=32){c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();}
+    const n=13,gap=8,bw=Math.min(66,(w-60)/n-gap),x0=(w-(n*(bw+gap)-gap))/2,y=150,bh=54,X=i=>x0+(n-1-i)*(bw+gap);   /* i = 0 motrice, 1..12 vagoni */
+    const v3=SC.livelli.find(L=>L.n==='schema_v3'),al=SC.livelli.find(L=>L.n==='schema_alfa'),br=SC.livelli.find(L=>L.n==='schema_bravo');
+    _testo11(c,'IL CONVOGLIO',w/2,88,24,'#9fd0ff');
+    for(let i=0;i<n;i++){const x=X(i);let fill='#1d3a6e',st='#7fb2ff';
+      if(i===3){fill=v3&&Math.sin(v3.t*9)>0?'#ff3030':'#a01818';st='#ff9090';}
+      c.fillStyle=fill;c.strokeStyle=st;c.lineWidth=2;c.beginPath();
+      if(i===0){c.moveTo(x,y);c.lineTo(x+bw*.62,y);c.lineTo(x+bw,y+bh*.62);c.lineTo(x+bw,y+bh);c.lineTo(x,y+bh);c.closePath();}else c.rect(x,y,bw,bh);c.fill();c.stroke();
+      if(i===3){const cx=x+bw/2,cy=y+bh/2;c.fillStyle='#ffe14a';c.beginPath();for(let k=0;k<16;k++){const r=k%2?7:16,a=k/16*6.283;c.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);}c.closePath();c.fill();}
+      _testo11(c,i?String(i):'M',x+bw/2,y+bh+20,17,i===3?'#ff9090':'#cfe2ff');
+      if(i<n-1){c.strokeStyle='#7fb2ff';c.beginPath();c.moveTo(X(i+1)+bw,y+bh*.7);c.lineTo(x,y+bh*.7);c.stroke();}}
+    const freccia=(i0,i1,yy,col,nome,k)=>{const xa=X(i0)+bw/2,xb=X(i1)+bw/2,xe=xa+(xb-xa)*Math.min(1,k);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=5;c.beginPath();c.moveTo(xa,yy);c.lineTo(xe,yy);c.stroke();
+      const dir=Math.sign(xb-xa);c.beginPath();c.moveTo(xe+dir*12,yy);c.lineTo(xe-dir*4,yy-10);c.lineTo(xe-dir*4,yy+10);c.closePath();c.fill();_testo11(c,nome,(xa+xe)/2,yy-22,20,col);};
+    if(al)freccia(3,0,y-18,'#58ff7a','ALFA',al.t/1.2);
+    if(br)freccia(4,12,y+bh+72,'#55d6ff','BRAVO',br.t/1.6);
+    c.restore();}},
+  schema_v3:{draw(){}},schema_alfa:{draw(){}},schema_bravo:{draw(){}},
+  /* L'ASSALTO NELLO SPAZIO (circa 12 secondi): il convoglio passa da destra a sinistra, la navicella si avvicina, 10 alpaca in tuta si lanciano,
+     la navicella colpisce il terzo vagone (solo un lampo bianco, niente fuoco né fumo), gli alpaca si aggrappano: 5 al primo vagone, 5 al quarto */
+  assalto11:{draw(c,t,w,h,d){_stelle10(c,t,w,h,30);
+    const M=immagineOggetto('motrice_convoglio'),V=immagineOggetto('vagone_esterno'),T=immagineOggetto('tuta_spaziale');if(!imgOk(M.im)||!imgOk(V.im))return;
+    const s=.55,mw=M.im.naturalWidth*s,vw=V.im.naturalWidth*s,cy=h*.42,hx=w*.04+Math.max(0,9-t)*18,   /* testa del convoglio: rallenta verso sinistra */
+      cx=i=>i===0?hx+mw/2:hx+mw+(i-1)*vw+vw/2+2*i;   /* centro della motrice (0) e dei vagoni 1..12 */
+    const boom=7.2,esploso=t>=boom;
+    for(let i=12;i>=1;i--){if(i===3&&esploso)continue;_ogg10(c,'vagone_esterno',cx(i),cy+Math.sin(t*2+i)*1,s);}
+    _ogg10(c,'motrice_convoglio',cx(0),cy-3,s,true);
+    /* navicella: arriva da sinistra in basso, sempre più veloce, verso il terzo vagone */
+    if(!esploso){const k=Math.min(1,t/boom),e=k*k,sx=-120+(cx(3)+120)*e,sy=h*.6+(cy-h*.6)*e;_naveFronte10(c,sx,sy,.24+.06*e,1,-.25*(1-e));d.nave={x:sx,y:sy};}
+    /* gli alpaca in tuta: escono uno dopo l'altro (da 3 s) e si lanciano verso il convoglio; 0-4 → primo vagone (Alfa), 5-9 → quarto (Bravo) */
+    if(imgOk(T.im))for(let i=0;i<10;i++){const t0=4.2+i*.27;if(t<t0)continue;d.p=d.p||[];if(!d.p[i]){const n=d.nave||{x:0,y:h*.6};d.p[i]={x:n.x,y:n.y};}
+      const p=d.p[i],dest=i<5?1:4,tx=cx(dest)+((i%5)-2)*vw*.17,ty=cy-V.im.naturalHeight*s*.5-6+(i%2)*4,k=Math.min(1,(t-t0)/2.2),e=1-Math.pow(1-k,2);
+      const x=p.x+(tx-p.x)*e,y=p.y+(ty-p.y)*e-Math.sin(k*3.14)*30;_ogg10(c,'tuta_spaziale',x,y,.55,false,k<1?(t*2+i)%6.28:0);}
+    /* l'impatto: lampo bianco e pezzi di metallo che volano via */
+    if(esploso){const q=t-boom;_suono9(d,()=>{sfx.boom&&sfx.boom();SUONI11.metallo();});
+      for(let i=0;i<26;i++){const a=sr(i)*6.283,v=60+sr(i+5)*220,x=cx(3)+Math.cos(a)*v*q,y=cy+Math.sin(a)*v*q,r=q*(3+sr(i+2)*6)+i;c.save();c.translate(x,y);c.rotate(r);
+        c.globalAlpha=Math.max(0,1-q/4);c.fillStyle=i%3?'#4a4c58':'#b8952e';c.fillRect(-5-sr(i)*6,-2,10+sr(i)*12,4+sr(i+1)*4);c.restore();}
+      const a=q<.12?q/.12:Math.max(0,1-(q-.12)/1.1);if(a>0){c.save();c.globalAlpha=a;c.fillStyle='#fff';c.fillRect(-40,-40,w+80,h+80);c.restore();}}
+    /* il conto alla rovescia (sotto i pulsanti in alto a destra) */
+    const rest=Math.max(0,277-Math.floor(t)),mm=Math.floor(rest/60),ss=String(rest%60).padStart(2,'0');
+    c.save();c.fillStyle='rgba(0,0,0,.55)';c.fillRect(w-150,74,130,40);c.strokeStyle='#ff4040';c.lineWidth=2;c.strokeRect(w-150,74,130,40);c.restore();
+    _testo11(c,mm+':'+ss,w-85,95,20,Math.floor(t*2)%2?'#ff5050':'#ffd0d0');}},
+  /* VAGONI: luci rosse d'emergenza a intermittenza e allarme */
+  emergenza11:{sopra:true,draw(c,t,w,h,d){_rosso11(c,t,w,h);const k=Math.floor(t/2.6);if(d.k!==k){d.k=k;try{SUONI11.allarme();}catch(e){}}}},
+  /* (nelle lotte: stesse luci, allarme solo nei primi secondi) */
+  emergenza11l:{sopra:true,draw(c,t,w,h,d){_rosso11(c,t,w,h);if(t<8){const k=Math.floor(t/2.6);if(d.k!==k){d.k=k;try{SUONI11.allarme();}catch(e){}}}}},
+  /* le luci si spengono un attimo (l'ottavo vagone è vuoto) e poi tornano */
+  buio11:{sopra:true,draw(c,t,w,h,d){const a=t<1.2?.88:Math.max(0,.88-(t-1.2)/1.2);if(a<=0)return;c.save();c.fillStyle='rgba(0,0,0,'+a+')';c.fillRect(-40,-40,w+80,h+80);c.restore();}},
+  /* raffica di proiettili da destra (dura 1,8 secondi) */
+  raffica11:{sopra:true,draw(c,t,w,h,d){if(t>1.8)return;_suono9(d,()=>{SUONI11.raffica();setTimeout(()=>SUONI11.raffica(),700);});_traccianti11(c,t,w,SCENA_SUOLO-120,SCENA_SUOLO-50,-1,10);}},
+  /* il tagliatore laser di Massimo: scintille sulla porta davanti a lui (taglio_fiamme11: con le fiamme del tagliafiamme) */
+  taglio11:{sopra:true,draw(c,t,w,h,d){const a=_att11('massimo');if(!a)return;const k=Math.floor(t/.18);if(d.k!==k){d.k=k;try{SUONI11.scintille();}catch(e){}}_scintille11(c,t,a.x+a.face*58,a.y-78,a.face,false);}},
+  taglio_fiamme11:{sopra:true,draw(c,t,w,h,d){const a=_att11('massimo');if(!a)return;const k=Math.floor(t/.3);if(d.k!==k){d.k=k;try{noise(.15,.03);}catch(e){}}_scintille11(c,t,a.x+a.face*58,a.y-78,a.face,true);}},
+  /* il battito del cuore di Zibe (il suono intorno si attutisce: prima {musica:'silenzio'}) e i bordi che pulsano */
+  battito11:{sopra:true,draw(c,t,w,h,d){const k=Math.floor(t/.95);if(d.k!==k){d.k=k;try{SUONI11.battito();}catch(e){}}
+    const p=Math.max(0,Math.sin((t%.95)/.95*6.283*2))*.5,g=c.createRadialGradient(w/2,h*.4,h*.25,w/2,h*.4,w*.7);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(30,0,0,'+(.35+p*.35)+')');
+    c.save();c.fillStyle=g;c.fillRect(-40,-40,w+80,h+80);c.restore();}},
+  /* rumori: la porta blindata si apre spezzando il metallo; la porta della cabina tagliata */
+  metallo11:{draw(c,t,w,h,d){_suono9(d,()=>SUONI11.metallo());}},
+  /* la granata stordente che rotola ai loro piedi (luce rossa che lampeggia) */
+  granata11:{draw(c,t,w,h,d){const a=_att11('ettore'),tx=a?a.x+60:w*.5,k=Math.min(1,t/1.1),x=w+20+(tx-w-20)*(1-Math.pow(1-k,2)),y=SCENA_SUOLO-6;
+    c.save();c.translate(x,y);c.rotate(-k*12);c.fillStyle='#3c4a3a';c.beginPath();c.ellipse(0,0,8,6,0,0,7);c.fill();c.fillStyle='#222';c.fillRect(-3,-9,6,4);c.restore();
+    if(Math.floor(t*6)%2){c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,40,40,.9)';c.beginPath();c.arc(x,y-4,3.5,0,7);c.fill();c.restore();}}},
+  /* il fumetto "!" sopra la testa di Ettore */
+  esclama11:{sopra:true,draw(c,t,w,h,d){if(t>1.8)return;const a=_att11('ettore');if(!a)return;const y=a.y-175-Math.min(1,t*6)*8;
+    c.save();c.fillStyle='#fff';c.strokeStyle='#000';c.lineWidth=3;c.beginPath();c.ellipse(a.x,y,18,22,0,0,7);c.fill();c.stroke();c.restore();_testo11(c,'!',a.x,y+1,20,'#d00000');}},
+  /* LA GRANATA STORDENTE: lampo bianco accecante, poi macchie colorate che svaniscono e un fischio acuto (la musica tace) */
+  stordente11:{sopra:true,draw(c,t,w,h,d){_suono9(d,()=>{sfx.boom&&sfx.boom();SUONI11.fischio();});if(!d.tr){d.tr=1;SC.shake=8;SC.shakeT=.5;SC.shakeT0=.5;}
+    const a=t<.08?t/.08:t<1.2?1:Math.max(0,1-(t-1.2)/1.8);c.save();
+    if(t>.9)for(let i=0;i<9;i++){const x=w*(.15+sr(i)*.7),y=h*(.15+sr(i+4)*.5),r=50+sr(i+8)*90,al=Math.max(0,.55-(t-.9)/3.4);if(al<=0)continue;
+      const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'hsla('+(sr(i+2)*360|0)+',90%,65%,'+al+')');g.addColorStop(1,'hsla(0,0%,100%,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();}
+    if(a>0){c.globalAlpha=a;c.fillStyle='#fff';c.fillRect(-40,-40,w+80,h+80);}c.restore();}},
+  /* l'idea di Alice: la batteria vola nell'armeria a destra; scoppi di munizioni, fuoco e fumo nero */
+  batteria11:{sopra:true,draw(c,t,w,h,d){const a=_att11('alice'),x0=a?a.x+a.face*30:w*.3,y0=a?a.y-90:200,k=Math.min(1,t/.8),x=x0+(w+30-x0)*k,y=y0-Math.sin(k*3.14)*70+k*40;
+    if(k<1){c.save();c.translate(x,y);c.rotate(t*12);c.fillStyle='#d8c040';c.fillRect(-6,-4,12,8);c.fillStyle='#333';c.fillRect(-6,-4,4,8);c.restore();}
+    if(t<.8)return;const q=t-.8;_suono9(d,()=>{sfx.boom&&sfx.boom();});const kk=Math.floor(q/.22);if(d.k!==kk){d.k=kk;try{SUONI11.scoppio();}catch(e){}}
+    for(const [u,s] of [[.86,1],[.95,2],[.78,3]])_fumo10(c,t,w*u,SCENA_SUOLO-20,240,s+40,.65);
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(w,SCENA_SUOLO-60,10,w,SCENA_SUOLO-60,w*.35);g.addColorStop(0,'rgba(255,160,40,'+(.55+.2*Math.sin(t*17))+')');g.addColorStop(1,'rgba(255,60,0,0)');
+    c.fillStyle=g;c.fillRect(w*.55,0,w*.5,h);c.restore();
+    for(let i=0;i<6;i++){const per=.5+sr(i)*.4,ph=((q+i*.17)%per)/per,n=Math.floor((q+i*.17)/per);_esplosione10(c,w*(.8+sr(n*3+i)*.2),SCENA_SUOLO-30-sr(n+i)*140,30+sr(i)*30,ph);}}},
+  /* rumori di lotta e lampi oltre la porta a destra */
+  rumori11:{sopra:true,draw(c,t,w,h,d){const k=Math.floor(t/.33);if(d.k!==k){d.k=k;try{if(sr(k)>.5)SUONI11.scoppio();else{noise(.08,.05);beep(600,.06,'square',.02,-300);}}catch(e){}}
+    if(Math.sin(t*23)>.6){c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,230,160,.35)';c.fillRect(w*.86,0,w*.2,SCENA_SUOLO+20);c.restore();}}},
+  /* ARMERIA: fumo nero e qualche scoppio; a destra la nube densa nasconde Luca finché c'è "fumo_via11" */
+  fumo_armeria11:{sopra:true,draw(c,t,w,h,d){for(const [u,s] of [[.2,5],[.45,6],[.7,7]])_fumo10(c,t*.6,w*u,SCENA_SUOLO*.45,120,s+60,.35);
+    const kk=Math.floor(t/1.9);if(d.k!==kk){d.k=kk;if(sr(kk+3)>.4)try{SUONI11.scoppio();}catch(e){}}
+    const V=SC.livelli.find(L=>L.n==='fumo_via11'),den=V?Math.max(0,1-V.t/1.6):1;
+    if(den>0){c.save();for(let i=0;i<22;i++){const x=w*(.7+sr(i)*.34)+Math.sin(t*.5+i)*12,y=SCENA_SUOLO-sr(i+3)*230,r=45+sr(i+6)*60;const g=c.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,'rgba(30,28,30,'+(.9*den)+')');g.addColorStop(1,'rgba(30,28,30,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();}c.restore();}}},
+  fumo_via11:{draw(){}},
+  /* esplosione al portellone a destra (Massimo vola all'indietro) */
+  scoppio_porta11:{sopra:true,draw(c,t,w,h,d){_suono9(d,()=>{sfx.boom&&sfx.boom();});_esplosione10(c,w*.93,SCENA_SUOLO-80,160,Math.min(1,t/.9));
+    for(let i=0;i<16;i++){const a=3.14+(sr(i)-.5)*1.6,v=80+sr(i+2)*200;c.globalAlpha=Math.max(0,1-t/1.4);c.fillStyle='#555';c.fillRect(w*.93+Math.cos(a)*v*t,SCENA_SUOLO-80+Math.sin(a)*v*t+t*t*120,5,4);}c.globalAlpha=1;}},
+  /* il getto d'aria dal tubo idraulico tranciato (braccio dell'esoscheletro) */
+  getto11:{sopra:true,draw(c,t,w,h,d){const a=_att11('dimauroexo');if(!a||t>3)return;_suono9(d,()=>{noise(1.2,.06);});const x=a.x+a.face*(40-63)*1.37,y=a.y-(120-105)*1.37-40;
+    c.save();for(let i=0;i<24;i++){const ph=(t*2.5+sr(i))%1,ang=-1.9+(sr(i+3)-.5)*.7,v=ph*110;c.globalAlpha=(1-ph)*.75*Math.max(0,1-t/3);c.fillStyle='#e8f0f4';
+      c.beginPath();c.arc(x-a.face*Math.cos(ang)*v*.6,y+Math.sin(ang)*v,4+ph*12,0,7);c.fill();}c.restore();}},
+  /* la granata di Luca nell'armeria: lampo e le rastrelliere che cadono */
+  rastrelliere11:{sopra:true,draw(c,t,w,h,d){_suono9(d,()=>{sfx.boom&&sfx.boom();setTimeout(()=>{try{SUONI10.crollo();}catch(e){}},350);});
+    for(let i=0;i<14;i++){const t0=.3+sr(i)*.6;if(t<t0)continue;const q=t-t0,x=w*(.06+sr(i+1)*.9),y=Math.min(SCENA_SUOLO-6,-30+q*q*700),r=y>=SCENA_SUOLO-6?1.45:q*3+sr(i);
+      c.save();c.translate(x,y);c.rotate(r);c.fillStyle=i%2?'#5a4630':'#3a3d42';c.fillRect(-28,-3,56,6);c.fillStyle='#222';c.fillRect(14,-5,8,10);c.restore();}
+    const a=t<.1?t/.1:Math.max(0,1-(t-.1)/.6);if(a>0){c.save();c.globalAlpha=a;c.fillStyle='#fff';c.fillRect(-40,-40,w+80,h+80);c.restore();}}},
+  /* VAGONE CALDAIA: la nebbia verdastra del gas che sale dal basso e le fiamme dal portello dell'inceneritore (in fondo al centro) */
+  gas11:{sopra:true,draw(c,t,w,h,d){_gas11(c,t,w,SCENA_SUOLO,h,Math.min(1,t/4));}},
+  inceneritore11:{draw(c,t,w,h,d){const b=d.bg;if(!b)return;_fuocoPortello11(c,t,b.x+b.w*CAP11_INC.x,b.y+b.h*CAP11_INC.y,b.w/960*1.4);
+    const per=5.5,ph=(t%per)/per;_linguaFuoco11(c,t,w+20,w*.5,SCENA_SUOLO,Math.min(1,ph*2.2),ph<.75?1:Math.max(0,1-(ph-.75)*4));}},
+  /* VAGONE DELLE CAPSULE: 4 capsule lungo la parete di fondo. caps1..caps3: si chiude, luci d'avviso, parte verso l'alto;
+     caps4_chiusa: la quarta si chiude (dentro c'è Luca); caps4_via: parte anche lei */
+  capsule11:{draw(c,t,w,h,d){const A=immagineOggetto('capsula_aperta'),C=immagineOggetto('capsula_chiusa');if(!imgOk(A.im)||!imgOk(C.im)||A.base==null||C.base==null)return;
+    const L=n=>SC.livelli.find(x=>x.n===n);
+    CAP11.capsule.forEach((u,i)=>{const lan=L(i<3?'caps'+(i+1):'caps4_via'),chiusa=i<3?lan:L('caps4_chiusa');let y=SCENA_SUOLO-6,lampeggia=false;
+      if(lan){const q=lan.t-(i<3?1.1:.2);if(i<3&&lan.t<1.1)lampeggia=true;if(q>0){if(!lan.d.s){lan.d.s=1;try{SUONI11.propulsori();}catch(e){}}y-=q*q*260;
+        c.save();c.globalCompositeOperation='lighter';const g=c.createLinearGradient(0,y,0,y+80);g.addColorStop(0,'rgba(180,230,255,.9)');g.addColorStop(1,'rgba(60,120,255,0)');c.fillStyle=g;c.fillRect(w*u-26,y-4,52,80);c.restore();}}
+      if(chiusa&&!lan)lampeggia=true;
+      const I=chiusa?C:A,s=1,x0=w*u-A.im.naturalWidth/2;   /* stesso bordo sinistro: lo sportello aperto sporge a destra */
+      if(y<-220)return;c.drawImage(I.im,x0,y-I.base*s,I.im.naturalWidth*s,I.im.naturalHeight*s);
+      if(lampeggia&&Math.floor(t*5)%2){c.save();c.globalCompositeOperation='lighter';for(const dx of [.2,.8]){const g=c.createRadialGradient(x0+C.im.naturalWidth*dx,y-C.base+18,0,x0+C.im.naturalWidth*dx,y-C.base+18,16);
+        g.addColorStop(0,'rgba(255,90,40,.95)');g.addColorStop(1,'rgba(255,40,0,0)');c.fillStyle=g;c.beginPath();c.arc(x0+C.im.naturalWidth*dx,y-C.base+18,16,0,7);c.fill();}c.restore();}});}},
+  caps1:{draw(){}},caps2:{draw(){}},caps3:{draw(){}},caps4_chiusa:{draw(){}},caps4_via:{draw(){}},
+  /* Luca spara a Ettore: i proiettili rimbalzano sulla lama accesa di blu */
+  spari_luca11:{sopra:true,draw(c,t,w,h,d){const L=_att11('dimauroministro'),E=_att11('ettore');if(!L||!E)return;const k=Math.floor(t/.28);if(d.k!==k){d.k=k;try{noise(.05,.06);beep(240,.05,'square',.03,-100);SUONI11.vetro();}catch(e){}}
+    const gx=L.x+L.face*62,gy=L.y-104,bx=E.x+E.face*26,by=E.y-86;c.save();c.globalCompositeOperation='lighter';for(let i=0;i<3;i++){const ph=(t*3.6+i/3)%1;
+      c.strokeStyle='rgba(255,230,120,.95)';c.lineWidth=2.5;c.beginPath();c.moveTo(gx+(bx-gx)*ph,gy+(by-gy)*ph);c.lineTo(gx+(bx-gx)*Math.max(0,ph-.08),gy+(by-gy)*Math.max(0,ph-.08));c.stroke();}c.restore();
+    _rimbalzo11(c,t,bx,by,-E.face,'blu');}},
+  /* Ettore colpisce il vetro della capsula: solo scintille */
+  vetro11:{sopra:true,draw(c,t,w,h,d){if(t>1.4)return;const k=Math.floor(t/.35);if(d.k!==k){d.k=k;try{SUONI11.vetro();noise(.06,.05);}catch(e){}}_scintille11(c,t,w*CAP11.capsule[3]-30,SCENA_SUOLO-96,-1,false);}},
+  /* Ettore chiude il portellone a sinistra: un'esplosione fortissima dall'altra parte; il portellone si incurva ma regge */
+  portellone11:{sopra:true,draw(c,t,w,h,d){_suono9(d,()=>{sfx.boom&&sfx.boom();try{SUONI10.crollo();}catch(e){}});const b=d.bg;if(!b)return;
+    const x=b.x+b.w*.105,y=b.y+b.h*.46,a=Math.max(0,1-t/1.6);c.save();c.globalCompositeOperation='lighter';c.strokeStyle='rgba(255,150,40,'+a+')';c.lineWidth=6;
+    c.beginPath();c.ellipse(x,y,b.w*.045,b.h*.17,0,0,7);c.stroke();const g=c.createRadialGradient(x,y,0,x,y,b.w*.12);g.addColorStop(0,'rgba(255,200,120,'+(.6*a)+')');g.addColorStop(1,'rgba(255,90,0,0)');
+    c.fillStyle=g;c.beginPath();c.arc(x,y,b.w*.12,0,7);c.fill();c.restore();}},
+  /* LA DERIVA: il vagone staccato ruota lentamente nel buio; il puntino verde (il pianeta) diventa sempre più grande;
+     deriva_dopo11 = "Quarantacinque minuti dopo" e il pianeta vicino; deriva_atmo11 = l'ingresso nell'atmosfera (bagliore arancione, vibrazioni, rumore che cresce) */
+  deriva11:{draw(c,t,w,h,d){_stelle10(c,t,w,h,6);const D=SC.livelli.find(L=>L.n==='deriva_dopo11'),A=SC.livelli.find(L=>L.n==='deriva_atmo11');
+    const P=immagineOggetto('pianeta_verde');let pk=D?Math.min(1,.25+D.t/9):Math.min(.25,t/40);if(A)pk=1;
+    if(imgOk(P.im)){const ps=.03+pk*pk*1.6,px=w*(.86-.36*pk),py=h*(.12+.55*pk);if(D||Math.sin(t*1.7)>-.3)_ogg10(c,'pianeta_verde',px,py,ps,false,0,D?1:.6+.4*Math.sin(t*2));}
+    let jx=0,jy=0,av=0;if(A){av=Math.min(1,A.t/4);jx=(Math.random()-.5)*av*14;jy=(Math.random()-.5)*av*10;const k=Math.floor(A.t/.5);if(d.k!==k){d.k=k;try{SUONI11.rombo(av);}catch(e){}}}
+    const vx=w*.42+jx,vy=h*.4+jy,rot=t*.18;
+    if(A){c.save();c.globalCompositeOperation='lighter';const R=120+av*60,g=c.createRadialGradient(vx,vy,20,vx,vy,R);g.addColorStop(0,'rgba(255,200,90,'+(.55*av)+')');g.addColorStop(1,'rgba(255,80,0,0)');
+      c.fillStyle=g;c.beginPath();c.arc(vx,vy,R,0,7);c.fill();for(let i=0;i<14;i++){const ph=(A.t*2+sr(i))%1;c.strokeStyle='rgba(255,170,60,'+(av*(1-ph))+')';c.lineWidth=3;
+        c.beginPath();c.moveTo(vx+(sr(i+2)-.5)*120,vy+40+ph*120);c.lineTo(vx+(sr(i+2)-.5)*120,vy+70+ph*160);c.stroke();}c.restore();}
+    _ogg10(c,'vagone_esterno',vx,vy,.75,false,rot);
+    if(D&&D.t<3.4){const a=Math.min(1,D.t*2,(3.4-D.t)*2);_testo11(c,'Quarantacinque minuti dopo',w/2,96,22,'#fff',a);}}},
+  deriva_dopo11:{draw(){}},deriva_atmo11:{draw(){}},
+  /* ---------- effetti delle LOTTE del capitolo 11 (disegnati nell'arena: w,h = schermo della lotta) ---------- */
+  /* la parata di Ettore: lampo azzurro sulla lama e i proiettili che rimbalzano via */
+  parata11:{sopra:true,draw(c,t,w,h,d){const g=game.p[0];if(!g||g.cfg.id!=='ettore'||g.state==='ko')return;if(!(g.state==='block'||g.blockFlash>0))return;
+    const bx=g.x+g.facing*30,by=g.y-g.cfg.h*.55;_rimbalzo11(c,t,bx,by,-g.facing,'blu');
+    for(const p of projectiles){if(p.owner===g||p.deviato11)continue;const dx=p.x-g.x;if(Math.abs(dx)<90&&Math.sign(dx)===g.facing&&Math.sign(p.vx)===-g.facing){p.deviato11=1;p.vx=-p.vx*.8;p.vy=-2-Math.random()*4;p.dmg=0;p.life=Math.min(p.life,16);
+      try{SUONI11.vetro();}catch(e){}try{spark(p.x,p.y,'#9fe8ff',8,2);}catch(e){}}}}},
+  /* lotta 13: tra un soldato e l'altro Massimo apre la porta a destra con il tagliatore (scintille), come se passassero al vagone successivo */
+  porta13:{draw(c,t,w,h,d){if(!SF)return;if(d.on===undefined)d.on=SF.ondata;if(SF.ondata!==d.on){d.on=SF.ondata;d.t0=t;}if(d.t0===undefined||t-d.t0>1.6)return;
+    const im=_img11('sprites/storia/massimo/scena/taglia.png');if(!imgOk(im))return;const fi=Math.floor((t-d.t0)*10)%12,sc=1.36,x=w-58,y=GROUND-8;
+    c.save();c.translate(x,y);c.drawImage(im,fi*224,0,224,128,-100*sc,-118*sc,224*sc,128*sc);c.restore();_scintille11(c,t,x+56,y-78,1,false);
+    const k=Math.floor(t/.18);if(d.k!==k){d.k=k;try{SUONI11.scintille();}catch(e){}}}},
+  /* lotta 14: la cassa di munizioni davanti al mitragliere (gli copre le gambe) */
+  cassa_mitragliere11:{sopra:true,draw(c,t,w,h,d){const e=game.p[1];if(!e||!e.cfg.id.startsWith('mitragliere'))return;const im=_img11('sprites/storia/oggetti/cassa_munizioni.png');if(!imgOk(im))return;
+    const s=1.35,iw=im.naturalWidth*s,ih=im.naturalHeight*s;c.drawImage(im,e.x+e.facing*14-iw/2,GROUND+3-ih,iw,ih);}},
+  /* lotta 14: quando la vita del mitragliere scende sotto il 30% la lotta si ferma e la storia continua */
+  fine_mitragliere11:{draw(c,t,w,h,d){const e=game.p[1];if(d.ok||!e||!SF||game.koPending||!e.cfg.id.startsWith('mitragliere'))return;
+    if(e.hp/e.maxHp<=.3){d.ok=1;game.koPending=true;game.freeze=999;try{flash(2);}catch(_){}fineLotta(50,'vittoria');}}},
+  /* lotta 15: la frase di Luca per 2 secondi all'inizio */
+  frase_luca11:{sopra:true,draw(c,t,w,h,d){if(t>2.8)return;const a=Math.min(1,t*4,(2.8-t)*3);c.save();c.globalAlpha=a*.75;c.fillStyle='#05040f';c.fillRect(w*.08,h*.24,w*.84,h*.16);c.restore();
+    _testo11(c,'LUCA DI MAURO:',w/2,h*.28,13,'#ffd24a',a);_testo11(c,'Davvero pensate di potermi battere?',w/2,h*.325,11,'#fff',a);_testo11(c,'Siete solo degli illusi.',w/2,h*.365,11,'#fff',a);}},
+  /* lotta 15: Massimo svenuto a terra sullo sfondo, a sinistra, con Viola accanto (Viola sparisce se è lei a combattere; Massimo quando si risveglia) */
+  spettatori15:{draw(c,t,w,h,d){if(!SF)return;const sv=(SF.svenuti||[]).includes('massimo');
+    for(const [id,x,posa,ultimo] of [['massimo',.07,'ko',true],['viola',.15,'triste',false]]){if(id==='massimo'&&!sv)continue;if(game.p[0]&&game.p[0].cfg.id===id)continue;
+      const S=SPRITE_CHARS[id]||STORY_SPRITES[id];if(!S)continue;const a=animPosa(S,id,posa);if(!a)continue;const im=S.img[a.file];if(!imgOk(im))continue;
+      const fi=ultimo?a.n-1:Math.floor(t*(a.fps||8))%a.n,fw=a.fw||S.fw,fh=a.fh||S.fh,ax=a.ax??S.ax,ay=a.ay??S.ay,sc=(a.sc||S.scale)*.85;
+      c.save();c.translate(Math.round(x*w),Math.round(GROUND-8));c.globalAlpha=.9;c.drawImage(im,fi*fw,0,fw,fh,-ax*sc,-ay*sc,fw*sc,fh*sc);c.restore();}}},
+  /* lotta 15 fase 1: al 70% Massimo si risveglia (poi si può scegliere), al 50% Ettore trancia il tubo idraulico (il braccio dell'esoscheletro
+     si rompe da solo: è la fase 2 del suo set), al 35% Luca lancia la granata e fugge: la lotta si ferma e la storia continua */
+  boss15:{draw(c,t,w,h,d){if(!SF||game.state!=='fight'||game.koPending)return;const e=game.p[1];if(!e||e.state==='ko')return;const r=e.hp/e.maxHp;
+    if(!d.f1&&r<=.7){d.f1=d.f0=1;_faseLotta11('MASSIMO SI RISVEGLIA!',()=>{SF.svenuti=(SF.svenuti||[]).filter(i=>i!=='massimo');e.hp=Math.max(1,e.hp-Math.round(e.maxHp*.02));e.hpTrail=e._trailHp=e.hp;},AZ_RISVEGLIO15,true);}
+    else if(d.f1&&!d.f2&&r<=.5){d.f2=1;_faseLotta11('IL TUBO IDRAULICO!',null,AZ_TUBO15,false);}
+    else if(d.f2&&!d.f3&&r<=.35){d.f3=1;game.koPending=true;game.freeze=999;game.banner='LUCA FUGGE!';game.bannerT=80;fineLotta(60,'vittoria');}}},
+  /* lotta 15 fase 2: Luca riparte dalla vita che aveva alla fine della fase 1 (35%), già senza il braccio meccanico */
+  vita35_11:{draw(c,t,w,h,d){const e=game.p[1];if(d.ok||!e||!e.cfg.id.startsWith('dimauroexo'))return;d.ok=1;e.hp=Math.round(e.maxHp*.35);e.hpTrail=e._trailHp=e.hp;}},
+  /* lotta 15 fase 2: gas e fuoco dell'inceneritore nell'arena */
+  gas11l:{sopra:true,draw(c,t,w,h,d){_gas11(c,t,w,GROUND,h,Math.min(.75,.4+t/10));}},
+  inceneritore11l:{draw(c,t,w,h,d){const b=d.bg;if(!b)return;_fuocoPortello11(c,t,b.x+b.w*CAP11_INC.x,b.y+b.h*CAP11_INC.y,b.w/960*1.4);}},
+  /* il mitragliere spara su Sito: i colpi rimbalzano sull'ascia */
+  spari_mitra11:{sopra:true,draw(c,t,w,h,d){const M=_att11('mitragliere'),S=_att11('sito');if(!M||!S)return;const k=Math.floor(t/.12);if(d.k!==k){d.k=k;try{noise(.03,.05);beep(200,.03,'square',.02,-60);}catch(e){}}
+    const gx=M.x+M.face*58,gy=M.y-76,bx=S.x+S.face*34,by=S.y-96;c.save();c.globalCompositeOperation='lighter';for(let i=0;i<4;i++){const ph=(t*4.2+i/4)%1;
+      c.strokeStyle='rgba(255,230,120,.95)';c.lineWidth=2.5;c.beginPath();c.moveTo(gx+(bx-gx)*ph,gy+(by-gy)*ph);c.lineTo(gx+(bx-gx)*Math.max(0,ph-.07),gy+(by-gy)*Math.max(0,ph-.07));c.stroke();}c.restore();
+    _rimbalzo11(c,t,bx,by,-S.face,'giallo');}},
+  /* Luca spara verso Zibe ed Ettore che si riparano */
+  colpi_luca11:{sopra:true,draw(c,t,w,h,d){const L=_att11('dimauroministro');if(!L)return;const k=Math.floor(t/.3);if(d.k!==k){d.k=k;try{noise(.05,.06);beep(240,.05,'square',.03,-100);}catch(e){}}
+    const gx=L.x+L.face*62,gy=L.y-104;c.save();c.globalCompositeOperation='lighter';for(let i=0;i<3;i++){const ph=(t*2.6+i/3)%1,tx=w*(.22+sr(i)*.1),ty=SCENA_SUOLO-60-sr(i+4)*60;
+      c.strokeStyle='rgba(255,230,120,.95)';c.lineWidth=2.5;c.beginPath();c.moveTo(gx+(tx-gx)*ph,gy+(ty-gy)*ph);c.lineTo(gx+(tx-gx)*Math.max(0,ph-.08),gy+(ty-gy)*Math.max(0,ph-.08));c.stroke();}c.restore();}},
+  /* Luca entra nell'ultima capsula */
+  svanisce_luca11:{draw(c,t,w,h,d){_svanisci9(c,t,d,'dimauroministro');}},
+  /* lotta 15 fase 2: sotto il 15% la lotta si ferma e la storia continua */
+  fine15_11:{draw(c,t,w,h,d){const e=game.p[1];if(d.ok||!e||!SF||game.koPending||!e.cfg.id.startsWith('dimauroexo'))return;
+    if(e.hp/e.maxHp<=.15){d.ok=1;game.koPending=true;game.freeze=999;try{flash(2);}catch(_){}fineLotta(50,'vittoria');}}},
+});
+/* i preparativi nel capannone: nome e arma in basso, per un secondo e mezzo (arma11_alice, arma11_mango, ...) */
+for(const [id,testo] of [['alice','Alice – due pistole leggere'],['mango','Mango – il braccio meccanico'],['batteo','Batteo – il fucile senza rinculo'],['viola','Viola – due sciabole corte'],
+  ['antonio','Antonio – l’arco con le frecce energetiche'],['massimo','Massimo – la mazza ferrata'],['chiara','Chiara – i pugnali al plasma e la pistola'],['sito','Sito – l’ascia bipenne e la pistola ornata']])
+  ANIMAZIONI['arma11_'+id]={sopra:true,draw(c,t,w,h,d){if(t>1.5)return;const a=Math.min(1,t*5,(1.5-t)*5);c.save();c.globalAlpha=a*.8;c.fillStyle='#120c04';c.fillRect(w*.14,SCENA_SUOLO+20,w*.72,52);
+    c.strokeStyle='#ffd24a';c.lineWidth=2;c.strokeRect(w*.14,SCENA_SUOLO+20,w*.72,52);c.restore();_testo11(c,testo,w/2,SCENA_SUOLO+47,20,'#ffe9a8',a);}};
+/* il portello dell'inceneritore nello sfondo del vagone caldaia (frazioni dell'immagine) */
+const CAP11_INC={x:.52,y:.5};
+/* nella lotta 15: breve pausa con una scena nell'arena, poi si torna a combattere (cambio = si può cambiare lottatore) */
+function _faseLotta11(testo,prima,azioni,cambio){game.freeze=Math.max(game.freeze,70);game.banner=testo;game.bannerT=70;try{sfx.special();}catch(e){}
+  SF.flash={col:'#FFFFFF',t:20,max:20};shake=Math.max(shake,6);if(prima)prima();
+  interludio(azioni,SF.p.arena,()=>{if(cambio&&SF&&SF.p.squadra&&SF.p.squadra.length>1)cambiaLottatore(()=>{});});}
 /* numero pseudo-casuale fisso per l'indice i (le animazioni restano uguali a ogni fotogramma) */
 function sr(i){const x=Math.sin(i*12.9898+78.233)*43758.5453;return x-Math.floor(x);}
 /* cap05: il tavolo del bar (sprites/storia/oggetti/tavolo_bar.png). k = 0 in piedi, 1 rovesciato su un fianco (ruota attorno al piede destro) */
@@ -8244,6 +9006,8 @@ function storiaSalta(){chiudiPop();const c=capById(ST.run.cap);let j=c.passi.fin
    - modo: 'normale' | 'ondata' | 'resisti' | 'copione' | 'interrotta' | 'boss'
    - durata: secondi (resisti e copione)        soglia: 0-1 e chi:'avversario'|'giocatore' (interrotta)
    - vita: moltiplicatore della vita dell'avversario (per i boss, es. 1.5)
+   - svenuti:['massimo']: nella scelta della squadra compaiono grigi con la scritta SVENUTO e non si possono scegliere
+     (una fase con risveglia:'massimo', oppure un effetto che toglie l'id da SF.svenuti, li rende di nuovo sceglibili)
    - fasi (boss): [{soglia:.5, testo:'FASE 2', lampo:'#FF2A2A', musica:'win', sprite:'altro_id', arena:'Cripta',
                     ricarica:true, aura:'red', cambio:true, scena:[...azioni di una scena...]}]
    - difficolta: 'facile' | 'normale' | 'difficile' | 'boss'     musica: traccia della lotta
@@ -8266,6 +9030,18 @@ const PERICOLI={
     fxObjs.push({t:0,life:40,draw(o){ctx.globalAlpha=.25+.3*(o.t/o.life);ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(x,GROUND+1,22,5,0,0,7);ctx.fill();ctx.globalAlpha=1;}});
     setTimeoutFrames(40,()=>{if(!game.p[1])return;projectiles.push({x,y:-20,vx:0,vy:7,grav:.2,w:18,h:18,dmg:6,kb:5,life:160,owner:game.p[1],col:'#FF8C1A',aoe:34,bounceKill:true,sp:false});});}},
 };
+/* lotta 15 fase 2 (vagone caldaia): ogni 5-6 secondi una lingua di fuoco striscia sul pavimento da destra verso il centro.
+   Mezzo secondo prima un bagliore arancione sul pavimento mostra dove arriverà. Toglie poca vita a chi la tocca (anche a Luca). */
+PERICOLI.fiamme11={tick(sf,t){if(game.koPending||!game.p[0]||!game.p[1])return;const F=sf.fz||(sf.fz={next:3});
+  if(!F.on&&t>=F.next){F.on=1;F.t0=t;F.colpiti=new Set();const x0=W+20,x1=W*.42;try{noise(.5,.04);beep(90,.6,'sawtooth',.02,40);}catch(e){}
+    fxObjs.push({t:0,life:150,under:true,draw(o){const q=o.t/60;
+      if(q<.5){const a=.3+.3*Math.sin(o.t*.6);ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createLinearGradient(x1,0,x0,0);g.addColorStop(0,'rgba(255,120,20,0)');g.addColorStop(.25,'rgba(255,120,20,'+a+')');g.addColorStop(1,'rgba(255,170,50,'+a+')');
+        ctx.fillStyle=g;ctx.beginPath();ctx.ellipse((x0+x1)/2,GROUND+1,(x0-x1)/2,9,0,0,7);ctx.fill();ctx.restore();}
+      else{const k=Math.min(1,(q-.5)/.9),al=q<1.9?1:Math.max(0,1-(q-1.9)/.6);_linguaFuoco11(ctx,q,x0,x1,GROUND+3,k,al);}}});}
+  if(F.on){const q=t-F.t0;
+    if(q>=.5&&q<1.9){const k=Math.min(1,(q-.5)/.9),xe=W+20+(W*.42-W-20)*k;
+      for(const f of game.p){if(!f||f.state==='ko'||F.colpiti.has(f))continue;if(f.x+f.half*.5>xe&&f.y>=GROUND-40){F.colpiti.add(f);const o=f===game.p[0]?game.p[1]:game.p[0];try{f.takeDamage(5,4,o,true);}catch(e){}}}}
+    if(q>=2.5){F.on=0;F.next=t+5+Math.random();}}}};
 /* tracce: quelle del gioco (menu, fight, win, lose) oppure un file music/<nome>.mp3 aggiunto in futuro */
 function traccia(nome){if(!nome)return null;if(nome==='silenzio')return 'hush';
   if(!tracks[nome]){const src='music/'+nome+'.mp3';window._loadMusic({[nome]:src});tracks[nome].addEventListener('error',()=>{avviso('Musica mancante: '+src+': resta la musica attuale');delete tracks[nome];if(ST.track===nome)ST.track=null;if(ST.fightTrack===nome)ST.fightTrack=null;});}
@@ -8273,22 +9049,23 @@ function traccia(nome){if(!nome)return null;if(nome==='silenzio')return 'hush';
 function cfgDi(id){if(STORY_ROSTER[id]){registerStoryChar(id);return STORY_ROSTER[id];}
   const c=ROSTER.find(r=>r.id===id);if(c){loadChar(id);return c;}avviso('Personaggio mancante per la lotta: "'+id+'"');return null;}
 function avviaLotta(p){salvaStoria(ST.run.cap,p.id);   /* salvataggio subito prima della lotta: RIPROVA riparte da qui */
-  const sq=(p.squadra||[]).filter(id=>cfgDi(id));
-  if(sq.length>1){scegliSquadra(p,sq,'Scegli il lottatore per questa lotta',id=>iniziaLotta(p,id));return;}
-  iniziaLotta(p,p.giocatore||sq[0]||'iacopo');}
+  const sq=(p.squadra||[]).filter(id=>cfgDi(id)),sv=(p.svenuti||[]).filter(id=>sq.includes(id)),ok=sq.filter(id=>!sv.includes(id));   /* svenuti: nella squadra ma non si possono scegliere */
+  if(sq.length>1&&ok.length){scegliSquadra(p,sq,'Scegli il lottatore per questa lotta',id=>iniziaLotta(p,id),sv);return;}
+  iniziaLotta(p,p.giocatore||ok[0]||sq[0]||'iacopo');}
 /* schermata di scelta (come in Final Fantasy VI) */
-function scegliSquadra(p,ids,sub,then){const pr=leggiProgressi(),last=pr&&pr.squadra&&pr.squadra[p.id];
+function scegliSquadra(p,ids,sub,then,svenuti){const pr=leggiProgressi(),sv=svenuti||[],last=pr&&pr.squadra&&pr.squadra[p.id];
   const list=$('sq-list');list.innerHTML='';$('sq-sub').textContent=sub;
-  ids.forEach(id=>{const b=document.createElement('button');b.className='btn-secondario sq-card'+(id===last?' last':'');
+  ids.forEach(id=>{const b=document.createElement('button');const ko=sv.includes(id);b.className='btn-secondario sq-card'+(ko?' svenuto':id===last?' last':'');if(ko)b.disabled=true;   /* svenuto: grigio, con la scritta, non si può scegliere */
     const cv=document.createElement('canvas');cv.width=cv.height=64;b.appendChild(cv);const nm=document.createElement('span');nm.textContent=nomeDi(id);b.appendChild(nm);
     ritratto(id,t=>{if(!t)return;const x=cv.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(t,0,0,64,64);});
+    if(ko){list.appendChild(b);return;}
     b.addEventListener('click',e=>{e.stopPropagation();try{sfx.ok();}catch(_){}chiudiPop();
       const q=leggiProgressi();if(q){q.squadra[p.id]=id;scriviProgressi(q);}then(id);});
     list.appendChild(b);});
   nascondiBox();apriPop('sp-squad');}
 function iniziaLotta(p,gid){const gc=cfgDi(gid)||cfgDi('iacopo'),ec=(p.avversari||[p.avversario]).filter(Boolean).map(cfgDi).filter(Boolean);
   if(!ec.length){avviso('Lotta senza avversario: '+p.id+': la salto');passoSuccessivo();return;}
-  SF={p,modo:p.modo||'normale',g:gc,gid:gc.id,nemici:ec,ondata:0,fase:0,t:0,flash:null,livelli:(p.effetti||[]).map(n=>({n,A:ANIMAZIONI[n],d:{}}))};
+  SF={p,modo:p.modo||'normale',g:gc,gid:gc.id,nemici:ec,ondata:0,fase:0,t:0,flash:null,svenuti:[...(p.svenuti||[])],livelli:(p.effetti||[]).map(n=>({n,A:ANIMAZIONI[n],d:{}}))};
   for(const sp of (p.spettatori||[])){const S=spriteAttore(sp.id);if(S){caricaPosa(S,sp.id,sp.posa||'scena');}}
   [gc,...ec].forEach(c=>registraArchivio(c.id));
   [gc,...ec].forEach(c=>ritratto(c.id,t=>{if(t&&!HUD_THUMB[c.id])HUD_THUMB[c.id]=t;}));
@@ -8322,6 +9099,7 @@ function nuovaFase(fz){SF.fase++;const d=game.cpuDiff();game.freeze=Math.max(gam
   if(fz.aura)game.p[1].aura=fz.aura;
   if(fz.arena){const bi=indiceArena(fz.arena);if(bi>=0){game.bg=bi;loadBg(bi);}else avviso('Arena mancante: "'+fz.arena+'"');}
   if(fz.ricarica){const g=game.p[0];g.hp=g.maxHp;g.hpTrail=g._trailHp=g.hp;}
+  if(fz.risveglia)SF.svenuti=(SF.svenuti||[]).filter(i=>i!==fz.risveglia);   /* da questa fase si può scegliere anche lui */
   const dopo=()=>{if(fz.cambio!==false&&SF.p.squadra&&SF.p.squadra.length>1)cambiaLottatore(()=>{});};
   if(fz.scena&&fz.scena.length)interludio(fz.scena,fz.arena||SF.p.arena,()=>{dopo();});else dopo();}
 /* scena dentro una lotta (es. tra le fasi del boss): poi si torna a combattere */
@@ -8332,7 +9110,7 @@ function interludio(azioni,sfondo,then){game.state='story';try{window._screenSwi
 function cambiaLottatore(then){const p=SF.p;game.state='story';try{window._screenSwitched&&window._screenSwitched();}catch(e){}storiaVista('play');SC=nuovaScena();SC.nero=true;avviaLoop();
   scegliSquadra(p,p.squadra.filter(id=>cfgDi(id)),'Nuova fase: puoi cambiare lottatore',id=>{const g=game.p[0];
     if(id!==g.cfg.id){const c=cfgDi(id),r=g.hp/g.maxHp,nf=new Fighter(c,g.x,g.facing,P1MAP);nf.hp=Math.max(1,Math.round(nf.maxHp*r));nf.hpTrail=nf._trailHp=nf.hp;nf.trailWait=0;nf.trailSpd=0;game.p[0]=nf;SF.g=c;SF.gid=id;}
-    game.freeze=Math.max(game.freeze,50);game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}then();});}
+    game.freeze=Math.max(game.freeze,50);game.state='fight';try{window._screenSwitched&&window._screenSwitched();}catch(e){}then();},SF.svenuti||[]);}
 /* LOTTE DELLA STORIA: effetti dell'arena (p.effetti: animazioni dell'elenco ANIMAZIONI; quelle con sopra:true davanti ai lottatori)
    e compagni fermi sullo sfondo (p.spettatori: [{id, x:0-1, verso:'destra', posa:'attesa'}]), che non combattono */
 function storiaSfondoLotta(sopra){if(!SF)return;
